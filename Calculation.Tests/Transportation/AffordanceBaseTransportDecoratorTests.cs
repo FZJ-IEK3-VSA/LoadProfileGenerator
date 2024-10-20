@@ -198,7 +198,7 @@ namespace Calculation.Tests.Transportation
                         "Desc", null, null);
                     transportationHandler = new TransportationHandler();
                     transportationHandler.AddSite(srcSite);
-                    abt = new AffordanceBaseTransportDecorator(affordance, transportationHandler, "travel to dstsite",
+                    abt = AffordanceBaseTransportDecorator.CreateTransportDecorator(affordance, transportationHandler, "travel to dstsite",
                         new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
                     dstloc.AddTransportationAffordance(abt);
 

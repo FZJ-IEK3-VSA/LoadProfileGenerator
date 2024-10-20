@@ -502,9 +502,8 @@ namespace CalculationController.CalcFactories {
                         throw new DataIntegrityException("More than one calc site has the location " + location.Name);
                     }
 
-                    AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
-                        aff, chh.TransportationHandler, aff.Name, chh.HouseholdKey,
-                        Guid.NewGuid().ToStrGuid(), _calcRepo);
+                    var abtd = AffordanceBaseTransportDecorator.CreateTransportDecorator(aff, chh.TransportationHandler,
+                        aff.Name, chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
 
                     // reset the list of subaffordances of the affordance
@@ -513,7 +512,7 @@ namespace CalculationController.CalcFactories {
                     // add all subaffordances again, but wrapped in transport decorators
                     foreach (var subaff in subaffsCopy)
                     {
-                        var decoratedSubAff = new AffordanceBaseTransportDecorator(subaff, chh.TransportationHandler,
+                        var decoratedSubAff = AffordanceBaseTransportDecorator.CreateTransportDecorator(subaff, chh.TransportationHandler,
                             subaff.Name, chh.HouseholdKey, StrGuid.New(), _calcRepo);
                         aff.SubAffordances.Add(decoratedSubAff);
                     }
@@ -533,9 +532,8 @@ namespace CalculationController.CalcFactories {
                     }
 
                     var aff = location.IdleAffs[person];
-                    AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
-                        aff, chh.TransportationHandler, aff.Name, chh.HouseholdKey,
-                        Guid.NewGuid().ToStrGuid(), _calcRepo);
+                    var abtd = AffordanceBaseTransportDecorator.CreateTransportDecorator(aff, chh.TransportationHandler,
+                        aff.Name, chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
                     location.IdleAffs[person] = abtd;
                 }
             }

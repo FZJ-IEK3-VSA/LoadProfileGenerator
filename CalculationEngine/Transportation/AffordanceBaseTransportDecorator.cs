@@ -15,10 +15,10 @@ namespace CalculationEngine.Transportation
 {
     public class AffordanceBaseTransportDecorator : CalcBase, ICalcAffordanceBase {
         public readonly ICalcAffordanceBase _sourceAffordance;
-        private readonly TransportationHandler _transportationHandler;
-        private readonly HouseholdKey _householdkey;
+        protected readonly TransportationHandler _transportationHandler;
+        protected readonly HouseholdKey _householdkey;
 
-        private readonly CalcRepo _calcRepo;
+        protected readonly CalcRepo _calcRepo;
 
         /// <summary>
         /// General flag to decide whether dynamic simulation of travel times and remote affordances
@@ -26,7 +26,29 @@ namespace CalculationEngine.Transportation
         /// </summary>
         public static readonly bool DynamicCitySimulation = true;
 
-        public AffordanceBaseTransportDecorator(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler,
+        /// <summary>
+        /// Creates the correct transport decorator to use, depending on whether dynamic city simulation is enabled or not
+        /// </summary>
+        /// <param name="sourceAffordance">the affordance to decorate</param>
+        /// <param name="transportationHandler">the transportation handler object</param>
+        /// <param name="name">the name of the affordance</param>
+        /// <param name="householdkey">the household key</param>
+        /// <param name="guid">guid of the decorated affordance</param>
+        /// <param name="calcRepo">the calc repo</param>
+        /// <returns>the newly created transport decorator</returns>
+        public static AffordanceBaseTransportDecorator CreateTransportDecorator(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler,
+            string name, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo)
+        {
+            if (DynamicCitySimulation)
+            {
+                return new AffordanceBaseTransportDecoratorDynamic(sourceAffordance, transportationHandler, name, householdkey, guid, calcRepo);
+            } else
+            {
+                return new AffordanceBaseTransportDecorator(sourceAffordance, transportationHandler, name, householdkey, guid, calcRepo);
+            }
+        }
+
+        protected AffordanceBaseTransportDecorator(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler,
             string name, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo) : base(name, guid)
         {
             _householdkey= householdkey;
@@ -36,27 +58,11 @@ namespace CalculationEngine.Transportation
             _sourceAffordance = sourceAffordance;
         }
 
-        /// <summary>
-        /// Creates a copy of the specified transport decorator, but replaces the source affordance with a new remote affordance.
-        /// </summary>
-        /// <param name="original">the original affordance transport decorator</param>
-        /// <param name="remoteAffordance">the remote affordance that will be used as source affordance</param>
-        public AffordanceBaseTransportDecorator(AffordanceBaseTransportDecorator original, CalcAffordanceRemote remoteAffordance) : base(remoteAffordance.Name, StrGuid.New())
-        {
-            _householdkey = original._householdkey;
-            _calcRepo = original._calcRepo;
-            _transportationHandler = original._transportationHandler;
-            _sourceAffordance = remoteAffordance;
-
-            var message = "Copying affordance base transport decorator for remote affordance " + remoteAffordance;
-            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(new TimeStep(0, 0, false), _householdkey, message));
-        }
-
         public string PrettyNameForDumping => Name + " (including transportation)";
 
         public CalcSite Site => _sourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
 
-        public void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
+        public virtual void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
             out IAffordanceActivation activationInfo)
         {
             if (_myLastTimeEntry.TimeOfLastEvalulation != startTime) {
@@ -90,46 +96,22 @@ namespace CalculationEngine.Transportation
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
 
 
-            // TODO: redesign the lower part as no-transport situations are now handled above already
-            // check if a travel of dynamic duration will start
-            var profileGuid = StrGuid.New();
-            IAffordanceActivation? sourceActivation =  null;
-            // TODO: this condition is not sufficient with the current CalcSites and Locations in the LPG (multiple locations all in the same "Event Location" site)
-            if (DynamicCitySimulation && personSourceLocation.CalcSite != _sourceAffordance.Site)
-            {
-                // person has to travel to the target site with an unknown duration - cannot activate the source affordance yet
-                var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
-                // determine the travel target: the POI of the affordance if it is remote, else null (for home)
-                var destination = _sourceAffordance is CalcAffordanceRemote remoteAff ? remoteAff.PointOfInterest : null;
-                activationInfo = new RemoteAffordanceActivation(activationName, _sourceAffordance.Name, startTime, destination, route, personSourceLocation.CalcSite, this);
-                return;
-            }
-
             // no dynamic travel is happening, so the affordance can now be activated in advance
+            IAffordanceActivation? sourceActivation = null;
             TimeStep affordanceStartTime = startTime.AddSteps(routeduration);
             if (affordanceStartTime.InternalStep < _calcRepo.CalcParameters.InternalTimesteps)
             {
                 // only activate the source affordance if the activation is still in the simulation time frame
                 _sourceAffordance.Activate(affordanceStartTime, activatorName, personSourceLocation, out sourceActivation);
-                if (!sourceActivation.IsDetermined)
-                {
-                    // the activated affordance is a remote affordance; this means the person must already be at the target site
-                    if (!DynamicCitySimulation)
-                        throw new LPGException("Remote affordances may only occur when dynamic city simulation is enabled.");
-
-                    // save the activation information for later logging
-                    activationInfo = sourceActivation;
-                    return;
-                }
             }
 
-            int sourceAffDuration = -1;
             // create the travel profile
             var name = "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
             var stepValues = CalcProfile.MakeListwithValue1AndCustomDuration(routeduration);
             string dataSource = sourceActivation?.DataSource ?? _sourceAffordance.Name;
-            var newPersonProfile = new CalcProfile(name, profileGuid, stepValues, ProfileType.Absolute, dataSource);
+            var newPersonProfile = new CalcProfile(name, StrGuid.New(), stepValues, ProfileType.Absolute, dataSource);
 
+            int sourceAffDuration = 0;
             if (sourceActivation is CalcProfile sourcePersonProfile)
             {
                 // if the source affordance was activated and provided a profile, append it to the travel profile
@@ -175,7 +157,7 @@ namespace CalculationEngine.Transportation
 
         public List<DeviceEnergyProfileTuple> Energyprofiles => _sourceAffordance.Energyprofiles;
 
-        private class LastTimeEntry(string personName, TimeStep timeOfLastEvalulation)
+        protected class LastTimeEntry(string personName, TimeStep timeOfLastEvalulation)
         {
             public string PersonName { get; } = personName;
             public TimeStep TimeOfLastEvalulation { get; } = timeOfLastEvalulation;
@@ -187,7 +169,7 @@ namespace CalculationEngine.Transportation
         /// field saves the route. This is necessary to use the same route in case the affordance is
         /// actually activated in the same timestep.
         /// </summary>
-        private LastTimeEntry _myLastTimeEntry = new("",new TimeStep(-1,0,false));
+        protected LastTimeEntry _myLastTimeEntry = new("",new TimeStep(-1,0,false));
 
         public BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson,
             bool clearDictionaries = true)
