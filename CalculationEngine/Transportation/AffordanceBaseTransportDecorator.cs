@@ -14,7 +14,7 @@ using Common.SQLResultLogging.Loggers;
 namespace CalculationEngine.Transportation
 {
     public class AffordanceBaseTransportDecorator : CalcBase, ICalcAffordanceBase {
-        public readonly ICalcAffordanceBase _sourceAffordance;
+        public readonly ICalcAffordanceBase SourceAffordance;
         protected readonly TransportationHandler _transportationHandler;
         protected readonly HouseholdKey _householdkey;
 
@@ -55,12 +55,12 @@ namespace CalculationEngine.Transportation
             _calcRepo = calcRepo;
             _calcRepo.OnlineLoggingData.AddTransportationStatus( new TransportationStatus(new TimeStep(0,0,false), householdkey, "Initializing affordance base transport decorator for " + name));
             _transportationHandler = transportationHandler;
-            _sourceAffordance = sourceAffordance;
+            SourceAffordance = sourceAffordance;
         }
 
         public string PrettyNameForDumping => Name + " (including transportation)";
 
-        public CalcSite Site => _sourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
+        public CalcSite Site => SourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
 
         public virtual void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
             out IAffordanceActivation activationInfo)
@@ -70,10 +70,10 @@ namespace CalculationEngine.Transportation
             }
 
             // TODO: this condition is not sufficient with the current CalcSites and Locations in the LPG (multiple locations all in the same "Event Location" site)
-            if (personSourceLocation.CalcSite == _sourceAffordance.Site)
+            if (personSourceLocation.CalcSite == SourceAffordance.Site)
             {
                 // no transport is necessary - simply activate the source affordance
-                _sourceAffordance.Activate(startTime, activatorName, personSourceLocation, out activationInfo);
+                SourceAffordance.Activate(startTime, activatorName, personSourceLocation, out activationInfo);
                 return;
             }
 
@@ -87,11 +87,11 @@ namespace CalculationEngine.Transportation
             string status;
             if (routeduration == 0) {
                 status = $"\tActivating {Name} at {startTime} with no transportation and moving from {personSourceLocation} to "
-                    + $"{_sourceAffordance.ParentLocation.Name} for affordance {_sourceAffordance.Name}";
+                    + $"{SourceAffordance.ParentLocation.Name} for affordance {SourceAffordance.Name}";
             }
             else {
                 status = $"\tActivating {Name} at {startTime} with a transportation duration of {routeduration} for moving from "
-                    + $"{personSourceLocation} to {_sourceAffordance.ParentLocation.Name}";
+                    + $"{personSourceLocation} to {SourceAffordance.ParentLocation.Name}";
             }
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
 
@@ -102,13 +102,13 @@ namespace CalculationEngine.Transportation
             if (affordanceStartTime.InternalStep < _calcRepo.CalcParameters.InternalTimesteps)
             {
                 // only activate the source affordance if the activation is still in the simulation time frame
-                _sourceAffordance.Activate(affordanceStartTime, activatorName, personSourceLocation, out sourceActivation);
+                SourceAffordance.Activate(affordanceStartTime, activatorName, personSourceLocation, out sourceActivation);
             }
 
             // create the travel profile
-            var name = "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
+            var name = "Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
             var stepValues = CalcProfile.MakeListwithValue1AndCustomDuration(routeduration);
-            string dataSource = sourceActivation?.DataSource ?? _sourceAffordance.Name;
+            string dataSource = sourceActivation?.DataSource ?? SourceAffordance.Name;
             var newPersonProfile = new CalcProfile(name, StrGuid.New(), stepValues, ProfileType.Absolute, dataSource);
 
             int sourceAffDuration = 0;
@@ -140,22 +140,22 @@ namespace CalculationEngine.Transportation
         {
             string usedDeviceNames = string.Join(", ", usedDeviceEvents.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
             _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, sourceSite?.Name ?? "",
-                Site.Name, route.Name, usedDeviceNames, duration, sourceAffordanceDuration, _sourceAffordance.Name, usedDeviceEvents);
+                Site.Name, route.Name, usedDeviceNames, duration, sourceAffordanceDuration, SourceAffordance.Name, usedDeviceEvents);
         }
 
-        public string AffCategory => _sourceAffordance.AffCategory;
+        public string AffCategory => SourceAffordance.AffCategory;
 
-        public ColorRGB AffordanceColor => _sourceAffordance.AffordanceColor;
+        public ColorRGB AffordanceColor => SourceAffordance.AffordanceColor;
 
-        public ActionAfterInterruption AfterInterruption => _sourceAffordance.AfterInterruption;
+        public ActionAfterInterruption AfterInterruption => SourceAffordance.AfterInterruption;
 
-        public CalcAffordanceType CalcAffordanceType => _sourceAffordance.CalcAffordanceType;
+        public CalcAffordanceType CalcAffordanceType => SourceAffordance.CalcAffordanceType;
 
         public IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting,
                                                              CalcLocation srcLocation) =>
-            _sourceAffordance.CollectSubAffordances(time, onlyInterrupting, srcLocation);
+            SourceAffordance.CollectSubAffordances(time, onlyInterrupting, srcLocation);
 
-        public List<DeviceEnergyProfileTuple> Energyprofiles => _sourceAffordance.Energyprofiles;
+        public List<DeviceEnergyProfileTuple> Energyprofiles => SourceAffordance.Energyprofiles;
 
         protected class LastTimeEntry(string personName, TimeStep timeOfLastEvalulation)
         {
@@ -185,7 +185,7 @@ namespace CalculationEngine.Transportation
                 route = _myLastTimeEntry.PreviouslySelectedRoutes[srcLocation];
             }
             else {
-                route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site, time, calcPerson, _sourceAffordance, _calcRepo);
+                route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site, time, calcPerson, SourceAffordance, _calcRepo);
                 if (route != null) {
                     _myLastTimeEntry.PreviouslySelectedRoutes.Add(srcLocation, route);
 
@@ -209,7 +209,7 @@ namespace CalculationEngine.Transportation
                 // if the end of the travel is after the simulation, everything is ok.
                 return BusynessType.NotBusy;
             }
-            var result = _sourceAffordance.IsBusy(dstStartTime, srcLocation, calcPerson,
+            var result = SourceAffordance.IsBusy(dstStartTime, srcLocation, calcPerson,
                 clearDictionaries);
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 time,
@@ -219,39 +219,39 @@ namespace CalculationEngine.Transportation
             return result;
         }
 
-        public CalcSubAffordance GetAsSubAffordance() => _sourceAffordance.GetAsSubAffordance();
+        public CalcSubAffordance GetAsSubAffordance() => SourceAffordance.GetAsSubAffordance();
 
-        public bool IsInterruptable => _sourceAffordance.IsInterruptable;
+        public bool IsInterruptable => SourceAffordance.IsInterruptable;
 
-        public bool IsInterrupting => _sourceAffordance.IsInterrupting;
+        public bool IsInterrupting => SourceAffordance.IsInterrupting;
 
-        public BodilyActivityLevel BodilyActivityLevel => _sourceAffordance.BodilyActivityLevel;
+        public BodilyActivityLevel BodilyActivityLevel => SourceAffordance.BodilyActivityLevel;
 
-        public int MaximumAge => _sourceAffordance.MaximumAge;
+        public int MaximumAge => SourceAffordance.MaximumAge;
 
-        public int MiniumAge => _sourceAffordance.MiniumAge;
+        public int MiniumAge => SourceAffordance.MiniumAge;
 
-        public bool NeedsLight => _sourceAffordance.NeedsLight;
+        public bool NeedsLight => SourceAffordance.NeedsLight;
 
-        public CalcLocation ParentLocation => _sourceAffordance.ParentLocation;
+        public CalcLocation ParentLocation => SourceAffordance.ParentLocation;
 
-        public PermittedGender PermittedGender => _sourceAffordance.PermittedGender;
+        public PermittedGender PermittedGender => SourceAffordance.PermittedGender;
 
-        public bool RandomEffect => _sourceAffordance.RandomEffect;
+        public bool RandomEffect => SourceAffordance.RandomEffect;
 
-        public bool RequireAllAffordances => _sourceAffordance.RequireAllAffordances;
+        public bool RequireAllAffordances => SourceAffordance.RequireAllAffordances;
 
-        public List<CalcDesire> Satisfactionvalues => _sourceAffordance.Satisfactionvalues;
+        public List<CalcDesire> Satisfactionvalues => SourceAffordance.Satisfactionvalues;
 
-        public string SourceTrait => _sourceAffordance.SourceTrait;
+        public string SourceTrait => SourceAffordance.SourceTrait;
 
-        public List<ICalcAffordanceBase> SubAffordances => _sourceAffordance.SubAffordances;
+        public List<ICalcAffordanceBase> SubAffordances => SourceAffordance.SubAffordances;
 
-        public string? TimeLimitName => _sourceAffordance.TimeLimitName;
-        public bool AreThereDuplicateEnergyProfiles() => _sourceAffordance.AreThereDuplicateEnergyProfiles();
+        public string? TimeLimitName => SourceAffordance.TimeLimitName;
+        public bool AreThereDuplicateEnergyProfiles() => SourceAffordance.AreThereDuplicateEnergyProfiles();
 
-        public string? AreDeviceProfilesEmpty() => _sourceAffordance.AreDeviceProfilesEmpty();
+        public string? AreDeviceProfilesEmpty() => SourceAffordance.AreDeviceProfilesEmpty();
 
-        public int Weight => _sourceAffordance.Weight;
+        public int Weight => SourceAffordance.Weight;
     }
 }

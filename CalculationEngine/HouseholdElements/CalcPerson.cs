@@ -397,7 +397,7 @@ namespace CalculationEngine.HouseholdElements
                     CurrentActivationInfo.Route!, duration, sourceAffordanceDuration);
 
                 // check if the actual affordance is available
-                var sourceAff = transportAffordance._sourceAffordance;
+                var sourceAff = transportAffordance.SourceAffordance;
                 if (sourceAff.IsBusy(time, _currentLocation, _calcPerson) != BusynessType.NotBusy)
                 {
                     // the affordance is not available, abort it
@@ -427,7 +427,7 @@ namespace CalculationEngine.HouseholdElements
             else
             {
                 // finished a remote activity
-                var affordance = (CalcAffordanceRemote)transportAffordance._sourceAffordance;
+                var affordance = (CalcAffordanceRemote)transportAffordance.SourceAffordance;
                 _isBusyForUnknownDuration = false;
                 affordance.Finish(time, Name);
 
@@ -968,7 +968,7 @@ namespace CalculationEngine.HouseholdElements
             var poi = new PointOfInterestId(0, 0);
 
             // turn the affordance into a remote affordance for this person
-            var remoteAff = CalcAffordanceRemote.CreateFromNormalAffordance(transportAffordance._sourceAffordance, poi);
+            var remoteAff = CalcAffordanceRemote.CreateFromNormalAffordance(transportAffordance.SourceAffordance, poi);
             // create a new transport decorator to avoid conflicts as persons can have different remote affordances
             return new AffordanceBaseTransportDecoratorDynamic(transportAffordance, remoteAff);
         }

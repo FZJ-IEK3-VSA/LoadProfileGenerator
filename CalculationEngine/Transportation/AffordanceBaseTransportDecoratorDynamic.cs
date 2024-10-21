@@ -34,10 +34,10 @@ namespace CalculationEngine.Transportation
             }
 
             // TODO: this condition is not sufficient with the current CalcSites and Locations in the LPG (multiple locations all in the same "Event Location" site)
-            if (personSourceLocation.CalcSite == _sourceAffordance.Site)
+            if (personSourceLocation.CalcSite == SourceAffordance.Site)
             {
                 // no transport is necessary - simply activate the source affordance
-                _sourceAffordance.Activate(startTime, activatorName, personSourceLocation, out activationInfo);
+                SourceAffordance.Activate(startTime, activatorName, personSourceLocation, out activationInfo);
                 return;
             }
 
@@ -52,21 +52,21 @@ namespace CalculationEngine.Transportation
             if (routeduration == 0)
             {
                 status = $"\tActivating {Name} at {startTime} with no transportation and moving from {personSourceLocation} to "
-                    + $"{_sourceAffordance.ParentLocation.Name} for affordance {_sourceAffordance.Name}";
+                    + $"{SourceAffordance.ParentLocation.Name} for affordance {SourceAffordance.Name}";
             }
             else
             {
                 status = $"\tActivating {Name} at {startTime} with a transportation duration of {routeduration} for moving from "
-                    + $"{personSourceLocation} to {_sourceAffordance.ParentLocation.Name}";
+                    + $"{personSourceLocation} to {SourceAffordance.ParentLocation.Name}";
             }
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
 
 
             // person has to travel to the target site with an unknown duration - cannot activate the source affordance yet
-            var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
+            var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
             // determine the travel target: the POI of the affordance if it is remote, else null (for home)
-            var destination = _sourceAffordance is CalcAffordanceRemote remoteAff ? remoteAff.PointOfInterest : null;
-            activationInfo = new RemoteAffordanceActivation(activationName, _sourceAffordance.Name, startTime, destination, route, personSourceLocation.CalcSite, this);
+            var destination = SourceAffordance is CalcAffordanceRemote remoteAff ? remoteAff.PointOfInterest : null;
+            activationInfo = new RemoteAffordanceActivation(activationName, SourceAffordance.Name, startTime, destination, route, personSourceLocation.CalcSite, this);
         }
     }
 }
