@@ -194,7 +194,7 @@ namespace CalculationEngine.Transportation
         public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] ICalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
             [NotNull] CalcPersonDto person, [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
-            if (SiteA == srcSite && dstSite == SiteB) {
+            if (srcSite.IsSameCategory(SiteA) && dstSite.IsSameCategory(SiteB)) {
                 var neededCategories = CollectNeededCalcTransportationDeviceCategory();
                 if (neededCategories.Count == 0) {
                     return true;
@@ -207,6 +207,7 @@ namespace CalculationEngine.Transportation
                     bool canUseOwnedDevice = neededCategories.Any(category => category == ownedDevice.Category);
                     if (!canUseOwnedDevice)
                     {
+                        // the person still owns a device that cannot be left at the current site, so this route is not available
                         return false;
                     }
                 }

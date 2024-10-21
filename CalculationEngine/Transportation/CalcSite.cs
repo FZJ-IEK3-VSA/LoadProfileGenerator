@@ -111,5 +111,10 @@ namespace CalculationEngine.Transportation
                 System.Guid.NewGuid().ToStrGuid(), _householdKey, carChargingLoadType, calcRepo, isBusy);
             ChargingDevices.Add(station);
         }
+
+        public bool IsSameCategory(ICalcSite other)
+        {
+            return this == other;
+        }
     }
 }

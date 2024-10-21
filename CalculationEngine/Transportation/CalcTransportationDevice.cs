@@ -27,7 +27,7 @@ namespace CalculationEngine.Transportation {
 
         private readonly double _maxChargingPower;
 
-        [NotNull] private readonly Dictionary<int, CalcSite?> _targetSiteByTimeStep = new Dictionary<int, CalcSite?>();
+        [NotNull] private readonly Dictionary<int, CalcSite?> _targetSiteByTimeStep = [];
 
         [NotNull] private TimeStep _activationStartTimestep = new TimeStep(-1, 0, false);
         [NotNull] private TimeStep _activationStopTimestep = new TimeStep(-1, 0, false);
@@ -37,7 +37,7 @@ namespace CalculationEngine.Transportation {
         private CalcChargingStation? _lastChargingStation;
 
         private string? _lastUsingPerson;
-        private readonly Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>> _keysByLocGuidAndLoadtype = new Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>>();
+        private readonly Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>> _keysByLocGuidAndLoadtype = [];
 
         [NotNull] private readonly CalcDeviceDto _calcDeviceDto;
         private readonly CalcRepo _calcRepo;

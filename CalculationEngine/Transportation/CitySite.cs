@@ -34,5 +34,7 @@ namespace CalculationEngine.Transportation
 
         public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc, CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> travelDeviceOwnerships)
             => SiteCategory.GetAllRoutesTo(dstSite, devicesAtSrc, person, travelDeviceOwnerships);
+
+        public bool IsSameCategory(ICalcSite other) => SiteCategory.IsSameCategory(other);
     }
 }
