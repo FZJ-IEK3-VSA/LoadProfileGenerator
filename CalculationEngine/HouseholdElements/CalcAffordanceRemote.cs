@@ -26,9 +26,10 @@ namespace CalculationEngine.HouseholdElements
         private Dictionary<string, TimeStep> _currentActivations = [];
 
         /// <summary>
-        /// The ID of the specific point of interest where the affordance takes place.
+        /// The specific site where the affordance takes place, including the ID of the
+        /// selcted point of interest.
         /// </summary>
-        public PointOfInterestId PointOfInterest { get; }
+        public override CitySite Site { get; }
 
         /// <summary>
         /// Creates a remote affordance from another affordance that uses a time limit. Creates a shallow copy
@@ -36,9 +37,9 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         /// <param name="affordance">the original affordance</param>
         /// <param name="poinOfInterest">the point of interest for the new remote affordance</param>
-        public CalcAffordanceRemote(CalcAffordanceWithTimeLimit affordance, PointOfInterestId poinOfInterest) : base(affordance)
+        public CalcAffordanceRemote(CalcAffordanceWithTimeLimit affordance, CitySite poinOfInterest) : base(affordance)
         {
-            PointOfInterest = poinOfInterest;
+            Site = poinOfInterest;
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="pointOfInterest">the point of interest for the new remote affordance</param>
         /// <returns>the new remote affordance</returns>
         /// <exception cref="LPGException">if the original affordance cannot be turned into a remote affordance</exception>
-        public static CalcAffordanceRemote CreateFromNormalAffordance(ICalcAffordanceBase affordance, PointOfInterestId pointOfInterest)
+        public static CalcAffordanceRemote CreateFromNormalAffordance(ICalcAffordanceBase affordance, CitySite pointOfInterest)
         {
             // check if the original affordance can be turned into a remote affordance
             if (affordance is CalcAffordanceRemote)
@@ -75,7 +76,7 @@ namespace CalculationEngine.HouseholdElements
 
             // TODO alternative approach: choose an affordance duration just like a normal affordance, and include it in RemoteAffordanceActivation as
             // 'requested stay duration', which the POI can use for stay simulation
-            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, PointOfInterest, null, personSourceLocation.CalcSite, this);
+            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, Site.PointOfInterest, null, personSourceLocation.CalcSite, this);
         }
 
         /// <summary>

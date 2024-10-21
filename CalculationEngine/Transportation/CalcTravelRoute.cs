@@ -191,7 +191,7 @@ namespace CalculationEngine.Transportation
             return totalDuration;
         }
 
-        public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] CalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
+        public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] ICalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
             [NotNull] CalcPersonDto person, [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
             if (SiteA == srcSite && dstSite == SiteB) {

@@ -176,7 +176,7 @@ namespace CalculationEngine.HouseholdElements
 
         public List<CalcDesire> Satisfactionvalues { get; }
 
-        public CalcSite? Site => ParentLocation.CalcSite;
+        public virtual ICalcSite? Site => ParentLocation.CalcSite;
 
         public string SourceTrait { get; }
 

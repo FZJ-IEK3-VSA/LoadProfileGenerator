@@ -10,7 +10,7 @@ using Common.CalcDto;
 
 namespace CalculationEngine.Transportation
 {
-    public class CalcSite : CalcBase
+    public class CalcSite : CalcBase, ICalcSite
     {
         public CalcSite(string pName, bool deviceChangeAllowed, StrGuid guid, HouseholdKey householdKey) : base(pName, guid)
         {
@@ -22,7 +22,7 @@ namespace CalculationEngine.Transportation
 
         private readonly HouseholdKey _householdKey;
 
-        public List<CalcChargingStation> ChargingDevices { get; } = new List<CalcChargingStation>();
+        public List<CalcChargingStation> ChargingDevices { get; } = [];
 
         private readonly List<CalcLocation> locations = [];
 
@@ -88,7 +88,7 @@ namespace CalculationEngine.Transportation
 
 
 
-        public List<CalcTravelRoute> GetAllRoutesTo(CalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc,
+        public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc,
              CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
             return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite, devicesAtSrc, person, deviceOwnerships)).ToList();
@@ -101,11 +101,8 @@ namespace CalculationEngine.Transportation
             return ChargingDevices.Where(x => x.DeviceCategory == category && x.CarChargingLoadType == carLoadType).ToList();
         }
 
-        public void AddChargingStation(CalcLoadType gridchargingLoadType,
-                                        CalcTransportationDeviceCategory cat,
-                                       double chargingDeviceMaxChargingPower,
-                                        CalcLoadType carChargingLoadType,
-                                       CalcRepo calcRepo, BitArray isBusy)
+        public void AddChargingStation(CalcLoadType gridchargingLoadType, CalcTransportationDeviceCategory cat,
+            double chargingDeviceMaxChargingPower, CalcLoadType carChargingLoadType, CalcRepo calcRepo, BitArray isBusy)
         {
             string name = Name + " - Charging station " + (ChargingDevices.Count + 1);
 

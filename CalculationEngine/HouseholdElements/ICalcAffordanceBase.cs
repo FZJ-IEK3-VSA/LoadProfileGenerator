@@ -69,7 +69,7 @@ namespace CalculationEngine.HouseholdElements
         bool AreThereDuplicateEnergyProfiles();
         string? AreDeviceProfilesEmpty();
 
-        CalcSite? Site { get; }
+        ICalcSite? Site { get; }
 
         BodilyActivityLevel BodilyActivityLevel { get; }
     }

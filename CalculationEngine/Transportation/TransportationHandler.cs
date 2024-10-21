@@ -58,7 +58,7 @@ namespace CalculationEngine.Transportation {
         /// <param name="affordance">the affordance for which the person wants to travel</param>
         /// <param name="calcRepo">the CalcRepo instance</param>
         /// <returns>the chosen route, or null if no available route was found</returns>
-        public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation, [NotNull] CalcSite dstSite,
+        public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation, [NotNull] ICalcSite dstSite,
                                                          [NotNull] TimeStep startTimeStep, [NotNull] CalcPersonDto person,
                                                          [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {

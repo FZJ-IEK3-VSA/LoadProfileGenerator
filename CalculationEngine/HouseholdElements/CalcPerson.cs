@@ -966,9 +966,10 @@ namespace CalculationEngine.HouseholdElements
 
             // TODO: get the POI preferences of this person
             var poi = new PointOfInterestId(0, 0);
+            var citySite = new CitySite(poi, transportAffordance.Site);
 
             // turn the affordance into a remote affordance for this person
-            var remoteAff = CalcAffordanceRemote.CreateFromNormalAffordance(transportAffordance.SourceAffordance, poi);
+            var remoteAff = CalcAffordanceRemote.CreateFromNormalAffordance(transportAffordance.SourceAffordance, citySite);
             // create a new transport decorator to avoid conflicts as persons can have different remote affordances
             return new AffordanceBaseTransportDecoratorDynamic(transportAffordance, remoteAff);
         }

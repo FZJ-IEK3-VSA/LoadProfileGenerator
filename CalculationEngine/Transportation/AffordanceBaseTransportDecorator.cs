@@ -60,7 +60,7 @@ namespace CalculationEngine.Transportation
 
         public string PrettyNameForDumping => Name + " (including transportation)";
 
-        public CalcSite Site => SourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
+        public ICalcSite Site => SourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
 
         public virtual void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
             out IAffordanceActivation activationInfo)
