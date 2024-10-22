@@ -7,42 +7,31 @@ using Common.CalcDto;
 using Common.Enums;
 using JetBrains.Annotations;
 
-namespace CalculationEngine.Transportation {
-    public class TransportationHandler {
-        [NotNull]
-        [ItemNotNull]
-        public List<CalcSite> CalcSites { get; }= new List<CalcSite>();
-        [NotNull]
-        [ItemNotNull]
-        public List<CalcTransportationDevice> VehicleDepot { get; } = new List<CalcTransportationDevice>();
-        [NotNull]
-        [ItemNotNull]
-        public List<CalcTransportationDevice> LocationUnlimitedDevices { get; } = new List<CalcTransportationDevice>();
-        [NotNull]
-        [ItemNotNull]
-        public List<CalcTravelRoute> TravelRoutes { get; }= new List<CalcTravelRoute>();
+namespace CalculationEngine.Transportation
+{
+    public class TransportationHandler
+    {
+        public List<CalcSite> CalcSites { get; } = [];
 
-        [NotNull]
-        [ItemNotNull]
-        public List<CalcTransportationDevice> AllMoveableDevices { get; } = new List<CalcTransportationDevice>();
+        public List<CalcTransportationDevice> VehicleDepot { get; } = [];
 
-        [NotNull]
-        public Dictionary<CalcSite, CalcTravelRoute> SameSiteRoutes { get; }= new Dictionary<CalcSite, CalcTravelRoute>();
-        [NotNull]
-        [ItemNotNull]
-        public List<CalcTransportationDeviceCategory> DeviceCategories { get;  } = new List<CalcTransportationDeviceCategory>();
+        public List<CalcTransportationDevice> LocationUnlimitedDevices { get; } = [];
+
+        public List<CalcTravelRoute> TravelRoutes { get; } = [];
+
+        public List<CalcTransportationDevice> AllMoveableDevices { get; } = [];
+
+        public Dictionary<CalcSite, CalcTravelRoute> SameSiteRoutes { get; } = [];
+
+        public List<CalcTransportationDeviceCategory> DeviceCategories { get; } = [];
 
         /// maps the name of each AffordanceTaggingSet to the respective CalcAffordanceTaggingSetDto object
-        [NotNull]
-        [ItemNotNull]
-        public Dictionary<string, CalcAffordanceTaggingSetDto> AffordanceTaggingSets { get; } = new Dictionary<string, CalcAffordanceTaggingSetDto>();
+        public Dictionary<string, CalcAffordanceTaggingSetDto> AffordanceTaggingSets { get; } = [];
 
         /// <summary>
         /// Stores which transportation device (e.g., cars) is currently owned by which person
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
-        public DeviceOwnershipMapping<string, CalcTransportationDevice> DeviceOwnerships { get; } = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
+        public DeviceOwnershipMapping<string, CalcTransportationDevice> DeviceOwnerships { get; } = new();
 
         /// <summary>
         /// Randomly selects a route out of all available ones, taking the respective weights into account.
@@ -59,7 +48,8 @@ namespace CalculationEngine.Transportation {
         public CalcTravelRoute? GetTravelRouteFromSrcLoc(CalcSite srcSite, CalcSite dstSite, TimeStep startTimeStep,
             CalcPersonDto person, ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
-            if (srcSite == dstSite) {
+            if (srcSite == dstSite)
+            {
                 // TODO: except for home, these should actually be selected like all other routes
                 return SameSiteRoutes[srcSite];
             }
@@ -77,7 +67,8 @@ namespace CalculationEngine.Transportation {
                 .Where(route => route.Gender == PermittedGender.All || person.Gender == PermittedGender.All || route.Gender == person.Gender)
                 .Where(route => route.MinimumAge < 0 || route.MinimumAge <= person.Age)
                 .Where(route => route.MaximumAge < 0 || route.MaximumAge >= person.Age)
-                .Where(route => {
+                .Where(route =>
+                {
                     if (route.AffordanceTaggingSetName == null || route.AffordanceTagName == null)
                     {
                         // if no AffordanceTagging information is given for a route, then it is allowed for all affordances
@@ -92,14 +83,16 @@ namespace CalculationEngine.Transportation {
                     return affordanceTaggingSet.GetAffordanceTag(affordance.Name) == route.AffordanceTagName;
                 })
                 .ToList();
-            if (allowedRoutes.Count == 0) {
+            if (allowedRoutes.Count == 0)
+            {
                 return null;
             }
 
             //check if the route is busy by calculating the duration. If busy, duration will be null
             int? dur = null;
             CalcTravelRoute? selectedRoute = null;
-            while (dur == null && allowedRoutes.Count > 0) {
+            while (dur == null && allowedRoutes.Count > 0)
+            {
                 // select a route randomly, based on the weights
                 double totalWeight = allowedRoutes.Sum(route => route.Weight);
                 double randomNumber = calcRepo.Rnd.NextDouble() * totalWeight;
@@ -117,7 +110,8 @@ namespace CalculationEngine.Transportation {
                 dur = selectedRoute.GetDuration(startTimeStep, person, AllMoveableDevices, DeviceOwnerships);
             }
 
-            if (dur == null) {
+            if (dur == null)
+            {
                 // no usable route found
                 selectedRoute = null;
             }
@@ -125,33 +119,34 @@ namespace CalculationEngine.Transportation {
             return selectedRoute;
         }
 
-        public void AddVehicleDepotDevice([NotNull] CalcTransportationDevice dev)
+        public void AddVehicleDepotDevice(CalcTransportationDevice dev)
         {
             VehicleDepot.Add(dev);
             AllMoveableDevices.Add(dev);
         }
 
-        public void AddSite([NotNull] CalcSite srcSite)
+        public void AddSite(CalcSite srcSite)
         {
             CalcSites.Add(srcSite);
         }
 
-        [NotNull]
-        public CalcTransportationDeviceCategory GetCategory([NotNull] CalcTransportationDeviceCategoryDto catDto)
+        public CalcTransportationDeviceCategory GetCategory(CalcTransportationDeviceCategoryDto catDto)
         {
-            if (DeviceCategories.Any(x => x.Guid == catDto.Guid)) {
+            if (DeviceCategories.Any(x => x.Guid == catDto.Guid))
+            {
                 return DeviceCategories.Single(x => x.Guid == catDto.Guid);
             }
-            CalcTransportationDeviceCategory ct = new CalcTransportationDeviceCategory(catDto.Name,catDto.IsLimitedToSingleLocation,catDto.Guid);
+            CalcTransportationDeviceCategory ct = new CalcTransportationDeviceCategory(catDto.Name, catDto.IsLimitedToSingleLocation, catDto.Guid);
             DeviceCategories.Add(ct);
             return ct;
         }
 
         public void AddAffordanceTaggingSets(List<CalcAffordanceTaggingSetDto> affordanceTaggingSets)
         {
-            foreach (var set in affordanceTaggingSets) { 
+            foreach (var set in affordanceTaggingSets)
+            {
                 AffordanceTaggingSets.Add(set.Name, set);
             }
         }
-  }
+    }
 }
