@@ -194,6 +194,13 @@ namespace CalculationEngine.Transportation
             if (srcSite is null)
                 throw new LPGException("When transport is enabled, the site must never be null.");
 
+            // check if the person is already at the correct site
+            if (srcSite == SourceAffordance.Site)
+            {
+                // no transport is necessary - simply check the source affordance for immediate activation
+                return SourceAffordance.IsBusy(time, srcSite, calcPerson, clearDictionaries);
+            }
+
             // if the last IsBusy call was not for the same person and time, reset the saved route
             if (!_myLastTimeEntry.IsApplicable(calcPerson.Name, time))
             {
@@ -234,8 +241,7 @@ namespace CalculationEngine.Transportation
                 // if the end of the travel is after the simulation, everything is ok.
                 return BusynessType.NotBusy;
             }
-            var result = SourceAffordance.IsBusy(dstStartTime, srcSite, calcPerson,
-                clearDictionaries);
+            var result = SourceAffordance.IsBusy(dstStartTime, srcSite, calcPerson, clearDictionaries);
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 time,
                 _householdkey, "\t\t" + time + " @" + srcSite + " by " + calcPerson.Name
