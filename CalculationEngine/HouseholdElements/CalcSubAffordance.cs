@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
@@ -65,7 +66,7 @@ namespace CalculationEngine.HouseholdElements
 
         public readonly CalcAffordance ParentAffordance;
 
-        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile)
+        public override void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile)
         {
             var endTime = startTime.AddSteps(personProfileDuration);
             ExecuteVariableOperations(startTime, endTime, endTime);
@@ -73,7 +74,7 @@ namespace CalculationEngine.HouseholdElements
             personTimeProfile = new CalcSubAffTimeProfile(personProfileDuration, personProfileDuration + " timesteps Person profile");
         }
 
-        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation) => throw new NotImplementedException();
+        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite) => throw new NotImplementedException();
 
         public override bool AreThereDuplicateEnergyProfiles() => false;
 

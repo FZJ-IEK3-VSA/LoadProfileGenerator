@@ -69,14 +69,14 @@ namespace CalculationEngine.HouseholdElements
             return new CalcAffordanceRemote(timelimitAff, pointOfInterest);
         }
 
-        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile)
+        public override void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile)
         {
             // execute only variable operations that occur in the beginning
             ExecuteVariableOperations(startTime, startTime, startTime, [VariableExecutionTime.Beginning]);
 
             // TODO alternative approach: choose an affordance duration just like a normal affordance, and include it in RemoteAffordanceActivation as
             // 'requested stay duration', which the POI can use for stay simulation
-            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, Site.PointOfInterest, null, personSourceLocation.CalcSite, this);
+            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, Site.PointOfInterest, null, personSourceSite, this);
         }
 
         /// <summary>
@@ -99,9 +99,9 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         /// <param name="time">current timestep</param>
         /// <param name="onlyInterrupting">whether only interrupting subaffordances should be collected</param>
-        /// <param name="srcLocation">the current location of the person</param>
+        /// <param name="srcSite">the current site of the person</param>
         /// <returns>a list of available subaffordances</returns>
-        public override IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation)
+        public override IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite)
         {
             if (SubAffordances.Count == 0)
             {
@@ -120,7 +120,7 @@ namespace CalculationEngine.HouseholdElements
             {
                 if (!onlyInterrupting || subAffordance.IsInterrupting)
                 {
-                    if (IsSubaffordanceAvailable(time, srcLocation, subAffordance.GetAsSubAffordance()))
+                    if (IsSubaffordanceAvailable(time, srcSite, subAffordance.GetAsSubAffordance()))
                     {
                         availableSubAffs.Add(subAffordance);
                     }
@@ -133,10 +133,10 @@ namespace CalculationEngine.HouseholdElements
         /// Checks if there is a current activation of the affordance that offers the specified subaffordance.
         /// </summary>
         /// <param name="time">the timestep for which to check if the subaffordance is available</param>
-        /// <param name="srcLocation">the location of the affordance</param>
+        /// <param name="srcSite">the site of the affordance</param>
         /// <param name="subAffordance">the subaffordance to check</param>
         /// <returns>whether the subaffordance is currently available</returns>
-        private bool IsSubaffordanceAvailable(TimeStep time, CalcLocation srcLocation, CalcSubAffordance subAffordance)
+        private bool IsSubaffordanceAvailable(TimeStep time, ICalcSite? srcSite, CalcSubAffordance subAffordance)
         {
             // check all current activations if one of them offers the subaffordance now
             foreach (var kvPair in _currentActivations)
@@ -149,7 +149,7 @@ namespace CalculationEngine.HouseholdElements
                 var isBufferTimePassed = personStartTime + subAffordance.Delaytimesteps + SubAffordanceStartFrame <= time.InternalStep;
                 // check if the subaffordance could be activated right now
                 var person = new CalcPersonDto("name", null, -1, PermittedGender.All, null, null, null, -1, null, null);
-                var isSubAffordanceBusy = subAffordance.IsBusy(time, srcLocation, person);
+                var isSubAffordanceBusy = subAffordance.IsBusy(time, srcSite, person);
                 if (isDelayTimePassed && !isBufferTimePassed && isSubAffordanceBusy == BusynessType.NotBusy)
                 {
                     // TODO: Subaffordance needs to be a RemoteAffordance with variable duration too

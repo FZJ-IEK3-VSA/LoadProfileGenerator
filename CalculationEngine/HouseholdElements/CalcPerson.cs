@@ -100,6 +100,17 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         private PointOfInterestId? _currentPOI;
 
+        /// <summary>
+        /// The site where the person currently is. May be one of the predefined CalcSites, or, with
+        /// dynamic city simulation, a CitySite corresponding to a specific point of interest.
+        /// Will always be null if transport is disabled, and must never be null if transport is enabled.
+        /// </summary>
+        private ICalcSite? _currentSite;
+
+        /// <summary>
+        /// The location of the currently active affordance. During transport, this is already the location
+        /// of the target affordance.
+        /// </summary>
         private CalcLocation _currentLocation { get; set; }
 
         /// <summary>
@@ -138,6 +149,7 @@ namespace CalculationEngine.HouseholdElements
             IsSick = isSick;
             IsOnVacation = isOnVacation;
             _currentLocation = startingLocation;
+            // remark: _currentSite cannot be initialized here, because startingLocation.Site is not assigned yet
             _vacationAffordanceGuid = System.Guid.NewGuid().ToStrGuid();
         }
 
@@ -398,7 +410,7 @@ namespace CalculationEngine.HouseholdElements
 
                 // check if the actual affordance is available
                 var sourceAff = transportAffordance.SourceAffordance;
-                if (sourceAff.IsBusy(time, _currentLocation, _calcPerson) != BusynessType.NotBusy)
+                if (sourceAff.IsBusy(time, _currentSite, _calcPerson) != BusynessType.NotBusy)
                 {
                     // the affordance is not available, abort it
                     if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
@@ -411,7 +423,7 @@ namespace CalculationEngine.HouseholdElements
                 }
 
                 // activate the actual affordance
-                sourceAff.Activate(time, Name, _currentLocation, out var sourceActivation);
+                sourceAff.Activate(time, Name, _currentSite, out var sourceActivation);
                 if (sourceActivation is CalcProfile personProfile)
                 {
                     // the actual activity is not remote and has a predetermined duration
@@ -720,8 +732,9 @@ namespace CalculationEngine.HouseholdElements
             PersonDesires.ApplyAffordanceEffect(bestaff.Satisfactionvalues, bestaff.RandomEffect, bestaff.Name);
 
             // activate the affordance and switch to its location
-            bestaff.Activate(currentTimeStep, Name, _currentLocation, out var activationInfo);
+            bestaff.Activate(currentTimeStep, Name, _currentSite, out var activationInfo);
             _currentLocation = bestaff.ParentLocation;
+            _currentSite = bestaff.Site;
 
             // set this flag if the person is starting an affordance or travel with yet undetermined duration
             _isBusyForUnknownDuration = !activationInfo.IsDetermined;
@@ -769,7 +782,7 @@ namespace CalculationEngine.HouseholdElements
         public void LogPersonStatus([JetBrains.Annotations.NotNull] TimeStep timestep)
         {
             var ps = new PersonStatus(_calcPerson.HouseholdKey, _calcPerson.Name,
-                _calcPerson.Guid, _currentLocation.Name, _currentLocation.Guid, _currentLocation.CalcSite?.Name,
+                _calcPerson.Guid, _currentLocation.Name, _currentLocation.Guid, _currentSite?.Name,
                 _currentLocation.CalcSite?.Guid, _currentAffordance?.Name, _currentAffordance?.Guid, timestep);
             _calcRepo.OnlineLoggingData.AddPersonStatus(ps);
         }
@@ -803,7 +816,7 @@ namespace CalculationEngine.HouseholdElements
                 {
                     // idle mode is enabled - select idle affordance
                     var idleaff = _currentLocation.IdleAffs[this];
-                    idleaff.IsBusy(time, _currentLocation, _calcPerson);
+                    idleaff.IsBusy(time, _currentSite, _calcPerson);
                     return idleaff;
                 }
 
@@ -957,7 +970,7 @@ namespace CalculationEngine.HouseholdElements
                 throw new LPGException("Tried to replace an affordance without a dynamic transport decorator.");
             }
 
-            var site = transportAffordance.ParentLocation.CalcSite;
+            var site = transportAffordance.Site;
             if (site?.Name == NameOfHomeCalcSite)
             {
                 // affordance takes place at home - no remote affordance
@@ -966,7 +979,7 @@ namespace CalculationEngine.HouseholdElements
 
             // TODO: get the POI preferences of this person
             var poi = new PointOfInterestId(0, 0);
-            var citySite = new CitySite(poi, transportAffordance.Site);
+            var citySite = new CitySite(poi, transportAffordance.Site.SiteCategory);
 
             // turn the affordance into a remote affordance for this person
             var remoteAff = CalcAffordanceRemote.CreateFromNormalAffordance(transportAffordance.SourceAffordance, citySite);
@@ -980,10 +993,12 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="locs">the list of locations</param>
         private void Init(List<CalcLocation> locs)
         {
-            if (_currentLocation.CalcSite?.Name != NameOfHomeCalcSite && AffordanceBaseTransportDecorator.DynamicCitySimulation)
+            // get the initial site from the location
+            _currentSite = _currentLocation.CalcSite;
+            if (AffordanceBaseTransportDecorator.DynamicCitySimulation && _currentSite?.Name != NameOfHomeCalcSite)
             {
                 // TODO: correctly initialize currentPOI
-                throw new NotImplementedException("Starting at another site than 'Home' is not yet implemented.");
+                throw new NotImplementedException("Starting at a site other than 'Home' is not yet implemented for the city simulation.");
             }
             InitAffordanceLists(locs, _sicknessPotentialAffs, true);
             InitAffordanceLists(locs, _normalPotentialAffs, false);
@@ -1069,7 +1084,7 @@ namespace CalculationEngine.HouseholdElements
             foreach (var calcAffordanceBase in srcList)
             {
                 if (NewIsAvailableAffordance(timeStep, calcAffordanceBase, errors, getOnlyRelevantDesires,
-                    _currentLocation.CalcSite, ignorePreviousAffordances))
+                    ignorePreviousAffordances))
                 {
                     resultingAff.Add(calcAffordanceBase);
                 }
@@ -1088,11 +1103,11 @@ namespace CalculationEngine.HouseholdElements
 
             foreach (var affordance in subSrcList)
             {
-                var spezsubaffs = affordance.CollectSubAffordances(timeStep, getOnlyInterrupting, _currentLocation);
+                var spezsubaffs = affordance.CollectSubAffordances(timeStep, getOnlyInterrupting, _currentSite);
                 foreach (var spezsubaff in spezsubaffs)
                 {
                     if (NewIsAvailableAffordance(timeStep, spezsubaff, errors,
-                        getOnlyRelevantDesires, _currentLocation.CalcSite, ignorePreviousAffordances))
+                        getOnlyRelevantDesires, ignorePreviousAffordances))
                     {
                         resultingAff.Add(spezsubaff);
                     }
@@ -1116,7 +1131,7 @@ namespace CalculationEngine.HouseholdElements
         private bool NewIsAvailableAffordance([JetBrains.Annotations.NotNull] TimeStep timeStep,
                                               [JetBrains.Annotations.NotNull] ICalcAffordanceBase aff,
                                               AffordanceStatusClass? errors, bool checkForRelevance,
-                                              CalcSite? srcSite, bool ignorePreviousAffordances)
+                                              bool ignorePreviousAffordances)
         {
             Debug.Assert(_calcRepo.CalcParameters.TransportationEnabled == (aff is AffordanceBaseTransportDecorator), "Affordance does not match transport setting");
 
@@ -1130,7 +1145,7 @@ namespace CalculationEngine.HouseholdElements
                 return false;
             }
 
-            var busynessResult = aff.IsBusy(timeStep, _currentLocation, _calcPerson);
+            var busynessResult = aff.IsBusy(timeStep, _currentSite, _calcPerson);
             if (busynessResult != BusynessType.NotBusy)
             {
                 if (errors != null)

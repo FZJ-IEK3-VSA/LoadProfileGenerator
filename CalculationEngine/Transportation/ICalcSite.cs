@@ -12,6 +12,8 @@ namespace CalculationEngine.Transportation
 
         bool DeviceChangeAllowed { get; }
 
+        CalcSite SiteCategory { get; }
+
         IReadOnlyCollection<CalcLocation> Locations { get; }
 
         List<CalcChargingStation> ChargingDevices { get; }

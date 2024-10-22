@@ -21,8 +21,6 @@ namespace CalculationEngine.Transportation {
         [NotNull]
         [ItemNotNull]
         public List<CalcTravelRoute> TravelRoutes { get; }= new List<CalcTravelRoute>();
-        [NotNull]
-        private Dictionary<CalcLocation, CalcSite> LocationSiteLookup { get; } = new Dictionary<CalcLocation, CalcSite>();
 
         [NotNull]
         [ItemNotNull]
@@ -51,19 +49,18 @@ namespace CalculationEngine.Transportation {
         /// Depending on the selected TravelRouteSet, routes can be filtered based on the person or 
         /// the target affordance.
         /// </summary>
-        /// <param name="srcLocation">source location for the route (only the site is relevant)</param>
+        /// <param name="srcSite">source site for the route</param>
         /// <param name="dstSite">destination site for the route</param>
         /// <param name="startTimeStep">time step in which to start the trip</param>
         /// <param name="person">the traveling person</param>
         /// <param name="affordance">the affordance for which the person wants to travel</param>
         /// <param name="calcRepo">the CalcRepo instance</param>
         /// <returns>the chosen route, or null if no available route was found</returns>
-        public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation, [NotNull] ICalcSite dstSite,
-                                                         [NotNull] TimeStep startTimeStep, [NotNull] CalcPersonDto person,
-                                                         [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
+        public CalcTravelRoute? GetTravelRouteFromSrcLoc(CalcSite srcSite, CalcSite dstSite, TimeStep startTimeStep,
+            CalcPersonDto person, ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
-            CalcSite srcSite = LocationSiteLookup[srcLocation];
             if (srcSite == dstSite) {
+                // TODO: except for home, these should actually be selected like all other routes
                 return SameSiteRoutes[srcSite];
             }
             if (srcSite.DeviceChangeAllowed)
@@ -137,9 +134,6 @@ namespace CalculationEngine.Transportation {
         public void AddSite([NotNull] CalcSite srcSite)
         {
             CalcSites.Add(srcSite);
-            foreach (CalcLocation location in srcSite.Locations) {
-                LocationSiteLookup.Add(location,srcSite);
-            }
         }
 
         [NotNull]

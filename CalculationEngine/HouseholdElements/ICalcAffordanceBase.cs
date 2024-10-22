@@ -43,15 +43,11 @@ namespace CalculationEngine.HouseholdElements
         int Weight { get; }
         StrGuid Guid { get; }
 
-        void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName,
-                      [NotNull] CalcLocation personSourceLocation, [NotNull] out IAffordanceActivation personTimeProfile);
+        void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile);
         
-        BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true);
+        BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson, bool clearDictionaries = true);
 
-        [NotNull]
-        [ItemNotNull]
-        IEnumerable<ICalcAffordanceBase> CollectSubAffordances([NotNull] TimeStep time,  bool onlyInterrupting,
-            [NotNull] CalcLocation srcLocation);
+        IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time,  bool onlyInterrupting, ICalcSite? srcSite);
 
         CalcSubAffordance GetAsSubAffordance();
 

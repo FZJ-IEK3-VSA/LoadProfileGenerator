@@ -287,23 +287,22 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         /// <param name="startTime">the start time step the affordance is executed in</param>
         /// <param name="activatorName">the person carrying out the affordance</param>
-        /// <param name="personSourceLocation">current location of the activating person</param>
+        /// <param name="personSourceSite">current site of the activating person</param>
         /// <param name="personTimeProfile">the resulting person profile for the activator</param>
-        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public abstract void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile);
+        public abstract void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile);
 
-        public abstract IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation);
+        public abstract IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite);
 
         /// <summary>
         /// Determines whether the affordance can be executed with the given parameters.
         /// </summary>
         /// <param name="time">time step when the affordance shall be executed</param>
-        /// <param name="srcLocation">current location of the person</param>
+        /// <param name="srcSite">current site of the person</param>
         /// <param name="calcPerson">the person to execute the affordance</param>
         /// <param name="clearDictionaries">whether probability and time factor dictionaries shall be cleared</param>
         /// <returns></returns>
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public virtual BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
+        public virtual BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson, bool clearDictionaries = true)
         {
             if (!AreVariableRequirementsMet())
             {

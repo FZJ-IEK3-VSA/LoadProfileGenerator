@@ -51,7 +51,7 @@ namespace CalculationEngine.HouseholdElements
             IsBusyArray = original.IsBusyArray;
         }
 
-        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
+        public override BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson, bool clearDictionaries = true)
         {
             if (time.InternalStep >= IsBusyArray.Length)
             {
@@ -64,7 +64,7 @@ namespace CalculationEngine.HouseholdElements
                 return BusynessType.Occupied;
             }
 
-            return base.IsBusy(time, srcLocation, calcPerson, clearDictionaries);
+            return base.IsBusy(time, srcSite, calcPerson, clearDictionaries);
         }
     }
 }

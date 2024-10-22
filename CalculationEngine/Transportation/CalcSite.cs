@@ -31,6 +31,11 @@ namespace CalculationEngine.Transportation
         private List<CalcTravelRoute> MyRoutes { get; } = [];
 
         /// <summary>
+        /// A CalcSite object already represents a site category
+        /// </summary>
+        public CalcSite SiteCategory => this;
+
+        /// <summary>
         /// Adds a new location to the list of locations, and sets the CalcSite property of the location to this site.
         /// </summary>
         /// <param name="location">the location to add</param>

@@ -25,25 +25,24 @@ namespace CalculationEngine.Transportation
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(new TimeStep(0, 0, false), _householdkey, message));
         }
 
-        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
+        public override void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite,
             out IAffordanceActivation activationInfo)
         {
-            if (_myLastTimeEntry.TimeOfLastEvalulation != startTime)
+            if (!_myLastTimeEntry.IsApplicable(activatorName, startTime) || _myLastTimeEntry.PreviouslySelectedRoute is null)
             {
                 throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
             }
 
-            // TODO: this condition is not sufficient with the current CalcSites and Locations in the LPG (multiple locations all in the same "Event Location" site)
-            if (personSourceLocation.CalcSite == SourceAffordance.Site)
+            // check if the person is already at the correct site
+            if (personSourceSite == SourceAffordance.Site)
             {
                 // no transport is necessary - simply activate the source affordance
-                SourceAffordance.Activate(startTime, activatorName, personSourceLocation, out activationInfo);
+                SourceAffordance.Activate(startTime, activatorName, personSourceSite, out activationInfo);
                 return;
             }
 
-
             // get the route which was already determined in IsBusy and activate it
-            CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoutes[personSourceLocation];
+            CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoute;
             int routeduration = route.Activate(startTime, activatorName, out var usedDeviceEvents, _transportationHandler.DeviceOwnerships);
             // TODO: probably with full transport simulation, the route will not be activated here, but step by step in CalcPerson
 
@@ -51,13 +50,13 @@ namespace CalculationEngine.Transportation
             string status;
             if (routeduration == 0)
             {
-                status = $"\tActivating {Name} at {startTime} with no transportation and moving from {personSourceLocation} to "
-                    + $"{SourceAffordance.ParentLocation.Name} for affordance {SourceAffordance.Name}";
+                status = $"\tActivating {Name} at {startTime} with no transportation and moving from {personSourceSite} to "
+                    + $"{Site.Name} for affordance {SourceAffordance.Name}";
             }
             else
             {
                 status = $"\tActivating {Name} at {startTime} with a transportation duration of {routeduration} for moving from "
-                    + $"{personSourceLocation} to {SourceAffordance.ParentLocation.Name}";
+                    + $"{personSourceSite} to {Site.Name}";
             }
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
 
@@ -66,7 +65,7 @@ namespace CalculationEngine.Transportation
             var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
             // determine the travel target: the POI of the affordance if it is remote, else null (for home)
             var destination = SourceAffordance is CalcAffordanceRemote remoteAff ? remoteAff.Site.PointOfInterest : null;
-            activationInfo = new RemoteAffordanceActivation(activationName, SourceAffordance.Name, startTime, destination, route, personSourceLocation.CalcSite, this);
+            activationInfo = new RemoteAffordanceActivation(activationName, SourceAffordance.Name, startTime, destination, route, personSourceSite, this);
         }
     }
 }

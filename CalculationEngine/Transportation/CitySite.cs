@@ -1,7 +1,9 @@
 ﻿using CalculationEngine.CitySimulation;
 using CalculationEngine.HouseholdElements;
 using Common.CalcDto;
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace CalculationEngine.Transportation
 {
@@ -11,13 +13,13 @@ namespace CalculationEngine.Transportation
     /// </summary>
     /// <param name="pointOfInterest">ID of the point of interest this site refers to</param>
     /// <param name="siteCategory">the shared CalcSite object defining the site category of this CitySite object</param>
-    public class CitySite(PointOfInterestId? pointOfInterest, ICalcSite siteCategory) : ICalcSite
+    public class CitySite(PointOfInterestId? pointOfInterest, CalcSite siteCategory) : ICalcSite, IEquatable<CitySite>
     {
         public PointOfInterestId? PointOfInterest { get; } = pointOfInterest;
 
-        public ICalcSite SiteCategory { get; } = siteCategory;
+        public CalcSite SiteCategory { get; } = siteCategory;
 
-        public string Name => SiteCategory.Name;
+        public string Name => SiteCategory.Name + $" (POI {PointOfInterest})";
 
         public bool DeviceChangeAllowed => SiteCategory.DeviceChangeAllowed;
 

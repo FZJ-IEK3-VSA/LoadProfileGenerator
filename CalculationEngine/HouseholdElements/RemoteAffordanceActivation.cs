@@ -15,7 +15,7 @@ namespace CalculationEngine.HouseholdElements
     /// <param name="route">the route to the destination site</param>
     /// <param name="sourceSite">the site from which the person set off when activating the affordance</param>
     public class RemoteAffordanceActivation(string name, string dataSource, TimeStep start, PointOfInterestId? destination,
-        CalcTravelRoute? route, CalcSite? sourceSite, ICalcAffordanceBase affordance,
+        CalcTravelRoute? route, ICalcSite? sourceSite, ICalcAffordanceBase affordance,
         List<CalcTravelDeviceUseEvent>? travelDeviceUseEvents = null) : IAffordanceActivation
     {
         public bool IsDetermined => false;
@@ -43,7 +43,7 @@ namespace CalculationEngine.HouseholdElements
         /// <summary>
         /// The site the activating person was at before the affordance
         /// </summary>
-        public CalcSite? SourceSite { get; } = sourceSite;
+        public ICalcSite? SourceSite { get; } = sourceSite;
 
         public ICalcAffordanceBase Affordance { get; } = affordance;
 
