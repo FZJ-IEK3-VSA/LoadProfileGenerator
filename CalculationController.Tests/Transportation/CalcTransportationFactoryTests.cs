@@ -323,8 +323,8 @@ namespace CalculationController.Tests.Transportation {
                         var dst = chh.TransportationHandler.CalcSites[1].Locations.ElementAt(0);
                         var ts = new TimeStep(1, parameters);
                         var person = new CalcPersonDto("personname", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-                        dst.Affordances[0].IsBusy(ts, src, person, false);
-                        dst.Affordances[0].Activate(ts, person.Name, src, out var personTimeProfile);
+                        dst.Affordances[0].IsBusy(ts, src.CalcSite, person, false);
+                        dst.Affordances[0].Activate(ts, person.Name, src.CalcSite, out var personTimeProfile);
                         fft.Dispose();
                     }
 

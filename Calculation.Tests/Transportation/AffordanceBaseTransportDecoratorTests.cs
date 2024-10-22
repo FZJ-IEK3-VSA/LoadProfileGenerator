@@ -42,15 +42,15 @@ namespace Calculation.Tests.Transportation
                     var affs = dstloc.Affordances.ToList();
                     var aff = affs[0];
                     var person = new CalcPersonDto("activator", null, 30, PermittedGender.All, null, null, null, -1, null, null);
-                    var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite,
+                    var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc.CalcSite, dstSite,
                         ts, person, sourceAff, calcRepo);
                     Assert.NotNull(travelroute);
                     // find if busy
-                    var isbusy = abt.IsBusy(ts, srcloc, person, false);
+                    var isbusy = abt.IsBusy(ts, srcloc.CalcSite, person, false);
                     isbusy.Should().Be(BusynessType.NotBusy);
 
                     Logger.Info("Activating affordance for time 0");
-                    aff.Activate(ts, person.Name, srcloc, out _);
+                    aff.Activate(ts, person.Name, srcloc.CalcSite, out _);
                 }
                 //should throw exception the second time.
                 Logger.Info("Activating affordance again for time 0");
@@ -80,17 +80,17 @@ namespace Calculation.Tests.Transportation
                     var aff = affs[0];
                     var person = new CalcPersonDto("activator", null, 30, PermittedGender.All, null, null, null, -1, null, null);
 
-                    var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc,
+                    var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc.CalcSite,
                         dstSite, ts, person, sourceAff, calcRepo);
                     Assert.NotNull(travelroute);
                     // find if busy
-                    var isbusy = abt.IsBusy(ts, srcloc, person, false);
+                    var isbusy = abt.IsBusy(ts, srcloc.CalcSite, person, false);
                     isbusy.Should().Be(BusynessType.NotBusy);
 
                     Logger.Info("Activating affordance for time 0");
                     var ownerships = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
                     travelroute.GetDuration(ts, person, new List<CalcTransportationDevice>(), ownerships);
-                    aff.Activate(ts, "activator", srcloc, out var _);
+                    aff.Activate(ts, "activator", srcloc.CalcSite, out var _);
                 }
                 //should throw exception the second time.
                 Logger.Info("Activating affordance again for time 0");
@@ -117,7 +117,7 @@ namespace Calculation.Tests.Transportation
                     var aff = affs[0];
                     var person = new CalcPersonDto("activator", null, 30, PermittedGender.All, null, null, null, -1, null, null);
 
-                    var route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, sourceAff, calcRepo);
+                    var route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc.CalcSite, dstSite, ts, person, sourceAff, calcRepo);
                     Assert.Equal("myRoute2", route.Name); // due to affordance tag
 
 
@@ -127,23 +127,23 @@ namespace Calculation.Tests.Transportation
                         new List<DeviceEnergyProfileTuple>(), new BitArray(0, false), BodilyActivityLevel.Low, calcRepo, null);
 
                     person = new CalcPersonDto("activator", null, 30, PermittedGender.Female, null, null, null, -1, null, null);
-                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc.CalcSite, dstSite, ts, person, untaggedAff, calcRepo);
                     Assert.Equal("myRoute2", route.Name); // due to gender
 
                     person = new CalcPersonDto("activator", null, 10, PermittedGender.All, null, null, null, -1, null, null);
-                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc.CalcSite, dstSite, ts, person, untaggedAff, calcRepo);
                     Assert.Equal("myRoute1", route.Name); // due to minimum age
 
                     person = new CalcPersonDto("activator", null, 100, PermittedGender.All, null, null, null, -1, null, null);
-                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc.CalcSite, dstSite, ts, person, untaggedAff, calcRepo);
                     Assert.Equal("myRoute2", route.Name); // due to maximum age
 
                     person = new CalcPersonDto("activator", null, 15, PermittedGender.Female, null, null, null, -1, null, null);
-                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc.CalcSite, dstSite, ts, person, untaggedAff, calcRepo);
                     Assert.Null(route); // due to wrong person ID
                     int allowedPersonID = 12345678;
                     person = new CalcPersonDto("activator", null, 15, PermittedGender.Female, null, null, null, allowedPersonID, null, null);
-                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc.CalcSite, dstSite, ts, person, untaggedAff, calcRepo);
                     Assert.Equal("myRoute3", route.Name); // correct person ID
                 }
                 wd.CleanUp();
