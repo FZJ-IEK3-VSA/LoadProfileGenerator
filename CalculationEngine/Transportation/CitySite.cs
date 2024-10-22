@@ -38,5 +38,30 @@ namespace CalculationEngine.Transportation
             => SiteCategory.GetAllRoutesTo(dstSite, devicesAtSrc, person, travelDeviceOwnerships);
 
         public bool IsSameCategory(ICalcSite other) => SiteCategory.IsSameCategory(other);
+
+        public bool Equals(CitySite? other)
+        {
+            if (other is null)
+                return false;
+            return PointOfInterest == other.PointOfInterest && SiteCategory == other.SiteCategory;
+        }
+
+        public override bool Equals(object? obj) => Equals(obj as CitySite);
+
+        public static bool operator ==(CitySite? lhs, CitySite? rhs)
+        {
+            if (ReferenceEquals(lhs, rhs))
+                return true;
+            if (lhs is null || rhs is null)
+                return false;
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(CitySite? lhs, CitySite? rhs) => !(lhs == rhs);
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
