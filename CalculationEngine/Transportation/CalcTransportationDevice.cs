@@ -35,7 +35,7 @@ namespace CalculationEngine.Transportation
         private TimeStep _activationStartTimestep = new(-1, 0, false);
         private TimeStep _activationStopTimestep = new(-1, 0, false);
         private double _availableRangeInMeters;
-        private CalcSite? _currentSite;
+        private ICalcSite? _currentSite;
 
         private CalcChargingStation? _lastChargingStation;
 
@@ -131,6 +131,7 @@ namespace CalculationEngine.Transportation
                 throw new LPGException("Trying to activate a device that is not at the source location");
             }
 
+            // mark start and end time steps of traveling with this device
             _lastUsingPerson = personName;
             _activationStartTimestep = startTimeStep;
             _activationStopTimestep = startTimeStep.AddSteps(durationInTimesteps);
@@ -140,6 +141,7 @@ namespace CalculationEngine.Transportation
                 _targetSiteByTimeStep.Add(_activationStopTimestep.InternalStep, dstSite);
             }
 
+            // mark the device as busy for the duration of this usage
             for (int i = transportationEventStartTimeStep.InternalStep;
                 i < transportationEventEndTimeStep.InternalStep && i < _isBusyArray.Length;
                 i++)
@@ -147,6 +149,7 @@ namespace CalculationEngine.Transportation
                 _isBusyArray[i] = true;
             }
 
+            // create load profiles for all load types
             foreach (CalcDeviceLoad load in _loads)
             {
                 var transportationDeviceProfile = new List<double>(durationInTimesteps);
@@ -182,12 +185,13 @@ namespace CalculationEngine.Transportation
         {
             AdjustCurrentsiteByTimestep(currentTimeStep);
             LastChargingPower = 0;
-            // first the undefined state
+            
             // geräte, die nicht geladen werden müssen, haben eine negative range.
             // geräte im vehicle depot / in transit müssen nicht geladen werden.
 
             if (_fullRangeInMeters < 0)
             {
+                // devices does not need to be charged
                 DisconnectCar();
                 _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.Undefined,
@@ -196,9 +200,9 @@ namespace CalculationEngine.Transportation
                 return;
             }
 
-            //currently driving
             if (currentTimeStep >= _activationStartTimestep && currentTimeStep < _activationStopTimestep)
             {
+                // device is currently driving
                 DisconnectCar();
 
                 if (_currentSite != null)
@@ -206,6 +210,7 @@ namespace CalculationEngine.Transportation
                     throw new LPGException("transportation device was assigned to a site, even though it is driving");
                 }
 
+                // calculate and log the distance driven in this timestep
                 double distancePerTimestep = AverageSpeedInMPerS *
                                              _calcRepo.CalcParameters.InternalStepsize.TotalSeconds;
                 _availableRangeInMeters -= distancePerTimestep;
@@ -221,9 +226,9 @@ namespace CalculationEngine.Transportation
                 return;
             }
 
-            //car is fully charged
             if (_availableRangeInMeters >= _fullRangeInMeters)
             {
+                // car is fully charged
                 _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndFullyCharged,
                     CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
@@ -236,7 +241,7 @@ namespace CalculationEngine.Transportation
 
             if (_currentSite != null)
             {
-                //needs charging && is at charging station
+                // needs charging && is at charging station
                 var chargingStations =
                     _currentSite.ChargingDevices.Where(x =>
                         x.CarChargingLoadType == _chargingCalcLoadType1 &&
@@ -330,16 +335,23 @@ namespace CalculationEngine.Transportation
             return false;
         }
 
+        /// <summary>
+        /// If necessary updates the site of a device during when it is used.
+        /// </summary>
+        /// <param name="timestep">the current timestep</param>
+        /// <exception cref="LPGException">if a site change was missed</exception>
         private void AdjustCurrentsiteByTimestep(TimeStep timestep)
         {
             if (Category.IsLimitedToSingleLocation)
             {
-                if (_targetSiteByTimeStep.ContainsKey(timestep.InternalStep))
+                if (_targetSiteByTimeStep.TryGetValue(timestep.InternalStep, out CalcSite? value))
                 {
-                    _currentSite = _targetSiteByTimeStep[timestep.InternalStep];
+                    // update to the new site and remove the update entry
+                    _currentSite = value;
                     _targetSiteByTimeStep.Remove(timestep.InternalStep);
                 }
 
+                // double-check if no site updates were missed
                 foreach (var ts in _targetSiteByTimeStep.Keys)
                 {
                     if (ts < timestep.InternalStep)
@@ -350,6 +362,10 @@ namespace CalculationEngine.Transportation
             }
         }
 
+        /// <summary>
+        /// Connect to a new charging station.
+        /// </summary>
+        /// <param name="station">the new station to connect to</param>
         private void ConnectCar(CalcChargingStation station)
         {
             if (_lastChargingStation != null)
@@ -361,6 +377,9 @@ namespace CalculationEngine.Transportation
             _lastChargingStation.SetConnectedCar(this);
         }
 
+        /// <summary>
+        /// Disconnect from the current charging station.
+        /// </summary>
         private void DisconnectCar()
         {
             _lastChargingStation?.DisconnectCar();
@@ -406,8 +425,8 @@ namespace CalculationEngine.Transportation
 
             if (cdl == null)
             {
-                throw new LPGException("It was tried to activate the loadtype " + loadType.Name +
-                                       " even though that one is not set for the device " + Name);
+                throw new LPGException($"It was tried to activate the loadtype {loadType.Name} even though that " +
+                                       $"one is not set for the device {Name}");
             }
 
             if (_calcRepo.Odap == null)
