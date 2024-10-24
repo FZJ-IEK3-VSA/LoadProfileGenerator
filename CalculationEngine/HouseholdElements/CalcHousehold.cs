@@ -413,12 +413,9 @@ namespace CalculationEngine.HouseholdElements {
             // simulate one step for each person and collect which persons started new remote activities
             List<RemoteActivityInfo> newRemoteActivities = [];
             foreach (var p in _persons) {
-                if (relevantFinishedActivities.TryGetValue(p.Name, out var activityFinished))
-                {
-                    // notify the CalcPerson that their current remote activity is finished
-                    p.remoteActivityResult = activityFinished;
-                }
-                bool remoteActivityStarted = p.NextStep(timestep, _locations, _daylightArray, _householdKey, _persons, _simulationSeed);
+                // notify the CalcPerson if their current remote activity is finished
+                var activityFinished = relevantFinishedActivities.GetValueOrDefault(p.Name);
+                bool remoteActivityStarted = p.NextStep(timestep, _locations, _daylightArray, _householdKey, _persons, _simulationSeed, activityFinished);
                 if (remoteActivityStarted)
                 {
                     newRemoteActivities.Add(p.GetRemoteActivityInfo());

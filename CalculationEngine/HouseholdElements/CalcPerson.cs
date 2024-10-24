@@ -153,11 +153,6 @@ namespace CalculationEngine.HouseholdElements
             _vacationAffordanceGuid = System.Guid.NewGuid().ToStrGuid();
         }
 
-        /// <summary>
-        /// Indicates that a remote affordance or travel activity has just been finished.
-        /// </summary>
-        public RemoteActivityFinished? remoteActivityResult;
-
         //guid for all vacations of this person
         private readonly StrGuid _vacationAffordanceGuid;
         // use one vacation location guid for all persons
@@ -301,12 +296,13 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="householdKey">household key</param>
         /// <param name="persons">all persons of the household</param>
         /// <param name="simulationSeed">the seed used in the current simulation</param>
+        /// <param name="remoteActivityResult">contains the results if a remote activity was just finished</param>
         /// <returns>whether a new remote activity was started</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public bool NextStep([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                              [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                              [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPerson> persons,
-                             int simulationSeed)
+                             int simulationSeed, RemoteActivityFinished? remoteActivityResult = null)
         {
             // initialize affordance lists
             if (time.InternalStep == 0)
@@ -331,7 +327,7 @@ namespace CalculationEngine.HouseholdElements
             // check if an ongoing remote affordance was finished
             if (remoteActivityResult is not null)
             {
-                bool remoteActivityStarted = UpdateRemoteActivity(time, isDaylight);
+                bool remoteActivityStarted = UpdateRemoteActivity(time, remoteActivityResult, isDaylight);
                 // check if a new affordance was started
                 if (IsBusy(time))
                 {
@@ -380,10 +376,11 @@ namespace CalculationEngine.HouseholdElements
         /// target location, no matter if that is a remote affordance or not.
         /// </summary>
         /// <param name="time">current timestep</param>
+        /// <param name="remoteActivityResult">provides information on the finished activity</param>
         /// <param name="isDaylight">daylight status objects</param>
         /// <returns>whether a new remote activity was started</returns>
         /// <exception cref="LPGException">if the remote activity was not correctly initialized</exception>
-        private bool UpdateRemoteActivity(TimeStep time, DayLightStatus isDaylight)
+        private bool UpdateRemoteActivity(TimeStep time, RemoteActivityFinished remoteActivityResult, DayLightStatus isDaylight)
         {
             if (CurrentActivationInfo == null)
                 throw new LPGException("Activation info for remote affordance " + _currentAffordance?.Name + " is missing.");
@@ -394,8 +391,6 @@ namespace CalculationEngine.HouseholdElements
 
             // update the location
             _currentPOI = remoteActivityResult!.NewLocation;
-            // reset the result object to correctly detect future remote updates
-            remoteActivityResult = null;
 
             // calculate the duration of the remote activity
             int duration = time.InternalStep - CurrentActivationInfo.Start.InternalStep;
