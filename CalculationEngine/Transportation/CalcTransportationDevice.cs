@@ -102,7 +102,7 @@ namespace CalculationEngine.Transportation
 
         public CalcTransportationDeviceCategory Category { get; }
 
-        public CalcSite? Currentsite => _currentSite;
+        public ICalcSite? Currentsite => _currentSite;
 
         public double LastChargingPower { get; set; }
 
@@ -290,7 +290,7 @@ namespace CalculationEngine.Transportation
                         chargingProfile, ProfileType.Absolute,
                         "Synthetic Charging for " + Name + " @ " + _currentSite.Name);
                     var dstLoadType = chargingStation.GridChargingLoadType;
-                    var key = _keysByLocGuidAndLoadtype[_currentSite.Guid][dstLoadType];
+                    var key = _keysByLocGuidAndLoadtype[_currentSite.SiteCategory.Guid][dstLoadType];
 
                     CalcDeviceLoad cdl = new CalcDeviceLoad("", 1, dstLoadType, 0, 0);
 
@@ -401,10 +401,10 @@ namespace CalculationEngine.Transportation
                 foreach (CalcChargingStation station in chargingStations)
                 {
                     var clone = _calcDeviceDto with { };
-                    clone.Name = "Charging " + Name + " @ " + station.ChargingStationName;
+                    clone.Name = $"Charging {Name} @ {station.ChargingStationName}";
                     clone.LocationGuid = site.Guid;
                     var key = _calcRepo.Odap.RegisterDevice(station.GridChargingLoadType.ConvertToDto(), _calcDeviceDto);
-                    _keysByLocGuidAndLoadtype.Add(clone.LocationGuid, new Dictionary<CalcLoadType, OefcKey>());
+                    _keysByLocGuidAndLoadtype.Add(clone.LocationGuid, []);
                     var lt = station.GridChargingLoadType;
                     _keysByLocGuidAndLoadtype[clone.LocationGuid].Add(lt, key);
                 }
