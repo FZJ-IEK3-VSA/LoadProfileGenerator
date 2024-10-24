@@ -194,12 +194,13 @@ namespace CalculationEngine.Transportation
             if (srcSite is null)
                 throw new LPGException("When transport is enabled, the site must never be null.");
 
+            // TODO: right now, this causes errors (a route must be set); check later if this can be included after changing the 
             // check if the person is already at the correct site
-            if (srcSite == SourceAffordance.Site)
-            {
-                // no transport is necessary - simply check the source affordance for immediate activation
-                return SourceAffordance.IsBusy(time, srcSite, calcPerson, clearDictionaries);
-            }
+            //if (srcSite == SourceAffordance.Site)
+            //{
+            //    // no transport is necessary - simply check the source affordance for immediate activation
+            //    return SourceAffordance.IsBusy(time, srcSite, calcPerson, clearDictionaries);
+            //}
 
             // if the last IsBusy call was not for the same person and time, reset the saved route
             if (!_myLastTimeEntry.IsApplicable(calcPerson.Name, time))
