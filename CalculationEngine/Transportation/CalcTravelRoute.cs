@@ -16,21 +16,20 @@ namespace CalculationEngine.Transportation
 
         private readonly CalcRepo _calcRepo;
 
-        [ItemNotNull]
-        [NotNull]
         private readonly List<CalcTransportationDevice> _locationUnlimitedDevices;
-        [ItemNotNull]
-        [NotNull]
+
         private readonly List<CalcTransportationDevice> _vehiclePool;
-        [NotNull]
+
+        private readonly DeviceOwnershipMapping<string, CalcTransportationDevice> _deviceOwnerships;
+
         private PreviouslyPickedDevices _mypicks = new PreviouslyPickedDevices("", new TimeStep(-1,0,false));
 
-        public CalcTravelRoute([NotNull] string pName, int minimumAge, int maximumAge, Common.Enums.PermittedGender gender, string affordanceTaggingSetName, string affordanceTagName,
-            int? personID, double weight, [NotNull] CalcSite siteA, [NotNull] CalcSite siteB,
-            [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclePool,
-            [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
-            [NotNull] HouseholdKey householdkey, StrGuid guid,
-                               CalcRepo calcRepo) : base(pName, guid)
+        public CalcTravelRoute(string pName, int minimumAge, int maximumAge, Common.Enums.PermittedGender gender,
+            string affordanceTaggingSetName, string affordanceTagName, int? personID, double weight, CalcSite siteA,
+            CalcSite siteB, List<CalcTransportationDevice> vehiclePool,
+            List<CalcTransportationDevice> locationUnlimitedDevices,
+            DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships, HouseholdKey householdkey,
+            StrGuid guid, CalcRepo calcRepo) : base(pName, guid)
         {
             MinimumAge = minimumAge;
             MaximumAge = maximumAge;
@@ -46,6 +45,7 @@ namespace CalculationEngine.Transportation
             siteA.AddRoute(this);
             _vehiclePool = vehiclePool;
             _locationUnlimitedDevices = locationUnlimitedDevices;
+            _deviceOwnerships = deviceOwnerships;
         }
 
         public int MinimumAge { get; }
@@ -78,8 +78,7 @@ namespace CalculationEngine.Transportation
         }
 
         public int Activate([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName,
-                            [NotNull][ItemNotNull] out List<CalcTravelDeviceUseEvent> usedDeviceEvents,
-                            [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
+                            [NotNull][ItemNotNull] out List<CalcTravelDeviceUseEvent> usedDeviceEvents)
         {
             if (_mypicks.Timestep != currentTimeStep || _mypicks.CalcPersonName != calcPersonName) {
                 throw new LPGException("Device was not previously picked?");
@@ -105,7 +104,7 @@ namespace CalculationEngine.Transportation
                 var device = _mypicks.PickedDevices[step];
                 if (device.Category.IsLimitedToSingleLocation)
                 {
-                    deviceOwnerships.TrySetOwnership(calcPersonName, device);
+                    _deviceOwnerships.TrySetOwnership(calcPersonName, device);
                 }
                 // log the transportation status and activate the step
                 int pickedDuration = _mypicks.PickedDurations[step];
@@ -139,13 +138,11 @@ namespace CalculationEngine.Transportation
         /// <param name="currentTimeStep">the time step for checking route activation</param>
         /// <param name="person">the person that wants to travel</param>
         /// <param name="allTransportationDevices">list of all transport devices</param>
-        /// <param name="deviceOwnerships">device ownership mapping</param>
         /// <returns>the total travel duration, or null if activation is not possible</returns>
         /// <exception cref="LPGException"></exception>
         [CanBeNull]
         public int? GetDuration([NotNull] TimeStep currentTimeStep, [NotNull] CalcPersonDto person,
-                                [ItemNotNull] [NotNull] List<CalcTransportationDevice> allTransportationDevices,
-                                [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
+                                [ItemNotNull][NotNull] List<CalcTransportationDevice> allTransportationDevices)
         {
             // check if the duration is already cached
             if (_mypicks.Timestep == currentTimeStep && _mypicks.CalcPersonName == person.Name) {
@@ -162,7 +159,7 @@ namespace CalculationEngine.Transportation
                     out CalcTransportationDevice? pickedDevice,
                     out int? durationForPickedDeviceInTimesteps,
                     _vehiclePool, _locationUnlimitedDevices,
-                    deviceAtSrc, person, deviceOwnerships);
+                    deviceAtSrc, person, _deviceOwnerships);
                 if (!success) {
                     //this travel route step not now available, thus the entire route is invalid.
                     return null;
@@ -191,8 +188,8 @@ namespace CalculationEngine.Transportation
             return totalDuration;
         }
 
-        public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] ICalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
-            [NotNull] CalcPersonDto person, [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
+        public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] ICalcSite dstSite, [ItemNotNull][NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
+            [NotNull] CalcPersonDto person)
         {
             if (srcSite.IsSameCategory(SiteA) && dstSite.IsSameCategory(SiteB)) {
                 var neededCategories = CollectNeededCalcTransportationDeviceCategory();
@@ -201,7 +198,7 @@ namespace CalculationEngine.Transportation
                 }
 
                 // if the person currently owns a device then this device must be used
-                var ownedDevice = deviceOwnerships.GetDevice(person.Name);
+                var ownedDevice = _deviceOwnerships.GetDevice(person.Name);
                 if (ownedDevice != null)
                 {
                     bool canUseOwnedDevice = neededCategories.Any(category => category == ownedDevice.Category);
@@ -211,7 +208,7 @@ namespace CalculationEngine.Transportation
                         return false;
                     }
                 }
-                bool areCategoriesAvailable = srcSite.AreCategoriesAvailable(neededCategories, _vehiclePool, devicesAtSrcLoc, person, deviceOwnerships);
+                bool areCategoriesAvailable = srcSite.AreCategoriesAvailable(neededCategories, _vehiclePool, devicesAtSrcLoc, person, _deviceOwnerships);
                 return areCategoriesAvailable;
             }
 

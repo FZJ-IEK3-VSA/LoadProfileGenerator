@@ -432,8 +432,11 @@ namespace CalculationController.CalcFactories {
             foreach (CalcTravelRouteDto travelRouteDto in travelRouteDtos) {
                 CalcSite siteA = sites.Single(x => x.Guid == travelRouteDto.SiteAGuid);
                 CalcSite siteB = sites.Single(x => x.Guid == travelRouteDto.SiteBGuid);
-                CalcTravelRoute travelRoute = new CalcTravelRoute(travelRouteDto.Name, travelRouteDto.MinimumAge, travelRouteDto.MaximumAge, travelRouteDto.Gender, travelRouteDto.AffordanceTaggingSetName,
-                    travelRouteDto.AffordanceTagName, travelRouteDto.PersonID, travelRouteDto.Weight, siteA, siteB, th.VehicleDepot, th.LocationUnlimitedDevices,  chh.HouseholdKey, travelRouteDto.Guid,_calcRepo);
+                CalcTravelRoute travelRoute = new CalcTravelRoute(travelRouteDto.Name, travelRouteDto.MinimumAge,
+                    travelRouteDto.MaximumAge, travelRouteDto.Gender, travelRouteDto.AffordanceTaggingSetName,
+                    travelRouteDto.AffordanceTagName, travelRouteDto.PersonID, travelRouteDto.Weight, siteA, siteB,
+                    th.VehicleDepot, th.LocationUnlimitedDevices, th.DeviceOwnerships, chh.HouseholdKey,
+                    travelRouteDto.Guid, _calcRepo);
                 foreach (var step in travelRouteDto.Steps) {
                     CalcTransportationDeviceCategory category = th.GetCategory(step.TransportationDeviceCategory);
                     travelRoute.AddTravelRouteStep(step.Name,  category, step.StepNumber, step.DistanceInM,
