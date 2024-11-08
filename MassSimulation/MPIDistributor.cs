@@ -110,10 +110,10 @@ namespace MassSimulation
             {
                 // determine whether the activity is a traveling or POI activity
                 bool isTravel = activity.IsTravel();
-                var poi = activity.AffordanceActivation.Destination;
+                var poi = activity.Activity.Destination;
                 if (isTravel)
                 {
-                    var travelMessage = new RemoteActivityStart(activity.Person, true, activity.AffordanceActivation.Affordance.Name, poi, activity.CurrentLocation);
+                    var travelMessage = new RemoteActivityStart(activity.Person, true, activity.Activity.Affordance.Name, poi, activity.CurrentLocation);
                     // determine the rank of the worker responsible for the person's current location
                     var currentLocationWorker = activity.CurrentLocation?.WorkerId ?? activity.Person.WorkerId;
                     AddNewActivity(currentLocationWorker, travelMessage);
@@ -125,7 +125,7 @@ namespace MassSimulation
                     {
                         throw new LPGException("A person wants to start a remote activity but is not at the correct point of interest.");
                     }
-                    var activityMessage = new RemoteActivityStart(activity.Person, false, activity.AffordanceActivation.Affordance.Name, poi);
+                    var activityMessage = new RemoteActivityStart(activity.Person, false, activity.Activity.Affordance.Name, poi);
                     AddNewActivity(poi.WorkerId, activityMessage);
                 }
             }

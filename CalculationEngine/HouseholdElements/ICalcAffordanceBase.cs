@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Automation;
+using CalculationEngine.Activities;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
@@ -9,7 +10,8 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements
 {
-    public enum BusynessType {
+    public enum BusynessType
+    {
         NotBusy,
         Occupied,
         NoTransportation,
@@ -19,9 +21,7 @@ namespace CalculationEngine.HouseholdElements
     }
     public interface ICalcAffordanceBase
     {
-        [NotNull]
         string Name { get; }
-        [NotNull]
         string AffCategory { get; }
         ActionAfterInterruption AfterInterruption { get; }
         CalcAffordanceType CalcAffordanceType { get; }
@@ -29,40 +29,43 @@ namespace CalculationEngine.HouseholdElements
         bool IsInterrupting { get; }
         int MaximumAge { get; }
         int MiniumAge { get; }
-        [NotNull]
         string PrettyNameForDumping { get; }
         bool NeedsLight { get; }
-        [NotNull]
         CalcLocation ParentLocation { get; }
         PermittedGender PermittedGender { get; }
         bool RandomEffect { get; }
         bool RequireAllAffordances { get; }
-        [NotNull]
-        [ItemNotNull]
         List<CalcDesire> Satisfactionvalues { get; }
         int Weight { get; }
         StrGuid Guid { get; }
 
-        void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile);
-        
+        IEnumerable<IActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite);
+
+        void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite);
+
+        void FinishActivation(TimeStep endTime, string activatorName);
+
+        // TODO: delete this method, or reuse it for something?
+        void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IActivity personTimeProfile);
+
         BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson, bool clearDictionaries = true);
 
-        IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time,  bool onlyInterrupting, ICalcSite? srcSite);
+        IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite);
 
         CalcSubAffordance GetAsSubAffordance();
 
-        [NotNull]
-        [ItemNotNull]
         List<ICalcAffordanceBase> SubAffordances { get; }
 
-        [CanBeNull]
-        [ItemNotNull]
         List<DeviceEnergyProfileTuple> Energyprofiles { get; }
-         ColorRGB AffordanceColor { get; }
-        [NotNull]
+
+        ColorRGB AffordanceColor { get; }
+        
         string SourceTrait { get; }
+        
         string? TimeLimitName { get; }
+        
         bool AreThereDuplicateEnergyProfiles();
+        
         string? AreDeviceProfilesEmpty();
 
         ICalcSite? Site { get; }

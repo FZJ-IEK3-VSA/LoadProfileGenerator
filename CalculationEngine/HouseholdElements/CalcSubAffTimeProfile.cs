@@ -31,7 +31,7 @@ using Automation;
 using Common;
 
 namespace CalculationEngine.HouseholdElements {
-    internal class CalcSubAffTimeProfile : ICalcProfile {
+    public class CalcSubAffTimeProfile : ICalcProfile {
         [JetBrains.Annotations.NotNull]
         private readonly List<double> _values;
 

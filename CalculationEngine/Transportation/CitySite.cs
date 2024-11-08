@@ -3,7 +3,6 @@ using CalculationEngine.HouseholdElements;
 using Common.CalcDto;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace CalculationEngine.Transportation
 {
@@ -13,9 +12,9 @@ namespace CalculationEngine.Transportation
     /// </summary>
     /// <param name="pointOfInterest">ID of the point of interest this site refers to</param>
     /// <param name="siteCategory">the shared CalcSite object defining the site category of this CitySite object</param>
-    public class CitySite(PointOfInterestId? pointOfInterest, CalcSite siteCategory) : ICalcSite, IEquatable<CitySite>
+    public class CitySite(PointOfInterestId pointOfInterest, CalcSite siteCategory) : ICalcSite, IEquatable<CitySite>
     {
-        public PointOfInterestId? PointOfInterest { get; } = pointOfInterest;
+        public PointOfInterestId PointOfInterest { get; } = pointOfInterest;
 
         public CalcSite SiteCategory { get; } = siteCategory;
 

@@ -1,4 +1,5 @@
-﻿using CalculationEngine.HouseholdElements;
+﻿using CalculationEngine.CitySimulation;
+using CalculationEngine.HouseholdElements;
 using Common.CalcDto;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace CalculationEngine.Transportation
         IReadOnlyCollection<CalcLocation> Locations { get; }
 
         List<CalcChargingStation> ChargingDevices { get; }
+
+        PointOfInterestId? PointOfInterest { get; }
 
 
         bool AreCategoriesAvailable(List<CalcTransportationDeviceCategory> neededDeviceCategories,

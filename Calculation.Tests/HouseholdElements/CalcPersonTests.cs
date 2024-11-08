@@ -221,7 +221,7 @@ namespace Calculation.Tests.HouseholdElements {
                 //var variableOperator = new VariableOperator();
                 TimeStep ts = new TimeStep(0, 0, true);
                 for (var i = 0; i < 100; i++) {
-                    cp.NextStep(ts, clocs, dls, hhkey, persons, 1);
+                    cp.NextStep(ts, clocs, dls, hhkey, persons);
                     ts = ts.AddSteps(1);
                 }
             }
@@ -334,7 +334,7 @@ namespace Calculation.Tests.HouseholdElements {
             };
             for (var i = 0; i < 100; i++) {
                 TimeStep ts = new TimeStep(i,0,true);
-                cp.NextStep(ts, clocs, dls, hhkey, persons, 1);
+                cp.NextStep(ts, clocs, dls, hhkey, persons);
             }
 
             //wd.CleanUp();

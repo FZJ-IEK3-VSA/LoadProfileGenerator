@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.CitySimulation;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
@@ -34,6 +35,8 @@ namespace CalculationEngine.Transportation
         /// A CalcSite object already represents a site category
         /// </summary>
         public CalcSite SiteCategory => this;
+
+        public PointOfInterestId? PointOfInterest => null;
 
         /// <summary>
         /// Adds a new location to the list of locations, and sets the CalcSite property of the location to this site.
@@ -91,15 +94,11 @@ namespace CalculationEngine.Transportation
             return true;
         }
 
-
-
         public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc,
              CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
-            return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite, devicesAtSrc, person, deviceOwnerships)).ToList();
+            return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite, devicesAtSrc, person)).ToList();
         }
-
-
 
         public List<CalcChargingStation> CollectChargingDevicesFor(CalcTransportationDeviceCategory category, CalcLoadType carLoadType)
         {

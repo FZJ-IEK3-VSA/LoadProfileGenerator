@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Activities;
 using CalculationEngine.CitySimulation;
 using CalculationEngine.Transportation;
 using Common;
@@ -23,6 +24,7 @@ namespace CalculationEngine.HouseholdElements
         /// Stores all current activations of this affordance. Maps name of the activating person
         /// to the start time of the activation.
         /// </summary>
+        /// TODO: current activations are not tracked yet
         private Dictionary<string, TimeStep> _currentActivations = [];
 
         /// <summary>
@@ -36,10 +38,10 @@ namespace CalculationEngine.HouseholdElements
         /// of the original affordance.
         /// </summary>
         /// <param name="affordance">the original affordance</param>
-        /// <param name="poinOfInterest">the point of interest for the new remote affordance</param>
-        public CalcAffordanceRemote(CalcAffordanceWithTimeLimit affordance, CitySite poinOfInterest) : base(affordance)
+        /// <param name="citySite">the point of interest for the new remote affordance</param>
+        public CalcAffordanceRemote(CalcAffordanceWithTimeLimit affordance, CitySite citySite) : base(affordance)
         {
-            Site = poinOfInterest;
+            Site = citySite;
         }
 
         /// <summary>
@@ -69,14 +71,18 @@ namespace CalculationEngine.HouseholdElements
             return new CalcAffordanceRemote(timelimitAff, pointOfInterest);
         }
 
-        public override void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile)
+        public override IEnumerable<RemoteActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
         {
-            // execute only variable operations that occur in the beginning
-            ExecuteVariableOperations(startTime, startTime, startTime, [VariableExecutionTime.Beginning]);
-
             // TODO alternative approach: choose an affordance duration just like a normal affordance, and include it in RemoteAffordanceActivation as
             // 'requested stay duration', which the POI can use for stay simulation
-            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, Site.PointOfInterest, null, personSourceSite, this);
+            var activation = new RemoteActivity(Name, Name, activator.Name, Site.PointOfInterest, this);
+            return [activation];
+        }
+
+        public override void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite)
+        {
+            // execute only variable operations that occur in the beginning
+            ExecuteVariableOperations(startTime, [VariableExecutionTime.Beginning], true);
         }
 
         /// <summary>
@@ -84,12 +90,11 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         /// <param name="endTime">the timestep in which the activity ended</param>
         /// <param name="activatorName">the person activating the affordance</param>
-        public void Finish(TimeStep endTime, string activatorName)
+        public override void FinishActivation(TimeStep endTime, string activatorName)
         {
             // execute only variable operations that occur at the end of the affordance, which is
             // also always the end of the person time
-            ExecuteVariableOperations(endTime, endTime, endTime, [VariableExecutionTime.EndofDevices, VariableExecutionTime.EndOfPerson]);
-            // TODO: manually check if the variable operations are actually executed in this case
+            ExecuteVariableOperations(endTime, [VariableExecutionTime.EndofDevices, VariableExecutionTime.EndOfPerson], true);
         }
 
         /// <summary>

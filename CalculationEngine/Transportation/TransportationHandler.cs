@@ -50,7 +50,7 @@ namespace CalculationEngine.Transportation
         {
             if (srcSite == dstSite)
             {
-                // TODO: except for home, these should actually be selected like all other routes
+                // TODO: what to do here? Think about the transport model coupling
                 return SameSiteRoutes[srcSite];
             }
             if (srcSite.DeviceChangeAllowed)
@@ -107,7 +107,7 @@ namespace CalculationEngine.Transportation
                     randomNumber -= route.Weight;
                 }
                 allowedRoutes.Remove(selectedRoute);
-                dur = selectedRoute.GetDuration(startTimeStep, person, AllMoveableDevices, DeviceOwnerships);
+                dur = selectedRoute.GetDuration(startTimeStep, person, AllMoveableDevices);
             }
 
             if (dur == null)

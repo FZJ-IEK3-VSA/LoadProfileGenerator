@@ -32,7 +32,7 @@ using CalculationEngine.HouseholdElements;
 
 namespace CalculationEngine
 {
-    public interface ICalcProfile : IAffordanceActivation
+    public interface ICalcProfile
     {
         List<double> StepValues { get; }
 

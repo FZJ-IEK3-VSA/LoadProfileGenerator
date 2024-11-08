@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Activities;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
@@ -66,12 +67,23 @@ namespace CalculationEngine.HouseholdElements
 
         public readonly CalcAffordance ParentAffordance;
 
-        public override void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile)
+        public override IEnumerable<StaticActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
         {
             var endTime = startTime.AddSteps(personProfileDuration);
-            ExecuteVariableOperations(startTime, endTime, endTime);
 
-            personTimeProfile = new CalcSubAffTimeProfile(personProfileDuration, personProfileDuration + " timesteps Person profile");
+
+            var personTimeProfile = new CalcSubAffTimeProfile(personProfileDuration, personProfileDuration + " timesteps Person profile");
+            return [new LocalActivity(activator.Name, personTimeProfile, this)];
+        }
+
+        public override void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite)
+        {
+            ExecuteVariableOperations(startTime, [VariableExecutionTime.Beginning], true);
+        }
+
+        public override void FinishActivation(TimeStep endTime, string activatorName)
+        {
+            ExecuteVariableOperations(endTime, [VariableExecutionTime.EndofDevices, VariableExecutionTime.EndOfPerson], true);
         }
 
         public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite) => throw new NotImplementedException();

@@ -32,6 +32,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Activities;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
@@ -245,42 +246,35 @@ namespace CalculationEngine.HouseholdElements
         }
 
         /// <summary>
-        /// Schedules all variable operations caused by an activation of this affordance, and immediately triggers operations
-        /// in the current time step.
+        /// Schedules all variable operations of the specified types for execution.
         /// </summary>
-        /// <param name="startTime">the starting time step of the affordance activation</param>
-        /// <param name="timeLastDeviceEnds">time step in which the last device of the affordance activation ends</param>
-        /// <param name="personEndTime">time step in which the person activity in the affordance activation ends</param>
-        /// <param name="operationTypesToExecute">the operation execution times to schedule now; operations with other execution 
-        /// times are skipped; default: execute all operations</param>
-        /// <exception cref="LPGException">if the execution time was not set for a variable operation</exception>
-        protected void ExecuteVariableOperations(TimeStep startTime, TimeStep timeLastDeviceEnds, TimeStep personEndTime, HashSet<VariableExecutionTime>? operationTypesToExecute = null)
+        /// <param name="timeOfExecution">the timestep to schedule the variable operations for</param>
+        /// <param name="operationTypesToExecute">the variable operations beginning times which shall be executed</param>
+        /// <param name="executeImmediately">whether an immediate variable execution should be triggered; this is only allowed if timeOfExecution is the current
+        /// timestep of the simulation</param>
+        protected void ExecuteVariableOperations(TimeStep timeOfExecution, HashSet<VariableExecutionTime>? operationTypesToExecute = null, bool executeImmediately = false)
         {
-            foreach (var op in _variableOps)
+            // determine the operations to execute
+            IEnumerable<CalcAffordanceVariableOp> relevantOperations = _variableOps;
+            if (operationTypesToExecute is not null)
+                relevantOperations = relevantOperations.Where(op => operationTypesToExecute.Contains(op.ExecutionTime));
+            // add an execution entry for each operation
+            foreach (var op in relevantOperations)
             {
-                if (operationTypesToExecute?.Contains(op.ExecutionTime) == false)
-                    continue; // the operation does not have one of the specified ExecutionTimes - skip it
-                // figure out end time
-                TimeStep time;
-                switch (op.ExecutionTime)
-                {
-                    case VariableExecutionTime.Beginning:
-                        time = startTime;
-                        break;
-                    case VariableExecutionTime.EndOfPerson:
-                        time = personEndTime;
-                        break;
-                    case VariableExecutionTime.EndofDevices:
-                        time = timeLastDeviceEnds;
-                        break;
-                    default:
-                        throw new LPGException("Forgotten Variable Execution Time");
-                }
-
-                _variableRepository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation, op.VariableAction, time, op.VariableGuid);
-                _variableRepository.Execute(startTime);
+                _variableRepository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation, op.VariableAction, timeOfExecution, op.VariableGuid);
+            }
+            // if required, trigger an immediate execution of variable operations; only allowed if timeOfExecution is the current timestep
+            if (executeImmediately)
+            {
+                _variableRepository.Execute(timeOfExecution);
             }
         }
+
+        public abstract IEnumerable<IActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite);
+
+        public abstract void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite);
+
+        public abstract void FinishActivation(TimeStep endTime, string activatorName);
 
         /// <summary>
         /// Activates this affordance, meaning that this affordance is carried out according to the given parameters.
@@ -289,7 +283,13 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="activatorName">the person carrying out the affordance</param>
         /// <param name="personSourceSite">current site of the activating person</param>
         /// <param name="personTimeProfile">the resulting person profile for the activator</param>
-        public abstract void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile);
+        public virtual void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IActivity personTimeProfile)
+        {
+            // TODO: do I keep the old Activate method for anything?
+            var activities = PlanActivation(startTime, null, personSourceSite);
+            personTimeProfile = activities.First();
+            StartActivation(startTime, activatorName, personSourceSite);
+        }
 
         public abstract IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite);
 

@@ -415,7 +415,7 @@ namespace CalculationEngine.HouseholdElements {
             foreach (var p in _persons) {
                 // notify the CalcPerson if their current remote activity is finished
                 var activityFinished = relevantFinishedActivities.GetValueOrDefault(p.Name);
-                bool remoteActivityStarted = p.NextStep(timestep, _locations, _daylightArray, _householdKey, _persons, _simulationSeed, activityFinished);
+                bool remoteActivityStarted = p.NextStep(timestep, _locations, _daylightArray, _householdKey, _persons, activityFinished);
                 if (remoteActivityStarted)
                 {
                     newRemoteActivities.Add(p.GetRemoteActivityInfo());

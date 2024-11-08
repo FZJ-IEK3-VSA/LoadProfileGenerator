@@ -5,6 +5,7 @@ using System.Linq;
 using System.Speech.Recognition.SrgsGrammar;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Activities;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
@@ -26,7 +27,7 @@ namespace CalculationEngine.Transportation
         /// General flag to decide whether dynamic simulation of travel times and remote affordances
         /// is done or not. If not, static route calculation and only fixed-duration affordances are used.
         /// </summary>
-        public static readonly bool DynamicCitySimulation = true;
+        public static readonly bool DynamicCitySimulation = false;
 
         /// <summary>
         /// Creates the correct transport decorator to use, depending on whether dynamic city simulation is enabled or not
@@ -65,69 +66,81 @@ namespace CalculationEngine.Transportation
 
         public ICalcSite Site => SourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
 
-        public virtual void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite,
-            out IAffordanceActivation activationInfo)
+        public virtual IEnumerable<IActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
         {
-            if (!_myLastTimeEntry.IsApplicable(activatorName, startTime) || _myLastTimeEntry.PreviouslySelectedRoute is null)
-                throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
             if (personSourceSite is null)
                 throw new LPGException("When transport is enabled, the site must never be null.");
-
             // check if the person is already at the correct site
             if (personSourceSite == SourceAffordance.Site)
             {
-                // no transport is necessary - simply activate the source affordance
-                SourceAffordance.Activate(startTime, activatorName, personSourceSite, out activationInfo);
-                return;
+                // TODO: this case should not happen anymore, as no travel activity will be created in this case
+                // no transport is necessary - simply pass on to the source affordance
+                return SourceAffordance.PlanActivation(startTime, activator, personSourceSite);
             }
 
+            // get the travel route determined and stored in the last IsBusy call
+            if (!SelectedRoutes.TryGetValue(activator.Name, out var routeEntry) || routeEntry.PreviouslySelectedRoute is null)
+                throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
+            CalcTravelRoute route = routeEntry.PreviouslySelectedRoute;
 
-            // get the route which was already determined in IsBusy and activate it
-            CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoute;
-            int routeduration = route.Activate(startTime, activatorName, out var usedDeviceEvents, _transportationHandler.DeviceOwnerships);
-            // TODO: probably with full transport simulation, the route will not be activated here, but step by step in CalcPerson
+            // determine the arrival time at the target location
+            int? travelDurationIfFound = route.GetDuration(startTime, activator, _transportationHandler.AllMoveableDevices);
+            int travelDuration = travelDurationIfFound ?? throw new LPGException("Bug: couldn't calculate travel duration for route.");
+            TimeStep affordanceStartTime = startTime.AddSteps(travelDuration);
 
-            // log transportation info
+            // create the source affordance activity objects
+            var sourceActivities = SourceAffordance.PlanActivation(affordanceStartTime, activator, personSourceSite);
+
+            // create the travel activity
+            var travelActivity = CreateActivity(activator, personSourceSite, route, travelDuration, sourceActivities.First());
+
+            // return the activity objects
+            List<IActivity> activities = [travelActivity];
+            activities.AddRange(sourceActivities);
+            return activities;
+        }
+
+        protected virtual IActivity CreateActivity(CalcPersonDto activator, ICalcSite personSourceSite, CalcTravelRoute route, int travelDuration, IActivity firstSourceActivity)
+        {
+            var name = "Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
+            var stepValues = CalcProfile.MakeListwithValue1AndCustomDuration(travelDuration);
+            string dataSource = firstSourceActivity.DataSource ?? SourceAffordance.Name;
+            var travelProfile = new CalcProfile(name, StrGuid.New(), stepValues, ProfileType.Absolute, dataSource);
+            return new StaticTravelActivity(activator.Name, travelProfile, this, new(route, personSourceSite));
+        }
+
+        public virtual void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite)
+        { }
+
+        public virtual void FinishActivation(TimeStep endTime, string activatorName)
+        {
+        }
+
+        public virtual void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IActivity personTimeProfile)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Logs activation of a traveling activity.
+        /// </summary>
+        /// <param name="startTime">start timestep of the travel</param>
+        /// <param name="personSourceSite">source site of the traveler</param>
+        /// <param name="travelDuration">expected travel duration in timesteps</param>
+        public void LogTransportationStatus(TimeStep startTime, ICalcSite personSourceSite, int travelDuration)
+        {
             string status;
-            if (routeduration == 0)
+            if (travelDuration == 0)
             {
                 status = $"\tActivating {Name} at {startTime} with no transportation and moving from {personSourceSite} to "
                     + $"{Site.Name} for affordance {SourceAffordance.Name}";
             }
             else
             {
-                status = $"\tActivating {Name} at {startTime} with a transportation duration of {routeduration} for moving from "
+                status = $"\tActivating {Name} at {startTime} with a transportation duration of {travelDuration} for moving from "
                     + $"{personSourceSite} to {Site.Name}";
             }
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
-
-
-            // no dynamic travel is happening, so the affordance can now be activated in advance
-            IAffordanceActivation? sourceActivation = null;
-            TimeStep affordanceStartTime = startTime.AddSteps(routeduration);
-            if (affordanceStartTime.InternalStep < _calcRepo.CalcParameters.InternalTimesteps)
-            {
-                // only activate the source affordance if the activation is still in the simulation time frame
-                SourceAffordance.Activate(affordanceStartTime, activatorName, personSourceSite, out sourceActivation);
-            }
-
-            // create the travel profile
-            var name = "Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
-            var stepValues = CalcProfile.MakeListwithValue1AndCustomDuration(routeduration);
-            string dataSource = sourceActivation?.DataSource ?? SourceAffordance.Name;
-            var newPersonProfile = new CalcProfile(name, StrGuid.New(), stepValues, ProfileType.Absolute, dataSource);
-
-            int sourceAffDuration = 0;
-            if (sourceActivation is CalcProfile sourcePersonProfile)
-            {
-                // if the source affordance was activated and provided a profile, append it to the travel profile
-                newPersonProfile.AppendProfile(sourcePersonProfile);
-                sourceAffDuration = sourcePersonProfile.StepValues.Count;
-            }
-            activationInfo = newPersonProfile;
-
-            // log the transportation event
-            LogTransportationEvent(usedDeviceEvents, activatorName, startTime, personSourceSite, route, routeduration, sourceAffDuration);
         }
 
         /// <summary>
@@ -149,6 +162,8 @@ namespace CalculationEngine.Transportation
                 Site.Name, route.Name, usedDeviceNames, duration, sourceAffordanceDuration, SourceAffordance.Name, usedDeviceEvents);
         }
 
+        protected Dictionary<string, LastTimeEntry> SelectedRoutes { get; } = [];
+
         public string AffCategory => SourceAffordance.AffCategory;
 
         public ColorRGB AffordanceColor => SourceAffordance.AffordanceColor;
@@ -162,31 +177,35 @@ namespace CalculationEngine.Transportation
 
         public List<DeviceEnergyProfileTuple> Energyprofiles => SourceAffordance.Energyprofiles;
 
-        protected class LastTimeEntry(string personName, TimeStep timeOfLastEvalulation)
+        /// <summary>
+        /// Class for storing a selected route. A selected route is only valid for the specified
+        /// </summary>
+        /// <param name="validStartTimeForRoute">the timestep for which the route was selected</param>
+        /// <param name="route">the selected route, or null if no route was found</param>
+        protected class LastTimeEntry(TimeStep validStartTimeForRoute, CalcTravelRoute? route = null)
         {
-            public string PersonName { get; } = personName;
-            public TimeStep TimeOfLastEvalulation { get; } = timeOfLastEvalulation;
-            public CalcTravelRoute? PreviouslySelectedRoute { get; set; }
+            /// <summary>
+            /// The timestep for which the route was selected and stored, and for which it is valid.
+            /// </summary>
+            public TimeStep ValidStartTimeForRoute { get; } = validStartTimeForRoute;
+
+            /// <summary>
+            /// The selected route. Can be null, which means that no route was found and the affordance
+            /// is not available in this timestep.
+            /// </summary>
+            public CalcTravelRoute? PreviouslySelectedRoute { get; } = route;
 
             /// <summary>
             /// Checks whether this entry is applicable for the specified conditions. A time
-            /// entry is only valid for one person for one timestep.
+            /// entry is only valid for one specific timestep.
             /// </summary>
-            /// <param name="name">the name of the person</param>
             /// <param name="time">the current timestep</param>
             /// <returns>whether the time entry can be used</returns>
-            internal bool IsApplicable(string name, TimeStep time)
+            internal bool IsApplicable(TimeStep time)
             {
-                return PersonName == name && TimeOfLastEvalulation == time;
+                return ValidStartTimeForRoute == time;
             }
         }
-
-        /// <summary>
-        /// Whenever a route is generated to check if affordance activation is possible in IsBusy, this
-        /// field saves the route. This is necessary to use the same route in case the affordance is
-        /// actually activated in the same timestep.
-        /// </summary>
-        protected LastTimeEntry _myLastTimeEntry = new("", new TimeStep(-1, 0, false));
 
         public BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson,
             bool clearDictionaries = true)
@@ -194,34 +213,31 @@ namespace CalculationEngine.Transportation
             if (srcSite is null)
                 throw new LPGException("When transport is enabled, the site must never be null.");
 
-            // TODO: right now, this causes errors (a route must be set); check later if this can be included after changing the 
             // check if the person is already at the correct site
-            //if (srcSite == SourceAffordance.Site)
-            //{
-            //    // no transport is necessary - simply check the source affordance for immediate activation
-            //    return SourceAffordance.IsBusy(time, srcSite, calcPerson, clearDictionaries);
-            //}
-
-            // if the last IsBusy call was not for the same person and time, reset the saved route
-            if (!_myLastTimeEntry.IsApplicable(calcPerson.Name, time))
+            if (srcSite == SourceAffordance.Site)
             {
-                _myLastTimeEntry = new LastTimeEntry(calcPerson.Name, time);
+                // no transport is necessary - simply check the source affordance for immediate activation
+                return SourceAffordance.IsBusy(time, srcSite, calcPerson, clearDictionaries);
+            }
+
+            // if the last IsBusy call was not for the same timestep, reset the saved route
+            if (SelectedRoutes.TryGetValue(calcPerson.Name, out var routeEntry) && !routeEntry.IsApplicable(time))
+            {
+                SelectedRoutes.Remove(calcPerson.Name);
+                routeEntry = null;
             }
 
             // determine the route to the target location
             CalcTravelRoute? route;
-            if (_myLastTimeEntry.PreviouslySelectedRoute is not null)
+            if (routeEntry is not null)
             {
-                route = _myLastTimeEntry.PreviouslySelectedRoute;
+                route = routeEntry.PreviouslySelectedRoute;
             }
             else
             {
-                // select an appropriate travel route for the given situation
+                // select an appropriate travel route for the given situation and store it
                 route = _transportationHandler.GetTravelRouteFromSrcLoc(srcSite.SiteCategory, Site.SiteCategory, time, calcPerson, SourceAffordance, _calcRepo);
-                if (route != null)
-                {
-                    _myLastTimeEntry.PreviouslySelectedRoute = route;
-                }
+                SelectedRoutes.Add(calcPerson.Name, new(time, route));
             }
 
             if (route == null)
@@ -230,7 +246,7 @@ namespace CalculationEngine.Transportation
             }
 
             // determine the arrival time at the target location
-            int? travelDurationN = route.GetDuration(time, calcPerson, _transportationHandler.AllMoveableDevices, _transportationHandler.DeviceOwnerships);
+            int? travelDurationN = route.GetDuration(time, calcPerson, _transportationHandler.AllMoveableDevices);
             if (travelDurationN == null)
             {
                 throw new LPGException("Bug: couldn't calculate travel duration for route.");

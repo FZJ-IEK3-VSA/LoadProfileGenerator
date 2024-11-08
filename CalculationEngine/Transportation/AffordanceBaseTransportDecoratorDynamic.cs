@@ -1,12 +1,14 @@
 ﻿using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Activities;
 using CalculationEngine.HouseholdElements;
 using Common;
+using Common.CalcDto;
 using Common.SQLResultLogging.Loggers;
 
 namespace CalculationEngine.Transportation
 {
-    internal class AffordanceBaseTransportDecoratorDynamic : AffordanceBaseTransportDecorator
+    public class AffordanceBaseTransportDecoratorDynamic : AffordanceBaseTransportDecorator
     {
         public AffordanceBaseTransportDecoratorDynamic(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler, string name, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo)
             : base(sourceAffordance, transportationHandler, name, householdkey, guid, calcRepo)
@@ -25,47 +27,11 @@ namespace CalculationEngine.Transportation
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(new TimeStep(0, 0, false), _householdkey, message));
         }
 
-        public override void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite,
-            out IAffordanceActivation activationInfo)
+        protected override DynamicTravelActivity CreateActivity(CalcPersonDto activator, ICalcSite personSourceSite, CalcTravelRoute route, int travelDuration, IActivity firstSourceActivity)
         {
-            if (!_myLastTimeEntry.IsApplicable(activatorName, startTime) || _myLastTimeEntry.PreviouslySelectedRoute is null)
-            {
-                throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
-            }
-
-            // check if the person is already at the correct site
-            if (personSourceSite == SourceAffordance.Site)
-            {
-                // no transport is necessary - simply activate the source affordance
-                SourceAffordance.Activate(startTime, activatorName, personSourceSite, out activationInfo);
-                return;
-            }
-
-            // get the route which was already determined in IsBusy and activate it
-            CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoute;
-            int routeduration = route.Activate(startTime, activatorName, out var usedDeviceEvents, _transportationHandler.DeviceOwnerships);
-            // TODO: probably with full transport simulation, the route will not be activated here, but step by step in CalcPerson
-
-            // log transportation info
-            string status;
-            if (routeduration == 0)
-            {
-                status = $"\tActivating {Name} at {startTime} with no transportation and moving from {personSourceSite} to "
-                    + $"{Site.Name} for affordance {SourceAffordance.Name}";
-            }
-            else
-            {
-                status = $"\tActivating {Name} at {startTime} with a transportation duration of {routeduration} for moving from "
-                    + $"{personSourceSite} to {Site.Name}";
-            }
-            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
-
-
-            // person has to travel to the target site with an unknown duration - cannot activate the source affordance yet
             var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
-            // determine the travel target: the POI of the affordance if it is remote, else null (for home)
-            var destination = SourceAffordance is CalcAffordanceRemote remoteAff ? remoteAff.Site.PointOfInterest : null;
-            activationInfo = new RemoteAffordanceActivation(activationName, SourceAffordance.Name, startTime, destination, route, personSourceSite, this);
+            var destination = firstSourceActivity.Destination;
+            return new DynamicTravelActivity(activationName, SourceAffordance.Name, activator.Name, destination, this, new(route, personSourceSite));
         }
     }
 }

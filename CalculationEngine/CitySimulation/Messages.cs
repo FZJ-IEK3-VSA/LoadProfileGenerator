@@ -1,4 +1,4 @@
-﻿using CalculationEngine.HouseholdElements;
+﻿using CalculationEngine.Activities;
 using System;
 using System.Diagnostics;
 
@@ -8,12 +8,12 @@ namespace CalculationEngine.CitySimulation
     /// Object encapsulating relevant information for a new remote activity
     /// </summary>
     /// <param name="person">the person carrying out the activity</param>
-    /// <param name="affordanceActivation">the corresponding RemoteAffordanceActivation object</param>
+    /// <param name="activity">the corresponding activity object</param>
     /// <param name="currentLocation">ID of the point of interest the person is currently at</param>
-    public class RemoteActivityInfo(PersonIdentifier person, RemoteAffordanceActivation affordanceActivation, PointOfInterestId? currentLocation)
+    public class RemoteActivityInfo(PersonIdentifier person, DynamicActivity activity, PointOfInterestId? currentLocation)
     {
         public readonly PersonIdentifier Person = person;
-        public readonly RemoteAffordanceActivation AffordanceActivation = affordanceActivation;
+        public readonly DynamicActivity Activity = activity;
         public readonly PointOfInterestId? CurrentLocation = currentLocation;
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace CalculationEngine.CitySimulation
         /// <returns>whether this activity is a travel activity</returns>
         public bool IsTravel()
         {
-            return AffordanceActivation.IsTravel();
+            return Activity.IsTravel;
         }
     }
 

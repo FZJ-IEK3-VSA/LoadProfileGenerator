@@ -89,7 +89,7 @@ namespace Calculation.Tests.Transportation
 
                     Logger.Info("Activating affordance for time 0");
                     var ownerships = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
-                    travelroute.GetDuration(ts, person, new List<CalcTransportationDevice>(), ownerships);
+                    travelroute.GetDuration(ts, person, new List<CalcTransportationDevice>());
                     aff.Activate(ts, "activator", srcloc.CalcSite, out var _);
                 }
                 //should throw exception the second time.
@@ -204,18 +204,18 @@ namespace Calculation.Tests.Transportation
 
                     var myCategory = new CalcTransportationDeviceCategory("mycategory", false, Guid.NewGuid().ToStrGuid());
                     var route1 = new CalcTravelRoute("myRoute1", -1, 50, PermittedGender.Male, "mytaggingset", "cooking", null, 1.0, srcSite, dstSite,
-                        transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
+                        transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices, transportationHandler.DeviceOwnerships,
                          new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
                     route1.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
                     transportationHandler.TravelRoutes.Add(route1);
                     var route2 = new CalcTravelRoute("myRoute2", 20, -1, PermittedGender.Female, "mytaggingset", "working", null, 1.0, srcSite, dstSite,
-                        transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
+                        transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices, transportationHandler.DeviceOwnerships,
                          key, Guid.NewGuid().ToStrGuid(), calcRepo);
                     route2.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
                     transportationHandler.TravelRoutes.Add(route2);
                     int personID = 12345678;
                     var route3 = new CalcTravelRoute("myRoute3", -1, -1, PermittedGender.All, null, null, personID, 1.0, srcSite, dstSite,
-                        transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
+                        transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices, transportationHandler.DeviceOwnerships,
                          key, Guid.NewGuid().ToStrGuid(), calcRepo);
                     route3.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
                     transportationHandler.TravelRoutes.Add(route3);

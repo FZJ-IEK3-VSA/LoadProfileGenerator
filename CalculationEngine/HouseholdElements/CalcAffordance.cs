@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Activities;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
@@ -143,24 +144,37 @@ namespace CalculationEngine.HouseholdElements
             return timeLastDeviceEnds;
         }
 
-        public override void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IAffordanceActivation personTimeProfile)
+        public override IEnumerable<StaticActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
         {
-            TimeStep timeLastDeviceEnds = CreateDeviceProfilesForActivation(startTime, activatorName);
-
             // determine the time the activating person is busy with the affordance
             var tf = _timeFactorsForTimes[startTime.InternalStep];
             int personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count, tf);
             TimeStep personEndTime = startTime.AddSteps(personsteps);
 
             // save start and end time of the person's activity
-            _currentActivations[activatorName] = new(startTime, personEndTime);
-
-            ExecuteVariableOperations(startTime, timeLastDeviceEnds, personEndTime);
+            _currentActivations[activator.Name] = new(startTime, personEndTime);
 
             // adapt the default person profile according to the time factor for this time step
+            var personTimeProfile = _personProfile.CompressExpandDoubleArray(tf);
+            var activation = new LocalActivity(activator.Name, personTimeProfile, this);
+            return [activation];
+        }
+
+        public override void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite)
+        {
+            TimeStep timeLastDeviceEnds = CreateDeviceProfilesForActivation(startTime, activatorName);
+
+            ExecuteVariableOperations(startTime, [VariableExecutionTime.Beginning], true);
+            ExecuteVariableOperations(timeLastDeviceEnds, [VariableExecutionTime.EndofDevices], false);
+
+            // TODO: this will lead to problems if multiple people activate this in parallel - how to do this instead?
             _probabilitiesForTimes.Clear();
             _timeFactorsForTimes.Clear();
-            personTimeProfile = _personProfile.CompressExpandDoubleArray(tf);
+        }
+
+        public override void FinishActivation(TimeStep endTime, string activatorName)
+        {
+            ExecuteVariableOperations(endTime, [VariableExecutionTime.EndOfPerson], true);
         }
 
         /// <summary>
