@@ -15,6 +15,8 @@ namespace CalculationEngine.Activities
             TravelInfo = travelInfo;
         }
 
+        //public override string Name => "Travel for " + base.Name;
+
         public override bool IsDetermined => false;
 
         public override bool IsTravel => true;

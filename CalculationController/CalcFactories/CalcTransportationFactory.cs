@@ -506,7 +506,7 @@ namespace CalculationController.CalcFactories {
                     }
 
                     var abtd = AffordanceBaseTransportDecorator.CreateTransportDecorator(aff, chh.TransportationHandler,
-                        aff.Name, chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
+                        chh.HouseholdKey, StrGuid.New(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
 
                     // reset the list of subaffordances of the affordance
@@ -516,7 +516,7 @@ namespace CalculationController.CalcFactories {
                     foreach (var subaff in subaffsCopy)
                     {
                         var decoratedSubAff = AffordanceBaseTransportDecorator.CreateTransportDecorator(subaff, chh.TransportationHandler,
-                            subaff.Name, chh.HouseholdKey, StrGuid.New(), _calcRepo);
+                            chh.HouseholdKey, StrGuid.New(), _calcRepo);
                         aff.SubAffordances.Add(decoratedSubAff);
                     }
                 }
@@ -536,7 +536,7 @@ namespace CalculationController.CalcFactories {
 
                     var aff = location.IdleAffs[person];
                     var abtd = AffordanceBaseTransportDecorator.CreateTransportDecorator(aff, chh.TransportationHandler,
-                        aff.Name, chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
+                        chh.HouseholdKey, StrGuid.New(), _calcRepo);
                     location.IdleAffs[person] = abtd;
                 }
             }

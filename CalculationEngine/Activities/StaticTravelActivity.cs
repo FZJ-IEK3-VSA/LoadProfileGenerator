@@ -1,13 +1,8 @@
-﻿using Automation.ResultFiles;
-using CalculationEngine.CitySimulation;
+﻿using CalculationEngine.CitySimulation;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.Transportation;
 using Common;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Xml.Linq;
 
 namespace CalculationEngine.Activities
 {
@@ -20,6 +15,8 @@ namespace CalculationEngine.Activities
             Affordance = affordance;
             TravelInfo = travelInfo;
         }
+
+        //public override string Name => "Travel for " + base.Name;
 
         public override bool IsTravel => true;
 

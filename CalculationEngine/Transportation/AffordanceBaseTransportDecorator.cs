@@ -34,30 +34,30 @@ namespace CalculationEngine.Transportation
         /// </summary>
         /// <param name="sourceAffordance">the affordance to decorate</param>
         /// <param name="transportationHandler">the transportation handler object</param>
-        /// <param name="name">the name of the affordance</param>
         /// <param name="householdkey">the household key</param>
         /// <param name="guid">guid of the decorated affordance</param>
         /// <param name="calcRepo">the calc repo</param>
         /// <returns>the newly created transport decorator</returns>
         public static AffordanceBaseTransportDecorator CreateTransportDecorator(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler,
-            string name, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo)
+            HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo)
         {
             if (DynamicCitySimulation)
             {
-                return new AffordanceBaseTransportDecoratorDynamic(sourceAffordance, transportationHandler, name, householdkey, guid, calcRepo);
+                return new AffordanceBaseTransportDecoratorDynamic(sourceAffordance, transportationHandler, householdkey, guid, calcRepo);
             }
             else
             {
-                return new AffordanceBaseTransportDecorator(sourceAffordance, transportationHandler, name, householdkey, guid, calcRepo);
+                return new AffordanceBaseTransportDecorator(sourceAffordance, transportationHandler, householdkey, guid, calcRepo);
             }
         }
 
         protected AffordanceBaseTransportDecorator(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler,
-            string name, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo) : base(name, guid)
+            HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo) : base(sourceAffordance.Name, guid)
         {
             _householdkey = householdkey;
             _calcRepo = calcRepo;
-            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(new TimeStep(0, 0, false), householdkey, "Initializing affordance base transport decorator for " + name));
+            var status = new TransportationStatus(new TimeStep(0, 0, false), householdkey, "Initializing affordance base transport decorator for " + sourceAffordance.Name);
+            _calcRepo.OnlineLoggingData.AddTransportationStatus(status);
             _transportationHandler = transportationHandler;
             SourceAffordance = sourceAffordance;
         }
@@ -259,11 +259,9 @@ namespace CalculationEngine.Transportation
                 return BusynessType.NotBusy;
             }
             var result = SourceAffordance.IsBusy(dstStartTime, srcSite, calcPerson, clearDictionaries);
-            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
-                time,
-                _householdkey, "\t\t" + time + " @" + srcSite + " by " + calcPerson.Name
-                                             + "Checking " + Name + " for busyness: " + result + " @time " + dstStartTime
-                                             + " with the route " + route.Name + " and a travel duration of " + travelDurationN));
+            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(time,
+                _householdkey, $"\t\t{time} @{srcSite} by {calcPerson.Name}. Checking {Name} for busyness: {result} @time {dstStartTime} with the " +
+                $"route {route.Name} and a travel duration of {travelDurationN}"));
             return result;
         }
 

@@ -81,8 +81,7 @@ namespace CalculationEngine.Transportation
                         return true;
                     }
                     return affordanceTaggingSet.GetAffordanceTag(affordance.Name) == route.AffordanceTagName;
-                })
-                .ToList();
+                }).ToList();
             if (allowedRoutes.Count == 0)
             {
                 return null;

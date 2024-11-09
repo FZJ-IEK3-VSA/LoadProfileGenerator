@@ -12,7 +12,7 @@ namespace CalculationEngine.Activities
     /// </summary>
     public abstract class Activity(string dataSource, string personName, PointOfInterestId? destination) : IActivity
     {
-        public string Name => Affordance.Name;
+        public virtual string Name => Affordance.Name;
         public string DataSource { get; } = dataSource;
         public string PersonName { get; } = personName;
         public TimeStep? StartTime { get; protected set; }

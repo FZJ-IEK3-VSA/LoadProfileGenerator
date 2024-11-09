@@ -608,7 +608,7 @@ namespace CalculationEngine.HouseholdElements
             if (affordance.IsBusy(timestep, _currentSite, _calcPerson) != BusynessType.NotBusy)
             {
                 // the affordance is not available, cancel it
-                string thought = "Planned affordance " + affordance.Name + " is not available anymore.";
+                string thought = "Planned activity " + activity.Name + " is not available anymore.";
                 LogThought(timestep, thought);
 
                 // remove the activity from the queue
@@ -628,7 +628,7 @@ namespace CalculationEngine.HouseholdElements
 
             // create an action entry for this activation
             _calcRepo.OnlineLoggingData.AddActionEntry(timestep, Guid,
-                Name, _isCurrentlySick, affordance.Name,
+                Name, _isCurrentlySick, activity.Name,
                 affordance.Guid, _calcPerson.HouseholdKey,
                 affordance.AffCategory, affordance.BodilyActivityLevel);
 

@@ -10,8 +10,8 @@ namespace CalculationEngine.Transportation
 {
     public class AffordanceBaseTransportDecoratorDynamic : AffordanceBaseTransportDecorator
     {
-        public AffordanceBaseTransportDecoratorDynamic(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler, string name, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo)
-            : base(sourceAffordance, transportationHandler, name, householdkey, guid, calcRepo)
+        public AffordanceBaseTransportDecoratorDynamic(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo)
+            : base(sourceAffordance, transportationHandler, householdkey, guid, calcRepo)
         {
         }
 
@@ -21,7 +21,7 @@ namespace CalculationEngine.Transportation
         /// <param name="original">the original affordance transport decorator</param>
         /// <param name="remoteAffordance">the remote affordance that will be used as source affordance</param>
         public AffordanceBaseTransportDecoratorDynamic(AffordanceBaseTransportDecoratorDynamic original, CalcAffordanceRemote remoteAffordance)
-            : base(remoteAffordance, original._transportationHandler, original.Name, original._householdkey, StrGuid.New(), original._calcRepo)
+            : base(remoteAffordance, original._transportationHandler, original._householdkey, StrGuid.New(), original._calcRepo)
         {
             var message = "Copying affordance base transport decorator for remote affordance " + remoteAffordance;
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(new TimeStep(0, 0, false), _householdkey, message));
