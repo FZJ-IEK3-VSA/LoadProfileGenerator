@@ -14,12 +14,19 @@ namespace MassSimulation.Simulators
     /// <summary>
     /// Stores all currently traveling agents and simulates their travel times.
     /// </summary>
-    internal class TransportSimulator(int rank) : ISimulator
+    internal class TransportSimulator : ISimulator
     {
-        public readonly int WorkerId = rank;
+        public readonly int WorkerId;
         private List<AgentTravelState> travelStates = [];
 
-        private TestLogger logger = new();
+        private readonly TestLogger logger;
+
+        public TransportSimulator(int rank)
+        {
+            WorkerId = rank;
+            var filename = $"Transport-{WorkerId}.txt";
+            logger = new(filename);
+        }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
@@ -80,8 +87,7 @@ namespace MassSimulation.Simulators
 
         public void FinishSimulation()
         {
-            var filename = $"Transport-{WorkerId}.txt";
-            logger.WriteToFile(filename);
+            logger.WriteToFile();
         }
     }
 }

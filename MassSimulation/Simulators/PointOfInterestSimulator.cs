@@ -15,12 +15,19 @@ namespace MassSimulation.Simulators
     /// <summary>
     /// Simulates agent stays in any point of interest, for example a small enterprise.
     /// </summary>
-    internal class PointOfInterestSimulator(int rank, int id) : ISimulator
+    internal class PointOfInterestSimulator : ISimulator
     {
         private List<AgentStayState> activityStates = [];
-        public PointOfInterestId PoiId { get; } = new PointOfInterestId(id, rank);
+        public PointOfInterestId PoiId { get; }
 
-        private TestLogger logger = new();
+        private TestLogger logger;
+
+        public PointOfInterestSimulator(int rank, int id)
+        {
+            PoiId = new PointOfInterestId(id, rank);
+            var filename = $"POI-{PoiId.WorkerId}-{PoiId.Id}.txt";
+            logger = new(filename);
+        }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
@@ -55,9 +62,12 @@ namespace MassSimulation.Simulators
         {
             if (newActivities.Any() || finishedActivities.Any())
             {
-                var newPersons = string.Join(", ", newActivities.Select(a => a.Person.PersonName));
+                foreach (var newActivity in newActivities)
+                {
+                    logger.Log(timestep, dateTime, $"{newActivity.Person.PersonName} started {newActivity.Affordance}");
+                }
                 var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
-                var message = $"Total persons: {activityStates.Count} - started: {newPersons}; finishedActivitites: {finishedPersons}";
+                var message = $"Total persons: {activityStates.Count} - finished activitites: {finishedPersons}";
                 logger.Log(timestep, dateTime, message);
             }
         }
@@ -80,8 +90,7 @@ namespace MassSimulation.Simulators
 
         public void FinishSimulation()
         {
-            var filename = $"POI-{PoiId.WorkerId}-{PoiId.Id}.txt";
-            logger.WriteToFile(filename);
+            logger.WriteToFile();
         }
     }
 }
