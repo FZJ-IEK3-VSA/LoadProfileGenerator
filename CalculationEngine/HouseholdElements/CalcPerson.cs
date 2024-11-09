@@ -306,7 +306,6 @@ namespace CalculationEngine.HouseholdElements
 
             // the person is already busy with an activity, check for a possible interruption
             return InterruptIfNeeded(time, isDaylight, false);
-
         }
 
         private bool StartNextActivity(TimeStep time, DayLightStatus isDaylight, List<CalcPerson> persons)
@@ -411,17 +410,16 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="ignorePreviousAffordances">whether the constraint not to activate one of the last few affordances can be ignored</param>
         /// <returns>whether a remote activity was started</returns>
         /// <exception cref="LPGException"></exception>
-        private bool InterruptIfNeeded(TimeStep time, DayLightStatus isDaylight,
-                                       bool ignorePreviousAffordances)
+        private bool InterruptIfNeeded(TimeStep time, DayLightStatus isDaylight, bool ignorePreviousAffordances)
         {
-            // track whether a new activity was started
-            bool newActivityStarted = false;
-
             // check if the affordance may be interrupted and did not already interrupt another affordance itself
             if (CurrentAffordance?.IsInterruptable == true && !_isCurrentActivityInterruption)
             {
                 if (activityQueue.CurrentActivity.IsTravel)
-                    throw new LPGException($"Travel affordance {CurrentAffordance} is marked as interruptable, this is not allowed.");
+                {
+                    // traveling cannot be interrupted
+                    return false;
+                }
                 if (!activityQueue.CurrentActivity.IsDetermined)
                     throw new LPGException($"Dynamic affordance {CurrentAffordance} is marked as interruptable, this is not allowed.");
 
@@ -437,7 +435,6 @@ namespace CalculationEngine.HouseholdElements
                     activityQueue.CurrentActivity.WasInterrupted = true;
 
                     // choose which affordance is started instead
-                    newActivityStarted = true;
                     var bestAffordance = GetBestAffordanceFromList(time, availableInterruptingAffordances);
 
                     // get the activation object for the interruption
@@ -460,13 +457,10 @@ namespace CalculationEngine.HouseholdElements
 
                     // log the interruption
                     LogThought(time, "Interrupting the previous affordance for " + bestAffordance.Name);
+                    return !activityQueue.CurrentActivity.IsDetermined;
                 }
             }
-
-            // log that the person is busy, including their current health state
-            string healthState = _isCurrentlySick ? "sick" : "healthy";
-            LogThought(time, "I'm busy and " + healthState);
-            return newActivityStarted && !activityQueue.CurrentActivity.IsDetermined;
+            return false;
         }
 
         /// <summary>
