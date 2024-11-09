@@ -77,7 +77,7 @@ namespace CalculationEngine.Activities
                 {
                     for (var i = 0; i < loc.LightDevices.Count; i++)
                     {
-                        loc.LightDevices[i].SetAllLoadTypesToTimeprofile(cp, timestep, "Light", Name, 1);
+                        loc.LightDevices[i].SetAllLoadTypesToTimeprofile(cp, timestep, "Light", PersonName, 1);
                     }
                 }
             }

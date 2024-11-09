@@ -75,7 +75,7 @@ namespace CalculationEngine.HouseholdElements
         {
             // TODO alternative approach: choose an affordance duration just like a normal affordance, and include it in RemoteAffordanceActivation as
             // 'requested stay duration', which the POI can use for stay simulation
-            var activation = new RemoteActivity(Name, Name, activator.Name, Site.PointOfInterest, this);
+            var activation = new RemoteActivity(Name, activator.Name, Site.PointOfInterest, this);
             return [activation];
         }
 

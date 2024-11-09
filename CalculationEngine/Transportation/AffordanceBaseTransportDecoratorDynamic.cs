@@ -31,7 +31,7 @@ namespace CalculationEngine.Transportation
         {
             var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
             var destination = firstSourceActivity.Destination;
-            return new DynamicTravelActivity(activationName, SourceAffordance.Name, activator.Name, destination, this, new(route, personSourceSite));
+            return new DynamicTravelActivity(SourceAffordance.Name, activator.Name, destination, this, new(route, personSourceSite));
         }
     }
 }

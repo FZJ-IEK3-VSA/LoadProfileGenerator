@@ -11,16 +11,16 @@ namespace CalculationEngine.Activities
 {
     public abstract class StaticActivity : Activity
     {
-        protected StaticActivity(string name, string dataSource, string personName, ICalcProfile profile) : base(name, dataSource, personName, null)
+        protected StaticActivity(string dataSource, string personName, ICalcProfile profile) : base(dataSource, personName, null)
         {
             Profile = profile;
         }
 
         protected StaticActivity(string personName, CalcProfile calcProfile)
-            : this(calcProfile.Name, calcProfile.DataSource, personName, calcProfile) { }
+            : this(calcProfile.DataSource, personName, calcProfile) { }
 
         protected StaticActivity(string personName, CalcSubAffTimeProfile calcProfile)
-            : this(calcProfile.Name, calcProfile.DataSource, personName, calcProfile) { }
+            : this(calcProfile.DataSource, personName, calcProfile) { }
 
         public override bool IsDetermined => true;
 
@@ -44,7 +44,7 @@ namespace CalculationEngine.Activities
             if (remoteActivityResult is not null)
                 throw new LPGException("Received an unexpected remote activity update during a local activity.");
 
-            return StartTime.InternalStep + Profile.StepValues.Count >= time.InternalStep;
+            return time.InternalStep >= StartTime.InternalStep + Profile.StepValues.Count;
         }
     }
 }

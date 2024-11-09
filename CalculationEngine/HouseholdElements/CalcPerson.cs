@@ -426,8 +426,10 @@ namespace CalculationEngine.HouseholdElements
             // check if the affordance may be interrupted and did not already interrupt another affordance itself
             if (CurrentAffordance?.IsInterruptable == true && !_isCurrentlyPriorityAffordanceRunning)
             {
-                if (activityQueue.CurrentActivity.IsDetermined)
-                    throw new LPGException($"Remote affordance {CurrentAffordance} is marked as interruptable.");
+                if (activityQueue.CurrentActivity.IsTravel)
+                    throw new LPGException($"Travel affordance {CurrentAffordance} is marked as interruptable, this is not allowed.");
+                if (!activityQueue.CurrentActivity.IsDetermined)
+                    throw new LPGException($"Dynamic affordance {CurrentAffordance} is marked as interruptable, this is not allowed.");
 
                 // select correct set of affordances
                 var aff = IsSick[time.InternalStep] ? _sicknessPotentialAffs : _normalPotentialAffs;
@@ -468,7 +470,7 @@ namespace CalculationEngine.HouseholdElements
             // log that the person is busy, including their current health state
             string healthState = _isCurrentlySick ? "sick" : "healthy";
             LogThought(time, "I'm busy and " + healthState);
-            return newActivityStarted;
+            return newActivityStarted && !activityQueue.CurrentActivity.IsDetermined;
         }
 
         /// <summary>
@@ -665,7 +667,8 @@ namespace CalculationEngine.HouseholdElements
 
         private void UpdateLocation(TimeStep timestep, IActivity activity, RemoteActivityFinished? remoteActivityResult)
         {
-            var affordance = activity.Affordance; // TODO: does this work for non-city and non-transport simulations?
+            // TODO: does this method work for non-city and non-transport simulations?
+            var affordance = activity.Affordance;
 
             // update the location fields
             _currentLocation = affordance.ParentLocation;

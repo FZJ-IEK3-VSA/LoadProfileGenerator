@@ -8,8 +8,8 @@ namespace CalculationEngine.Activities
 {
     public class DynamicTravelActivity : DynamicActivity
     {
-        public DynamicTravelActivity(string name, string dataSource, string personName, PointOfInterestId? destination, AffordanceBaseTransportDecoratorDynamic affordance,
-            TravelInformation travelInfo) : base(name, dataSource, personName, destination)
+        public DynamicTravelActivity(string dataSource, string personName, PointOfInterestId? destination, AffordanceBaseTransportDecoratorDynamic affordance, TravelInformation travelInfo)
+            : base(dataSource, personName, destination)
         {
             Affordance = affordance;
             TravelInfo = travelInfo;
@@ -47,7 +47,7 @@ namespace CalculationEngine.Activities
 
         public override string GetStartThought()
         {
-            return "Starting to execute dynamic travel " + Name + " with unknown duration.";
+            return $"Starting to execute dynamic travel {Name} with unknown duration.";
         }
     }
 }

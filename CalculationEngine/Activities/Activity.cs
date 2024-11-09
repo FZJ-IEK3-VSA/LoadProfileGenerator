@@ -10,9 +10,9 @@ namespace CalculationEngine.Activities
     /// <summary>
     /// Abstract base class for all affordance activations
     /// </summary>
-    public abstract class Activity(string name, string dataSource, string personName, PointOfInterestId? destination) : IActivity
+    public abstract class Activity(string dataSource, string personName, PointOfInterestId? destination) : IActivity
     {
-        public string Name { get; } = name;
+        public string Name => Affordance.Name;
         public string DataSource { get; } = dataSource;
         public string PersonName { get; } = personName;
         public TimeStep? StartTime { get; protected set; }
