@@ -32,7 +32,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using Automation;
@@ -47,7 +46,6 @@ using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
-using JetBrains.Annotations;
 
 #endregion
 
@@ -102,7 +100,7 @@ namespace CalculationEngine.HouseholdElements
         /// Is true if an affordance that interrupted another is currently active.
         /// Prevents interrupting an already interrupting affordance.
         /// </summary>
-        private bool _isCurrentlyPriorityAffordanceRunning;
+        private bool _isCurrentActivityInterruption;
 
         private bool _isCurrentlySick;
 
@@ -303,25 +301,35 @@ namespace CalculationEngine.HouseholdElements
             if (activityQueue.CurrentActivity.IsFinished(time, remoteActivityResult))
             {
                 FinishActivity(time, activityQueue.CurrentActivity, remoteActivityResult);
+                return StartNextActivity(time, isDaylight, persons);
+            }
 
-                // start the next activity if there is one planned
-                if (!activityQueue.IsEmpty)
+            // the person is already busy with an activity, check for a possible interruption
+            return InterruptIfNeeded(time, isDaylight, false);
+
+        }
+
+        private bool StartNextActivity(TimeStep time, DayLightStatus isDaylight, List<CalcPerson> persons)
+        {
+            if (!activityQueue.IsEmpty && activityQueue.CurrentActivity.WasInterrupted)
+            {
+                // the next activity had been interrupted by the previous one
+                bool resumedPreviousActivity = ReturnToPreviousActivityAfterInterrupt(time);
+                if (resumedPreviousActivity)
                 {
-                    StartActivity(time, isDaylight, activityQueue.CurrentActivity);
-                    _isCurrentlyPriorityAffordanceRunning = false;
-                    return !activityQueue.CurrentActivity.IsDetermined;
+                    return false;
                 }
             }
 
-            // TODO: fortfahren nach Interrupt implementieren
-            //ReturnToPreviousActivityIfPreviouslyInterrupted(time);
-
-            // if the person is already busy with an activity, only check for a possible interruption
+            // start the next activity
             if (!activityQueue.IsEmpty)
             {
-                return InterruptIfNeeded(time, isDaylight, false);
+                // there are still activities planned, start the next one
+                StartActivity(time, isDaylight, activityQueue.CurrentActivity);
+                _isCurrentActivityInterruption = false;
+                return !activityQueue.CurrentActivity.IsDetermined;
             }
-
+            // no more activities planned, choose and start new activities
             return PlanAndStartNewActivity(time, isDaylight, persons);
         }
 
@@ -335,7 +343,7 @@ namespace CalculationEngine.HouseholdElements
 
             // start the first of the new activities
             StartActivity(time, isDaylight, activityQueue.CurrentActivity);
-            _isCurrentlyPriorityAffordanceRunning = false;
+            _isCurrentActivityInterruption = false;
 
             // return whether a new remote activity was started
             return !activityQueue.CurrentActivity.IsDetermined;
@@ -406,11 +414,11 @@ namespace CalculationEngine.HouseholdElements
         private bool InterruptIfNeeded(TimeStep time, DayLightStatus isDaylight,
                                        bool ignorePreviousAffordances)
         {
-            // track whether a remote activity was started
+            // track whether a new activity was started
             bool newActivityStarted = false;
 
             // check if the affordance may be interrupted and did not already interrupt another affordance itself
-            if (CurrentAffordance?.IsInterruptable == true && !_isCurrentlyPriorityAffordanceRunning)
+            if (CurrentAffordance?.IsInterruptable == true && !_isCurrentActivityInterruption)
             {
                 if (activityQueue.CurrentActivity.IsTravel)
                     throw new LPGException($"Travel affordance {CurrentAffordance} is marked as interruptable, this is not allowed.");
@@ -425,7 +433,10 @@ namespace CalculationEngine.HouseholdElements
                     NewGetAllViableAffordancesAndSubs(time, null, true, aff, ignorePreviousAffordances);
                 if (availableInterruptingAffordances.Count != 0)
                 {
-                    // the current affordance will now be interrupted; choose which affordance is started instead
+                    // the current affordance will now be interrupted
+                    activityQueue.CurrentActivity.WasInterrupted = true;
+
+                    // choose which affordance is started instead
                     newActivityStarted = true;
                     var bestAffordance = GetBestAffordanceFromList(time, availableInterruptingAffordances);
 
@@ -439,14 +450,13 @@ namespace CalculationEngine.HouseholdElements
                             FinishActivity(time, activityQueue.CurrentActivity, null);
                             break;
                         case ActionAfterInterruption.GoBackToOld:
-                            // TODO: do anything here?
                             break;
                     }
 
                     // add the activity to the beginning of the queue so it is immediately carried out
                     activityQueue.AddFirst(interruptActivities);
                     StartActivity(time, isDaylight, activityQueue.CurrentActivity);
-                    _isCurrentlyPriorityAffordanceRunning = true;
+                    _isCurrentActivityInterruption = true;
 
                     // log the interruption
                     LogThought(time, "Interrupting the previous affordance for " + bestAffordance.Name);
@@ -460,24 +470,31 @@ namespace CalculationEngine.HouseholdElements
         }
 
         /// <summary>
-        /// Check if the last affordance had interrupted another one, and if so whether the interrupted affordance
-        /// should now be resumed. If so, creates a new action entry for the resumed affordance. 
+        /// This method is called when an affordance that had been interrupted is resumed.
+        /// Resumes the interrupted activity if possible, or else removes it from the activity queue.
         /// </summary>
         /// <param name="time">current timestep</param>
-        /// <exception cref="LPGException"></exception>
-        private void ReturnToPreviousActivityIfPreviouslyInterrupted(TimeStep time)
+        /// <returns>whether the interrupted activity was resumed</returns>
+        private bool ReturnToPreviousActivityAfterInterrupt(TimeStep time)
         {
-            // TODO: move this logging of resuming an affordance after interrupt to somewhere else
+            // check if the interrupted activity can still be resumed
+            if (activityQueue.CurrentActivity.IsFinished(time, null))
+            {
+                // the interrupted activity is already over by now - finish it
+                activityQueue.CurrentActivity.Finish(time, null);
+                activityQueue.RemoveCurrentActivity();
+                return false;
+            }
 
-            // check if an affordance was interrupted previously, and if the interrupted affordance shall now be resumed
             // log that the interrupted affordance is now continued
-            var thought = "Back to " + _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 2];
+            var thought = "Resuming interrupted activity " + activityQueue.CurrentActivity.Name;
             LogThought(time, thought);
 
-            // -2 to get the affordance before the interrupting one
-            ICalcAffordanceBase prevAff = _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 2].Item1;
+            // add another action entry, but don't activate the resumed activity again
+            var prevAff = activityQueue.CurrentActivity.Affordance;
             _calcRepo.OnlineLoggingData.AddActionEntry(time, Guid, Name, _isCurrentlySick, prevAff.Name, prevAff.Guid,
                 _calcPerson.HouseholdKey, prevAff.AffCategory, prevAff.BodilyActivityLevel);
+            return true;
         }
 
         private void WriteDesiresToLogfileIfNeeded(TimeStep time, HouseholdKey householdKey)

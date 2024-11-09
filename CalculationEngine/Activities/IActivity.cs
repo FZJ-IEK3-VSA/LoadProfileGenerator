@@ -56,6 +56,8 @@ namespace CalculationEngine.Activities
 
         bool LightingSwitchedOn { get; }
 
+        bool WasInterrupted { get; set; }
+
         /// <summary>
         /// Creates a message about starting the activity. Can be logged as a thought of
         /// the activating person.

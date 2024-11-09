@@ -18,6 +18,7 @@ namespace CalculationEngine.Activities
         public TimeStep? StartTime { get; protected set; }
         public PointOfInterestId? Destination { get; } = destination;
         public bool LightingSwitchedOn { get; protected set; }
+        public bool WasInterrupted { get; set; }
 
         public abstract bool IsDetermined { get; }
         public abstract bool IsTravel { get; }
