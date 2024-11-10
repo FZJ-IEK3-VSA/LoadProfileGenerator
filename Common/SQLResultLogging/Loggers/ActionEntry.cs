@@ -84,7 +84,7 @@ namespace Common.SQLResultLogging.Loggers {
 
         public ActionEntry([JetBrains.Annotations.NotNull] string category, [JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] TimeStep timeStep,
                            DateTime dateTime, StrGuid personGuid, [JetBrains.Annotations.NotNull] string personName, bool isSick,
-                           [JetBrains.Annotations.NotNull] string affordanceName, StrGuid affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel)
+                           [JetBrains.Annotations.NotNull] string affordanceName, StrGuid affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel, bool isTravel)
         {
             Category = category;
             HouseholdKey = householdKey;
@@ -97,6 +97,7 @@ namespace Common.SQLResultLogging.Loggers {
             AffordanceGuid = affordanceGuid;
             ID = id;
             BodilyActivityLevel = bodilyActivityLevel;
+            IsTravel = isTravel;
             ActionEntryGuid = Guid.NewGuid().ToStrGuid();
         }
 
@@ -126,6 +127,9 @@ namespace Common.SQLResultLogging.Loggers {
         public bool IsSick { get; set; }
 
         [JsonProperty]
+        public bool IsTravel { get; set; }
+
+        [JsonProperty]
         public StrGuid PersonGuid { get; set; }
 
         [JetBrains.Annotations.NotNull]
@@ -145,13 +149,13 @@ namespace Common.SQLResultLogging.Loggers {
                                                   bool isSick, [JetBrains.Annotations.NotNull] string affordanceName,
                                                   StrGuid affordanceGuid, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                                                   [JetBrains.Annotations.NotNull] string category,
-                                                  DateTime timestamp, BodilyActivityLevel bodilyActivityLevel)
+                                                  DateTime timestamp, BodilyActivityLevel bodilyActivityLevel, bool isTravel)
         {
             ActionEntry ae = new ActionEntry(
                 category, householdKey, timeStep, timestamp,
                 personGuid, personName, isSick, affordanceName,
                 affordanceGuid,
-                0, bodilyActivityLevel);
+                0, bodilyActivityLevel, isTravel);
             return ae;
         }
     }

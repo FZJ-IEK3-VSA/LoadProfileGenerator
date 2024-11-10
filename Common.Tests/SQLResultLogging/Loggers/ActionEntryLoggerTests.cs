@@ -55,7 +55,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
                 InputDataLogger idl = new InputDataLogger(savers.ToArray());
                 TimeStep ts = new TimeStep(1, 0, true);
                 ActionEntry ae1 = new ActionEntry("blub", key, ts, DateTime.Now, "123".ToStrGuid(), "name", false,
-                    "affname", "affguid".ToStrGuid(), 0, BodilyActivityLevel.Low);
+                    "affname", "affguid".ToStrGuid(), 0, BodilyActivityLevel.Low, false);
                 List<IHouseholdKey> aes = new List<IHouseholdKey>
             {
                 ae1

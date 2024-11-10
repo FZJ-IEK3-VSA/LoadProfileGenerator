@@ -65,7 +65,7 @@ namespace CalculationEngine.OnlineLogging {
         void AddActionEntry([NotNull] TimeStep timeStep, StrGuid personGuid, [NotNull] string personName, bool isSick,
                             [NotNull] string affordanceName,
                             StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
-                            [NotNull] string affordanceCategory, BodilyActivityLevel bodilyActivityLevel);
+                            [NotNull] string affordanceCategory, BodilyActivityLevel bodilyActivityLevel, bool isTravel);
 
         void AddColumnEntry([NotNull] ColumnEntry ce);
         void AddLocationEntry([NotNull] LocationEntry le);
@@ -157,14 +157,14 @@ namespace CalculationEngine.OnlineLogging {
 
         public void AddActionEntry(TimeStep timeStep, StrGuid personGuid, string personName,
                                    bool isSick, string affordanceName, StrGuid affordanceGuid,
-                                   HouseholdKey householdKey, string affordanceCategory, BodilyActivityLevel bodilyActivityLevel)
+                                   HouseholdKey householdKey, string affordanceCategory, BodilyActivityLevel bodilyActivityLevel, bool isTravel)
         {
             if (!timeStep.DisplayThisStep) {
                 return;
             }
             ActionEntry ae = ActionEntry.MakeActionEntry(timeStep,
                 personGuid, personName, isSick, affordanceName, affordanceGuid,
-                householdKey, affordanceCategory, _dsc.MakeDateFromTimeStep(timeStep), bodilyActivityLevel);
+                householdKey, affordanceCategory, _dsc.MakeDateFromTimeStep(timeStep), bodilyActivityLevel, isTravel);
             _actionEntries.Add(ae);
         }
 

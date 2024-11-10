@@ -394,7 +394,7 @@ namespace CalculationEngine.HouseholdElements
             {
                 _calcRepo.OnlineLoggingData.AddActionEntry(time, _calcPerson.Guid, _calcPerson.Name,
                     _isCurrentlySick, "taking a vacation", _vacationAffordanceGuid, _calcPerson.HouseholdKey,
-                    "Vacation", BodilyActivityLevel.Outside);
+                    "Vacation", BodilyActivityLevel.Outside, false);
                 _calcRepo.OnlineLoggingData.AddLocationEntry(new LocationEntry(_calcPerson.HouseholdKey,
                     _calcPerson.Name, _calcPerson.Guid, time, "Vacation", _vacationLocationGuid));
                 _alreadyloggedvacation = true;
@@ -487,7 +487,7 @@ namespace CalculationEngine.HouseholdElements
             // add another action entry, but don't activate the resumed activity again
             var prevAff = activityQueue.CurrentActivity.Affordance;
             _calcRepo.OnlineLoggingData.AddActionEntry(time, Guid, Name, _isCurrentlySick, prevAff.Name, prevAff.Guid,
-                _calcPerson.HouseholdKey, prevAff.AffCategory, prevAff.BodilyActivityLevel);
+                _calcPerson.HouseholdKey, prevAff.AffCategory, prevAff.BodilyActivityLevel, activityQueue.CurrentActivity.IsTravel);
             return true;
         }
 
@@ -630,7 +630,7 @@ namespace CalculationEngine.HouseholdElements
             _calcRepo.OnlineLoggingData.AddActionEntry(timestep, Guid,
                 Name, _isCurrentlySick, activity.Name,
                 affordance.Guid, _calcPerson.HouseholdKey,
-                affordance.AffCategory, affordance.BodilyActivityLevel);
+                affordance.AffCategory, affordance.BodilyActivityLevel, activity.IsTravel);
 
             LogThought(timestep, activity.GetStartThought());
 
