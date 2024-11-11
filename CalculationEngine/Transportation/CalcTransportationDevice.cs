@@ -30,8 +30,6 @@ namespace CalculationEngine.Transportation
 
         private readonly double _maxChargingPower;
 
-        private readonly Dictionary<int, CalcSite?> _targetSiteByTimeStep = [];
-
         private TimeStep _activationStartTimestep = new(-1, 0, false);
         private TimeStep _activationStopTimestep = new(-1, 0, false);
         private double _availableRangeInMeters;
@@ -137,8 +135,8 @@ namespace CalculationEngine.Transportation
             _activationStopTimestep = startTimeStep.AddSteps(durationInTimesteps);
             if (Category.IsLimitedToSingleLocation)
             {
-                _targetSiteByTimeStep.Add(startTimeStep.InternalStep, null);
-                _targetSiteByTimeStep.Add(_activationStopTimestep.InternalStep, dstSite);
+                // set site to null while traveling
+                _currentSite = null;
             }
 
             // mark the device as busy for the duration of this usage
@@ -168,6 +166,27 @@ namespace CalculationEngine.Transportation
             }
         }
 
+        /// <summary>
+        /// Finishes the current travel of this device.
+        /// </summary>
+        /// <param name="timestep">the current timestep, in which the travel ends</param>
+        /// <param name="destination">the destination at which the device arrived</param>
+        public void FinishTravel(TimeStep timestep, ICalcSite destination)
+        {
+            _activationStopTimestep = timestep;
+            _currentSite = Category.IsLimitedToSingleLocation ? destination : null;
+        }
+
+        /// <summary>
+        /// Checks if this device is currently in use and traveling.
+        /// </summary>
+        /// <param name="currentTimeStep">the current timestep</param>
+        /// <returns>true if the device is currently traveling; otherwise, false</returns>
+        private bool IsCurrentlyTraveling(TimeStep currentTimeStep)
+        {
+            return currentTimeStep >= _activationStartTimestep && currentTimeStep < _activationStopTimestep;
+        }
+
         public int CalculateDurationOfTimestepsForDistance(double distanceInM) =>
             CalculateDurationOfTimestepsForDistance(distanceInM, AverageSpeedInMPerS, _calcRepo.CalcParameters.InternalStepsize);
 
@@ -183,15 +202,14 @@ namespace CalculationEngine.Transportation
 
         public void DriveAndCharge(TimeStep currentTimeStep)
         {
-            AdjustCurrentsiteByTimestep(currentTimeStep);
             LastChargingPower = 0;
-            
+
             // geräte, die nicht geladen werden müssen, haben eine negative range.
             // geräte im vehicle depot / in transit müssen nicht geladen werden.
 
             if (_fullRangeInMeters < 0)
             {
-                // devices does not need to be charged
+                // device does not need to be charged
                 DisconnectCar();
                 _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.Undefined,
@@ -200,7 +218,7 @@ namespace CalculationEngine.Transportation
                 return;
             }
 
-            if (currentTimeStep >= _activationStartTimestep && currentTimeStep < _activationStopTimestep)
+            if (IsCurrentlyTraveling(currentTimeStep))
             {
                 // device is currently driving
                 DisconnectCar();
@@ -266,12 +284,6 @@ namespace CalculationEngine.Transportation
                         chargingStation = chargingStations.First(x => x.IsAvailable);
                         ConnectCar(chargingStation);
                     }
-
-                    if (_currentSite == null)
-                    {
-                        throw new LPGException("Current site was null while trying to charge.");
-                    }
-
                     if (chargingStation == null)
                     {
                         throw new LPGException("Charging station for charging was null");
@@ -333,33 +345,6 @@ namespace CalculationEngine.Transportation
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// If necessary updates the site of a device during when it is used.
-        /// </summary>
-        /// <param name="timestep">the current timestep</param>
-        /// <exception cref="LPGException">if a site change was missed</exception>
-        private void AdjustCurrentsiteByTimestep(TimeStep timestep)
-        {
-            if (Category.IsLimitedToSingleLocation)
-            {
-                if (_targetSiteByTimeStep.TryGetValue(timestep.InternalStep, out CalcSite? value))
-                {
-                    // update to the new site and remove the update entry
-                    _currentSite = value;
-                    _targetSiteByTimeStep.Remove(timestep.InternalStep);
-                }
-
-                // double-check if no site updates were missed
-                foreach (var ts in _targetSiteByTimeStep.Keys)
-                {
-                    if (ts < timestep.InternalStep)
-                    {
-                        throw new LPGException("Leftover old timestep");
-                    }
-                }
-            }
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
@@ -21,6 +22,7 @@ namespace CalculationEngine.Transportation
 
         public List<CalcTransportationDevice> AllMoveableDevices { get; } = [];
 
+        // TODO: remove SameSiteRoutes if not needes anymore
         public Dictionary<CalcSite, CalcTravelRoute> SameSiteRoutes { get; } = [];
 
         public List<CalcTransportationDeviceCategory> DeviceCategories { get; } = [];
@@ -49,10 +51,8 @@ namespace CalculationEngine.Transportation
             CalcPersonDto person, ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
             if (srcSite == dstSite)
-            {
-                // TODO: what to do here? Think about the transport model coupling
-                return SameSiteRoutes[srcSite];
-            }
+                throw new LPGException($"Source and destination of a travel must not be the same site ({srcSite}).");
+
             if (srcSite.DeviceChangeAllowed)
             {
                 // person is not bound to a device anymore
@@ -60,7 +60,7 @@ namespace CalculationEngine.Transportation
             }
             //first get the routes, no matter if busy
             var devicesAtSrc = AllMoveableDevices.Where(x => x.Currentsite == srcSite).ToList();
-            var possibleRoutes = srcSite.GetAllRoutesTo(dstSite, devicesAtSrc, person, DeviceOwnerships);
+            var possibleRoutes = srcSite.GetAllRoutesTo(dstSite, devicesAtSrc, person);
             // filter routes based on the affordance tag
             var allowedRoutes = possibleRoutes
                 .Where(route => route.PersonID == null || route.PersonID == person.ID)

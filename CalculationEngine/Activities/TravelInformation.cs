@@ -45,6 +45,12 @@ namespace CalculationEngine.Activities
             if (TravelDeviceUseEvents is null)
                 throw new LPGException("Did not store the travel device use events in a travel activity.");
 
+            // finish usage for all devices
+            foreach (var deviceUse in TravelDeviceUseEvents)
+            {
+                deviceUse.Device.FinishTravel(startTime, affordance.Site);
+            }
+
             int sourceAffordanceDuration = -1; // dummy value - is currently not used in transportation logging
             affordance.LogTransportationEvent(TravelDeviceUseEvents, personName, startTime!, SourceSite, Route, duration, sourceAffordanceDuration);
         }

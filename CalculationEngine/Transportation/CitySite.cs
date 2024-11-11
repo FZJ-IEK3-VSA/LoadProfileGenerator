@@ -33,8 +33,8 @@ namespace CalculationEngine.Transportation
         public List<CalcChargingStation> CollectChargingDevicesFor(CalcTransportationDeviceCategory category, CalcLoadType carLoadType)
             => SiteCategory.CollectChargingDevicesFor(category, carLoadType);
 
-        public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc, CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> travelDeviceOwnerships)
-            => SiteCategory.GetAllRoutesTo(dstSite, devicesAtSrc, person, travelDeviceOwnerships);
+        public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc, CalcPersonDto person)
+            => SiteCategory.GetAllRoutesTo(dstSite, devicesAtSrc, person);
 
         public bool IsSameCategory(ICalcSite other) => SiteCategory.IsSameCategory(other);
 

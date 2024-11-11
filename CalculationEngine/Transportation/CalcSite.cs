@@ -94,8 +94,7 @@ namespace CalculationEngine.Transportation
             return true;
         }
 
-        public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc,
-             CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
+        public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc, CalcPersonDto person)
         {
             return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite, devicesAtSrc, person)).ToList();
         }

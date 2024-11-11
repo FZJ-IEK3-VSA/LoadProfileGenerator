@@ -29,7 +29,7 @@ namespace CalculationEngine.Transportation
         List<CalcChargingStation> CollectChargingDevicesFor(CalcTransportationDeviceCategory category, CalcLoadType carLoadType);
 
         List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc,
-            CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> travelDeviceOwnerships);
+            CalcPersonDto person);
 
         bool IsSameCategory(ICalcSite other);
     }
