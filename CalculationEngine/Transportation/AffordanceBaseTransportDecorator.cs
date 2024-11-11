@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Speech.Recognition.SrgsGrammar;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Activities;
@@ -87,6 +85,7 @@ namespace CalculationEngine.Transportation
             int? travelDurationIfFound = route.GetDuration(startTime, activator, _transportationHandler.AllMoveableDevices);
             int travelDuration = travelDurationIfFound ?? throw new LPGException("Bug: couldn't calculate travel duration for route.");
             TimeStep affordanceStartTime = startTime.AddSteps(travelDuration);
+            // TODO: the dynamic transport decorator needs to guess the route duration here instead, perhaps based on a moving average?
 
             // create the source affordance activity objects
             var sourceActivities = SourceAffordance.PlanActivation(affordanceStartTime, activator, personSourceSite);
