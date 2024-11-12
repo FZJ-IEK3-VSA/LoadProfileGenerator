@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Automation;
+using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -22,6 +23,7 @@ namespace Common.JSON {
 
     public class CalcParameters {
         private int _numberOfSettlingDays = 3;
+        private bool citySimulationEnabled = false;
 
         private CalcParameters()
         {
@@ -32,6 +34,23 @@ namespace Common.JSON {
         public int AffordanceRepetitionCount { get; set; }
 
         public bool TransportationEnabled { get; set; }
+
+        /// <summary>
+        /// Specifies whether this LPG simulation is part of a city simulation. In a city simulation,
+        /// travels and remote activities (affordances that don't take place at home) are simulated dynamically,
+        /// outside of the LPG household.
+        /// </summary>
+        public bool CitySimulationEnabled
+        {
+            get => citySimulationEnabled;
+            set
+            {
+                if (value && !TransportationEnabled)
+                    throw new LPGException("City simulation can only be enabled if transport is enabled.");
+                citySimulationEnabled = value;
+            }
+        }
+
         public bool FlexibilityEnabled { get; set; }
         [NotNull]
         public string CSVCharacter { get; set; } = ";";

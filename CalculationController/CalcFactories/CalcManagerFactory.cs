@@ -70,7 +70,7 @@ namespace CalculationController.CalcFactories
         [SuppressMessage("ReSharper", "ThrowingSystemException")]
         [JetBrains.Annotations.NotNull]
         public CalcManager GetCalcManager([JetBrains.Annotations.NotNull] Simulator sim,
-                [JetBrains.Annotations.NotNull] CalcStartParameterSet csps,  bool forceRandom)
+                [JetBrains.Annotations.NotNull] CalcStartParameterSet csps,  bool forceRandom, bool citySimulationEnabled = false)
             //, ICalcObject hh,
             //bool forceRandom, TemperatureProfile temperatureProfile,
             //GeographicLocation geographicLocation, EnergyIntensityType energyIntensity,
@@ -122,6 +122,7 @@ namespace CalculationController.CalcFactories
                 var container = builder.Build();
                 using var scope = container.BeginLifetimeScope();
                 var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository, out var affordanceTaggingSets);
+                calcRepo.CalcParameters.CitySimulationEnabled = citySimulationEnabled;
 
                 cm = new CalcManager(csps.ResultPath,
                     //hh.Name,

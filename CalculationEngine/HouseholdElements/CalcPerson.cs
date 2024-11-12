@@ -865,9 +865,9 @@ namespace CalculationEngine.HouseholdElements
         private ICalcAffordanceBase ReplaceWithRemoteAffordanceIfNecessary(ICalcAffordanceBase affordance)
         {
             // TODO: put this option somewhere more suitable
-            if (!AffordanceBaseTransportDecorator.DynamicCitySimulation)
+            if (!_calcRepo.CalcParameters.CitySimulationEnabled)
             {
-                // not dynamic city simulation
+                // no dynamic city simulation
                 return affordance;
             }
             if (affordance is not AffordanceBaseTransportDecoratorDynamic transportAffordance)
@@ -901,7 +901,7 @@ namespace CalculationEngine.HouseholdElements
         {
             // get the initial site from the location
             _currentSite = _currentLocation.CalcSite;
-            if (AffordanceBaseTransportDecorator.DynamicCitySimulation && _currentSite?.Name != NameOfHomeCalcSite)
+            if (_calcRepo.CalcParameters.CitySimulationEnabled && _currentSite?.Name != NameOfHomeCalcSite)
             {
                 // TODO: correctly initialize currentPOI
                 throw new NotImplementedException("Starting at a site other than 'Home' is not yet implemented for the city simulation.");

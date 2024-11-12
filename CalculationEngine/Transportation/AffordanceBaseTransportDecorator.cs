@@ -22,12 +22,6 @@ namespace CalculationEngine.Transportation
         protected readonly CalcRepo _calcRepo;
 
         /// <summary>
-        /// General flag to decide whether dynamic simulation of travel times and remote affordances
-        /// is done or not. If not, static route calculation and only fixed-duration affordances are used.
-        /// </summary>
-        public static readonly bool DynamicCitySimulation = true;
-
-        /// <summary>
         /// Creates the correct transport decorator to use, depending on whether dynamic city simulation is enabled or not
         /// </summary>
         /// <param name="sourceAffordance">the affordance to decorate</param>
@@ -39,7 +33,7 @@ namespace CalculationEngine.Transportation
         public static AffordanceBaseTransportDecorator CreateTransportDecorator(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler,
             HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo)
         {
-            if (DynamicCitySimulation)
+            if (calcRepo.CalcParameters.CitySimulationEnabled)
             {
                 return new AffordanceBaseTransportDecoratorDynamic(sourceAffordance, transportationHandler, householdkey, guid, calcRepo);
             }

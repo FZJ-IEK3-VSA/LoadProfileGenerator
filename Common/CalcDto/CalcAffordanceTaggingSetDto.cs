@@ -75,6 +75,8 @@ namespace Common.CalcDto {
         /// <returns>The tag of the specified affordance</returns>
         public string GetAffordanceTag(string affordanceName)
         {
+            if (affordanceName.StartsWith("Travel "))
+                return "Travel";
             // look up the affordance name in the dictionary
             if (!_affordanceToTagDict.TryGetValue(affordanceName, out var affordanceTag))
             {
