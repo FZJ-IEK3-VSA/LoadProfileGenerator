@@ -30,7 +30,5 @@ namespace CalculationEngine.Transportation
 
         List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc,
             CalcPersonDto person);
-
-        bool IsSameCategory(ICalcSite other);
     }
 }

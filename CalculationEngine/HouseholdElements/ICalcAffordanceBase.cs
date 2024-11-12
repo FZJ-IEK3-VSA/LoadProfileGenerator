@@ -68,7 +68,7 @@ namespace CalculationEngine.HouseholdElements
         
         string? AreDeviceProfilesEmpty();
 
-        ICalcSite? Site { get; }
+        CalcSite? Site { get; }
 
         BodilyActivityLevel BodilyActivityLevel { get; }
     }

@@ -25,7 +25,7 @@ namespace CalculationEngine.Transportation
         /// General flag to decide whether dynamic simulation of travel times and remote affordances
         /// is done or not. If not, static route calculation and only fixed-duration affordances are used.
         /// </summary>
-        public static readonly bool DynamicCitySimulation = false;
+        public static readonly bool DynamicCitySimulation = true;
 
         /// <summary>
         /// Creates the correct transport decorator to use, depending on whether dynamic city simulation is enabled or not
@@ -62,7 +62,7 @@ namespace CalculationEngine.Transportation
 
         public string PrettyNameForDumping => Name + " (including transportation)";
 
-        public ICalcSite Site => SourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
+        public CalcSite Site => SourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
 
         public virtual IEnumerable<IActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
         {

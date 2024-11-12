@@ -36,8 +36,6 @@ namespace CalculationEngine.Transportation
         public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc, CalcPersonDto person)
             => SiteCategory.GetAllRoutesTo(dstSite, devicesAtSrc, person);
 
-        public bool IsSameCategory(ICalcSite other) => SiteCategory.IsSameCategory(other);
-
         public bool Equals(CitySite? other)
         {
             if (other is null)

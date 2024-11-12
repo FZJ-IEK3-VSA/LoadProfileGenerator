@@ -191,7 +191,7 @@ namespace CalculationEngine.Transportation
         public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] ICalcSite dstSite, [ItemNotNull][NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
             [NotNull] CalcPersonDto person)
         {
-            if (srcSite.IsSameCategory(SiteA) && dstSite.IsSameCategory(SiteB)) {
+            if (srcSite == SiteA && dstSite == SiteB) {
                 var neededCategories = CollectNeededCalcTransportationDeviceCategory();
                 if (neededCategories.Count == 0) {
                     return true;

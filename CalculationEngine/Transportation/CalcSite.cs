@@ -13,10 +13,11 @@ namespace CalculationEngine.Transportation
 {
     public class CalcSite : CalcBase, ICalcSite
     {
-        public CalcSite(string pName, bool deviceChangeAllowed, StrGuid guid, HouseholdKey householdKey) : base(pName, guid)
+        public CalcSite(string pName, bool deviceChangeAllowed, StrGuid guid, HouseholdKey householdKey, PointOfInterestId? pointOfInterest = null) : base(pName, guid)
         {
             DeviceChangeAllowed = deviceChangeAllowed;
             _householdKey = householdKey;
+            PointOfInterest = pointOfInterest;
         }
 
         public bool DeviceChangeAllowed { get; }
@@ -36,7 +37,17 @@ namespace CalculationEngine.Transportation
         /// </summary>
         public CalcSite SiteCategory => this;
 
-        public PointOfInterestId? PointOfInterest => null;
+        /// <summary>
+        /// Stores the ID of the point of interest this site represents, if city simulation
+        /// is 
+        /// </summary>
+        public PointOfInterestId? PointOfInterest { get; }
+
+        public CalcSite CreateCopyWithPOI(PointOfInterestId pointOfInterest)
+        {
+            // TODO: copy other properties if necessary
+            return new CalcSite(Name, DeviceChangeAllowed, StrGuid.New(), _householdKey, pointOfInterest);
+        }
 
         /// <summary>
         /// Adds a new location to the list of locations, and sets the CalcSite property of the location to this site.
@@ -113,11 +124,6 @@ namespace CalculationEngine.Transportation
                 gridchargingLoadType, chargingDeviceMaxChargingPower, name,
                 System.Guid.NewGuid().ToStrGuid(), _householdKey, carChargingLoadType, calcRepo, isBusy);
             ChargingDevices.Add(station);
-        }
-
-        public bool IsSameCategory(ICalcSite other)
-        {
-            return this == other;
         }
     }
 }
