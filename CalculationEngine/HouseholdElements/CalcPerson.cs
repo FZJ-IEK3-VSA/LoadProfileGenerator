@@ -53,12 +53,6 @@ namespace CalculationEngine.HouseholdElements
 {
     public class CalcPerson : CalcBase
     {
-        /// <summary>
-        /// Name of the CalcSite "Home". This is relevant for the city simulation
-        /// and determination of remote affordances.
-        /// </summary>
-        private const string NameOfHomeCalcSite = "Home";
-
         private readonly PotentialAffs _normalPotentialAffs = new PotentialAffs();
 
         private readonly CalcPersonDesires _normalDesires;
@@ -88,7 +82,7 @@ namespace CalculationEngine.HouseholdElements
         /// dynamic city simulation, a CitySite corresponding to a specific point of interest.
         /// Will always be null if transport is disabled, and must never be null if transport is enabled.
         /// </summary>
-        private ICalcSite? _currentSite;
+        private CalcSite? _currentSite;
 
         /// <summary>
         /// The location of the currently active affordance. During transport, this is already the location
@@ -877,7 +871,7 @@ namespace CalculationEngine.HouseholdElements
             }
 
             var site = transportAffordance.Site;
-            if (site?.Name == NameOfHomeCalcSite)
+            if (site.IsHome)
             {
                 // affordance takes place at home - no remote affordance
                 return affordance;
@@ -901,7 +895,7 @@ namespace CalculationEngine.HouseholdElements
         {
             // get the initial site from the location
             _currentSite = _currentLocation.CalcSite;
-            if (_calcRepo.CalcParameters.CitySimulationEnabled && _currentSite?.Name != NameOfHomeCalcSite)
+            if (_calcRepo.CalcParameters.CitySimulationEnabled && _currentSite?.IsHome == false)
             {
                 // TODO: correctly initialize currentPOI
                 throw new NotImplementedException("Starting at a site other than 'Home' is not yet implemented for the city simulation.");

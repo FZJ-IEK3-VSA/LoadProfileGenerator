@@ -13,6 +13,12 @@ namespace CalculationEngine.Transportation
 {
     public class CalcSite : CalcBase, ICalcSite
     {
+        /// <summary>
+        /// Name of the CalcSite "Home". This is relevant for the city simulation
+        /// and determination of remote affordances.
+        /// </summary>
+        private const string NameOfHomeCalcSite = "Home";
+
         public CalcSite(string pName, bool deviceChangeAllowed, StrGuid guid, HouseholdKey householdKey, PointOfInterestId? pointOfInterest = null) : base(pName, guid)
         {
             DeviceChangeAllowed = deviceChangeAllowed;
@@ -42,6 +48,12 @@ namespace CalculationEngine.Transportation
         /// is 
         /// </summary>
         public PointOfInterestId? PointOfInterest { get; }
+
+        /// <summary>
+        /// Returns true if this site is the home of the simulated household, and
+        /// false, if it is any other site.
+        /// </summary>
+        public bool IsHome => Name == NameOfHomeCalcSite;
 
         public CalcSite CreateCopyWithPOI(PointOfInterestId pointOfInterest)
         {

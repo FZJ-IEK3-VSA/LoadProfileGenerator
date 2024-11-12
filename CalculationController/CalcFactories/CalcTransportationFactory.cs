@@ -482,6 +482,10 @@ namespace CalculationController.CalcFactories {
                         carLt, _calcRepo, isBusy);
                 }
             }
+
+            // check number of 'Home' sites
+            if (sites.Count(site => site.IsHome) != 1)
+                throw new LPGException("Exactly one site needs to be the 'Home' site of the household.");
             return sites;
         }
 
