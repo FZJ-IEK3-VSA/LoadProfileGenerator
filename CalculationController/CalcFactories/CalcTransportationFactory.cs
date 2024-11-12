@@ -492,19 +492,13 @@ namespace CalculationController.CalcFactories {
                 throw new LPGException("no transportation handler");
             }
 
-            foreach (CalcLocation location in chh.Locations) {
-                foreach (var aff in location.PureAffordances) {
+            foreach (CalcLocation location in chh.Locations)
+            {
+                CheckIfLocationIsOnlyInOneSite(chh, location);
+
+                foreach (var aff in location.PureAffordances)
+                {
                     //replace with affordance decorator
-                    var sites = chh.TransportationHandler.CalcSites.Where(x => x.Locations.Contains(location)).ToList();
-                    if (sites.Count == 0)
-                    {
-                        throw new DataIntegrityException("No calc site has the location " + location.Name + ". To make the transportation work, every site needs one location.");
-                    }
-
-                    if (sites.Count > 1) {
-                        throw new DataIntegrityException("More than one calc site has the location " + location.Name);
-                    }
-
                     var abtd = AffordanceBaseTransportDecorator.CreateTransportDecorator(aff, chh.TransportationHandler,
                         chh.HouseholdKey, StrGuid.New(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
@@ -521,24 +515,33 @@ namespace CalculationController.CalcFactories {
                     }
                 }
 
+                // decorate the idle affordances
                 var persons = location.IdleAffs.Keys.ToList();
                 foreach (var person in persons) {
-                    var sites = chh.TransportationHandler.CalcSites.Where(x => x.Locations.Contains(location)).ToList();
-                    if (sites.Count == 0)
-                    {
-                        throw new DataIntegrityException("No calc site has the location " + location.Name + ". To make the transportation work, every site needs one location.");
-                    }
-
-                    if (sites.Count > 1)
-                    {
-                        throw new DataIntegrityException("More than one calc site has the location " + location.Name);
-                    }
-
                     var aff = location.IdleAffs[person];
                     var abtd = AffordanceBaseTransportDecorator.CreateTransportDecorator(aff, chh.TransportationHandler,
                         chh.HouseholdKey, StrGuid.New(), _calcRepo);
                     location.IdleAffs[person] = abtd;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified location is only contained in exactly one site.
+        /// </summary>
+        /// <param name="chh">the CalcHousehold object</param>
+        /// <param name="location">the location to look up</param>
+        /// <exception cref="DataIntegrityException">if the location is contained in no sites, or in more than one site</exception>
+        private static void CheckIfLocationIsOnlyInOneSite(CalcHousehold chh, CalcLocation location)
+        {
+            var sites = chh.TransportationHandler.CalcSites.Where(x => x.Locations.Contains(location)).ToList();
+            if (sites.Count == 0)
+            {
+                throw new DataIntegrityException("No calc site has the location " + location.Name + ". To make the transportation work, every site needs one location.");
+            }
+            if (sites.Count > 1)
+            {
+                throw new DataIntegrityException("More than one calc site has the location " + location.Name);
             }
         }
 
