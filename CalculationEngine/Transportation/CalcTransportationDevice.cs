@@ -23,9 +23,6 @@ namespace CalculationEngine.Transportation
         private readonly double _energyToDistanceFactor;
         private readonly double _fullRangeInMeters;
 
-
-        private readonly BitArray _isBusyArray;
-
         private readonly List<CalcDeviceLoad> _loads;
 
         private readonly double _maxChargingPower;
@@ -65,7 +62,6 @@ namespace CalculationEngine.Transportation
                 throw new LPGException("Time steps were not initialized.");
             }
 
-            _isBusyArray = new BitArray(_calcRepo.CalcParameters.InternalTimesteps);
             var vehiclePoolGuid = "8C426E95-B269-402E-9806-C3785D6C8433".ToStrGuid();
             _calcDeviceDto.LocationGuid = vehiclePoolGuid;
             _calcDeviceDto.LocationName = "Vehicle Pool";
@@ -137,14 +133,6 @@ namespace CalculationEngine.Transportation
             {
                 // set site to null while traveling
                 _currentSite = null;
-            }
-
-            // mark the device as busy for the duration of this usage
-            for (int i = transportationEventStartTimeStep.InternalStep;
-                i < transportationEventEndTimeStep.InternalStep && i < _isBusyArray.Length;
-                i++)
-            {
-                _isBusyArray[i] = true;
             }
 
             // create load profiles for all load types
@@ -333,18 +321,20 @@ namespace CalculationEngine.Transportation
                 , _dsc.MakeDateStringFromTimeStep(currentTimeStep), 0));
         }
 
+        /// <summary>
+        /// Checks if this transportation device will presumably be busy during the specified time period.
+        /// As with all affordances, this can later change due to actual travel times deviating from the
+        /// expected times.
+        /// </summary>
+        /// <param name="startTimeStep">the start timestep of the desired usage period</param>
+        /// <param name="durationInTimesteps">the duration of the desired usage period (currently unused)</param>
+        /// <returns>true if the device is busy during that period; false, if it is available</returns>
         public bool IsBusy(TimeStep startTimeStep, int durationInTimesteps)
         {
-            int endTimeStep = startTimeStep.InternalStep + durationInTimesteps;
-            for (int i = startTimeStep.InternalStep; i < endTimeStep && i < _calcRepo.CalcParameters.InternalTimesteps; i++)
-            {
-                if (_isBusyArray[i])
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            var endTimeStep = startTimeStep.AddSteps(durationInTimesteps);
+            if (endTimeStep < _activationStartTimestep)
+                throw new LPGException("Transport devices are activated at the start of a journey. Checking for timesteps before that should never happen.");
+            return startTimeStep < _activationStopTimestep;
         }
 
         /// <summary>
