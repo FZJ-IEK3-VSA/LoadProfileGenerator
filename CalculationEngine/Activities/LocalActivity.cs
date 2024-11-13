@@ -26,9 +26,9 @@ namespace CalculationEngine.Activities
 
         public override CalcAffordanceWithTimeLimit Affordance { get; }
 
-        public override void Start(TimeStep timestep, DayLightStatus dayLightStatus, ICalcSite? currentSite)
+        public override void Start(TimeStep timestep, DayLightStatus dayLightStatus)
         {
-            base.Start(timestep, dayLightStatus, currentSite);
+            base.Start(timestep, dayLightStatus);
             // activate lighting devices; remark: no lighting simulation for remote activities
             LightingSwitchedOn = ActivateLighting(timestep, Profile, Affordance.ParentLocation, dayLightStatus, Affordance.NeedsLight);
         }

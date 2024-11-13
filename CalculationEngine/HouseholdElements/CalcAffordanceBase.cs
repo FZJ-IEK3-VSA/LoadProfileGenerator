@@ -272,7 +272,7 @@ namespace CalculationEngine.HouseholdElements
 
         public abstract IEnumerable<IActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite);
 
-        public abstract void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite);
+        public abstract void StartActivation(TimeStep startTime, string activatorName);
 
         public abstract void FinishActivation(TimeStep endTime, string activatorName);
 
@@ -288,7 +288,7 @@ namespace CalculationEngine.HouseholdElements
             // TODO: do I keep the old Activate method for anything?
             var activities = PlanActivation(startTime, null, personSourceSite);
             personTimeProfile = activities.First();
-            StartActivation(startTime, activatorName, personSourceSite);
+            StartActivation(startTime, activatorName);
         }
 
         public abstract IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite);

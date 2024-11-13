@@ -41,7 +41,7 @@ namespace CalculationEngine.HouseholdElements
 
         IEnumerable<IActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite);
 
-        void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite);
+        void StartActivation(TimeStep startTime, string activatorName);
 
         void FinishActivation(TimeStep endTime, string activatorName);
 

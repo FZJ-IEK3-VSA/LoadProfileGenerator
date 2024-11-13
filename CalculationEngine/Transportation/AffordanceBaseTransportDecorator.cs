@@ -85,7 +85,7 @@ namespace CalculationEngine.Transportation
             var sourceActivities = SourceAffordance.PlanActivation(affordanceStartTime, activator, personSourceSite);
 
             // create the travel activity
-            var travelActivity = CreateActivity(activator, personSourceSite, route, travelDuration, sourceActivities.First());
+            var travelActivity = CreateActivity(activator, route, travelDuration, sourceActivities.First());
 
             // return the activity objects
             List<IActivity> activities = [travelActivity];
@@ -93,21 +93,20 @@ namespace CalculationEngine.Transportation
             return activities;
         }
 
-        protected virtual IActivity CreateActivity(CalcPersonDto activator, ICalcSite personSourceSite, CalcTravelRoute route, int travelDuration, IActivity firstSourceActivity)
+        protected virtual IActivity CreateActivity(CalcPersonDto activator, CalcTravelRoute route, int travelDuration, IActivity firstSourceActivity)
         {
             var name = "Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
             var stepValues = CalcProfile.MakeListwithValue1AndCustomDuration(travelDuration);
             string dataSource = firstSourceActivity.DataSource ?? SourceAffordance.Name;
             var travelProfile = new CalcProfile(name, StrGuid.New(), stepValues, ProfileType.Absolute, dataSource);
-            return new StaticTravelActivity(activator.Name, travelProfile, this, new(route, personSourceSite));
+            return new StaticTravelActivity(activator.Name, travelProfile, this, new(route));
         }
 
-        public virtual void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite)
+        public virtual void StartActivation(TimeStep startTime, string activatorName)
         { }
 
         public virtual void FinishActivation(TimeStep endTime, string activatorName)
-        {
-        }
+        { }
 
         public virtual void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IActivity personTimeProfile)
         {

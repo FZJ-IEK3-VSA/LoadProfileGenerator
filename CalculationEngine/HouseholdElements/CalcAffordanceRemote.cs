@@ -75,7 +75,7 @@ namespace CalculationEngine.HouseholdElements
             return [activation];
         }
 
-        public override void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite)
+        public override void StartActivation(TimeStep startTime, string activatorName)
         {
             // execute only variable operations that occur in the beginning
             ExecuteVariableOperations(startTime, [VariableExecutionTime.Beginning], true);

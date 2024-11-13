@@ -76,7 +76,7 @@ namespace CalculationEngine.HouseholdElements
             return [new LocalActivity(activator.Name, personTimeProfile, this)];
         }
 
-        public override void StartActivation(TimeStep startTime, string activatorName, ICalcSite? personSourceSite)
+        public override void StartActivation(TimeStep startTime, string activatorName)
         {
             ExecuteVariableOperations(startTime, [VariableExecutionTime.Beginning], true);
         }

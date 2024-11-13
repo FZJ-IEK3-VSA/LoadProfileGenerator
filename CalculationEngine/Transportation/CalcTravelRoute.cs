@@ -55,13 +55,9 @@ namespace CalculationEngine.Transportation
         public string AffordanceTagName { get; }
         public int? PersonID { get; }
         public double Weight { get; }
-        [NotNull]
-        private CalcSite SiteA { get; }
-        [NotNull]
+        public CalcSite SiteA { get; }
         public CalcSite SiteB { get; }
-        [NotNull]
-        [ItemNotNull]
-        private List<CalcTravelRouteStep> Steps { get; } = new List<CalcTravelRouteStep>();
+        private List<CalcTravelRouteStep> Steps { get; } = [];
 
         public class CalcTravelDeviceUseEvent([NotNull] CalcTransportationDevice device, int durationInSteps, double totalDistance)
         {

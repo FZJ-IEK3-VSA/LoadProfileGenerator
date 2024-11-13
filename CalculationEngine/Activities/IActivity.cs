@@ -65,7 +65,7 @@ namespace CalculationEngine.Activities
         /// <returns>thought message about starting the activity</returns>
         string GetStartThought();
 
-        void Start(TimeStep timestep, DayLightStatus dayLightStatus, ICalcSite? currentSite);
+        void Start(TimeStep timestep, DayLightStatus dayLightStatus);
 
         bool IsFinished(TimeStep timestep, RemoteActivityFinished? remoteActivityResult);
 

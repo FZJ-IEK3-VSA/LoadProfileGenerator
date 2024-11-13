@@ -27,11 +27,11 @@ namespace CalculationEngine.Transportation
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(new TimeStep(0, 0, false), _householdkey, message));
         }
 
-        protected override DynamicTravelActivity CreateActivity(CalcPersonDto activator, ICalcSite personSourceSite, CalcTravelRoute route, int travelDuration, IActivity firstSourceActivity)
+        protected override DynamicTravelActivity CreateActivity(CalcPersonDto activator, CalcTravelRoute route, int travelDuration, IActivity firstSourceActivity)
         {
             var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
             var destination = firstSourceActivity.Destination;
-            return new DynamicTravelActivity(SourceAffordance.Name, activator.Name, destination, this, new(route, personSourceSite));
+            return new DynamicTravelActivity(SourceAffordance.Name, activator.Name, destination, this, new(route));
         }
     }
 }

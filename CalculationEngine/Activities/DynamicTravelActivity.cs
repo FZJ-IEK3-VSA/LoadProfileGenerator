@@ -26,10 +26,10 @@ namespace CalculationEngine.Activities
         public TravelInformation TravelInfo { get; }
 
 
-        public override void Start(TimeStep timestep, DayLightStatus dayLightStatus, ICalcSite? currentSite)
+        public override void Start(TimeStep timestep, DayLightStatus dayLightStatus)
         {
-            base.Start(timestep, dayLightStatus, currentSite);
-            TravelInfo.StartTravel(timestep, PersonName, currentSite, Affordance);
+            base.Start(timestep, dayLightStatus);
+            TravelInfo.StartTravel(timestep, PersonName, Affordance);
         }
 
         public override bool IsFinished(TimeStep timestep, RemoteActivityFinished? remoteActivityResult)

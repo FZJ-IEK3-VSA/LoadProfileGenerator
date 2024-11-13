@@ -25,13 +25,13 @@ namespace CalculationEngine.Activities
         public abstract ICalcAffordanceBase Affordance { get; }
 
 
-        public virtual void Start(TimeStep timestep, DayLightStatus dayLightStatus, ICalcSite? currentSite)
+        public virtual void Start(TimeStep timestep, DayLightStatus dayLightStatus)
         {
             if (StartTime is not null)
                 throw new LPGException($"Activity {Name} was activated a second time.");
 
             StartTime = timestep;
-            Affordance.StartActivation(timestep, PersonName, currentSite);
+            Affordance.StartActivation(timestep, PersonName);
         }
 
         public virtual int Finish(TimeStep time, RemoteActivityFinished? remoteActivityResult)

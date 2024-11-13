@@ -429,6 +429,8 @@ namespace CalculationEngine.HouseholdElements
 
                     // choose which affordance is started instead
                     var bestAffordance = GetBestAffordanceFromList(time, availableInterruptingAffordances);
+                    if (bestAffordance.ParentLocation.CalcSite != _currentSite)
+                        throw new NotImplementedException("An affordance was interrupted by another one at another site");
 
                     // get the activation object for the interruption
                     var interruptActivities = PlanAffordanceActivation(time, isDaylight, bestAffordance);
@@ -634,7 +636,7 @@ namespace CalculationEngine.HouseholdElements
             }
 
             // activate the activity
-            activity.Start(timestep, dayLightStatus, _currentSite);
+            activity.Start(timestep, dayLightStatus);
 
             // log wether light was switched on
             string message = activity.LightingSwitchedOn ? "Turning on the light for " : "No light needed for ";
