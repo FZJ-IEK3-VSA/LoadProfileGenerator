@@ -82,7 +82,7 @@ namespace CalculationEngine.HouseholdElements
         /// dynamic city simulation, a CitySite corresponding to a specific point of interest.
         /// Will always be null if transport is disabled, and must never be null if transport is enabled.
         /// </summary>
-        private CalcSite? _currentSite;
+        private CalcSite? _currentSite => _currentLocation.CalcSite;
 
         /// <summary>
         /// The location of the currently active affordance. During transport, this is already the location
@@ -123,7 +123,6 @@ namespace CalculationEngine.HouseholdElements
             IsSick = isSick;
             IsOnVacation = isOnVacation;
             _currentLocation = startingLocation;
-            // remark: _currentSite cannot be initialized here, because startingLocation.Site is not assigned yet
             _vacationAffordanceGuid = System.Guid.NewGuid().ToStrGuid();
         }
 
@@ -644,7 +643,7 @@ namespace CalculationEngine.HouseholdElements
 
         public void FinishActivity(TimeStep timestep, IActivity activity, RemoteActivityFinished? remoteActivityResult)
         {
-            UpdateLocation(timestep, activity, remoteActivityResult);
+            UpdateLocation(timestep, activity.Affordance.ParentLocation);
 
             int duration = activity.Finish(timestep, remoteActivityResult);
 
@@ -656,14 +655,15 @@ namespace CalculationEngine.HouseholdElements
             activityQueue.RemoveCurrentActivity();
         }
 
-        private void UpdateLocation(TimeStep timestep, IActivity activity, RemoteActivityFinished? remoteActivityResult)
+        /// <summary>
+        /// Updates the location of this person and creates a respective location log entry.
+        /// </summary>
+        /// <param name="timestep">the current timestep</param>
+        /// <param name="newLocation">the new location</param>
+        private void UpdateLocation(TimeStep timestep, CalcLocation newLocation)
         {
-            // TODO: does this method work for non-city and non-transport simulations?
-            var affordance = activity.Affordance;
-
             // update the location fields
-            _currentLocation = affordance.ParentLocation;
-            _currentSite = affordance.Site;
+            _currentLocation = newLocation;
 
             // log the location where the affordance is taking place
             _calcRepo.OnlineLoggingData.AddLocationEntry(
@@ -671,8 +671,8 @@ namespace CalculationEngine.HouseholdElements
                     _calcPerson.Name,
                     _calcPerson.Guid,
                     timestep,
-                    affordance.ParentLocation.Name,
-                    affordance.ParentLocation.Guid)); // TODO: add POI-ID to log?
+                    newLocation.Name,
+                    newLocation.Guid)); // TODO: add POI-ID to log?
         }
 
         /// <summary>
@@ -893,13 +893,6 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="locs">the list of locations</param>
         private void Init(List<CalcLocation> locs)
         {
-            // get the initial site from the location
-            _currentSite = _currentLocation.CalcSite;
-            if (_calcRepo.CalcParameters.CitySimulationEnabled && _currentSite?.IsHome == false)
-            {
-                // TODO: correctly initialize currentPOI
-                throw new NotImplementedException("Starting at a site other than 'Home' is not yet implemented for the city simulation.");
-            }
             InitAffordanceLists(locs, _sicknessPotentialAffs, true);
             InitAffordanceLists(locs, _normalPotentialAffs, false);
         }
