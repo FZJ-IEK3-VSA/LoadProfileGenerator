@@ -62,13 +62,17 @@ namespace MassSimulation.Simulators
         {
             if (newActivities.Any() || finishedActivities.Any())
             {
+                logger.Log(timestep, dateTime, $"Persons present: {activityStates.Count}");
+                // log each newly started activity
                 foreach (var newActivity in newActivities)
                 {
                     logger.Log(timestep, dateTime, $"{newActivity.Person.PersonName} started {newActivity.Affordance}");
                 }
-                var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
-                var message = $"Total persons: {activityStates.Count} - finished activitites: {finishedPersons}";
-                logger.Log(timestep, dateTime, message);
+                if (finishedActivities.Any())
+                {
+                    var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
+                    logger.Log(timestep, dateTime, $"Finished activitites: {finishedPersons}");
+                }
             }
         }
 

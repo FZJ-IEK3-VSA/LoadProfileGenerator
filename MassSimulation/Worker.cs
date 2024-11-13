@@ -59,14 +59,13 @@ namespace MassSimulation
 
             Stopwatch watch = Stopwatch.StartNew();
             RunSimulation();
+            comm.Barrier();
             watch.Stop();
-            logger.Info("Finished simulation");
+            logger.Info("Finished simulation. Time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
 
             FinishSimulation();
-
             comm.Barrier();
-            if (rank == 0)
-                logger.Info("Simulation time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
+            logger.Info("Finished postprocessing");
         }
 
         public void InitSimulation(string houseJobFile, int numAgents)

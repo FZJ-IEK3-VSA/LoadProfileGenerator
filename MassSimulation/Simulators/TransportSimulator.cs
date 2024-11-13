@@ -67,9 +67,11 @@ namespace MassSimulation.Simulators
         {
             if (newActivities.Any() || finishedActivities.Any())
             {
-                var newPersons = string.Join(", ", newActivities.Select(a => a.Person.PersonName));
-                var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
-                var message = $"Total persons: {travelStates.Count} - started: {newPersons}; arrived: {finishedPersons}";
+                var message = $"Persons traveling: {travelStates.Count}";
+                if (newActivities.Any())
+                    message += "; started: " + string.Join(", ", newActivities.Select(a => a.Person.PersonName));
+                if (finishedActivities.Any())
+                    message += "; arrived: " + string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
                 logger.Log(timestep, dateTime, message);
             }
         }
