@@ -1,6 +1,7 @@
 ﻿using Automation.ResultFiles;
 using CalculationEngine.Transportation;
 using Common;
+using Common.CalcDto;
 using System.Collections.Generic;
 
 namespace CalculationEngine.Activities
@@ -26,6 +27,11 @@ namespace CalculationEngine.Activities
         /// List of transportation device usages for this travel activity
         /// </summary>
         public List<CalcTravelRoute.CalcTravelDeviceUseEvent>? TravelDeviceUseEvents { get; set; }
+
+        /// <summary>
+        /// The name of the travel activity
+        /// </summary>
+        public string TravelName => CalcAffordanceTaggingSetDto.GetTravelActivityName(Route.Name);
 
         public void StartTravel(TimeStep timestep, string personName, ICalcSite? currentSite, AffordanceBaseTransportDecorator affordance)
         {

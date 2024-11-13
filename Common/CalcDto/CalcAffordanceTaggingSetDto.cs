@@ -47,6 +47,15 @@ namespace Common.CalcDto {
             _affordanceToTagDict = new Dictionary<string, string>();
         }
 
+        /// <summary>
+        /// Builds the name of a travel activity using the name of the corresponding
+        /// travel route. This travel activity name will be added to the affordance tagging sets
+        /// for each existing route.
+        /// </summary>
+        /// <param name="routeName">the name of the route used in the travel</param>
+        /// <returns>the corresponding travel activity name</returns>
+        public static string GetTravelActivityName(string routeName) => "travel on " + routeName;
+
         // this property is needed for Json deserialization
         [NotNull]
         public Dictionary<string, string> AffordanceToTagDict => _affordanceToTagDict;
@@ -65,8 +74,15 @@ namespace Common.CalcDto {
         [NotNull]
         public string Name { get; }
 
-        [NotNull]
-        public string IdlenessTag { get; set; } = "idleness";
+        /// <summary>
+        /// Special tag used for all travel activities.
+        /// </summary>
+        public string TravelTag => "travel";
+
+        /// <summary>
+        /// Special tag used for all idle affordances.
+        /// </summary>
+        public string IdlenessTag => "idleness";
 
         /// <summary>
         /// Gets the affordance tag assigned to the specified affordance name. Checks for special affordance names.
@@ -75,8 +91,6 @@ namespace Common.CalcDto {
         /// <returns>The tag of the specified affordance</returns>
         public string GetAffordanceTag(string affordanceName)
         {
-            if (affordanceName.StartsWith("Travel "))
-                return "Travel";
             // look up the affordance name in the dictionary
             if (!_affordanceToTagDict.TryGetValue(affordanceName, out var affordanceTag))
             {
@@ -128,6 +142,17 @@ namespace Common.CalcDto {
         public void AddTag([NotNull] string affordanceName, [NotNull] string tagName)
         {
             _affordanceToTagDict.Add(affordanceName, tagName);
+        }
+
+        /// <summary>
+        /// Adds a tagging entry for a travel activity. Builds the travel activity name
+        /// from the travel route name.
+        /// </summary>
+        /// <param name="routeName">the name of the travel route</param>
+        public void AddTravelTag(string routeName)
+        {
+            string routeActivityName = GetTravelActivityName(routeName);
+            AddTag(routeActivityName, TravelTag);
         }
 
         public double LookupReferenceValue([NotNull] string tagName, PermittedGender gender, int age)
