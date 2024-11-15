@@ -23,6 +23,12 @@ namespace Common.Extensions
             return s;
         }
 
+        /// <summary>
+        /// Creates a new StrGuid from this string. The resulting StrGuid only contains
+        /// this string as value and is not guaranteed to be unique.
+        /// </summary>
+        /// <param name="myguid">the string to turn into a StrGuid</param>
+        /// <returns>the new StrGuid containing the string as value</returns>
         public static StrGuid ToStrGuid(this string myguid)
         {
             return StrGuid.FromString(myguid);

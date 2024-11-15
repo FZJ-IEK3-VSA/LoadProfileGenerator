@@ -30,10 +30,8 @@ using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using Automation;
 using Automation.ResultFiles;
@@ -63,6 +61,7 @@ namespace Common.Extensions
 
             return s;
         }
+
         [JetBrains.Annotations.NotNull]
         public static StrGuid ToStrGuid(this Guid myguid)
         {
@@ -75,20 +74,11 @@ namespace Common.Extensions
             string name = mythread.Name;
             if (name == null)
             {
-                //throw new Exception("No thread name");
                 name = "(no thread name) #" + mythread.ManagedThreadId;
             }
             return name;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        //public static string GetCurrentMethod() {
-        //    var st = new StackTrace();
-        //    var sf = st.GetFrame(1);
-
-        //    return sf.GetMethod().Name;
-        //}
         public static void Sort<T>([JetBrains.Annotations.NotNull][ItemNotNull] this ObservableCollection<T> collection, [JetBrains.Annotations.NotNull] Comparison<T> comparer)
             where T : IComparable
         {
@@ -117,12 +107,6 @@ namespace Common.Extensions
                 {
                     collection.Move(collection.IndexOf(sorted[i]), i);
                 }
-
-                /*
-                 * if (sorted[i].CompareTo(collection[i]) != 0) {
-                    collection.Move(collection.IndexOf(sorted[i]), i);
-                }
-                 */
             }
         }
 
@@ -150,24 +134,5 @@ namespace Common.Extensions
             }
             collection.Sort();
         }
-
-        //public static void SynchronizeWithList<T>(this List<T> collection, List<T> list)
-        //    where T : IComparable {
-        //    foreach (var item in list) {
-        //        if (!collection.Contains(item)) {
-        //            collection.Add(item);
-        //        }
-        //    }
-        //    var todelete = new List<T>();
-        //    foreach (var item in collection) {
-        //        if (!list.Contains(item)) {
-        //            todelete.Add(item);
-        //        }
-        //    }
-        //    foreach (var item in todelete) {
-        //        collection.Remove(item);
-        //    }
-        //    collection.Sort();
-        //}
     }
 }
