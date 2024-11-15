@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Common;
+using Common.Extensions;
 using Database;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
@@ -18,24 +19,27 @@ namespace CalculationController.Integrity
                 return;
             }
             foreach (var routeSet in sim.TravelRouteSets.Items) {
+                // determine the reference distance for the travel route set
                 var arr = routeSet.Name.Split(' ');
-                var kmstr = arr.FirstOrDefault(x => x.EndsWith("km"));
+                const string km = "km";
+                var kmstr = arr.FirstOrDefault(x => x.EndsWith(km));
+                int routeSetDistance = int.Parse(kmstr.RemoveSuffix(km)) * 1000;
                 if (kmstr == null) {
                     throw new DataIntegrityException("No distance declaration in the name of the route set " + routeSet.Name, routeSet);
                 }
-                //var kmstr2 = kmstr.Replace("km", "");
-                //bool success = int.TryParse(kmstr2, out int km);
-                //if(!success) {
-                    //continue;
-                //}
 
+                // check if each workplace route in the set fits to this distance (with a tolerance)
+                const double tolerance = 1000;
                 foreach (var route in routeSet.TravelRoutes) {
                     if (!route.TravelRoute.Name.ToLower().Contains("workplace")) {
                         continue;
                     }
 
-                    if (!route.TravelRoute.Name.Contains(" " +kmstr)) {
-                        throw new DataIntegrityException("Workplace route " + route.TravelRoute.PrettyName + " in the route set " + routeSet.Name + " does not match the distance from the name which should be " + kmstr, routeSet  );
+                    double routeDistance = route.TravelRoute.CalculateTotalDistance();
+                    if (routeDistance < routeSetDistance - tolerance|| routeDistance > routeSetDistance + tolerance)
+                    {
+                        throw new DataIntegrityException($"Workplace route {route.TravelRoute.PrettyName} in the route set {routeSet.Name} has a distance of {routeDistance/1000}km. " +
+                            $"This does not match the distance specified for the travel route set, which should be {kmstr}", routeSet);
                     }
                 }
 
