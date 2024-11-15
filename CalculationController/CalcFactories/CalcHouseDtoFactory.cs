@@ -12,6 +12,7 @@ using CalculationController.Integrity;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Database;
 using Database.Helpers;
@@ -21,7 +22,8 @@ using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 
-namespace CalculationController.CalcFactories {
+namespace CalculationController.CalcFactories
+{
     [UsedImplicitly]
     public class CalcHouseDtoFactory {
         [JetBrains.Annotations.NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;

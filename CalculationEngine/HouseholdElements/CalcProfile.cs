@@ -36,11 +36,13 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using JetBrains.Annotations;
 
 #endregion
 
-namespace CalculationEngine.HouseholdElements {
+namespace CalculationEngine.HouseholdElements
+{
     public sealed class CalcProfile : BasicElement, ICalcProfile {
         [ItemNotNull]
         [JetBrains.Annotations.NotNull] private readonly List<CalcTimeDataPoint> _datapoints = [];

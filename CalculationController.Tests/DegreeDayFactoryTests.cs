@@ -5,6 +5,7 @@ using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.Tests;
 using Database;
 using Database.Tables.Houses;

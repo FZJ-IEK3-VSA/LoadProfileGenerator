@@ -38,10 +38,10 @@ using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 
-namespace Common {
-
-
-    public static class Extensions {
+namespace Common.Extensions
+{
+    public static class MixedExtensions
+    {
         [JetBrains.Annotations.NotNull]
         public static string RelativePath([JetBrains.Annotations.NotNull] this FileInfo fi, [JetBrains.Annotations.NotNull] DirectoryInfo di)
         {
@@ -51,11 +51,13 @@ namespace Common {
             }
 
             string s = fi.FullName.Substring(di.FullName.Length);
-            while (s.EndsWith("\\")) {
+            while (s.EndsWith("\\"))
+            {
                 s = s.Substring(0, s.Length - 1);
             }
 
-            while (s.StartsWith("\\")) {
+            while (s.StartsWith("\\"))
+            {
                 s = s.Substring(1);
             }
 
@@ -71,18 +73,14 @@ namespace Common {
         public static string GetNotNullThreadName([JetBrains.Annotations.NotNull] this Thread mythread)
         {
             string name = mythread.Name;
-            if (name == null) {
+            if (name == null)
+            {
                 //throw new Exception("No thread name");
                 name = "(no thread name) #" + mythread.ManagedThreadId;
             }
             return name;
         }
 
-        [JetBrains.Annotations.NotNull]
-        public static StrGuid ToStrGuid([JetBrains.Annotations.NotNull] this string myguid)
-        {
-            return  StrGuid.FromString(myguid);
-        }
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [MethodImpl(MethodImplOptions.NoInlining)]
         //public static string GetCurrentMethod() {
@@ -92,24 +90,31 @@ namespace Common {
         //    return sf.GetMethod().Name;
         //}
         public static void Sort<T>([JetBrains.Annotations.NotNull][ItemNotNull] this ObservableCollection<T> collection, [JetBrains.Annotations.NotNull] Comparison<T> comparer)
-            where T : IComparable {
-            if (collection == null) {
+            where T : IComparable
+        {
+            if (collection == null)
+            {
                 throw new LPGException("Sorting failed, collection = null");
             }
             var sorted = collection.ToList();
             sorted.Sort(comparer);
-            for (var i = 0; i < sorted.Count; i++) {
+            for (var i = 0; i < sorted.Count; i++)
+            {
                 collection.Move(collection.IndexOf(sorted[i]), i);
             }
         }
 
-        public static void Sort<T>([JetBrains.Annotations.NotNull][ItemNotNull] this ObservableCollection<T> collection) where T : IComparable {
-            if (collection == null) {
+        public static void Sort<T>([JetBrains.Annotations.NotNull][ItemNotNull] this ObservableCollection<T> collection) where T : IComparable
+        {
+            if (collection == null)
+            {
                 throw new LPGException("Sorting failed, collection = null");
             }
             var sorted = collection.OrderBy(x => x).ToList();
-            for (var i = 0; i < sorted.Count; i++) {
-                if (!sorted[i].Equals(collection[i])) {
+            for (var i = 0; i < sorted.Count; i++)
+            {
+                if (!sorted[i].Equals(collection[i]))
+                {
                     collection.Move(collection.IndexOf(sorted[i]), i);
                 }
 
@@ -122,22 +127,28 @@ namespace Common {
         }
 
         public static void SynchronizeWithList<T>([JetBrains.Annotations.NotNull][ItemNotNull] this ObservableCollection<T> collection, [JetBrains.Annotations.NotNull][ItemNotNull] List<T> list)
-            where T : IComparable {
-            foreach (var item in list) {
-                if (!collection.Contains(item)) {
+            where T : IComparable
+        {
+            foreach (var item in list)
+            {
+                if (!collection.Contains(item))
+                {
                     collection.Add(item);
                 }
             }
             var todelete = new List<T>();
-            foreach (var item in collection) {
-                if (!list.Contains(item)) {
+            foreach (var item in collection)
+            {
+                if (!list.Contains(item))
+                {
                     todelete.Add(item);
                 }
             }
-            foreach (var item in todelete) {
+            foreach (var item in todelete)
+            {
                 collection.Remove(item);
             }
-            Sort(collection);
+            collection.Sort();
         }
 
         //public static void SynchronizeWithList<T>(this List<T> collection, List<T> list)

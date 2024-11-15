@@ -16,8 +16,10 @@ using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using JetBrains.Annotations;
+using Common.Extensions;
 
-namespace CalculationController.CalcFactories {
+namespace CalculationController.CalcFactories
+{
     public class CalcTransportationDtoFactory {
         [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDtoDictionary _loadTypeDict;

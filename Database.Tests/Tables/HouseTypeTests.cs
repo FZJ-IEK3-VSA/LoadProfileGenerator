@@ -31,6 +31,7 @@ using System.Collections.ObjectModel;
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -41,7 +42,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables {
+namespace Database.Tests.Tables
+{
 
     public class HouseTypeTests : UnitTestBaseClass
     {

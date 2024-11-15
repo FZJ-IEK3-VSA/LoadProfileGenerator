@@ -31,10 +31,12 @@ using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
+using Common.Extensions;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace Common.SQLResultLogging.Loggers {
+namespace Common.SQLResultLogging.Loggers
+{
 
     public class SingleTimestepActionEntry : IHouseholdKey
     {

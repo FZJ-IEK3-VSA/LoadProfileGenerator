@@ -31,11 +31,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class Variable : DBBaseElement {
         public const string TableName = "tblVariables";
 

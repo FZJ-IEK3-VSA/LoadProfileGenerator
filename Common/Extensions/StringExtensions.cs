@@ -1,4 +1,6 @@
-﻿namespace Common.Extensions
+﻿using Automation;
+
+namespace Common.Extensions
 {
     /// <summary>
     /// Defines string extension methods
@@ -19,6 +21,11 @@
                 return s.Substring(0, s.Length - suffix.Length);
             }
             return s;
+        }
+
+        public static StrGuid ToStrGuid(this string myguid)
+        {
+            return StrGuid.FromString(myguid);
         }
     }
 }

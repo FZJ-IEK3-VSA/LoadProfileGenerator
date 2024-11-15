@@ -35,6 +35,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Xunit;

@@ -8,6 +8,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
@@ -62,7 +63,7 @@ namespace CalculationEngine.Transportation
                 throw new LPGException("Time steps were not initialized.");
             }
 
-            var vehiclePoolGuid = "8C426E95-B269-402E-9806-C3785D6C8433".ToStrGuid();
+            var vehiclePoolGuid = StringExtensions.ToStrGuid("8C426E95-B269-402E-9806-C3785D6C8433");
             _calcDeviceDto.LocationGuid = vehiclePoolGuid;
             _calcDeviceDto.LocationName = "Vehicle Pool";
 

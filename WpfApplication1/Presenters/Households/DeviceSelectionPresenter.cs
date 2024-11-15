@@ -31,14 +31,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Automation.ResultFiles;
-using Common;
+using Common.Extensions;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Households;
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public enum SelectionSource {
         All,
         ModularHousehold

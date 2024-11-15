@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Automation;
-using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using JetBrains.Annotations;
 
 namespace CalculationController.DtoFactories

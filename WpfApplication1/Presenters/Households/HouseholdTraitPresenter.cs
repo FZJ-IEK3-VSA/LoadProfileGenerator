@@ -35,6 +35,7 @@ using System.Windows;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -43,7 +44,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Households;
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class HouseholdTraitPresenter : PresenterBaseDBBase<HouseholdTraitView> {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _classifications = new ObservableCollection<string>();
         [NotNull] private readonly HouseholdTrait _hht;

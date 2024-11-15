@@ -12,6 +12,7 @@ using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
@@ -236,7 +237,7 @@ namespace Calculation.Tests.Transportation
                     list.Add(cdl);
                     CalcDeviceDto cdd = new CalcDeviceDto("bus", myCategory.Guid,
                         hhkey, OefcDeviceType.Transportation, myCategory.Name, string.Empty,
-                        Guid.NewGuid().ToStrGuid(), string.Empty.ToStrGuid(), string.Empty, FlexibilityType.NoFlexibility, 0);
+                        Guid.NewGuid().ToStrGuid(), StringExtensions.ToStrGuid(string.Empty), string.Empty, FlexibilityType.NoFlexibility, 0);
                     var transportationDevice =
                         new CalcTransportationDevice(myCategory, 1, list, 100,
                             10, 1000, chargingloadtype, calcSites,

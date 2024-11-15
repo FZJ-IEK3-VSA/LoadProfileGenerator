@@ -6,12 +6,14 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class DeviceAction : DBBaseElement, IAssignableDevice {
         public const string TableName = "tblDeviceActions";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DeviceActionProfile> _profiles;

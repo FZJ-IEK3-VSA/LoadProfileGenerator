@@ -36,6 +36,7 @@ using System.Runtime.CompilerServices;
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
@@ -44,7 +45,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Houses;
 
-namespace LoadProfileGenerator.Presenters.Houses {
+namespace LoadProfileGenerator.Presenters.Houses
+{
     public class SettlementTemplatePresenter : PresenterBaseDBBase<SettlementTemplateView>,
         IEquatable<SettlementTemplatePresenter> {
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<House> _generatedHouses = new ObservableCollection<House>();

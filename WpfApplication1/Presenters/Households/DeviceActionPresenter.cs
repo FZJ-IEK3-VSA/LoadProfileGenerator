@@ -1,13 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
-using Common;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Households;
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class DeviceActionPresenter : PresenterBaseDBBase<DeviceActionView> {
         [NotNull] private readonly DeviceAction _deviceAction;
         [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;

@@ -7,12 +7,14 @@ using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class HouseholdPlan : DBBaseElement {
         public const string TableName = "tblHouseholdPlans";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HouseholdPlanEntry> _entries;

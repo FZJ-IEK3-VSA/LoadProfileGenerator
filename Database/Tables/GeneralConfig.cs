@@ -37,6 +37,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Common.JSON;
 using Database.Database;
 using JetBrains.Annotations;
@@ -45,7 +46,8 @@ using Newtonsoft.Json.Converters;
 
 #endregion
 
-namespace Database.Tables {
+namespace Database.Tables
+{
     public class CombinedSettings {
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -58,7 +60,7 @@ namespace Database.Tables {
 
         [JetBrains.Annotations.NotNull] private Dictionary<string, SingleSetting> _settings = new Dictionary<string, SingleSetting>();
 
-        public GeneralConfig([JetBrains.Annotations.NotNull] string connectionString) : base("GeneralConfig", TableName, connectionString, "E5E37859-2ECB-4F62-A164-3ADD39300225".ToStrGuid()) {
+        public GeneralConfig([JetBrains.Annotations.NotNull] string connectionString) : base("GeneralConfig", TableName, connectionString, StringExtensions.ToStrGuid("E5E37859-2ECB-4F62-A164-3ADD39300225")) {
             Options = new Dictionary<CalcOption, SingleOption>();
         }
         public int CarpetPlotWidth {

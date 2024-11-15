@@ -32,6 +32,7 @@ using Automation;
 using CalculationEngine.HouseElements;
 using CalculationEngine.HouseholdElements;
 using Common;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using Xunit;

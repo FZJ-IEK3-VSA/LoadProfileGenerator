@@ -43,6 +43,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Database.Database;
 using Database.Tables.BasicElements;
@@ -54,7 +55,8 @@ using Exception = System.Exception;
 
 #endregion
 
-namespace Database.Tables.Houses {
+namespace Database.Tables.Houses
+{
     public class Settlement : DBBaseElement, ICalcObject {
         public const string TableName = "tblSettlement";
         [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<SettlementHH> _households;

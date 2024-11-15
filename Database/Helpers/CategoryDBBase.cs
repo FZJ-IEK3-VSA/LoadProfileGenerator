@@ -38,6 +38,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Tables;
 using JetBrains.Annotations;
 

@@ -34,12 +34,14 @@ using System.Globalization;
 using System.Linq;
 using Automation;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class DateBasedProfile : DBBaseElement {
         public const string TableName = "tblDateBasedProfile";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DateProfileDataPoint> _datapoints;

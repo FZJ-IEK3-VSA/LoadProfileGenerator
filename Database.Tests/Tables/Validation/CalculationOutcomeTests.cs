@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.Validation;
 using FluentAssertions;
@@ -9,7 +10,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables.Validation {
+namespace Database.Tests.Tables.Validation
+{
 
     public class CalculationOutcomeTests : UnitTestBaseClass
     {

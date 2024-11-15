@@ -36,13 +36,15 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.ModularHouseholds {
+namespace Database.Tables.ModularHouseholds
+{
     public enum EstimateType {
         Theoretical,
         FromCalculations

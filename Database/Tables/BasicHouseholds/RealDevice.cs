@@ -37,6 +37,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -44,7 +45,8 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class RealDevice : DBBaseElement, IAssignableDevice {
         public const string TableName = "tblDevices";
 

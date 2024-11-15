@@ -37,13 +37,15 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class SubAffordance : DBBaseElement {
         public const string TableName = "tblSubAffordances";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<SubAffordanceDesire> _subAffordanceDesires;

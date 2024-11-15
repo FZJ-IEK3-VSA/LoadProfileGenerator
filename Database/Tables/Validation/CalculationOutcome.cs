@@ -4,12 +4,13 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Automation;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Validation {
+namespace Database.Tables.Validation
+{
     public class CalculationOutcome : DBBaseElement, IComparable<CalculationOutcome> {
         public const string TableName = "tblCalculationOutcomes";
         [JetBrains.Annotations.NotNull] private readonly string _timeResolution;

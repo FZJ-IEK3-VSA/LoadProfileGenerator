@@ -38,6 +38,7 @@ using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using FluentAssertions;
@@ -47,7 +48,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests {
+namespace Calculation.Tests
+{
     public class CalcAffordanceTests : UnitTestBaseClass
     {
 
@@ -111,7 +113,16 @@ namespace Calculation.Tests {
                 cdl
             };
             CalcDeviceDto cdd = new CalcDeviceDto("device",
+
+/* Unmerged change from project 'Calculation.Tests (net8.0)'
+Before:
                 "devcategoryguid".ToStrGuid(),
+                hhkey,
+After:
+"devcategoryguid".ToStrGuid(),
+                hhkey,
+*/
+StringExtensions.ToStrGuid("devcategoryguid"),
                 hhkey,
                 OefcDeviceType.Device,
                 "category",

@@ -43,6 +43,7 @@ using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -57,7 +58,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.OnlineDeviceActivation {
+namespace Calculation.Tests.OnlineDeviceActivation
+{
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class OnlineDeviceActivationProcessorTests : UnitTestBaseClass {
         public OnlineDeviceActivationProcessorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -233,10 +235,10 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         fft.RegisterHousehold(Constants.GeneralHouseholdKey, "generalhousehold", HouseholdKeyType.General, "Description", null, null);
                         fft.RegisterHousehold(hhkey, "hh1", HouseholdKeyType.Household, "Description", null, null);
                         var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
-                        var deviceGuid = "devguid".ToStrGuid();
-                        var locationGuid = "locationGuid".ToStrGuid();
-                        var loadtypeGuid = "ltguid".ToStrGuid();
-                        var cdd = new CalcDeviceDto("devicename", "devcatguid".ToStrGuid(), hhkey, OefcDeviceType.Device, "devcatname", "",
+                        var deviceGuid = StringExtensions.ToStrGuid("devguid");
+                        var locationGuid = StringExtensions.ToStrGuid("locationGuid");
+                        var loadtypeGuid = StringExtensions.ToStrGuid("ltguid");
+                        var cdd = new CalcDeviceDto("devicename", StringExtensions.ToStrGuid("devcatguid"), hhkey, OefcDeviceType.Device, "devcatname", "",
                             deviceGuid, locationGuid, "loc", FlexibilityType.NoFlexibility, 0);
 
                         var key = new OefcKey(cdd, loadtypeGuid);
@@ -309,7 +311,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                     //wd.InputDataLogger.AddSaver(new CalcDeviceDtoLogger(wd.SqlResultLoggingService));
                     var dsc = new DateStampCreator(calcParameters);
                     using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters)) {
-                        var calcPersonDto = new CalcPersonDto("blub", "personguid".ToStrGuid(), 1, PermittedGender.Male, key, new List<DateSpan>(),
+                        var calcPersonDto = new CalcPersonDto("blub", StringExtensions.ToStrGuid("personguid"), 1, PermittedGender.Male, key, new List<DateSpan>(),
                             new List<DateSpan>(), 1, "traittag", "householdname");
                         var persons = new List<CalcPersonDto> {
                             calcPersonDto

@@ -13,6 +13,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using Database;
@@ -22,7 +23,8 @@ using Moq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Calculation.HouseholdElements.Tests {
+namespace Calculation.HouseholdElements.Tests
+{
     public class CalcHouseholdTests : UnitTestBaseClass {
         public CalcHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
@@ -79,7 +81,8 @@ namespace Calculation.HouseholdElements.Tests {
     }
 }
 
-namespace Calculation.Tests.HouseholdElements {
+namespace Calculation.Tests.HouseholdElements
+{
     public class CalcHouseholdTests : UnitTestBaseClass {
         public CalcHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {

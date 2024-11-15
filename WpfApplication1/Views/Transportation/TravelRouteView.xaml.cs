@@ -2,11 +2,13 @@
 using System.Windows;
 using System.Windows.Input;
 using Common;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
 
-namespace LoadProfileGenerator.Views.Transportation {
+namespace LoadProfileGenerator.Views.Transportation
+{
     /// <summary>
     ///     Interaktionslogik für DeviceActionView.xaml
     /// </summary>

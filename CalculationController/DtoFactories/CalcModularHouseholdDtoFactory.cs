@@ -7,6 +7,7 @@ using CalculationController.CalcFactories;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging.Loggers;
 using Database;
@@ -16,7 +17,8 @@ using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
 
-namespace CalculationController.DtoFactories {
+namespace CalculationController.DtoFactories
+{
     public class CalcModularHouseholdDtoFactory {
         [NotNull] private readonly CalcAffordanceDtoFactory _calcAffordanceDtoFactory;
 

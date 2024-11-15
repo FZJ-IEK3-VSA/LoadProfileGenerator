@@ -29,14 +29,15 @@
 #region
 
 using System.Collections.ObjectModel;
-using Common;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Views.BasicElements;
 
 #endregion
 
-namespace LoadProfileGenerator.Presenters.BasicElements {
+namespace LoadProfileGenerator.Presenters.BasicElements
+{
     public class VariablePresenter : PresenterBaseDBBase<VariableView> {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
 

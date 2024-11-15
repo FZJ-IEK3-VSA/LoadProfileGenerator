@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Automation;
 using CalculationController.CalcFactories;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
@@ -11,7 +12,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace CalculationController.Tests.CalcFactories {
+namespace CalculationController.Tests.CalcFactories
+{
     public class CalcTransportationFactoryTests : UnitTestBaseClass
     {
         [Fact]

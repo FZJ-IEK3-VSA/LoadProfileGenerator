@@ -32,13 +32,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Houses {
+namespace Database.Tables.Houses
+{
     public class Generator : DBBaseElement {
         public const string TableName = "tblGenerators";
 

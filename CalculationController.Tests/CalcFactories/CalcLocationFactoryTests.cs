@@ -40,6 +40,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.Tests;
@@ -53,7 +54,8 @@ using Xunit.Abstractions;
 
 using Logger = Common.Logger;
 
-namespace CalculationController.Tests.CalcFactories {
+namespace CalculationController.Tests.CalcFactories
+{
     public class CalcLocationFactoryTests : UnitTestBaseClass {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]

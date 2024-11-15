@@ -35,6 +35,7 @@ using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.ModularHouseholds;
@@ -42,7 +43,8 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class TimeLimit : DBBaseElement {
         private const string OldTableName = "tblDeviceTimes";
         public const string TableName = "tblTimeLimits";

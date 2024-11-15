@@ -34,13 +34,15 @@ using Automation;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.Tests;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests {
+namespace Calculation.Tests
+{
     public class CalcProfileTests : UnitTestBaseClass
     {
         public CalcProfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

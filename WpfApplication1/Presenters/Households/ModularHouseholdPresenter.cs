@@ -33,6 +33,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
@@ -40,7 +41,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Households;
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class ModularHouseholdPresenter : PresenterBaseDBBase<ModularHouseholdView> {
         [CanBeNull] private static TraitTag _selectedFilterTag;
 

@@ -32,6 +32,7 @@ using System;
 using System.Collections.ObjectModel;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
@@ -42,7 +43,8 @@ using Xunit.Abstractions;
 
 #endregion
 
-namespace Database.Tests.Tables {
+namespace Database.Tests.Tables
+{
 
     public class SettlementHHTests : UnitTestBaseClass
     {

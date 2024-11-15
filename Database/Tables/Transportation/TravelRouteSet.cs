@@ -6,11 +6,13 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Transportation {
+namespace Database.Tables.Transportation
+{
     public class TravelRouteSet : DBBaseElement {
         public const string TableName = "tblTravelRouteSet";
 

@@ -8,6 +8,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
@@ -18,7 +19,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.OnlineLogging {
+namespace Calculation.Tests.OnlineLogging
+{
     public class FileFactoryAndTrackerTests : UnitTestBaseClass
     {
         public FileFactoryAndTrackerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

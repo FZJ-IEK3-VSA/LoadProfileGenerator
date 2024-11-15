@@ -4,6 +4,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using System.Collections.Generic;
 
 namespace CalculationEngine.Activities

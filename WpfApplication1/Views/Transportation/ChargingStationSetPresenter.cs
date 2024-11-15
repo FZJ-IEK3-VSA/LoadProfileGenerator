@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Common;
+using Common.Extensions;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
@@ -9,7 +9,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters;
 using LoadProfileGenerator.Presenters.BasicElements;
 
-namespace LoadProfileGenerator.Views.Transportation {
+namespace LoadProfileGenerator.Views.Transportation
+{
     public class ChargingStationSetPresenter : PresenterBaseDBBase<ChargingStationSetView> {
         [CanBeNull] private ModularHousehold _selectedModularHousehold;
         [CanBeNull] private TravelRouteSet _selectedTravelRouteSet;

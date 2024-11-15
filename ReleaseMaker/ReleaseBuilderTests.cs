@@ -11,6 +11,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationController.Integrity;
 using Common;
+using Common.Extensions;
 using Database;
 using Database.Database;
 using Database.Helpers;

@@ -2,6 +2,7 @@
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.Transportation;
 using FluentAssertions;

@@ -10,6 +10,7 @@ using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -19,7 +20,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.HouseholdElements {
+namespace Calculation.Tests.HouseholdElements
+{
     public class CalcAutoDevTests : UnitTestBaseClass
     {
         public CalcAutoDevTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

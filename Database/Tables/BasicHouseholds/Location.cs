@@ -36,6 +36,7 @@ using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -43,7 +44,8 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class Location : DBBaseElement {
         public const string TableName = "tblLocations";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<LocationDevice> _locDevs = new ObservableCollection<LocationDevice>();

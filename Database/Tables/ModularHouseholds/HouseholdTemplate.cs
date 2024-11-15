@@ -13,6 +13,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -20,7 +21,8 @@ using Database.Tables.Houses;
 using Database.Templating;
 using JetBrains.Annotations;
 
-namespace Database.Tables.ModularHouseholds {
+namespace Database.Tables.ModularHouseholds
+{
     public enum TemplateVacationType {
         FromList,
         RandomlyGenerated

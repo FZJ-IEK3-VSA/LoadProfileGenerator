@@ -32,13 +32,15 @@ using System.Linq;
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Database.Tables;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.SpecialViews;
 
-namespace LoadProfileGenerator.Presenters.SpecialViews {
+namespace LoadProfileGenerator.Presenters.SpecialViews
+{
     public class SettingPresenter : PresenterBaseWithAppPresenter<SettingsView> {
         private const string Allfiles = "Create all Files";
         private const string NoFiles = "Create no files";

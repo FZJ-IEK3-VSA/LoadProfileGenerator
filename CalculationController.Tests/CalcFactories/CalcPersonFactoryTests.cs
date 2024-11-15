@@ -33,6 +33,7 @@ using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using Database.Tables.BasicElements;
@@ -43,7 +44,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace CalculationController.Tests.CalcFactories {
+namespace CalculationController.Tests.CalcFactories
+{
     public class CalcPersonFactoryTests : UnitTestBaseClass
     {
         [Fact]

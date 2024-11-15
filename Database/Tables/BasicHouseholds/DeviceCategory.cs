@@ -36,6 +36,7 @@ using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -45,7 +46,8 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public sealed class DeviceCategory : DBBaseElement, IAssignableDevice, IComparable<DeviceCategory> // IComparable
     {
         public const string TableName = "tblDeviceCategories";
@@ -327,7 +329,7 @@ namespace Database.Tables.BasicHouseholds {
             var aic = new AllItemCollections(realDevices: devices);
             _allDevicesDict[connectionString] = devices;
             deviceCategoryNone = new DeviceCategory("(none)", -1, connectionString, false,
-                devices, "04290EB6-4FC1-4D4D-92B8-E7E12A104C0F".ToStrGuid(), -1);
+                devices, StringExtensions.ToStrGuid("04290EB6-4FC1-4D4D-92B8-E7E12A104C0F"), -1);
             _dcNoneCategory[connectionString] = deviceCategoryNone;
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             result.Add(_dcNoneCategory[connectionString]);

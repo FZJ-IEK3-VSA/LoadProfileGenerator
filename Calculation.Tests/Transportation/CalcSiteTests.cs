@@ -10,6 +10,7 @@ using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -21,7 +22,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.Transportation {
+namespace Calculation.Tests.Transportation
+{
     public class CalcSiteTests : UnitTestBaseClass
     {
         [Fact]

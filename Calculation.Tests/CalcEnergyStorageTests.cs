@@ -38,6 +38,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -46,7 +47,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests {
+namespace Calculation.Tests
+{
     public class CalcEnergyStorageTests:CalcUnitTestBase  {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -70,7 +72,7 @@ namespace Calculation.Tests {
                         var deviceGuid = Guid.NewGuid().ToStrGuid();
                         HouseholdKey hhkey = new HouseholdKey("HH1");
                         var locationGuid = Guid.NewGuid().ToStrGuid();
-                        CalcDeviceDto cdd = new CalcDeviceDto("dev1", "devcatguid".ToStrGuid(),
+                        CalcDeviceDto cdd = new CalcDeviceDto("dev1", StringExtensions.ToStrGuid("devcatguid"),
                             hhkey, OefcDeviceType.Device, "devcatname", "", deviceGuid, locationGuid, "loc", FlexibilityType.NoFlexibility, 0);
                         var key = new OefcKey(cdd, clt.Guid);
                         odap.RegisterDevice(clt.ConvertToDto(), cdd);

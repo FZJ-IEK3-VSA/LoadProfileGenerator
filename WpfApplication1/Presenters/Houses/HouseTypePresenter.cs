@@ -31,7 +31,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using Automation;
-using Common;
+using Common.Extensions;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -40,7 +40,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Houses;
 
-namespace LoadProfileGenerator.Presenters.Houses {
+namespace LoadProfileGenerator.Presenters.Houses
+{
     public class HouseTypePresenter : PresenterBaseDBBase<HouseTypeView> {
         [NotNull] private readonly HouseType _houseType;
         [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;

@@ -10,6 +10,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Database;
 using Database.Helpers;

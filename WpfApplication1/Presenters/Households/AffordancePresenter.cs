@@ -35,6 +35,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -44,7 +45,8 @@ using LoadProfileGenerator.Views.Households;
 
 #endregion
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class AffordancePresenter : PresenterBaseDBBase<AffordanceView> {
         [JetBrains.Annotations.NotNull] private readonly Affordance _aff;
 

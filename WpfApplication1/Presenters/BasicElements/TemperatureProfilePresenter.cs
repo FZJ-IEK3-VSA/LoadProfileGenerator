@@ -29,11 +29,13 @@
 using System;
 using System.Threading;
 using Common;
+using Common.Extensions;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using LoadProfileGenerator.Views.BasicElements;
 
-namespace LoadProfileGenerator.Presenters.BasicElements {
+namespace LoadProfileGenerator.Presenters.BasicElements
+{
     public class TemperatureProfilePresenter : PresenterBaseDBBase<TemperatureProfileView> {
         [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
         [JetBrains.Annotations.NotNull] private readonly CSVImporter _csvImporter;

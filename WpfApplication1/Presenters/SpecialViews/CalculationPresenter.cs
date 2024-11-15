@@ -51,10 +51,12 @@ using Database.Tables.Transportation;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.SpecialViews;
+using Common.Extensions;
 
 #endregion
 
-namespace LoadProfileGenerator.Presenters.SpecialViews {
+namespace LoadProfileGenerator.Presenters.SpecialViews
+{
 
     public class LPGDispatcher : ILPGDispatcher {
         public Dispatcher Dispatcher { get; }

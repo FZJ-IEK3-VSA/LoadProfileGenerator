@@ -31,6 +31,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using FluentAssertions;
@@ -38,7 +39,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables {
+namespace Database.Tests.Tables
+{
 
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class TemperatureProfileTests : UnitTestBaseClass

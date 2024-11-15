@@ -4,10 +4,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using Automation.ResultFiles;
+using Common.Extensions;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace Common {
+namespace Common
+{
     public interface ICalculationProfiler {
         void StartPart([JetBrains.Annotations.NotNull] string key);
 

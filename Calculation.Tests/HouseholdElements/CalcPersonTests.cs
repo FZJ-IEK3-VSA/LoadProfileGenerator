@@ -40,6 +40,7 @@ using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -121,7 +122,8 @@ namespace Calculation.HouseholdElements.Tests
     }
 }
 
-namespace Calculation.Tests.HouseholdElements {
+namespace Calculation.Tests.HouseholdElements
+{
     public class CalcPersonTests : CalcUnitTestBase {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]

@@ -28,9 +28,10 @@
 
 using System.Collections.Generic;
 using Automation;
-using Common;
+using Common.Extensions;
 
-namespace CalculationEngine.HouseholdElements {
+namespace CalculationEngine.HouseholdElements
+{
     public class CalcSubAffTimeProfile : ICalcProfile {
         [JetBrains.Annotations.NotNull]
         private readonly List<double> _values;
