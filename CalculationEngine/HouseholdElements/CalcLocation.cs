@@ -26,7 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
@@ -34,24 +33,22 @@ using CalculationEngine.Transportation;
 
 namespace CalculationEngine.HouseholdElements
 {
-    public class CalcLocation : CalcBase {
-        
-        
-        private readonly List<ICalcAffordanceBase> _pureAffordances = new List<ICalcAffordanceBase>();
-        
-        
-        private readonly List<ICalcAffordanceBase> _siteAffordances = new List<ICalcAffordanceBase>();
+    public class CalcLocation(string pName, StrGuid guid) : CalcBase(pName, guid)
+    {
+        private readonly List<ICalcAffordanceBase> _pureAffordances = [];
+
+        private readonly List<ICalcAffordanceBase> _siteAffordances = [];
+
         private bool _isTransportationEnabled;
-        //public object Variables;
 
         public CalcSite? CalcSite { get; set; }
-        public CalcLocation( string pName, StrGuid guid) : base(pName, guid) => Devices = new List<CalcDevice>();
 
-        
-        
-        public List<ICalcAffordanceBase> Affordances {
-            get {
-                if (_isTransportationEnabled) {
+        public IReadOnlyList<ICalcAffordanceBase> Affordances
+        {
+            get
+            {
+                if (_isTransportationEnabled)
+                {
                     return _siteAffordances;
                 }
 
@@ -59,45 +56,33 @@ namespace CalculationEngine.HouseholdElements
             }
         }
 
-        
-        
-        public List<ICalcAffordanceBase> PureAffordances => _pureAffordances;
+        public IReadOnlyList<ICalcAffordanceBase> PureAffordances => _pureAffordances;
 
-        
-        
-        public List<CalcDevice> Devices { get; }
+        public List<CalcDevice> Devices { get; } = [];
 
-        
-        
-        public List<CalcDevice> LightDevices { get; } = new List<CalcDevice>();
+        public List<CalcDevice> LightDevices { get; } = [];
 
-        public Dictionary<CalcPerson, ICalcAffordanceBase> IdleAffs {
-            get;
-        } = new Dictionary<CalcPerson, ICalcAffordanceBase>();
+        public Dictionary<CalcPerson, ICalcAffordanceBase> IdleAffs { get; } = [];
 
-        public void AddAffordance( CalcAffordance aff)
+        public void AddAffordance(CalcAffordance aff)
         {
-            if(_isTransportationEnabled) {
-                throw new LPGException("Error: tried to add an normal affordance after transportation was enabled.");
+            if (_isTransportationEnabled)
+            {
+                throw new LPGException("Error: tried to add a normal affordance after transportation was enabled.");
             }
 
             _pureAffordances.Add(aff);
         }
 
-        public void AddTransportationAffordance( AffordanceBaseTransportDecorator transportationAffordance)
+        public void AddTransportationAffordance(AffordanceBaseTransportDecorator transportationAffordance)
         {
             _siteAffordances.Add(transportationAffordance);
             _isTransportationEnabled = true;
         }
 
-        public void AddLightDevice( CalcDevice device)
+        public void AddLightDevice(CalcDevice device)
         {
             LightDevices.Add(device);
-        }
-
-        public void SortAffordances()
-        {
-            Affordances.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
         }
 
         public override string ToString() => Name;
