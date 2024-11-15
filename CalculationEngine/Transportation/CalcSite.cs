@@ -24,6 +24,9 @@ namespace CalculationEngine.Transportation
             DeviceChangeAllowed = deviceChangeAllowed;
             _householdKey = householdKey;
             PointOfInterest = pointOfInterest;
+
+            // TODO: only for testing
+            PointOfInterest = new PointOfInterestId(0, 0);
         }
 
         public bool DeviceChangeAllowed { get; }

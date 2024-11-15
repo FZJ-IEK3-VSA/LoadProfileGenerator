@@ -430,7 +430,10 @@ namespace CalculationEngine.HouseholdElements
                     // choose which affordance is started instead
                     var bestAffordance = GetBestAffordanceFromList(time, availableInterruptingAffordances);
                     if (bestAffordance.ParentLocation.CalcSite != _currentSite)
-                        throw new NotImplementedException("An affordance was interrupted by another one at another site");
+                    {
+                        // TODO: what to do in this case?
+                        //throw new NotImplementedException("An affordance was interrupted by another one at another site");
+                    }
 
                     // get the activation object for the interruption
                     var interruptActivities = PlanAffordanceActivation(time, isDaylight, bestAffordance);
@@ -879,12 +882,8 @@ namespace CalculationEngine.HouseholdElements
                 return affordance;
             }
 
-            // TODO: get the POI preferences of this person
-            var poi = new PointOfInterestId(0, 0);
-            var citySite = new CitySite(poi, transportAffordance.Site.SiteCategory);
-
             // turn the affordance into a remote affordance for this person
-            var remoteAff = CalcAffordanceRemote.CreateFromNormalAffordance(transportAffordance.SourceAffordance, citySite);
+            var remoteAff = CalcAffordanceRemote.CreateFromNormalAffordance(transportAffordance.SourceAffordance);
             // create a new transport decorator to avoid conflicts as persons can have different remote affordances
             return new AffordanceBaseTransportDecoratorDynamic(transportAffordance, remoteAff);
         }

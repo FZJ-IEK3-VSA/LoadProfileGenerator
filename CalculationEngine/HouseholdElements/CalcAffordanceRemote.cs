@@ -23,21 +23,19 @@ namespace CalculationEngine.HouseholdElements
 
         /// <summary>
         /// The specific site where the affordance takes place, including the ID of the
-        /// selcted point of interest.
+        /// selcted point of interest. Must not be null for remote affordances.
         /// </summary>
-        public override CalcSite Site { get; }
+        public override CalcSite Site => base.Site!;
 
         /// <summary>
         /// Creates a remote affordance from another affordance that uses a time limit. Creates a shallow copy
         /// of the original affordance.
         /// </summary>
         /// <param name="affordance">the original affordance</param>
-        /// <param name="citySite">the point of interest for the new remote affordance</param>
-        public CalcAffordanceRemote(CalcAffordanceWithTimeLimit affordance, CalcSite citySite) : base(affordance)
+        public CalcAffordanceRemote(CalcAffordanceWithTimeLimit affordance) : base(affordance)
         {
-            if (citySite.PointOfInterest is null)
+            if (Site?.PointOfInterest is null)
                 throw new LPGException("A remote affordance needs a site with a valid point of interest ID.");
-            Site = citySite;
         }
 
         /// <summary>
@@ -45,10 +43,9 @@ namespace CalculationEngine.HouseholdElements
         /// original affordance.
         /// </summary>
         /// <param name="affordance">the original affordance</param>
-        /// <param name="site">the point of interest for the new remote affordance</param>
         /// <returns>the new remote affordance</returns>
         /// <exception cref="LPGException">if the original affordance cannot be turned into a remote affordance</exception>
-        public static CalcAffordanceRemote CreateFromNormalAffordance(ICalcAffordanceBase affordance, CalcSite site)
+        public static CalcAffordanceRemote CreateFromNormalAffordance(ICalcAffordanceBase affordance)
         {
             // check if the original affordance can be turned into a remote affordance
             if (affordance is CalcAffordanceRemote)
@@ -64,7 +61,7 @@ namespace CalculationEngine.HouseholdElements
                 throw new LPGException("Trying to create a remote affordance from unknown affordance type.");
             }
 
-            return new CalcAffordanceRemote(timelimitAff, site);
+            return new CalcAffordanceRemote(timelimitAff);
         }
 
         public override IEnumerable<RemoteActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
