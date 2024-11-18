@@ -430,16 +430,17 @@ namespace CalculationEngine.HouseholdElements
 
                     // choose which affordance is started instead
                     var bestAffordance = GetBestAffordanceFromList(time, availableInterruptingAffordances);
+                    var actionAfterinterruption = bestAffordance.AfterInterruption;
                     if (bestAffordance.ParentLocation.CalcSite != _currentSite)
                     {
-                        // TODO: what to do in this case?
-                        //throw new NotImplementedException("An affordance was interrupted by another one at another site");
+                        // after a site change, always choose a new affordance
+                        actionAfterinterruption = ActionAfterInterruption.LookForNew;
                     }
 
                     // get the activation object for the interruption
                     var interruptActivities = PlanAffordanceActivation(time, isDaylight, bestAffordance);
 
-                    switch (bestAffordance.AfterInterruption)
+                    switch (actionAfterinterruption)
                     {
                         case ActionAfterInterruption.LookForNew:
                             // finish the current activity
