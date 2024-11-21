@@ -479,51 +479,74 @@ namespace SimulationEngineLib.HouseJobProcessor
             {
                 var hhs = MakeHousehold(sim, householdData, r);
 
-                // get or create transportation objects, if required
-                bool transportEnabled = hj.CalcSpec.EnableTransportation;
-                var chargingStationSet = sim.ChargingStationSets.FindWithException(householdData.ChargingStationSet, !transportEnabled);
-                var transportationDeviceSet = sim.TransportationDeviceSets.FindWithException(householdData.TransportationDeviceSet, !transportEnabled);
-                TravelRouteSet travelrouteset;
-                if (householdData.TravelRouteSet is not null)
-                {
-                    // try to load the specified TravelRouteSet
-                    travelrouteset = sim.TravelRouteSets.FindWithException(householdData.TravelRouteSet);
-                }
-                else
-                {
-                    // no TravelRouteSet specified: use alternative travel specification (if available)
-                    // For each person, transportation preferences can be specified. These are used to create a new TravelRouteSet.
-                    var travelRouteSetBuilder = new TravelRouteSetBuilderFromPersonData(sim);
-                    travelrouteset = travelRouteSetBuilder.CreateTravelRouteSetFromPersonPreferences(householdData);
-                }
-                if (transportEnabled && travelrouteset is null)
-                {
-                    throw new LPGPBadParameterException("No travel route set and no personal transportation preferences specified.");
-                }
-
-                if (!householdData.TransportationDistanceModifiers.IsNullOrEmpty() && travelrouteset is not null)
-                {
-                    Logger.Info($"Setting new travel distances for {hhs.Name} ");
-                    travelrouteset = AdjustTravelDistancesBasedOnModifiers(travelrouteset, sim, house, householdData, householdidx);
-                    Logger.Info("Name of the new travel route set to be used is " + travelrouteset.Name);
-                }
-
                 if (poiTraitReplacer is not null)
                 {
                     // replace locations in all traits with new POI locations
-                    if (householdData.TravelPreferences is null)
+                    if (householdData.PointOfInterestPreferences is null)
                         throw new LPGException($"No person travel preferences specified for household #{householdidx}");
-                    poiTraitReplacer.ReplaceTraitsInHousehold(hhs, householdData.TravelPreferences);
+                    poiTraitReplacer.ReplaceTraitsInHousehold(hhs, householdData.PointOfInterestPreferences);
+                }
+
+                // get or create all transportation objects, if required
+                bool transportEnabled = hj.CalcSpec.EnableTransportation;
+                var chargingStationSet = sim.ChargingStationSets.FindWithException(householdData.ChargingStationSet, !transportEnabled);
+                var transportationDeviceSet = sim.TransportationDeviceSets.FindWithException(householdData.TransportationDeviceSet, !transportEnabled);
+                var travelRouteSet = transportEnabled ? DetermineTravelRouteSet(sim, householdData) : null;
+
+                // check if the distances in the travel route set should be modified
+                if (!householdData.TransportationDistanceModifiers.IsNullOrEmpty() && travelRouteSet is not null)
+                {
+                    Logger.Info($"Setting new travel distances for {hhs.Name} ");
+                    travelRouteSet = AdjustTravelDistancesBasedOnModifiers(travelRouteSet, sim, house, householdData, householdidx);
+                    Logger.Info("Name of the new travel route set to be used is " + travelRouteSet.Name);
                 }
 
                 // add the new household to the house
-                house.AddHousehold(hhs, chargingStationSet, travelrouteset, transportationDeviceSet);
+                house.AddHousehold(hhs, chargingStationSet, travelRouteSet, transportationDeviceSet);
                 householdidx++;
             }
 
             house.SaveToDB();
             Logger.Info("Successfully created house.");
             return house.GetJsonReference();
+        }
+
+        private static TravelRouteSet DetermineTravelRouteSet(Simulator sim, HouseholdData householdData)
+        {
+            // there are multiple ways how traveling behavior can be specified in the calcspe; check if only exactly one is used
+            bool travelRouteSetGiven = householdData.TravelRouteSet is not null;
+            bool travelPreferencesGiven = TravelRouteSetBuilderFromPersonData.IsRequiredDataAvailable(householdData);
+            bool poiPreferencesGiven = TravelRouteSetBuilderCity.IsRequiredDataAvailable(householdData);
+            
+            bool[] areParametersGiven = [travelRouteSetGiven, travelPreferencesGiven, poiPreferencesGiven];
+            int numberOfParametersGiven = areParametersGiven.Count(x => x);
+            if (numberOfParametersGiven == 0)
+                throw new LPGPBadParameterException($"Transportation is enabled, but no information about travel behavior of household {householdData.Name} was given.");
+            if (numberOfParametersGiven > 1)
+                throw new LPGPBadParameterException($"Two or more properties specifying travel behavior were set, but only one is allowed at a time.");
+
+            // determine the travel route set depending on the given travel parameter
+            TravelRouteSet travelrouteset;
+            if (travelRouteSetGiven)
+            {
+                // try to load the specified TravelRouteSet
+                travelrouteset = sim.TravelRouteSets.FindWithException(householdData.TravelRouteSet);
+            } else if (poiPreferencesGiven)
+            {
+                // TODO: not implemented yet
+                var travelRouteSetBuilder = new TravelRouteSetBuilderCity(sim);
+                travelrouteset = travelRouteSetBuilder.CreateTravelRouteSetFromPoiPreferences(householdData);
+            }
+            else if (travelPreferencesGiven)
+            {
+                // use transportation preferences of each person from the person data
+                var travelRouteSetBuilder = new TravelRouteSetBuilderFromPersonData(sim);
+                travelrouteset = travelRouteSetBuilder.CreateTravelRouteSetFromPersonPreferences(householdData);
+            } else
+            {
+                throw new LPGException("None of the travel parameters was set, this should have been caught by the checks above.");
+            }
+            return travelrouteset;
         }
 
         [NotNull]

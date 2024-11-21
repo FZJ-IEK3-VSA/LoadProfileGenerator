@@ -140,6 +140,6 @@ namespace Automation {
         /// Specifies which points of interest each person visits, and which routes they use for that.
         /// Uses the full person name as key.
         /// </summary>
-        public Dictionary<string, PersonTravelPreferences>? TravelPreferences { get; set; }
+        public Dictionary<string, PersonPoiPreferences>? PointOfInterestPreferences { get; set; }
     }
 }

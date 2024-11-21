@@ -22,26 +22,45 @@ namespace SimulationEngineLib.HouseJobProcessor
         private readonly Simulator sim = simulator;
 
         /// <summary>
+        /// Checks if all required data is set in order to create a travel route set from
+        /// the traveling preferences of each person.
+        /// </summary>
+        /// <param name="householdData">the HouseholdData object</param>
+        /// <returns>true if all data is available; otherwise, false</returns>
+        public static bool IsRequiredDataAvailable(HouseholdData householdData)
+        {
+            // check if person data is given
+            if (householdData.HouseholdDataPersonSpec?.Persons is null)
+                return false;
+            foreach (var person in householdData.HouseholdDataPersonSpec.Persons)
+            {
+                // check if the transportation preferences are set for each person in the household
+                if (person?.TransportationPreferences is null)
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Alternatively to directly specifying a TravelRouteSet the transport preferences of each person can be specified.
         /// This function collects these preferences and uses them to create a new TravelRouteSet.
         /// </summary>
         /// <param name="householdData">The HouseholdData object for which the TravelRouteSet will be created</param>
         /// <returns>A new TravelRouteSet that contains all required routes.</returns>
-        public TravelRouteSet? CreateTravelRouteSetFromPersonPreferences(HouseholdData householdData)
+        public TravelRouteSet CreateTravelRouteSetFromPersonPreferences(HouseholdData householdData)
         {
             // find the home site of this household because it has a special role when using transportation preferences of persons
             Site home = sim.Sites.FindFirstByName("Home", FindMode.IgnoreCase);
-            if (home == null || householdData.HouseholdDataPersonSpec == null)
+            if (home is null)
             {
-                // no "home" site or no persons available to calculate a travel route set
-                return null;
+                throw new LPGException("Could not find the \"Home\" site, which is necessary to build a new travel route set");
             }
             // create a new empty travel route set
             var name = "Generated TravelRouteSet " + "(" + householdData.Name + ")";
             var description = "This TravelRouteSet was generated using the transportation device preferences of all persons in this household.";
             var travelRouteSet = new TravelRouteSet(name, null, sim.ConnectionString, description, Guid.NewGuid().ToStrGuid(), null);
             travelRouteSet.SaveToDB();
-            foreach (PersonData person in householdData.HouseholdDataPersonSpec.Persons)
+            foreach (PersonData person in householdData.HouseholdDataPersonSpec!.Persons)
             {
                 CreateTravelRoutesForPerson(person, home, travelRouteSet);
             }
@@ -57,11 +76,11 @@ namespace SimulationEngineLib.HouseJobProcessor
         private void CreateTravelRoutesForPerson(PersonData person, Site home, TravelRouteSet travelRouteSet)
         {
             var preferences = person.TransportationPreferences;
-            if (preferences == null)
+            if (preferences is null)
             {
-                return;
+                throw new LPGPBadParameterException($"No transportation preferences given for {person.PersonName}.");
             }
-            Dictionary<Site, TransportationPreference> sites = new Dictionary<Site, TransportationPreference>();
+            Dictionary<Site, TransportationPreference> sites = [];
             // collect all sites (except home)
             foreach (var preference in preferences)
             {
