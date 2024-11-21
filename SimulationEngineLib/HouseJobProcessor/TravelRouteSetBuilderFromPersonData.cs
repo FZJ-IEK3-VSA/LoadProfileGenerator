@@ -51,11 +51,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         public TravelRouteSet CreateTravelRouteSetFromPersonPreferences(HouseholdData householdData)
         {
             // find the home site of this household because it has a special role when using transportation preferences of persons
-            Site home = sim.Sites.FindFirstByName(Constants.HomeSiteName, FindMode.IgnoreCase);
-            if (home is null)
-            {
-                throw new LPGException("Could not find the \"Home\" site, which is necessary to build a new travel route set");
-            }
+            Site home = GetHomeSite(sim);
             // create a new empty travel route set
             var name = $"Generated TravelRouteSet ({householdData.Name})";
             var description = "This TravelRouteSet was generated using the transportation device preferences of all persons in this household.";
@@ -174,6 +170,20 @@ namespace SimulationEngineLib.HouseJobProcessor
         {
             angle = rad ? angle : Math.PI * angle / 180.0;
             return Math.Sqrt(a * a + b * b - Math.Cos(angle) * 2 * a * b);
+        }
+
+        /// <summary>
+        /// Finds and returns the predefined Home site.
+        /// </summary>
+        /// <param name="sim">database access object</param>
+        /// <returns>the Home site</returns>
+        /// <exception cref="LPGException">if the Home site could not be found</exception>
+        public static Site GetHomeSite(Simulator sim)
+        {
+            var homeSite = sim.Sites.FindFirstByName(Constants.HomeSiteName, FindMode.IgnoreCase);
+            if (homeSite is null)
+                throw new LPGException("Could not find the \"Home\" site, which is necessary to build a new travel route set.");
+            return homeSite;
         }
     }
 }

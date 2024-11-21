@@ -50,7 +50,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// Stores which location must be replaced with which new one, for each point of interest
         /// separately. Uses the POI-ID as key.
         /// </summary>
-        private Dictionary<string, PoiLocationReplacement> LocationReplacements;
+        public IReadOnlyDictionary<string, PoiLocationReplacement> LocationReplacements { get; }
 
         /// <summary>
         /// Creates a new PointOfInterestTraitReplacer
@@ -106,8 +106,8 @@ namespace SimulationEngineLib.HouseJobProcessor
             // create new adapted traits
             foreach (var person in household.Persons)
             {
-                if (!travelPreferences.TryGetValue(person.Name, out var personTravelPreferences))
-                    throw new LPGException($"Missing travel preferences for {person.Name} in household {household.Name}");
+                if (!travelPreferences.TryGetValue(person.PrettyName, out var personTravelPreferences))
+                    throw new LPGException($"Missing travel preferences for {person.PrettyName} in household {household.Name}");
 
                 // get a lookup object mapping each location that needs to be replaced in this person's traits to all new locations that will replace it
                 var locationsToReplace = personTravelPreferences.PoiWeights.Select(poi => new WheightedPoiLocationReplacement(LocationReplacements[poi.Key], poi.Value))
