@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using Common;
 using Common.Extensions;
 using Database;
 using Database.Helpers;
@@ -50,13 +51,13 @@ namespace SimulationEngineLib.HouseJobProcessor
         public TravelRouteSet CreateTravelRouteSetFromPersonPreferences(HouseholdData householdData)
         {
             // find the home site of this household because it has a special role when using transportation preferences of persons
-            Site home = sim.Sites.FindFirstByName("Home", FindMode.IgnoreCase);
+            Site home = sim.Sites.FindFirstByName(Constants.HomeSiteName, FindMode.IgnoreCase);
             if (home is null)
             {
                 throw new LPGException("Could not find the \"Home\" site, which is necessary to build a new travel route set");
             }
             // create a new empty travel route set
-            var name = "Generated TravelRouteSet " + "(" + householdData.Name + ")";
+            var name = $"Generated TravelRouteSet ({householdData.Name})";
             var description = "This TravelRouteSet was generated using the transportation device preferences of all persons in this household.";
             var travelRouteSet = new TravelRouteSet(name, null, sim.ConnectionString, description, Guid.NewGuid().ToStrGuid(), null);
             travelRouteSet.SaveToDB();

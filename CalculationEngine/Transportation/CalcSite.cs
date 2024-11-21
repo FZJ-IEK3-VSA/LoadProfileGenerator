@@ -6,6 +6,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.CitySimulation;
 using CalculationEngine.HouseholdElements;
+using Common;
 using Common.CalcDto;
 using Common.Extensions;
 
@@ -13,12 +14,6 @@ namespace CalculationEngine.Transportation
 {
     public class CalcSite : CalcBase, ICalcSite
     {
-        /// <summary>
-        /// Name of the CalcSite "Home". This is relevant for the city simulation
-        /// and determination of remote affordances.
-        /// </summary>
-        private const string NameOfHomeCalcSite = "Home";
-
         public CalcSite(string pName, bool deviceChangeAllowed, StrGuid guid, HouseholdKey householdKey, PointOfInterestId? pointOfInterest = null) : base(pName, guid)
         {
             DeviceChangeAllowed = deviceChangeAllowed;
@@ -56,7 +51,7 @@ namespace CalculationEngine.Transportation
         /// Returns true if this site is the home of the simulated household, and
         /// false, if it is any other site.
         /// </summary>
-        public bool IsHome => Name == NameOfHomeCalcSite;
+        public bool IsHome => Name == Constants.HomeSiteName;
 
         public CalcSite CreateCopyWithPOI(PointOfInterestId pointOfInterest)
         {
