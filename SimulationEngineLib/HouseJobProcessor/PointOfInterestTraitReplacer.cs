@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System.Collections.Generic;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
@@ -99,7 +101,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="household">the household whose traits should be replaced</param>
         /// <param name="travelPreferences">the POI preferences of all persons in the household</param>
         /// <exception cref="LPGException">if travel preferences for a person are missing</exception>
-        internal void ReplaceTraitsInHousehold(ModularHousehold household, Dictionary<string, PersonTravelPreferences>? travelPreferences)
+        internal void ReplaceTraitsInHousehold(ModularHousehold household, Dictionary<string, PersonTravelPreferences> travelPreferences)
         {
             // create new adapted traits
             foreach (var person in household.Persons)
