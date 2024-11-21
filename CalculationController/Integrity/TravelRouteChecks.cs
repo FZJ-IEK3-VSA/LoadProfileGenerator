@@ -44,7 +44,7 @@ namespace CalculationController.Integrity
                 }
 
                 var sites = routeSet.TravelRoutes.Select(x => x.TravelRoute.SiteA).ToList();
-                var sitesB = routeSet.TravelRoutes.Select(x => x.TravelRoute.SiteA).ToList();
+                var sitesB = routeSet.TravelRoutes.Select(x => x.TravelRoute.SiteB).ToList();
                 sites.AddRange(sitesB);
                 sites = sites.Distinct().ToList();
                 var hh = sim.ModularHouseholds[0];
@@ -52,7 +52,7 @@ namespace CalculationController.Integrity
                 var locsAtSites = sitelocs.Select(x => x.Location).Distinct().ToList();
                 foreach (var loc in hh.CollectLocations()) {
                     if (!locsAtSites.Contains(loc)) {
-                        throw new DataIntegrityException("The location " + loc.PrettyName  + " in the household " + hh.PrettyName + "  at travel route set  " +  routeSet.Name + " is not covered by any site. Add a route with this site.", routeSet );
+                        throw new DataIntegrityException("The location " + loc.PrettyName  + " in the household " + hh.PrettyName + " at travel route set  " +  routeSet.Name + " is not covered by any site. Add a route with this site.", routeSet );
                     }
                 }
                 CheckRouteCompleteness(routeSet,sites);
