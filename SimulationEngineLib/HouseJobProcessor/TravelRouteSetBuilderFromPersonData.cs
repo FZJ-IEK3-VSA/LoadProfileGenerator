@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Automation;
@@ -15,7 +17,7 @@ namespace SimulationEngineLib.HouseJobProcessor
     /// in the person data of the calc spec.
     /// </summary>
     /// <param name="simulator">database access object</param>
-    public class TravelRouteSetBuilderFromPersonData(Simulator simulator)
+    internal class TravelRouteSetBuilderFromPersonData(Simulator simulator)
     {
         private readonly Simulator sim = simulator;
 
@@ -25,7 +27,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         /// <param name="householdData">The HouseholdData object for which the TravelRouteSet will be created</param>
         /// <returns>A new TravelRouteSet that contains all required routes.</returns>
-        public TravelRouteSet CreateTravelRouteSetFromPersonPreferences(HouseholdData householdData)
+        public TravelRouteSet? CreateTravelRouteSetFromPersonPreferences(HouseholdData householdData)
         {
             // find the home site of this household because it has a special role when using transportation preferences of persons
             Site home = sim.Sites.FindFirstByName("Home", FindMode.IgnoreCase);
@@ -60,14 +62,10 @@ namespace SimulationEngineLib.HouseJobProcessor
                 return;
             }
             Dictionary<Site, TransportationPreference> sites = new Dictionary<Site, TransportationPreference>();
-            // collect all sites (except from home)
+            // collect all sites (except home)
             foreach (var preference in preferences)
             {
-                var site = sim.Sites.FindByJsonReference(preference.DestinationSite);
-                if (site == null)
-                {
-                    throw new LPGPBadParameterException("Could not find the site \"" + site.Name + "\".");
-                }
+                var site = sim.Sites.FindWithException(preference.DestinationSite);
                 sites.Add(site, preference);
             }
             // create routes from each site to all others
@@ -102,14 +100,10 @@ namespace SimulationEngineLib.HouseJobProcessor
             for (int i = 0; i < preference.TransportationDeviceCategories.Count; i++)
             {
                 // create the route for the specified transportation device category
-                var category = sim.TransportationDeviceCategories.FindByJsonReference(preference.TransportationDeviceCategories[i]);
-                if (category == null)
-                {
-                    throw new LPGPBadParameterException("Could not find the category \"" + category.Name + "\".");
-                }
+                var category = sim.TransportationDeviceCategories.FindWithException(preference.TransportationDeviceCategories[i]);
                 var name = "Generated (from " + origin.Name + " to " + destination.Name + " for " + person.PersonName + " using \"" + category.Name + "\")";
                 var description = "This route was generated based on the transportation preferences of " + person.PersonName;
-                TravelRoute route = new TravelRoute(null, sim.ConnectionString, name, description, origin, destination, StrGuid.New(), "");
+                var route = new TravelRoute(null, sim.ConnectionString, name, description, origin, destination, StrGuid.New(), "");
                 route.SaveToDB();
                 // add only a single step using the specified category
                 var stepName = "Generated (" + category.Name + ")";
