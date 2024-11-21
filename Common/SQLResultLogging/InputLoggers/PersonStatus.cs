@@ -1,4 +1,6 @@
-﻿using Automation;
+﻿#nullable enable
+
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
