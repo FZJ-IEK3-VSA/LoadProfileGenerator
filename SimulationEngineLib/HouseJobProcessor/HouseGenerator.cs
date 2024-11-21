@@ -16,6 +16,7 @@ using Database;
 using Database.Helpers;
 using Database.Tables;
 using Database.Tables.BasicElements;
+using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
@@ -366,7 +367,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
         /// <summary>
-        /// Gets the JsonReference of the house to calculate form a HouseCreationAndCalculationjob.
+        /// Gets the JsonReference of the house to calculate from a HouseCreationAndCalculationjob.
         /// Depending on the configuration, the reference of an existing house is returned or a new
         /// house is created.
         /// </summary>
@@ -466,6 +467,13 @@ namespace SimulationEngineLib.HouseJobProcessor
             house.GeographicLocation = sim.GeographicLocations.FindOrDefault(hj.CalcSpec.GeographicLocation);
             house.TemperatureProfile = sim.TemperatureProfiles.FindOrDefault(hj.CalcSpec.TemperatureProfile);
 
+            // check if locations should be replaced with new POI locations for the city simulation
+            PointOfInterestTraitReplacer poiTraitReplacer = null;
+            if (hj.City is not null)
+            {
+                poiTraitReplacer = new PointOfInterestTraitReplacer(sim, hj.City);
+            }
+
             // create and add the Households
             Random r = new();
             int householdidx = 1;
@@ -495,13 +503,22 @@ namespace SimulationEngineLib.HouseJobProcessor
 
                 if (!householdData.TransportationDistanceModifiers.IsNullOrEmpty() && travelrouteset != null)
                 {
-                    Logger.Info("Setting new travel distances for " + hhs.Name + " " + "");
-                    travelrouteset = AdjustTravelDistancesBasedOnModifiers(travelrouteset, sim, house, householdData, householdidx++);
+                    Logger.Info($"Setting new travel distances for {hhs.Name} ");
+                    travelrouteset = AdjustTravelDistancesBasedOnModifiers(travelrouteset, sim, house, householdData, householdidx);
                     Logger.Info("Name of the new travel route set to be used is " + travelrouteset.Name);
+                }
+
+                if (poiTraitReplacer is not null)
+                {
+                    // replace locations in all traits with new POI locations
+                    if (householdData.TravelPreferences is null)
+                        throw new LPGException($"No person travel preferences specified for household #{householdidx}");
+                    poiTraitReplacer.ReplaceTraitsInHousehold(hhs, householdData.TravelPreferences);
                 }
 
                 // add the new household to the house
                 house.AddHousehold(hhs, chargingStationSet, travelrouteset, transportationDeviceSet);
+                householdidx++;
             }
 
             house.SaveToDB();

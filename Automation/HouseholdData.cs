@@ -135,5 +135,11 @@ namespace Automation {
         public List<TransportationDistanceModifier>? TransportationDistanceModifiers { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public HouseholdDataSpecificationType HouseholdDataSpecification { get; set; }
+
+        /// <summary>
+        /// Specifies which points of interest each person visits, and which routes they use for that.
+        /// Uses the full person name as key.
+        /// </summary>
+        public Dictionary<string, PersonTravelPreferences>? TravelPreferences { get; set; }
     }
 }

@@ -1529,7 +1529,7 @@ namespace Database.Tables.ModularHouseholds
             AddAffordanceToLocation(hhl, aff, timeLimit, weight, startMinusTime, startPlusTime, endMinusTime, endPlusTime);
         }
 
-        internal void AddAffordanceToLocation([JetBrains.Annotations.NotNull] HHTLocation location,
+        public void AddAffordanceToLocation([JetBrains.Annotations.NotNull] HHTLocation location,
                                               [JetBrains.Annotations.NotNull] Affordance aff,
                                               [CanBeNull] TimeLimit timeLimit,
                                               int weight,
@@ -1637,7 +1637,7 @@ namespace Database.Tables.ModularHouseholds
         }
 
         [JetBrains.Annotations.NotNull]
-        internal HHTLocation AddLocation([JetBrains.Annotations.NotNull] Location location)
+        public HHTLocation AddLocation([JetBrains.Annotations.NotNull] Location location)
         {
             foreach (var hhLocation in _locations) {
                 if (hhLocation.Location == location) {
@@ -1670,7 +1670,7 @@ namespace Database.Tables.ModularHouseholds
             Autodevs.Remove(hhAutonomous);
         }
 
-        internal void DeleteHHTLocationFromDB([JetBrains.Annotations.NotNull] HHTLocation hhl)
+        public void DeleteHHTLocationFromDB([JetBrains.Annotations.NotNull] HHTLocation hhl)
         {
             if (hhl.ID != null) {
                 hhl.DeleteFromDB();
