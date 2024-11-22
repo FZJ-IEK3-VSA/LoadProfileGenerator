@@ -29,6 +29,10 @@ namespace Database.Tables.Transportation
         [CanBeNull] private Site _siteB;
         [CanBeNull] private string _routeKey;
 
+        /// <summary>
+        /// Can be used to dynamically modify travel route distances via TransportationDistanceModifiers
+        /// in the Calcspec.
+        /// </summary>
         [CanBeNull]
         public string RouteKey {
             get => _routeKey;
