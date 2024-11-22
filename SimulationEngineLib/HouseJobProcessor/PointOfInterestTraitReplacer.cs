@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using Common;
 using Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -108,6 +109,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             {
                 if (!travelPreferences.TryGetValue(person.PrettyName, out var personTravelPreferences))
                     throw new LPGException($"Missing travel preferences for {person.PrettyName} in household {household.Name}");
+                CheckPersonPoiPreferences(personTravelPreferences);
 
                 // get a lookup object mapping each location that needs to be replaced in this person's traits to all new locations that will replace it
                 var locationsToReplace = personTravelPreferences.PoiWeights.Select(poi => new WheightedPoiLocationReplacement(LocationReplacements[poi.Key], poi.Value))
@@ -185,6 +187,32 @@ namespace SimulationEngineLib.HouseJobProcessor
             }
             newTrait.SaveToDB();
             return newTrait;
+        }
+
+        /// <summary>
+        /// Checks if the point of interest preferences are valid.
+        /// </summary>
+        /// <param name="preferences">the preferences object to check</param>
+        /// <exception cref="LPGPBadParameterException">if the preferences are invalid</exception>
+        public static void CheckPersonPoiPreferences(PersonPoiPreferences preferences)
+        {
+            var relevantPOIs = preferences.PoiWeights.Keys.ToHashSet();
+            // in addition to the defined POIs, the Home site is also a valid start/destination
+            relevantPOIs.Add(Constants.HomeSiteName);
+            foreach (var route in preferences.Routes)
+            {
+                string? missingPOI = null;
+                if (!relevantPOIs.Contains(route.Start))
+                    missingPOI = route.Start;
+                if (!relevantPOIs.Contains(route.Destination))
+                    missingPOI = route.Destination;
+                if (missingPOI is not null)
+                {
+                    var message = $"Invalid PointOfInterestPreferences: the point of interest '{missingPOI}' is used as start or " +
+                        "destination of a route, but is not contained in the PoiWeights.";
+                    throw new LPGPBadParameterException(message);
+                }
+            }
         }
     }
 }
