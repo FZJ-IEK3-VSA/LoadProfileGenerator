@@ -23,10 +23,11 @@ namespace CalculationController.Integrity
                 var arr = routeSet.Name.Split(' ');
                 const string km = "km";
                 var kmstr = arr.FirstOrDefault(x => x.EndsWith(km));
-                int routeSetDistance = int.Parse(kmstr.RemoveSuffix(km)) * 1000;
-                if (kmstr == null) {
+                if (kmstr is null) {
                     throw new DataIntegrityException("No distance declaration in the name of the route set " + routeSet.Name, routeSet);
                 }
+                int routeSetDistance = int.Parse(kmstr.RemoveSuffix(km)) * 1000;
+
 
                 // check if each workplace route in the set fits to this distance (with a tolerance)
                 const double tolerance = 1000;
