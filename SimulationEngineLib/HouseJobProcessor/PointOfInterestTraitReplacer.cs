@@ -89,7 +89,8 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var site = sim.Sites.CreateNewItem(sim.ConnectionString);
                 site.Name = poiId;
                 site.Description = "Generated site for a single point of interest";
-                site.AddLocation(location, true);
+                site.AddLocation(location);
+                site.SaveToDB();
 
                 locationReplacements[poiId] = new PoiLocationReplacement(entry.Key, referenceLocation, location, site, timelimit);
             }
