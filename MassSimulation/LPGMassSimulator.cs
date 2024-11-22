@@ -64,7 +64,7 @@ namespace MassSimulation
                 calcStartParameterSet.ResultPath = resultDirectory;
 
                 // create a calcManager for each household
-                var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
+                var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false, true);
                 simulationTargets.Add(new MassSimulationTarget(calcObjectRef.Id, calcManager, resultDirectory));
             }
 

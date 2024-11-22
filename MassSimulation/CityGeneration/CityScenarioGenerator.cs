@@ -20,8 +20,6 @@ namespace MassSimulation.CityGeneration
             object[] buildings = [];
             foreach (object buildingInfo in buildings)
             {
-                // determine the responsible worker
-                int responsibleWorker = 0;
                 if (IsResidential(buildingInfo))
                 {
                     // create a house description out of the building data
@@ -42,11 +40,11 @@ namespace MassSimulation.CityGeneration
                     // map to LPG CalcLocation to determine available affordances
                     // create a set of available affordances including duration to simulate stay durations
                     // --> this might not be necessary if NewRemoteActivity messages contain a requested duration
-                    // create PoiSimulator object
-                    var poiSim = new PointOfInterestSimulator(responsibleWorker, 123);
+                    // create point of interest
+                    var poiSim = new PointOfInterestConfig(new("123"));
                 }
             }
-            return new Scenario(null, null, null);
+            return new Scenario(null, null, null, null);
         }
 
         private bool IsResidential(object buildingInfo)

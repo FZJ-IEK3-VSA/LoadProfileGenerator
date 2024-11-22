@@ -14,14 +14,13 @@ namespace CalculationEngine.Transportation
 {
     public class CalcSite : CalcBase, ICalcSite
     {
-        public CalcSite(string pName, bool deviceChangeAllowed, StrGuid guid, HouseholdKey householdKey, PointOfInterestId? pointOfInterest = null) : base(pName, guid)
+        public CalcSite(string pName, bool deviceChangeAllowed, StrGuid guid, HouseholdKey householdKey) : base(pName, guid)
         {
             DeviceChangeAllowed = deviceChangeAllowed;
             _householdKey = householdKey;
-            PointOfInterest = pointOfInterest;
 
-            // TODO: only for testing
-            PointOfInterest = new PointOfInterestId(0, 0);
+            // in city simulation, CalcSites are created with the corresponding POI-ID as their name
+            PointOfInterest = IsHome ? null : new PointOfInterestId(Name);
         }
 
         public bool DeviceChangeAllowed { get; }
@@ -52,12 +51,6 @@ namespace CalculationEngine.Transportation
         /// false, if it is any other site.
         /// </summary>
         public bool IsHome => Name == Constants.HomeSiteName;
-
-        public CalcSite CreateCopyWithPOI(PointOfInterestId pointOfInterest)
-        {
-            // TODO: copy other properties if necessary
-            return new CalcSite(Name, DeviceChangeAllowed, StrGuid.New(), _householdKey, pointOfInterest);
-        }
 
         /// <summary>
         /// Adds a new location to the list of locations, and sets the CalcSite property of the location to this site.

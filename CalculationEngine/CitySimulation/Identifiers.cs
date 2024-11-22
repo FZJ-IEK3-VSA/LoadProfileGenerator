@@ -6,16 +6,27 @@ namespace CalculationEngine.CitySimulation
     /// Unique identifier for a CalcPerson in the city simulation. Can be initialized as an incomplete
     /// identifier without target ID and worker ID, making it only unique within the simulation target.
     /// </summary>
-    /// <param name="personName">the name of the person</param>
-    /// <param name="householdKey">the key of the person's household</param>
-    /// <param name="targetId">the simulation target, i.e. the building that contains the household</param>
-    /// <param name="workerId">the rank of the worker that simulates the target</param>
-    public record PersonIdentifier(string personName, HouseholdKey householdKey, string targetId = "", int workerId = -1)
+    public record PersonIdentifier
     {
-        public string PersonName { get; } = personName;
-        public HouseholdKey HouseholdKey { get; } = householdKey;
-        public string TargetId { get; private set; } = targetId;
-        public int WorkerId { get; private set; } = workerId;
+        /// <summary>
+        /// Creates a new person identifier.
+        /// </summary>
+        /// <param name="personName">the name of the person</param>
+        /// <param name="householdKey">the key of the person's household</param>
+        /// <param name="targetId">the simulation target, i.e. the building that contains the household</param>
+        /// <param name="workerId">the rank of the worker that simulates the target</param>
+        public PersonIdentifier(string personName, HouseholdKey householdKey, string targetId = "", int workerId = -1)
+        {
+            PersonName = personName;
+            HouseholdKey = householdKey;
+            TargetId = targetId;
+            WorkerId = workerId;
+        }
+
+        public string PersonName { get; }
+        public HouseholdKey HouseholdKey { get; }
+        public string TargetId { get; private set; }
+        public int WorkerId { get; private set; }
 
         /// <summary>
         /// If the identifier is incomplete, i.e. it is missing target ID and worker ID, this method
@@ -49,11 +60,6 @@ namespace CalculationEngine.CitySimulation
     /// <summary>
     /// Unique identifier for a point of interest and its simulator.
     /// </summary>
-    /// <param name="id">ID of the point of interest</param>
-    /// <param name="workerId">rank of the worker that simulates the POI</param>
-    public record PointOfInterestId(int id, int workerId)
-    {
-        public readonly int Id = id;
-        public readonly int WorkerId = workerId;
-    }
+    /// <param name="Id">ID of the point of interest</param>
+    public record PointOfInterestId(string Id);
 }

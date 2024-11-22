@@ -53,8 +53,14 @@ namespace MassSimulation
         /// </summary>
         private readonly MessageContainer[] objectsForWorkers;
 
-        public MPIDistributor(int numWorkers)
+        /// <summary>
+        /// Maps each point of interest ID to the worker responsible for this POI.
+        /// </summary>
+        private readonly PointOfInterestRegister poiRegister;
+
+        public MPIDistributor(int numWorkers, PointOfInterestRegister poiRegister)
         {
+            this.poiRegister = poiRegister;
             // initialize the array of data collection objects
             objectsForWorkers = new MessageContainer[numWorkers];
             for (int i = 0; i < objectsForWorkers.Length; i++)
@@ -112,12 +118,12 @@ namespace MassSimulation
                 // determine whether the activity is a traveling or POI activity
                 bool isTravel = activity.IsTravel();
                 var poi = activity.Activity.Destination;
+                var message = new RemoteActivityStart(activity.Person, isTravel, activity.Activity.Name, poi, activity.CurrentLocation);
+                int targetWorker;
                 if (isTravel)
                 {
-                    var travelMessage = new RemoteActivityStart(activity.Person, true, activity.Activity.Name, poi, activity.CurrentLocation);
                     // determine the rank of the worker responsible for the person's current location
-                    var currentLocationWorker = activity.CurrentLocation?.WorkerId ?? activity.Person.WorkerId;
-                    AddNewActivity(currentLocationWorker, travelMessage);
+                    targetWorker = poiRegister.GetWorkerForLocation(activity.CurrentLocation, activity.Person);
                 }
                 else
                 {
@@ -126,9 +132,9 @@ namespace MassSimulation
                     {
                         throw new LPGException("A person wants to start a remote activity but is not at the correct point of interest.");
                     }
-                    var activityMessage = new RemoteActivityStart(activity.Person, false, activity.Activity.Name, poi);
-                    AddNewActivity(poi.WorkerId, activityMessage);
+                    targetWorker = poiRegister.GetWorkerForPOI(poi);
                 }
+                AddNewActivity(targetWorker, message);
             }
         }
 

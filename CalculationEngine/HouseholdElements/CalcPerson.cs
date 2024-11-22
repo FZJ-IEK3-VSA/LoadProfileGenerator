@@ -698,8 +698,8 @@ namespace CalculationEngine.HouseholdElements
         public void LogPersonStatus(TimeStep timestep)
         {
             var ps = new PersonStatus(_calcPerson.HouseholdKey, _calcPerson.Name,
-                _calcPerson.Guid, _currentLocation.Name, _currentLocation.Guid, _currentSite?.Name,
-                _currentLocation.CalcSite?.Guid, CurrentAffordance?.Name, CurrentAffordance?.Guid, timestep);
+                _calcPerson.Guid, _currentLocation.Name, _currentLocation.Guid, _currentSite?.Name ?? "no site",
+                _currentLocation.CalcSite?.Guid, CurrentAffordance.Name, CurrentAffordance?.Guid, timestep);
             _calcRepo.OnlineLoggingData.AddPersonStatus(ps);
         }
 
@@ -865,7 +865,6 @@ namespace CalculationEngine.HouseholdElements
         /// <returns>the affordance to add to the person's list</returns>
         private ICalcAffordanceBase ReplaceWithRemoteAffordanceIfNecessary(ICalcAffordanceBase affordance)
         {
-            // TODO: put this option somewhere more suitable
             if (!_calcRepo.CalcParameters.CitySimulationEnabled)
             {
                 // no dynamic city simulation
@@ -877,8 +876,7 @@ namespace CalculationEngine.HouseholdElements
                 throw new LPGException("Tried to replace an affordance without a dynamic transport decorator.");
             }
 
-            var site = transportAffordance.Site;
-            if (site.IsHome)
+            if (transportAffordance.Site.IsHome)
             {
                 // affordance takes place at home - no remote affordance
                 return affordance;

@@ -1,40 +1,46 @@
 ﻿using Automation.ResultFiles;
 using CalculationEngine.CitySimulation;
-using CalculationEngine.HouseholdElements;
 
 namespace MassSimulation
 {
     /// <summary>
-    /// Register that stores all POIs
+    /// Register that stores all POIs and the worker responsible for simulating them.
     /// </summary>
-    internal class PointOfInterestRegister(int numWorkers)
+    public class PointOfInterestRegister(Dictionary<PointOfInterestId, int> poiToWorkerMapping)
     {
         /// <summary>
         /// Register for all point of interests
         /// </summary>
-        private readonly Dictionary<CalcLocation, IEnumerable<PointOfInterestId>> poiRegister = [];
+        private readonly IReadOnlyDictionary<PointOfInterestId, int> poiRegister = poiToWorkerMapping;
 
         /// <summary>
-        /// Get a random item out of an enumerable
+        /// Returns the ID of the worker responsible for simulating the location. The location is either
+        /// the ID of a point of interest, or null, which means the person is at home.
+        /// person);
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumerable"></param>
-        /// <param name="rand"></param>
-        /// <returns></returns>
-        public static T PickRandomElement<T>(IEnumerable<T> enumerable, Random? rand = null)
+        /// <param name="pointOfInterestId">the point of interest to look up</param>
+        /// <returns>the worker responsible for this POI</returns>
+        /// <exception cref="LPGException">if the worker could not be determined</exception>
+        public int GetWorkerForLocation(PointOfInterestId? pointOfInterestId, PersonIdentifier personId)
         {
-            rand = rand ?? new Random();
-            int index = rand.Next(0, enumerable.Count());
-            return enumerable.ElementAt(index);
+            if (pointOfInterestId is null)
+            {
+                return personId.WorkerId;
+            }
+            return GetWorkerForPOI(pointOfInterestId);
         }
 
-        private PointOfInterestId GetPOIForAffordance(ICalcAffordanceBase affordance)
+        /// <summary>
+        /// Returns the ID of the worker responsible for simulating the specified point of interest.
+        /// </summary>
+        /// <param name="pointOfInterestId">the point of interest to look up</param>
+        /// <returns>the worker responsible for this POI</returns>
+        /// <exception cref="LPGException">if the worker could not be determined</exception>
+        public int GetWorkerForPOI(PointOfInterestId pointOfInterestId)
         {
-            if (!poiRegister.ContainsKey(affordance.ParentLocation))
-            {
-                throw new LPGException("No fitting POIs for location " + affordance.ParentLocation + " found.");
-            }
-            return PickRandomElement(poiRegister[affordance.ParentLocation]);
+            if (!poiRegister.TryGetValue(pointOfInterestId, out int workerId))
+                throw new LPGException($"Unregistered point of interest: {pointOfInterestId}; could not determine responsible worker.");
+            return workerId;
         }
     }
 }

@@ -54,7 +54,13 @@ namespace MassSimulation.CityGeneration
             {
                 targetReferences[i] = new MassSimTargetReference("House " + i, calcObjectReference);
             }
-            return new Scenario(newDbPath, calcSpec, targetReferences);
+
+            // create the POIs defined in the house job file
+            var poiConfigs = hcj.City?.PointsOfInterest.Keys.Select(poiId => new PointOfInterestConfig(new(poiId))).ToArray();
+            if (poiConfigs is null || poiConfigs.Length == 0)
+                throw new LPGException("No POIs defined in job file");
+            
+            return new Scenario(newDbPath, calcSpec, targetReferences, poiConfigs);
         }
     }
 }

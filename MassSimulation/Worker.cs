@@ -29,10 +29,9 @@ namespace MassSimulation
         private List<PointOfInterestSimulator> poiSimulators = [];
         private TransportSimulator? transportSimulator;
 
-        private PointOfInterestRegister poiRegister;
-
         private CalcParameters? calcParameters;
         private Scenario? scenario;
+        private ScenarioPart? scenarioPart;
 
         private readonly MPILogger logger;
 
@@ -43,7 +42,6 @@ namespace MassSimulation
             numWorkers = comm.Size;
             workerName = MPI.Environment.ProcessorName;
 
-            poiRegister = new(numWorkers);
             logger = new MPILogger(true, rank);
         }
 
@@ -90,9 +88,9 @@ namespace MassSimulation
             }
 
             // distribute simulation targets
-            ScenarioPart partForThisWorker = comm.Scatter(scenarioParts, 0);
+            scenarioPart = comm.Scatter(scenarioParts, 0);
 
-            lpgSimulator = new(rank, partForThisWorker);
+            lpgSimulator = new(rank, scenarioPart);
             calcParameters = lpgSimulator.CalcParameters;
 
             lpgSimulator.Init();
@@ -100,8 +98,8 @@ namespace MassSimulation
             // initialize the transport simulator
             transportSimulator = new TransportSimulator(rank);
 
-            // TODO: init PointOfInterestSimulators properly
-            poiSimulators = [new(rank, rank)];
+            // initialize the point of interst simulators
+            poiSimulators = scenarioPart.PointsOfInterest.Select(poi => new PointOfInterestSimulator(rank, poi.Id)).ToList();
         }
 
         private void RunSimulation()
@@ -137,7 +135,7 @@ namespace MassSimulation
             var remoteTravelsAndActivities = lpgSimulator.SimulateOneStep(timestep, simulationTime, activityMessages.finishedActivities);
 
             // create a new object for message collection and distribution
-            var messageCollector = new MPIDistributor(numWorkers);
+            var messageCollector = new MPIDistributor(numWorkers, scenarioPart.PoiRegister);
             messageCollector.AddNewActivities(remoteTravelsAndActivities);
             // remark: for consistency, these messages are only distributed after this timestep is finished
 

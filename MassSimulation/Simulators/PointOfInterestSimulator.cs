@@ -18,14 +18,15 @@ namespace MassSimulation.Simulators
     internal class PointOfInterestSimulator : ISimulator
     {
         private List<AgentStayState> activityStates = [];
+
+        private readonly TestLogger logger;
+
         public PointOfInterestId PoiId { get; }
 
-        private TestLogger logger;
-
-        public PointOfInterestSimulator(int rank, int id)
+        public PointOfInterestSimulator(int rank, PointOfInterestId id)
         {
-            PoiId = new PointOfInterestId(id, rank);
-            var filename = $"POI-{PoiId.WorkerId}-{PoiId.Id}.txt";
+            PoiId = id;
+            var filename = $"POI-{rank}-{PoiId.Id}.txt";
             logger = new(filename);
         }
 
