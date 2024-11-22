@@ -23,8 +23,10 @@ namespace CalculationController.Integrity
                 var arr = routeSet.Name.Split(' ');
                 const string km = "km";
                 var kmstr = arr.FirstOrDefault(x => x.EndsWith(km));
-                if (kmstr is null) {
-                    throw new DataIntegrityException("No distance declaration in the name of the route set " + routeSet.Name, routeSet);
+                if (kmstr is null)
+                {
+                    // this travel route set has no distance declaration
+                    return;
                 }
                 int routeSetDistance = int.Parse(kmstr.RemoveSuffix(km)) * 1000;
 
