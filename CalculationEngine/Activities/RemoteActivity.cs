@@ -7,8 +7,8 @@ using Common;
 namespace CalculationEngine.Activities
 {
 
-    public class RemoteActivity(string dataSource, string personName, PointOfInterestId? destination, CalcAffordanceRemote affordance)
-        : DynamicActivity(dataSource, personName, destination)
+    public class RemoteActivity(string dataSource, string personName, PointOfInterestId? destination, CalcAffordanceRemote affordance, int? expectedDuration = null)
+        : DynamicActivity(dataSource, personName, destination, expectedDuration)
     {
         public override bool IsTravel => false;
 

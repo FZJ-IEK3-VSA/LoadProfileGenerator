@@ -1,14 +1,10 @@
-﻿#region
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Automation.ResultFiles;
 using CalculationEngine.Activities;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
-
-#endregion
 
 namespace CalculationEngine.HouseholdElements
 {
@@ -22,6 +18,11 @@ namespace CalculationEngine.HouseholdElements
         private Dictionary<string, TimeStep> _currentActivations = [];
 
         /// <summary>
+        /// Helper object for calculating expected activity durations
+        /// </summary>
+        internal AffordanceDurationCalculator DurationCalculator { get; }
+
+        /// <summary>
         /// The specific site where the affordance takes place, including the ID of the
         /// selcted point of interest. Must not be null for remote affordances.
         /// </summary>
@@ -32,10 +33,11 @@ namespace CalculationEngine.HouseholdElements
         /// of the original affordance.
         /// </summary>
         /// <param name="affordance">the original affordance</param>
-        public CalcAffordanceRemote(CalcAffordanceWithTimeLimit affordance) : base(affordance)
+        public CalcAffordanceRemote(CalcAffordance affordance) : base(affordance)
         {
             if (Site?.PointOfInterest is null)
                 throw new LPGException("A remote affordance needs a site with a valid point of interest ID.");
+            DurationCalculator = affordance.DurationCalculator;
         }
 
         /// <summary>
@@ -56,19 +58,18 @@ namespace CalculationEngine.HouseholdElements
             {
                 throw new LPGException("Cannot convert a transport decorator - pass the source affordance instead");
             }
-            if (affordance is not CalcAffordanceWithTimeLimit timelimitAff)
+            if (affordance is not CalcAffordance calcAffordance)
             {
-                throw new LPGException("Trying to create a remote affordance from unknown affordance type.");
+                throw new LPGException($"Trying to create a remote affordance from an unknown affordance type: {affordance.GetType().Name}");
             }
 
-            return new CalcAffordanceRemote(timelimitAff);
+            return new CalcAffordanceRemote(calcAffordance);
         }
 
         public override IEnumerable<RemoteActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
         {
-            // TODO alternative approach: choose an affordance duration just like a normal affordance, and include it in RemoteAffordanceActivation as
-            // 'requested stay duration', which the POI can use for stay simulation
-            var activation = new RemoteActivity(Name, activator.Name, Site.PointOfInterest, this);
+            var expectedDuration = DurationCalculator.GetEnd(startTime, activator.Name) - startTime;
+            var activation = new RemoteActivity(Name, activator.Name, Site.PointOfInterest, this, expectedDuration.InternalStep);
             return [activation];
         }
 

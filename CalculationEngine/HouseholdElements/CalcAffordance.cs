@@ -39,7 +39,6 @@ using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
-using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging.Loggers;
 
@@ -54,12 +53,6 @@ namespace CalculationEngine.HouseholdElements
     public class CalcAffordance : CalcAffordanceWithTimeLimit
     {
         private readonly CalcProfile _personProfile;
-
-        private readonly Dictionary<string, Dictionary<int, double>> _probabilitiesForTimes = [];
-
-        private readonly Dictionary<string, Dictionary<int, double>> _timeFactorsForTimes = [];
-
-        private readonly double _timeStandardDeviation;
 
         /// <summary>
         /// Stores all current activations of this affordance. Maps name of the activating person
@@ -83,9 +76,14 @@ namespace CalculationEngine.HouseholdElements
                 throw new DataIntegrityException("The affordance " + Name + " has no person profile!");
 #pragma warning restore IDE0016 // Use 'throw' expression
             }
-            _timeStandardDeviation = timeStandardDeviation;
             _personProfile = personProfile;
+            DurationCalculator = new(_personProfile.StepValues.Count, timeStandardDeviation, CalcRepo, Name);
         }
+
+        /// <summary>
+        /// Helper object for calculating affordance activation durations
+        /// </summary>
+        internal AffordanceDurationCalculator DurationCalculator { get; }
 
         /// <summary>
         /// A normal affordance always has a CalcSite object as Site
@@ -117,9 +115,9 @@ namespace CalculationEngine.HouseholdElements
                 var profs = Energyprofiles.Where(x => x.CalcDevice == device).ToList();
                 foreach (var dpt in profs)
                 {
-                    if (dpt.Probability > _probabilitiesForTimes[activatorName][startTime.InternalStep])
+                    if (dpt.Probability > DurationCalculator.GetProbability(startTime, activatorName))
                     {
-                        CalcProfile adjustedProfile = dpt.TimeProfile.CompressExpandDoubleArray(_timeFactorsForTimes[activatorName][startTime.InternalStep]);
+                        CalcProfile adjustedProfile = dpt.TimeProfile.CompressExpandDoubleArray(DurationCalculator.GetTimeFactor(startTime, activatorName));
                         var endtime = dpt.CalcDevice.SetTimeprofile(adjustedProfile, startTime.AddSteps(dpt.TimeOffsetInSteps), dpt.LoadType, Name,
                             activatorName, dpt.Multiplier, false, out var finalValues);
                         if (endtime > timeLastDeviceEnds)
@@ -147,15 +145,12 @@ namespace CalculationEngine.HouseholdElements
 
         public override IEnumerable<StaticActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
         {
-            // determine the time the activating person is busy with the affordance
-            var tf = _timeFactorsForTimes[activator.Name][startTime.InternalStep];
-            int personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count, tf);
-            TimeStep personEndTime = startTime.AddSteps(personsteps);
-
+            var personEndTime = DurationCalculator.GetEnd(startTime, activator.Name);
             // save start and end time of the person's activity
             _currentActivations[activator.Name] = new(startTime, personEndTime);
 
             // adapt the default person profile according to the time factor for this time step
+            double tf = DurationCalculator.GetTimeFactor(startTime, activator.Name);
             var personTimeProfile = _personProfile.CompressExpandDoubleArray(tf);
             var activation = new LocalActivity(activator.Name, personTimeProfile, this);
             return [activation];
@@ -168,9 +163,8 @@ namespace CalculationEngine.HouseholdElements
             ExecuteVariableOperations(startTime, [VariableExecutionTime.Beginning], true);
             ExecuteVariableOperations(timeLastDeviceEnds, [VariableExecutionTime.EndofDevices], false);
 
-            // clear probabilities and time factors for the activating person only
-            _probabilitiesForTimes[activatorName].Clear();
-            _timeFactorsForTimes[activatorName].Clear();
+            // clear probabilities and time factors
+            DurationCalculator.ClearForPerson(activatorName);
         }
 
         public override void FinishActivation(TimeStep endTime, string activatorName)
@@ -254,40 +248,6 @@ namespace CalculationEngine.HouseholdElements
         }
 
         /// <summary>
-        /// Checks if time factors have already been set for this time step, and if not sets them.
-        /// </summary>
-        /// <param name="personName">name of the person for whom time factors are required</param>
-        /// <param name="time">the time step to check</param>
-        private void DetermineTimeFactors(string personName, TimeStep time)
-        {
-            var factorsForPerson = _timeFactorsForTimes.GetOrAddDefault(personName);
-            if (!factorsForPerson.ContainsKey(time.InternalStep))
-            {
-                factorsForPerson[time.InternalStep] = CalcRepo.NormalRandom.NextDouble(1, _timeStandardDeviation);
-                if (factorsForPerson[time.InternalStep] < 0)
-                {
-                    throw new DataIntegrityException("The duration standard deviation on " + Name + " is too large: a negative value of " +
-                                                     factorsForPerson[time.InternalStep] + " came up. The standard deviation is " +
-                                                     _timeStandardDeviation);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Checks if probabilities have already been set for this time step, and if not sets them.
-        /// </summary>
-        /// <param name="personName">name of the person for whom probabilities are required</param>
-        /// <param name="time">the time step to check</param>
-        private void DetermineProbabilities(string personName, TimeStep time)
-        {
-            var probsForPerson = _probabilitiesForTimes.GetOrAddDefault(personName);
-            if (!probsForPerson.ContainsKey(time.InternalStep))
-            {
-                probsForPerson[time.InternalStep] = CalcRepo.Rnd.NextDouble();
-            }
-        }
-
-        /// <summary>
         /// Checks if all devices are free for activating the affordance.
         /// </summary>
         /// <param name="personName">name of the person for whom to check devices</param>
@@ -297,10 +257,10 @@ namespace CalculationEngine.HouseholdElements
         {
             foreach (var dpt in Energyprofiles)
             {
-                if (dpt.Probability > _probabilitiesForTimes[personName][time.InternalStep])
+                if (dpt.Probability > DurationCalculator.GetProbability(time, personName))
                 {
                     if (dpt.CalcDevice.IsBusyDuringTimespan(time.AddSteps(dpt.TimeOffsetInSteps), dpt.TimeProfile.StepValues.Count,
-                        _timeFactorsForTimes[personName][time.InternalStep], dpt.LoadType))
+                        DurationCalculator.GetTimeFactor(time, personName), dpt.LoadType))
                     {
                         return true;
                     }
@@ -311,9 +271,6 @@ namespace CalculationEngine.HouseholdElements
 
         public override BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson, bool clearDictionaries = true)
         {
-            DetermineTimeFactors(calcPerson.Name, time);
-            DetermineProbabilities(calcPerson.Name, time);
-
             if (AreDevicesOccupied(calcPerson.Name, time))
             {
                 return BusynessType.Occupied;
