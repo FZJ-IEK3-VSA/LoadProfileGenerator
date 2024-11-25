@@ -7,7 +7,6 @@ using Common;
 using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements
 {
@@ -20,16 +19,14 @@ namespace CalculationEngine.HouseholdElements
         /// <summary>
         /// Specifies when this affordance is unavailable, based on its timelimit.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         private readonly BitArray IsBusyArray;
 
-        protected CalcAffordanceWithTimeLimit([NotNull] string pName, [NotNull] CalcLocation loc, [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
-            PermittedGender permittedGender, bool needsLight, bool randomEffect, [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
-            bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, [ItemNotNull][NotNull] BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
-            [NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
-            [NotNull] CalcVariableRepository variableRepository, [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
-            [NotNull][ItemNotNull] List<VariableRequirement> variableRequirements)
+        protected CalcAffordanceWithTimeLimit(string pName, CalcLocation loc, List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
+            PermittedGender permittedGender, bool needsLight, bool randomEffect, string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
+            bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
+             CalcRepo calcRepo, HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
+             CalcVariableRepository variableRepository, List<CalcAffordanceVariableOp> variableOps,
+             List<VariableRequirement> variableRequirements)
             : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, needsLight, randomEffect, pAffCategory, isInterruptable, isInterrupting, actionAfterInterruption, weight, requireAllAffordances,
                   calcAffordanceType, guid, bodilyActivityLevel, calcRepo, householdKey, energyProfiles, affordanceColor, sourceTrait, timeLimitName, variableRepository, variableOps, variableRequirements)
         {
