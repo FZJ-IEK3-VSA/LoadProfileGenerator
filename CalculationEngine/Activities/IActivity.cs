@@ -50,6 +50,11 @@ namespace CalculationEngine.Activities
         PointOfInterestId? Destination { get; }
 
         /// <summary>
+        /// If given, specifies the expected duration of the activity in timesteps.
+        /// </summary>
+        int? ExpectedDuration { get; }
+
+        /// <summary>
         /// The timestep in which the activity started
         /// </summary>
         TimeStep? StartTime { get; }

@@ -1,11 +1,7 @@
 ﻿using Automation.ResultFiles;
 using CalculationEngine.CitySimulation;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.Transportation;
 using Common;
-using Common.CalcDto;
-using System.Collections.Generic;
 
 namespace CalculationEngine.Activities
 {
@@ -24,6 +20,8 @@ namespace CalculationEngine.Activities
 
         public override bool IsDetermined => true;
 
+        public override int? ExpectedDuration => Profile.StepValues.Count;
+
         /// <summary>
         /// The profile specifies how long the person is busy with
         /// this activity.
@@ -33,8 +31,7 @@ namespace CalculationEngine.Activities
 
         public override string GetStartThought()
         {
-            return $"Starting to execute local affordance {Name}, basis duration {Profile.StepValues.Count} time " +
-                $"factor {Profile.TimeFactor}, total duration {Profile.StepValues.Count}";
+            return $"Starting to execute static activity {Name}, time factor {Profile.TimeFactor}, total duration {ExpectedDuration}";
         }
 
         public override bool IsFinished(TimeStep time, RemoteActivityFinished? remoteActivityResult)

@@ -11,15 +11,19 @@ namespace CalculationEngine.Activities
     /// <param name="dataSource">source of the affordance activation</param>
     /// <param name="personName">name of the person activating the affordance</param>
     /// <param name="destination">POI where the activity will take place</param>
-    public abstract class DynamicActivity(string dataSource, string personName, PointOfInterestId? destination)
+    /// <param name="expectedDuration">the expected duration of the activity, if known</param>
+    public abstract class DynamicActivity(string dataSource, string personName, PointOfInterestId? destination, int? expectedDuration = null)
         : Activity(dataSource, personName, destination)
     {
         public override bool IsDetermined => false;
 
+        public override int? ExpectedDuration => expectedDuration;
+
 
         public override string GetStartThought()
         {
-            return $"Starting to execute dynamic affordance {Name} with unknown duration.";
+            string durationString = ExpectedDuration is null ? "unknown duration" : $"expected duration {ExpectedDuration}";
+            return $"Starting to execute dynamic affordance {Name} with {durationString}.";
         }
 
         public override bool IsFinished(TimeStep timestep, RemoteActivityFinished? remoteActivityResult)

@@ -22,6 +22,7 @@ namespace CalculationEngine.Activities
 
         public abstract bool IsDetermined { get; }
         public abstract bool IsTravel { get; }
+        public abstract int? ExpectedDuration { get; }
         public abstract ICalcAffordanceBase Affordance { get; }
 
 
