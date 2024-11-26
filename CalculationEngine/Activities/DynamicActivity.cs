@@ -12,7 +12,7 @@ namespace CalculationEngine.Activities
     /// <param name="personName">name of the person activating the affordance</param>
     /// <param name="destination">POI where the activity will take place</param>
     /// <param name="expectedDuration">the expected duration of the activity, if known</param>
-    public abstract class DynamicActivity(string dataSource, string personName, PointOfInterestId? destination, int? expectedDuration = null)
+    public abstract class DynamicActivity(string dataSource, string personName, PointOfInterestId? destination, int? expectedDuration)
         : Activity(dataSource, personName, destination)
     {
         public override bool IsDetermined => false;

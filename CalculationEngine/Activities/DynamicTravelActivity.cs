@@ -6,24 +6,18 @@ using Common;
 
 namespace CalculationEngine.Activities
 {
-    public class DynamicTravelActivity : DynamicActivity
+    public class DynamicTravelActivity(string dataSource, string personName, PointOfInterestId? destination, AffordanceBaseTransportDecoratorDynamic affordance,
+        TravelInformation travelInfo, int? expectedDuration = null) : DynamicActivity(dataSource, personName, destination, expectedDuration)
     {
-        public DynamicTravelActivity(string dataSource, string personName, PointOfInterestId? destination, AffordanceBaseTransportDecoratorDynamic affordance, TravelInformation travelInfo)
-            : base(dataSource, personName, destination)
-        {
-            Affordance = affordance;
-            TravelInfo = travelInfo;
-        }
-
         public override string Name => TravelInfo.TravelName;
 
         public override bool IsDetermined => false;
 
         public override bool IsTravel => true;
 
-        public override AffordanceBaseTransportDecoratorDynamic Affordance { get; }
+        public override AffordanceBaseTransportDecoratorDynamic Affordance { get; } = affordance;
 
-        public TravelInformation TravelInfo { get; }
+        public TravelInformation TravelInfo { get; } = travelInfo;
 
 
         public override void Start(TimeStep timestep, DayLightStatus dayLightStatus)
