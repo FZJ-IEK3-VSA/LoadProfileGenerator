@@ -37,7 +37,6 @@ using Common;
 using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements
 {
@@ -69,9 +68,6 @@ namespace CalculationEngine.HouseholdElements
 
         public override IEnumerable<StaticActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
         {
-            var endTime = startTime.AddSteps(personProfileDuration);
-
-
             var personTimeProfile = new CalcSubAffTimeProfile(personProfileDuration, personProfileDuration + " timesteps Person profile");
             return [new LocalActivity(activator.Name, personTimeProfile, this)];
         }

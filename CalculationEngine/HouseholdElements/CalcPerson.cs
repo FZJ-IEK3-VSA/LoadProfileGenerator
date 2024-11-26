@@ -26,8 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-#region
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,13 +46,11 @@ using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 
-#endregion
-
 namespace CalculationEngine.HouseholdElements
 {
     public class CalcPerson : CalcBase
     {
-        private readonly PotentialAffs _normalPotentialAffs = new PotentialAffs();
+        private readonly PotentialAffs _normalPotentialAffs = new();
 
         private readonly CalcPersonDesires _normalDesires;
 
@@ -69,7 +65,7 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         private readonly List<Tuple<ICalcAffordanceBase, TimeStep>> _previousAffordancesWithEndTime = [];
 
-        private readonly PotentialAffs _sicknessPotentialAffs = new PotentialAffs();
+        private readonly PotentialAffs _sicknessPotentialAffs = new();
 
         private bool _alreadyloggedvacation;
 
@@ -146,6 +142,11 @@ namespace CalculationEngine.HouseholdElements
 
         public string PrettyName => _calcPerson.Name + "(" + _calcPerson.Age + "/" + _calcPerson.Gender + ")";
 
+        /// <summary>
+        /// Provides information about the currently active remote activity.
+        /// </summary>
+        /// <returns>remote activity information object</returns>
+        /// <exception cref="LPGException">if no remote activity is active, or if the current site is not known</exception>
         public RemoteActivityInfo GetRemoteActivityInfo()
         {
             if (_currentSite is null)
@@ -156,29 +157,6 @@ namespace CalculationEngine.HouseholdElements
         }
 
         public PersonInformation MakePersonInformation() => new(Name, Guid, _calcPerson.TraitTag);
-
-        /// <summary>
-        /// Determines if the person is busy with an affordance in the sepcified timestep.
-        /// Will always return true while the person is carrying out a remote affordance with unspecified duration.
-        /// </summary>
-        /// <param name="timeStep">the internal timestep index to check</param>
-        /// <returns>whether the person is busy in the timestep</returns>
-        private bool IsBusy(int timeStep)
-        {
-            // TODO: is this method still needed?
-            return !activityQueue.IsEmpty;
-        }
-
-        /// <summary>
-        /// Determines if the person is busy with an affordance in the sepcified timestep.
-        /// Will always return true while the person is carrying out a remote affordance with unspecified duration.
-        /// </summary>
-        /// <param name="timeStep">the timestep to check</param>
-        /// <returns>whether the person is busy in the timestep</returns>
-        private bool IsBusy(TimeStep timeStep)
-        {
-            return IsBusy(timeStep.InternalStep);
-        }
 
         public bool NewIsBasicallyValidAffordance(ICalcAffordanceBase aff, bool sickness, bool logDetails)
         {
@@ -254,10 +232,9 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="householdKey">household key</param>
         /// <param name="persons">all persons of the household</param>
         /// <param name="remoteActivityResult">contains the results if a remote activity was just finished</param>
-        /// <returns>whether a new remote activity was started</returns>
+        /// <returns>true if the newly started activity is dynamic; otherwise, false</returns>
         public bool NextStep(TimeStep time, List<CalcLocation> locs, DayLightStatus isDaylight,
-                              HouseholdKey householdKey,
-                              List<CalcPerson> persons,
+                             HouseholdKey householdKey, List<CalcPerson> persons,
                              RemoteActivityFinished? remoteActivityResult = null)
         {
             // initialize affordance lists
@@ -302,6 +279,14 @@ namespace CalculationEngine.HouseholdElements
             return InterruptIfNeeded(time, isDaylight, false);
         }
 
+        /// <summary>
+        /// Starts the next activity in the queue. Plans new activities if the queue is empty.
+        /// Also resumes previously interrupted activities.
+        /// </summary>
+        /// <param name="time">the current timestep</param>
+        /// <param name="isDaylight">daylight object</param>
+        /// <param name="persons">list of all persons in the household</param>
+        /// <returns>true if the newly started activity is dynamic; otherwise, false</returns>
         private bool StartNextActivity(TimeStep time, DayLightStatus isDaylight, List<CalcPerson> persons)
         {
             if (!activityQueue.IsEmpty && activityQueue.CurrentActivity.WasInterrupted)
@@ -326,6 +311,13 @@ namespace CalculationEngine.HouseholdElements
             return PlanAndStartNewActivity(time, isDaylight, persons);
         }
 
+        /// <summary>
+        /// Selects new activities, adds them to the activity queue, and starts the first of them.
+        /// </summary>
+        /// <param name="time">the current timestep</param>
+        /// <param name="isDaylight">daylight info object</param>
+        /// <param name="persons">list of all persons in the household</param>
+        /// <returns>true if the newly started activity is dynamic; otherwise, false</returns>
         private bool PlanAndStartNewActivity(TimeStep time, DayLightStatus isDaylight, List<CalcPerson> persons)
         {
             // find a new affordance and plan its activation
@@ -517,7 +509,6 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="householdKey">the household key</param>
         /// <returns>the randomly selected affordance</returns>
         /// <exception cref="LPGException">if no affordance could be selected</exception>
-
         public ICalcAffordanceBase PickRandomAffordanceFromEquallyAttractiveOnes(
              List<ICalcAffordanceBase> bestaffordances,
              TimeStep time, CalcPerson person, HouseholdKey householdKey)
@@ -849,8 +840,7 @@ namespace CalculationEngine.HouseholdElements
 
             if (bestaffordances.Count > 1)
             {
-                bestaff = PickRandomAffordanceFromEquallyAttractiveOnes(bestaffordances, time,
-                    this, _calcPerson.HouseholdKey);
+                bestaff = PickRandomAffordanceFromEquallyAttractiveOnes(bestaffordances, time, this, _calcPerson.HouseholdKey);
             }
 
             return bestaff;
@@ -1046,17 +1036,25 @@ namespace CalculationEngine.HouseholdElements
             return true;
         }
 
+        /// <summary>
+        /// Stores the affordance status tuples of all currently unavailable affordances, providing the reasons
+        /// why each affordance is not available.
+        /// </summary>
         private class AffordanceStatusClass
         {
             public List<AffordanceStatusTuple> Reasons { get; } = [];
         }
 
-        private class AffordanceStatusTuple(ICalcAffordanceBase affordance, string reason)
-        {
-            public ICalcAffordanceBase Affordance { get; } = affordance;
-            public string Reason { get; } = reason;
-        }
+        /// <summary>
+        /// Stores an affordance and the reason why it is currently not available.
+        /// </summary>
+        /// <param name="Affordance">the unavailable affordance</param>
+        /// <param name="Reason">the reason why the affordance is not available</param>
+        private record AffordanceStatusTuple(ICalcAffordanceBase Affordance, string Reason);
 
+        /// <summary>
+        /// Stores all affordances available to a person in a specific state (healthy or sick)
+        /// </summary>
         private class PotentialAffs
         {
             public List<ICalcAffordanceBase> PotentialAffordances { get; } = [];
