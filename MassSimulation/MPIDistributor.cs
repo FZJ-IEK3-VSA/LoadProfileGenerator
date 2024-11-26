@@ -118,7 +118,7 @@ namespace MassSimulation
                 // determine whether the activity is a traveling or POI activity
                 bool isTravel = activity.IsTravel();
                 var poi = activity.Activity.Destination;
-                var message = new RemoteActivityStart(activity.Person, isTravel, activity.Activity.Name, poi, activity.CurrentLocation);
+                var message = new RemoteActivityStart(activity.Person, isTravel, activity.Activity.Name, poi, activity.CurrentLocation, activity.Activity.ExpectedDuration);
                 int targetWorker;
                 if (isTravel)
                 {

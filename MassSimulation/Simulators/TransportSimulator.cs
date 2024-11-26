@@ -1,13 +1,6 @@
 ﻿using CalculationEngine.CitySimulation;
 using Common;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MassSimulation.Simulators
 {
@@ -39,7 +32,7 @@ namespace MassSimulation.Simulators
                 UpdateRemainingTravelDistance(state);
             }
 
-            var finishedTravels = GetArrivingAgents();
+            var finishedTravels = GetArrivedAgents();
             LogState(timeStep, dateTime, newActivities, finishedTravels);
             return finishedTravels;
         }
@@ -56,11 +49,15 @@ namespace MassSimulation.Simulators
             {
                 Debug.Assert(travelActivity.IsTravel, "TransportSimulator received a non-travel activity.");
 
-                // TODO: dummy value; here, all travel route steps should be started succesively
-                double distance = 10;
-
+                double distance = DetermineDuration(travelActivity);
                 travelStates.Add(new AgentTravelState(travelActivity, distance));
             }
+        }
+
+        private int DetermineDuration(RemoteActivityStart activity)
+        {
+            // -2 to account for the timesteps lost due to messaging until the CalcPerson receives the ActivityFinished message
+            return activity.ExpectedDuration - 2 ?? throw new NotImplementedException("No default duration for traveling implemented");
         }
 
         private void LogState(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities, IEnumerable<RemoteActivityFinished> finishedActivities)
@@ -76,7 +73,7 @@ namespace MassSimulation.Simulators
             }
         }
 
-        public IEnumerable<RemoteActivityFinished> GetArrivingAgents()
+        public IEnumerable<RemoteActivityFinished> GetArrivedAgents()
         {
             // collect all persons that arrived in the current timestep
             Predicate<AgentTravelState> hasArrived = t => t.RemainingTravelDistance <= 0;

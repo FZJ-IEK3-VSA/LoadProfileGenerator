@@ -1,14 +1,6 @@
 ﻿using CalculationEngine.CitySimulation;
-using CalculationEngine.HouseholdElements;
 using Common;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MassSimulation.Simulators
 {
@@ -52,11 +44,15 @@ namespace MassSimulation.Simulators
             {
                 Debug.Assert(!newActivity.IsTravel, "TransportSimulator received a non-travel activity.");
 
-                // TODO: simple test implementation: take longer the more people are present
-                double duration = 5 + Math.Max(30, activityStates.Count);
-
+                double duration = DetermineDuration(newActivity);
                 activityStates.Add(new AgentStayState(newActivity, duration));
             }
+        }
+
+        private int DetermineDuration(RemoteActivityStart activity)
+        {
+            // -2 to account for the timesteps lost due to messaging until the CalcPerson receives the ActivityFinished message
+            return activity.ExpectedDuration - 2 ?? throw new NotImplementedException("No default duration for remote activity implemented");
         }
 
         private void LogState(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities, IEnumerable<RemoteActivityFinished> finishedActivities)
