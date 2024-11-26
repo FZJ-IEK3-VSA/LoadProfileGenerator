@@ -45,9 +45,6 @@ namespace CalculationEngine.HouseholdElements
 
         void FinishActivation(TimeStep endTime, string activatorName);
 
-        // TODO: delete this method, or reuse it for something?
-        void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IActivity personTimeProfile);
-
         BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson, bool clearDictionaries = true);
 
         IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite);

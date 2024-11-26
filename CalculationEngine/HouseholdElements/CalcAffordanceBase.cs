@@ -276,21 +276,6 @@ namespace CalculationEngine.HouseholdElements
 
         public abstract void FinishActivation(TimeStep endTime, string activatorName);
 
-        /// <summary>
-        /// Activates this affordance, meaning that this affordance is carried out according to the given parameters.
-        /// </summary>
-        /// <param name="startTime">the start time step the affordance is executed in</param>
-        /// <param name="activatorName">the person carrying out the affordance</param>
-        /// <param name="personSourceSite">current site of the activating person</param>
-        /// <param name="personTimeProfile">the resulting person profile for the activator</param>
-        public virtual void Activate(TimeStep startTime, string activatorName, ICalcSite? personSourceSite, out IActivity personTimeProfile)
-        {
-            // TODO: do I keep the old Activate method for anything?
-            var activities = PlanActivation(startTime, null, personSourceSite);
-            personTimeProfile = activities.First();
-            StartActivation(startTime, activatorName);
-        }
-
         public abstract IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite);
 
         /// <summary>

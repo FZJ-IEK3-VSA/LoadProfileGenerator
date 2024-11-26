@@ -51,7 +51,7 @@ namespace Calculation.Tests.Transportation
                     isbusy.Should().Be(BusynessType.NotBusy);
 
                     Logger.Info("Activating affordance for time 0");
-                    aff.Activate(ts, person.Name, srcloc.CalcSite, out _);
+                    aff.PlanActivation(ts, person, srcloc.CalcSite);
                 }
                 //should throw exception the second time.
                 Logger.Info("Activating affordance again for time 0");
@@ -91,7 +91,7 @@ namespace Calculation.Tests.Transportation
                     Logger.Info("Activating affordance for time 0");
                     var ownerships = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
                     travelroute.GetDuration(ts, person, new List<CalcTransportationDevice>());
-                    aff.Activate(ts, "activator", srcloc.CalcSite, out var _);
+                    aff.PlanActivation(ts, person, srcloc.CalcSite);
                 }
                 //should throw exception the second time.
                 Logger.Info("Activating affordance again for time 0");
@@ -122,7 +122,7 @@ namespace Calculation.Tests.Transportation
                     Assert.Equal("myRoute2", route.Name); // due to affordance tag
 
 
-                    var untaggedAff = new CalcAffordance("UntaggedAffordance", new CalcProfile("calcprofile", Guid.NewGuid().ToStrGuid(), null, ProfileType.Absolute, "syn"),
+                    var untaggedAff = new CalcAffordance("UntaggedAffordance", new CalcProfile("calcprofile", Guid.NewGuid().ToStrGuid(), [1], ProfileType.Absolute, "syn"),
                         dstloc, false, null, 18, 50, PermittedGender.All, false, 0.1, LPGColors.Blue, "affordance category", false, false, new List<CalcAffordanceVariableOp>(),
                         new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false, "srctrait", Guid.NewGuid().ToStrGuid(), null,
                         new List<DeviceEnergyProfileTuple>(), new BitArray(0, false), BodilyActivityLevel.Low, calcRepo, null);

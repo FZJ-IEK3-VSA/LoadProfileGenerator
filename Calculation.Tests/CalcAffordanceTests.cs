@@ -187,9 +187,11 @@ StringExtensions.ToStrGuid("devcategoryguid"),
                     cd.IsBusyForLoadType[lt][ts.InternalStep] = false;
                 }
                 TimeStep ts2 = new TimeStep(i, calcParameters);
+                
                 aff.IsBusy(ts2, site, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate( ts2, "blub", site, out var _);
+                aff.PlanActivation(ts2, person, site);
+                aff.StartActivation(ts2, person.Name);
+
                 if (cd.GetIsBusyForTesting(ts2, lt)) {
                     trueCount++;
                 }
@@ -221,8 +223,8 @@ StringExtensions.ToStrGuid("devcategoryguid"),
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
                 aff.IsBusy(ts3, site, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate(ts3, "blub", site, out var _);
+                aff.PlanActivation(ts3, person, site);
+                aff.StartActivation(ts3, person.Name);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
                     trueCount++;
                 }
@@ -237,7 +239,7 @@ StringExtensions.ToStrGuid("devcategoryguid"),
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest25Percent()
         {
-            const int stepcount = 150;
+            const int stepcount = 1000;
             SetupProbabilityTest(out var aff, out var lt, out CalcDevice cd, out var loc, stepcount, 0.25);
             var site = loc.CalcSite;
             var trueCount = 0;
@@ -254,18 +256,15 @@ StringExtensions.ToStrGuid("devcategoryguid"),
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
                 aff.IsBusy(ts3, site, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate(ts3, "blub", site, out var _);
+                aff.PlanActivation(ts3, person, site);
+                aff.StartActivation(ts3, person.Name);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
                     trueCount++;
                 }
             }
 
             Logger.Info("Truecount: " + trueCount);
-#pragma warning disable VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
-
             trueCount.Should().BeApproximately(resultcount/4,0.1);
-#pragma warning restore VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
         }
 
         [Fact]
@@ -289,8 +288,8 @@ StringExtensions.ToStrGuid("devcategoryguid"),
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
                 aff.IsBusy(ts3, site, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate(ts3, "blub", site, out var _);
+                aff.PlanActivation(ts3, person, site);
+                aff.StartActivation(ts3, person.Name);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
                     trueCount++;
                 }
@@ -323,8 +322,8 @@ StringExtensions.ToStrGuid("devcategoryguid"),
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
                 aff.IsBusy(ts3, site, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate(ts3, "blub", site, out var _);
+                aff.PlanActivation(ts3, person, site);
+                aff.StartActivation(ts3, person.Name);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
                     trueCount++;
                 }
@@ -387,15 +386,17 @@ StringExtensions.ToStrGuid("devcategoryguid"),
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
             aff.IsBusy(ts, site, person);
-            aff.Activate(ts, "blub", site, out var _);
-             variableRepository.GetValueByGuid(variableGuid).Should().Be(1);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
+            variableRepository.GetValueByGuid(variableGuid).Should().Be(1);
             for (var i = 0; i < 15; i++) {
                 TimeStep ts1 = new TimeStep(i, 0, false);
                 cd.SetIsBusyForTesting(ts1, false, lt);
             }
 
             aff.IsBusy(ts, site, person);
-            aff.Activate(ts, "blub", site, out var _);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
             variableRepository.GetValueByGuid(variableGuid).Should().Be(2);
         }
 
@@ -453,9 +454,9 @@ StringExtensions.ToStrGuid("devcategoryguid"),
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
             aff.IsBusy(ts, site, person);
-            //var variableOperator = new VariableOperator();
-            aff.Activate(ts, "blub", site, out var _);
-             calcVariableRepository.GetValueByGuid(variableGuid).Should().Be(1);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
+            calcVariableRepository.GetValueByGuid(variableGuid).Should().Be(1);
         }
 
         [Fact]
@@ -517,16 +518,17 @@ StringExtensions.ToStrGuid("devcategoryguid"),
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
             aff.IsBusy(ts, site, person);
-            //var variableOperator = new VariableOperator();
-            aff.Activate(ts, "blub", site, out var _);
-             crv.GetValueByGuid(variableGuid).Should().Be(-1);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
+            crv.GetValueByGuid(variableGuid).Should().Be(-1);
             for (var i = 0; i < 15; i++) {
                 TimeStep ts1 = new TimeStep(i, 0, false);
                 cd.SetIsBusyForTesting(ts1, false, lt);
             }
 
             aff.IsBusy(ts, site, person);
-            aff.Activate(ts, "blub", site, out var _);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
             crv.GetValueByGuid(variableGuid).Should().Be(-2);
         }
 
@@ -584,11 +586,12 @@ StringExtensions.ToStrGuid("devcategoryguid"),
 
             //bool result = aff.IsBusy(0, nr, r, loc);
             //(result).Should().BeFalse();
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
             CheckForBusyness(site, aff, cd, lt);
             TimeStep ts = new TimeStep(0, 0, false);
-            aff.Activate(ts.AddSteps(10), "blub", site, out var _);
+            aff.PlanActivation(ts.AddSteps(10), person, site);
+            aff.StartActivation(ts.AddSteps(10), person.Name);
             CheckForBusyness(site, aff, cd, lt);
-            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
             aff.IsBusy(ts.AddSteps(1), site, person, false).Should().NotBe(BusynessType.NotBusy);
             aff.IsBusy(ts.AddSteps(19), site, person, false).Should().NotBe(BusynessType.NotBusy);
             aff.IsBusy(ts, site, person, false).Should().Be(BusynessType.NotBusy);
