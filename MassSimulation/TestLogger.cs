@@ -10,7 +10,7 @@ namespace MassSimulation
         private List<LogEntry> LogEntries = [];
 
         private int lastWrittenEntry = 0;
-        private int lastTimestep = -1;
+        private string lastPrefix = "";
 
         public void Log(TimeStep timestep, DateTime dateTime, string message)
         {
@@ -28,12 +28,12 @@ namespace MassSimulation
             StringBuilder logMessage = new();
             foreach (LogEntry entry in LogEntries.Skip(lastWrittenEntry))
             {
-                string linePrefix = $"{entry.Timestep.InternalStep:0000} - ";
+                string linePrefix = $"{entry.Timestep.InternalStep:000000} {entry.DateTime} - ";
                 // if there are multiple lines for the same timestep, skip the prefix for better readability
-                if (entry.Timestep.InternalStep == lastTimestep)
-                    linePrefix = new string(' ', linePrefix.Length);
+                if (linePrefix == lastPrefix)
+                    linePrefix = new string(' ', lastPrefix.Length);
                 logMessage.Append(linePrefix + entry.Message + Environment.NewLine);
-                lastTimestep = entry.Timestep.InternalStep;
+                lastPrefix = linePrefix;
             }
             // append new entries to the log file
             File.AppendAllText(directory + Filename, logMessage.ToString());
