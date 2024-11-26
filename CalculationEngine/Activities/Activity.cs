@@ -39,6 +39,8 @@ namespace CalculationEngine.Activities
         {
             if (StartTime is null)
                 throw new LPGException($"Activity {Name} has not been activated yet.");
+            if (!IsFinished(time, remoteActivityResult))
+                throw new LPGException($"Called Finish method on activity {Name} although it was not finished.");
 
             Affordance.FinishActivation(time, PersonName);
             return time.InternalStep - StartTime.InternalStep;

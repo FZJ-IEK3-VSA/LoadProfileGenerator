@@ -42,7 +42,6 @@ using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
-using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 
@@ -560,9 +559,6 @@ namespace CalculationEngine.HouseholdElements
         /// <exception cref="LPGException">if the activity was not finished yet</exception>
         public void FinishActivity(TimeStep timestep, IActivity activity, RemoteActivityFinished? remoteActivityResult)
         {
-            if (!activity.IsFinished(timestep, remoteActivityResult))
-                throw new LPGException($"Tried to finalize the activity {activity.Name}, but it was not finished yet.");
-
             UpdateLocation(timestep, activity.Affordance.ParentLocation);
 
             int duration = activity.Finish(timestep, remoteActivityResult);
