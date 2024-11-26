@@ -77,10 +77,10 @@ namespace Calculation.Tests.Logfile
                 CalcPerson cp = new CalcPerson(calcPerson, cloc,
                     isSick, isOnVacation, calcRepo);
                 //"bla", 1, 5, r, 48, PermittedGender.Male, lf, "HH1", cloc, "traittag", "hhname0",calcParameters,isSick,Guid.NewGuid().ToStrGuid());
-                cp.PersonDesires.AddDesires(cd1);
-                dlf.RegisterDesires(cp.PersonDesires.Desires.Values);
+                cp.CurrentDesires.AddDesires(cd1);
+                dlf.RegisterDesires(cp.CurrentDesires.Desires.Values);
                 TimeStep ts = new TimeStep(0, 0, true);
-                DesireEntry de = new DesireEntry(cp, ts, cp.PersonDesires, dlf, calcParameters);
+                DesireEntry de = new DesireEntry(cp, ts, cp.CurrentDesires, dlf, calcParameters);
                 fft.RegisterHousehold(new HouseholdKey("hh1"), "bla", HouseholdKeyType.Household, "desc", null, null);
                 dlf.WriteEntry(de, new HouseholdKey("hh1"));
                 dlf.Dispose();

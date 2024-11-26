@@ -208,8 +208,8 @@ namespace CalculationController.CalcFactories {
                 var calcAffordance = (CalcAffordance)calcAffordanceBase;
                 bool found = false;
                 foreach (var person in calcHousehold.Persons) {
-                    bool isvalidforsick = person.NewIsBasicallyValidAffordance(calcAffordance, true, false);
-                    bool isvalidforhealth = person.NewIsBasicallyValidAffordance(calcAffordance, false, false);
+                    bool isvalidforsick = person.IsAffordanceValidForPerson(calcAffordance, true, false);
+                    bool isvalidforhealth = person.IsAffordanceValidForPerson(calcAffordance, false, false);
                     if (isvalidforsick || isvalidforhealth) {
                         found = true;
                         break;
@@ -221,8 +221,8 @@ namespace CalculationController.CalcFactories {
                                  " seems to not be executable " + " by any person in the household " + calcHousehold.Name + ".");
                     foreach (var person in calcHousehold.Persons) {
                         Logger.Info("Details for the person: " + person.Name);
-                        person.NewIsBasicallyValidAffordance(calcAffordance, true, true);
-                        person.NewIsBasicallyValidAffordance(calcAffordance, false, true);
+                        person.IsAffordanceValidForPerson(calcAffordance, true, true);
+                        person.IsAffordanceValidForPerson(calcAffordance, false, true);
                     }
 
                     throw new DataIntegrityException("The affordance " + calcAffordance.Name + " from the trait " + calcAffordance.SourceTrait +

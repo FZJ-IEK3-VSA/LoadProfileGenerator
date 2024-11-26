@@ -220,7 +220,7 @@ namespace CalculationEngine.HouseholdElements {
             {
                 sw.WriteLine(calcPerson.Name);
                 sw.WriteLine("\tDesires:");
-                foreach (var desire in calcPerson.PersonDesires.Desires)
+                foreach (var desire in calcPerson.CurrentDesires.Desires)
                 {
                     sw.WriteLine("\t\t" + desire.Value.Name);
                 }
@@ -339,7 +339,7 @@ namespace CalculationEngine.HouseholdElements {
             _calcRepo.FileFactoryAndTracker.RegisterHousehold(_householdKey, Name, HouseholdKeyType.Household,_description,null,null);
             if (_calcRepo.CalcParameters.IsSet(CalcOption.DesiresLogfile)) {
                 foreach (var p in _persons) {
-                    _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.PersonDesires.Desires.Values);
+                    _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.CurrentDesires.Desires.Values);
                     _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.SicknessDesires.Desires.Values);
                 }
             }

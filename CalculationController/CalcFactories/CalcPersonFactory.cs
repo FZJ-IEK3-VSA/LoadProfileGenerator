@@ -134,8 +134,8 @@ namespace CalculationController.CalcFactories {
                 desire.SourceTrait,
                 desire.DesireCategory);
             if (desire.HealthStatus == HealthStatus.Healthy || desire.HealthStatus == HealthStatus.HealthyOrSick) {
-                CheckIfDesireViolatesCategory(desire, calcPerson.PersonDesires, calcPerson, householdName);
-                calcPerson.PersonDesires.AddDesires(cd1);
+                CheckIfDesireViolatesCategory(desire, calcPerson.CurrentDesires, calcPerson, householdName);
+                calcPerson.CurrentDesires.AddDesires(cd1);
             }
 
             if (desire.HealthStatus == HealthStatus.Sick || desire.HealthStatus == HealthStatus.HealthyOrSick) {

@@ -164,7 +164,7 @@ namespace Calculation.Tests.HouseholdElements
                 using CalcRepo calcRepo = new CalcRepo(lf:lf, odap: odap, calcParameters:calcParameters, rnd:rnd, normalRandom:nr, onlineLoggingData:old);
                 var cp = new CalcPerson(calcPerson,   cloc,  isSick, isOnVacation,calcRepo);
                     //20, PermittedGender.Male, lf, "HH1", cloc, "traittag","hhname0", calcParameters,isSick, Guid.NewGuid().ToStrGuid());
-                cp.PersonDesires.AddDesires(desire1);
+                cp.CurrentDesires.AddDesires(desire1);
                 cp.SicknessDesires.AddDesires(desire1);
                 var deviceLoads = new List<CalcDeviceLoad>
                 {
@@ -265,7 +265,7 @@ namespace Calculation.Tests.HouseholdElements
             using CalcRepo calcRepo = new CalcRepo(lf:lf, odap:odap, calcParameters:calcParameters, rnd: rnd, normalRandom: nr, onlineLoggingData:old);
             var cp = new CalcPerson(calcPerson, cloc,  isSick, isOnVacation, calcRepo);
             //"blub", 1, 1, r,20, PermittedGender.Male, lf, "HH1", cloc,"traittag","hhname0", calcParameters,isSick, Guid.NewGuid().ToStrGuid());
-            cp.PersonDesires.AddDesires(desire1);
+            cp.CurrentDesires.AddDesires(desire1);
             cp.SicknessDesires.AddDesires(desire1);
             var deviceLoads = new List<CalcDeviceLoad>
             {
