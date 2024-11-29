@@ -209,6 +209,7 @@ namespace SimulationEngineLib
             WriteClass<CityData>(sw, encounteredTypes, writtenTypes);
             WriteClass<RouteData>(sw, encounteredTypes, writtenTypes);
             WriteClass<PointOfInterestData>(sw, encounteredTypes, writtenTypes);
+            WriteClass<Coordinates>(sw, encounteredTypes, writtenTypes);
             encounteredTypes.Remove("System.String");
             encounteredTypes.Remove("System.Int32");
             encounteredTypes.Remove("System.Double");
@@ -426,6 +427,7 @@ namespace SimulationEngineLib
                 case "Automation.PersonPoiPreferences":
                 case "Automation.SingleDeviceProfile":
                 case "Automation.RouteData":
+                case "Automation.Coordinates":
                     typename = type.Name;
                     return $"Optional[{typename}] = None";
                 case "Automation.ResultFiles.HouseholdKeyType":
