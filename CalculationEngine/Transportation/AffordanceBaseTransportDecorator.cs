@@ -290,6 +290,6 @@ namespace CalculationEngine.Transportation
 
         public string? AreDeviceProfilesEmpty() => SourceAffordance.AreDeviceProfilesEmpty();
 
-        public int Weight => SourceAffordance.Weight;
+        public double Weight => SourceAffordance.Weight;
     }
 }

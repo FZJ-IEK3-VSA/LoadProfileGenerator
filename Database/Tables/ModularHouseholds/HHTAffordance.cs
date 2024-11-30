@@ -23,7 +23,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         private  TimeLimit _timeLimit;
 
-        private  int _weight;
+        private  double _weight;
 
         private  int _startMinusMinutes;
         private  int _startPlusMinutes;
@@ -33,7 +33,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public HHTAffordance([CanBeNull]int? pID, [CanBeNull] Affordance affv, [CanBeNull] HHTLocation hhtLocation,
             int householdTraitID,
-        [JetBrains.Annotations.NotNull]    string connectionString, [JetBrains.Annotations.NotNull] string hhaffName,[CanBeNull] TimeLimit timeLimit, int weight
+        [JetBrains.Annotations.NotNull]    string connectionString, [JetBrains.Annotations.NotNull] string hhaffName,[CanBeNull] TimeLimit timeLimit, double weight
             , int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes,
             [JetBrains.Annotations.NotNull] StrGuid guid) : base(hhaffName, TableName, connectionString, guid)
         {
@@ -58,7 +58,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         public TimeLimit TimeLimit => _timeLimit;
 
-        public int Weight => _weight;
+        public double Weight => _weight;
 
         [UsedImplicitly]
         public int HouseholdTraitID => _householdTraitID;
@@ -214,7 +214,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public class JsonDto {
-            public JsonDto(JsonReference affordance, JsonReference timeLimit, int weight, int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes, StrGuid guid)
+            public JsonDto(JsonReference affordance, JsonReference timeLimit, double weight, int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes, StrGuid guid)
             {
                 Affordance = affordance;
                 TimeLimit = timeLimit;
@@ -233,7 +233,7 @@ namespace Database.Tables.ModularHouseholds {
             public JsonReference Affordance { get; set; }
 
             public JsonReference TimeLimit { get; set; }
-            public int Weight { get; set; }
+            public double Weight { get; set; }
             public int StartMinusMinutes { get; set; }
             public int StartPlusMinutes { get; set; }
             public int EndMinusMinutes { get; set; }

@@ -50,7 +50,7 @@ namespace LoadProfileGenerator.Presenters.Households
         [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _classifications = new ObservableCollection<string>();
         [NotNull] private readonly HouseholdTrait _hht;
         [ItemNotNull] [NotNull] private readonly ObservableCollection<Affordance> _relevantAffordances = new ObservableCollection<Affordance>();
-        private int _affordanceWeight;
+        private double _affordanceWeight;
         [NotNull] private string _autoSelectedAddCategory;
         [CanBeNull] private string _currentAffordanceDesireString;
         private int _endMinusTime;
@@ -105,7 +105,7 @@ namespace LoadProfileGenerator.Presenters.Households
         }
 
         [UsedImplicitly]
-        public int AffordanceWeight {
+        public double AffordanceWeight {
             get => _affordanceWeight;
             set {
                 if (value == _affordanceWeight) {

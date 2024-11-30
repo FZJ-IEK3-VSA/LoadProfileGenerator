@@ -36,7 +36,7 @@ namespace CalculationEngine.HouseholdElements
         bool RandomEffect { get; }
         bool RequireAllAffordances { get; }
         List<CalcDesire> Satisfactionvalues { get; }
-        int Weight { get; }
+        double Weight { get; }
         StrGuid Guid { get; }
 
         IEnumerable<IActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite);

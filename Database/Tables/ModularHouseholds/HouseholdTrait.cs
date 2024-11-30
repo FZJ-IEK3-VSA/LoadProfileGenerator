@@ -53,7 +53,7 @@ namespace Database.Tables.ModularHouseholds
     public record AffordanceWithTimeLimit {
         public AffordanceWithTimeLimit([JetBrains.Annotations.NotNull] Affordance affordance,
                                        [CanBeNull] TimeLimit timeLimit,
-                                       int weight,
+                                       double weight,
                                        int startMinusTime,
                                        int startPlusTime,
                                        int endMinusTime,
@@ -82,7 +82,7 @@ namespace Database.Tables.ModularHouseholds
         public TimeLimit TimeLimit { get; }
 
         [UsedImplicitly]
-        public int Weight { get; }
+        public double Weight { get; }
 
         [UsedImplicitly]
         public int StartMinusTime { get; }
@@ -1532,7 +1532,7 @@ namespace Database.Tables.ModularHouseholds
         public void AddAffordanceToLocation([JetBrains.Annotations.NotNull] HHTLocation location,
                                               [JetBrains.Annotations.NotNull] Affordance aff,
                                               [CanBeNull] TimeLimit timeLimit,
-                                              int weight,
+                                              double weight,
                                               int startMinusTime,
                                               int startPlusTime,
                                               int endMinusTime,

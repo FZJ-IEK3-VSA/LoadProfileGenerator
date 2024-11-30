@@ -22,7 +22,7 @@ namespace CalculationEngine.HouseholdElements
         private readonly BitArray IsBusyArray;
 
         protected CalcAffordanceWithTimeLimit(string pName, CalcLocation loc, List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
-            PermittedGender permittedGender, bool needsLight, bool randomEffect, string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
+            PermittedGender permittedGender, bool needsLight, bool randomEffect, string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, double weight,
             bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
              CalcRepo calcRepo, HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
              CalcVariableRepository variableRepository, List<CalcAffordanceVariableOp> variableOps,

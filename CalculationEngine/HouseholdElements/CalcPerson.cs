@@ -964,10 +964,10 @@ namespace CalculationEngine.HouseholdElements
         {
             // randomly select one of the affordances, based on their weights
             var weightsum = bestaffordances.Sum(x => x.Weight);
-            var pick = _calcRepo.Rnd.Next(weightsum);
+            var pick = _calcRepo.Rnd.NextDouble() * weightsum;
             ICalcAffordanceBase? selectedAff = null;
             var idx = 0;
-            var cumulativesum = 0;
+            double cumulativesum = 0;
 
             while (idx < bestaffordances.Count)
             {

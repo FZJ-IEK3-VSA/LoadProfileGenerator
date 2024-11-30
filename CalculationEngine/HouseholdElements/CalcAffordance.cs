@@ -63,7 +63,7 @@ namespace CalculationEngine.HouseholdElements
         public CalcAffordance(string pName, CalcProfile personProfile, CalcLocation loc, bool randomEffect,
             List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight, double timeStandardDeviation,
             ColorRGB affordanceColor, string pAffCategory, bool isInterruptable, bool isInterrupting, List<CalcAffordanceVariableOp> variableOps,
-            List<VariableRequirement> variableRequirements, ActionAfterInterruption actionAfterInterruption, string timeLimitName, int weight,
+            List<VariableRequirement> variableRequirements, ActionAfterInterruption actionAfterInterruption, string timeLimitName, double weight,
             bool requireAllDesires, string srcTrait, StrGuid guid, CalcVariableRepository variableRepository,
             List<DeviceEnergyProfileTuple> energyprofiles, BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
             CalcRepo calcRepo, HouseholdKey householdKey)

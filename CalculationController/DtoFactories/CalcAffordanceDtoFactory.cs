@@ -344,7 +344,7 @@ namespace CalculationController.DtoFactories
         private void MakeSubAffordances([JetBrains.Annotations.NotNull] CalcAffordanceDto caff, [JetBrains.Annotations.NotNull] Affordance aff, int timeStepsPerHour,
             TimeSpan internalStepSize, [JetBrains.Annotations.NotNull] CalcLocationDto calcloc,
             [JetBrains.Annotations.NotNull] LocationDtoDict locDict,
-            [JetBrains.Annotations.NotNull] string csvCharacter, int weight, [JetBrains.Annotations.NotNull] string srcTrait,
+            [JetBrains.Annotations.NotNull] string csvCharacter, double weight, [JetBrains.Annotations.NotNull] string srcTrait,
             [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             // Subaffordanzen durchgehen

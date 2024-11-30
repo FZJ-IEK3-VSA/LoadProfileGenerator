@@ -50,7 +50,7 @@ namespace CalculationEngine.HouseholdElements
         public CalcSubAffordance(string pName, CalcLocation loc, List<CalcDesire> satisfactionvalues, int miniumAge,
             int maximumAge, int delaytimesteps, PermittedGender permittedGender, string pAffCategory,
             bool isInterruptable, bool isInterrupting, CalcAffordance parentAffordance,
-            List<CalcAffordanceVariableOp> variableOps, int weight, string sourceTrait, StrGuid guid, BitArray isBusy,
+            List<CalcAffordanceVariableOp> variableOps, double weight, string sourceTrait, StrGuid guid, BitArray isBusy,
             CalcVariableRepository variableRepository, BodilyActivityLevel bodilyActivityLevel, CalcRepo calcRepo,
             HouseholdKey hhkey)
             : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,

@@ -33,7 +33,7 @@ namespace SimulationEngineLib.HouseJobProcessor
     /// </summary>
     /// <param name="Replacement">the normal POI replacement</param>
     /// <param name="Weight">the weight for selection of the POI of this replacement</param>
-    record WheightedPoiLocationReplacement(PoiLocationReplacement Replacement, int Weight);
+    record WheightedPoiLocationReplacement(PoiLocationReplacement Replacement, double Weight);
 
     /// <summary>
     /// Handles integration of points of interest for the city simulation.
