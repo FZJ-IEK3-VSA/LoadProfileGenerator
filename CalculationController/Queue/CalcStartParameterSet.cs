@@ -132,7 +132,7 @@ namespace CalculationController.Queue {
             DeviceProfileHeaderMode deviceProfileHeaderMode,
             bool ignorePreviousActivitiesWhenNeeded,
             string resultPath, bool transportationEnabled, bool enableIdlemode, string decimalSeperator,
-            bool flexibilityEnabled)
+            bool flexibilityEnabled, bool citySimulationEnabled = false)
         {
             IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
             ResultPath = resultPath;
@@ -171,6 +171,7 @@ namespace CalculationController.Queue {
             EnableIdlemode = enableIdlemode;
             DecimalSeperator = decimalSeperator;
             FlexibilityEnabled = flexibilityEnabled;
+            CitySimulationEnabled = citySimulationEnabled;
         }
 
         public string ResultPath { get; set; }
@@ -252,6 +253,7 @@ namespace CalculationController.Queue {
         public DeviceProfileHeaderMode DeviceProfileHeaderMode { get;  }
         public bool IgnorePreviousActivitiesWhenNeeded { get; set; }
         public bool TransportationEnabled { get; set; }
+        public bool CitySimulationEnabled { get; set; } = false;
         public bool EnableIdlemode { get; }
 
         public JsonCalcSpecification CalcSpec { get; set; }
