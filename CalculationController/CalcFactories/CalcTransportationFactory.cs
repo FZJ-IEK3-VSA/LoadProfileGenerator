@@ -298,8 +298,8 @@ namespace CalculationController.CalcFactories
             foreach (Location location in mhh.CollectLocations()) {
                 Site site = travelRouteSites.FirstOrDefault(x => x.Locations.Any(y => y.Location == location));
                 if (site == null) {
-                    throw new LPGException("Could not find a site for the location " + location.PrettyName +
-                                           " in the travel route set " + travelRouteSet.PrettyName);
+                    throw new LPGException($"No reachable site in the travel route set {travelRouteSet.PrettyName} contains the location {location.PrettyName}, which is required "
+                        + $"for the household {mhh.PrettyName}. Perhaps a route to the correct site is missing.");
                 }
 
                 if (!householdSites.Contains(site)) {
