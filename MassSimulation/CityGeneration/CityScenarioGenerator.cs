@@ -1,55 +1,95 @@
 ﻿using Automation;
-using MassSimulation.Simulators;
+using Automation.ResultFiles;
+using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
 
 namespace MassSimulation.CityGeneration
 {
-
     /// <summary>
     /// Mockup for creation of a city scenario from external datasources (Builda etc.)
     /// </summary>
-    internal class CityScenarioGenerator
+    internal class CityScenario
     {
-        public Scenario ImportCity(string inputFile)
+        public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath)
         {
-            HouseGenerator houseGenerator = new();
-            List<MassSimTargetReference> targetReferences = [];
+            var inputDirectory = new DirectoryInfo(inputDirectoryPath);
+            // read house job file; only calcspec and database path are actually needed here
+            string houseJobStr = File.ReadAllText(inputDirectory.CombineName("Calcspec.json")).Trim(HouseGenerator.charsToTrim);
+            HouseCreationAndCalculationJob? hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
+            if (hcj == null)
+                throw new LPGException("housejob was null");
+            var calcSpec = hcj.CalcSpec ?? throw new LPGException("No CalcSpec was given in the input file");
+            // TODO: calcspec should be complete and single-source-of-parameters
+            // --> check and fill all missing values in the calcspec first, then move on
+            if (!calcSpec.EnableTransportation)
+                throw new LPGException("Transport must be enabled for the city simulation.");
 
-            // read the input file
-            // iterate through all buildings
-            object[] buildings = [];
-            foreach (object buildingInfo in buildings)
+            // create result directory
+            var resultDir = hcj.CalcSpec.OutputDirectory ??= HouseGenerator.DefaultResultDirectory;
+            if (!Directory.Exists(resultDir))
             {
-                if (IsResidential(buildingInfo))
-                {
-                    // create a house description out of the building data
-                    HouseCreationAndCalculationJob? hcj = null;
-                    
-                    // chose or generate the corresponding LPG house and contained households
-                    // remark: perhaps split here, so that not all households are generated in the same DB file
-                    var calcObjectReference = houseGenerator.GetHouseReference(hcj, null);
-                    var targetRef = new MassSimTargetReference("House 123", calcObjectReference);
-                    targetReferences.Add(targetRef);
-
-                    // I cannot modify a Persons Affordances until the CalcHousehold is created immediately before calculation
-                    // Determine POI preferences here and save them in the MassSimTargetReference for later application in CalcPerson
-                }
-                else
-                {
-                    // determine building category, size/attractiveness
-                    // map to LPG CalcLocation to determine available affordances
-                    // create a set of available affordances including duration to simulate stay durations
-                    // --> this might not be necessary if NewRemoteActivity messages contain a requested duration
-                    // create point of interest
-                    var poiSim = new PointOfInterestConfig(new("123"));
-                }
+                Directory.CreateDirectory(resultDir);
+                Thread.Sleep(100);
             }
-            return new Scenario(null, null, null, null);
+
+            HouseGenerator houseGenerator = new();
+
+            // check for existing files in the result directory
+            houseGenerator.CleanResultDirectoryBeforeSimulation(resultDir);
+
+            // copy DB file to result directory and open a connection to it
+            var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
+            // TODO: absoluten Pfad der ursprünglich verwendeten Datenbankdatei loggen
+
+            // save settings to the database copy in the result directory
+            JsonCalculator.SaveSettingsToDatabase(sim, hcj.CalcSpec);
+
+            // create house configs and POI configs from the files in the input directory
+            var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"));
+            //var poiConfigs = CollectPOIConfigs(inputDirectory.CombineName("POIs"));
+            var poiConfigs = ReadCityDataFile(inputDirectory.CombineName("city.json"));
+
+            // create a new scenario object containing all house and POI configs
+            return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs);
         }
 
-        private bool IsResidential(object buildingInfo)
+        /// <summary>
+        /// Collects all house config files in the input directory and creates a simulation target object for
+        /// each of them.
+        /// </summary>
+        /// <param name="directory">the subdirectory in the input directory containing the house configs</param>
+        /// <returns>all house configs from the directory</returns>
+        private static IEnumerable<MassSimTargetReference> CollectHouseConfigs(string directory)
         {
-            throw new NotImplementedException();
+            return Directory.GetFiles(directory).Select(f => new MassSimTargetReference(Path.GetFileName(f), f));
+        }
+
+
+        /// <summary>
+        /// Collects all POI config files in the input directory and creates a POI config object for
+        /// each of them.
+        /// </summary>
+        /// <param name="directory">the subdirectory in the input directory containing the POI configs</param>
+        /// <returns>all POI configs from the directory</returns>
+        private static IEnumerable<PointOfInterestConfig> CollectPOIConfigs(string directory)
+        {
+            return Directory.GetFiles(directory).Select(f => new PointOfInterestConfig(new(Path.GetFileName(f)), f));
+        }
+
+        /// <summary>
+        /// Parse all POI definitions of the city from the file city.json in the input directory.
+        /// </summary>
+        /// <param name="filename">path to the city.json file containing a CityData object</param>
+        /// <returns>all POI configs parsed from the file</returns>
+        /// <exception cref="LPGException">if the file was invalid</exception>
+        private static IEnumerable<PointOfInterestConfig> ReadCityDataFile(string filename)
+        {
+            string cityDataJson = File.ReadAllText(filename).Trim(HouseGenerator.charsToTrim);
+            CityData? cityData = JsonConvert.DeserializeObject<CityData>(cityDataJson);
+            if (cityData == null)
+                throw new LPGException($"Could not read CityData from file {filename}");
+
+            return cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
         }
     }
 }

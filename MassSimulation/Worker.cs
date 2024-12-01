@@ -47,12 +47,12 @@ namespace MassSimulation
 
         public void Run()
         {
-            int numAgents = numWorkers; // TODO: for testing
-            var houseJobFile = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
+            var inputPath = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
+            inputPath = @"D:\Git-Repositories\CityScenarioGenerator\LPG_city_scenario";
 
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
-            InitSimulation(houseJobFile, numAgents);
+            InitSimulation(inputPath);
             logger.Info("Finished initialization");
 
             Stopwatch watch = Stopwatch.StartNew();
@@ -66,7 +66,7 @@ namespace MassSimulation
             logger.Info("Finished postprocessing");
         }
 
-        public void InitSimulation(string houseJobFile, int numAgents)
+        public void InitSimulation(string inputPath)
         {
             // general settings
             // avoid MPI processes cluttering the console
@@ -77,7 +77,8 @@ namespace MassSimulation
             if (rank == 0)
             {
                 // determine simulation targets
-                scenario = TestScenarios.CreateDuplicateHousesScenario(houseJobFile, numAgents);
+                //scenario = TestScenarios.CreateDuplicateHousesScenario(inputPath, numWorkers);
+                scenario = CityScenario.ReadScenarioFromConfigDirectory(inputPath);
                 scenarioParts = scenario.GetScenarioParts(numWorkers);
                 int length = scenarioParts.Length;
                 if (length < numWorkers)

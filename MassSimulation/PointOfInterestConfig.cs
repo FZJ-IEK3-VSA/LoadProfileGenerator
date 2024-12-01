@@ -2,8 +2,5 @@
 
 namespace MassSimulation
 {
-    public class PointOfInterestConfig(PointOfInterestId id)
-    {
-        public PointOfInterestId Id { get; } = id;
-    }
+    public record PointOfInterestConfig(PointOfInterestId Id);
 }

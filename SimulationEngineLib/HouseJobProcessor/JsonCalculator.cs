@@ -55,7 +55,8 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="calcObjectReference">JsonReference of the object to simulate</param>
         /// <param name="profiler">optional profiler object to use in the calculation</param>
         /// <returns>The CalcStartParameterSet containing all specified parameters, and default values for anything not specified</returns>
-        public static CalcStartParameterSet CreateCalcParametersFromCalcSpec(Simulator sim, JsonCalcSpecification calcSpec, JsonReference calcObjectReference, CalculationProfiler profiler = null)
+        public static CalcStartParameterSet CreateCalcParametersFromCalcSpec(Simulator sim, JsonCalcSpecification calcSpec, JsonReference calcObjectReference, 
+            CalculationProfiler profiler = null, bool citySimulationEnabled = false)
         {
             // get the CalcObject from the JsonReference
             if (calcObjectReference == null)
@@ -153,7 +154,8 @@ namespace SimulationEngineLib.HouseJobProcessor
                 calcSpec.EnableTransportation,
                 calcSpec.EnableIdlemode,
                 sim.MyGeneralConfig.DecimalSeperator,
-                calcSpec.EnableFlexibility
+                calcSpec.EnableFlexibility,
+                citySimulationEnabled: citySimulationEnabled
             );
         }
 

@@ -10,6 +10,7 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.JSON;
 using Database;
+using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,10 @@ namespace MassSimulation
     /// </summary>
     internal class LPGMassSimulator
     {
-        private int rank;
-        private Simulator sim;
-        private ScenarioPart scenarioPart;
-        private List<MassSimulationTarget> simulationTargets;
+        private readonly int rank;
+        private readonly Simulator sim;
+        private readonly ScenarioPart scenarioPart;
+        private readonly List<MassSimulationTarget> simulationTargets;
 
         public CalcParameters CalcParameters;
 
@@ -45,27 +46,41 @@ namespace MassSimulation
             Logger.Get().StartCollectingAllMessages();
             JsonCalculator.InitLoggerAndLogCalcSpec(baseResultDirInfo, scenarioPart.CalcSpecification, "Log.CommandlineCalculation.Worker" + rank + ".txt");
 
-            // TODO: copy DB for each worker
-            //var sim = HouseGenerator.CopyAndOpenDatabase(PathToDatabase, resultDir);
-            sim = new Simulator("Data Source=" + scenarioPart.DatabasePath);
+            HouseGenerator houseGenerator = new();
+
+            // create a DB copy for this worker and open a connection to it
+            var databaseDirectory = Path.Combine(baseResultDir, "Databases");
+            sim = houseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, $"profilegenerator.worker_{rank}.db3");
 
             simulationTargets = new List<MassSimulationTarget>(scenarioPart.TargetReferences.Count);
             var cmf = new CalcManagerFactory();
 
-            foreach (var calcObjectRef in scenarioPart.TargetReferences)
+            foreach (var target in scenarioPart.TargetReferences)
             {
                 // create a separate subdirectory for each simulation target
-                string subdir = calcObjectRef.Id.ToString();
+                string subdir = target.Id.ToString();
                 string resultDirectory = Path.Combine(baseResultDir, subdir);
                 Directory.CreateDirectory(resultDirectory);
 
+                // read house job file for this target
+                string houseJobStr = File.ReadAllText(target.ConfigFilePath).Trim(HouseGenerator.charsToTrim);
+                HouseCreationAndCalculationJob? hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
+                if (hcj == null)
+                    throw new LPGException("housejob was null");
+
+                // set the global Calcspec
+                hcj.CalcSpec = scenarioPart.CalcSpecification;
+
+                // create the target house/household if necessary and get its JsonReference
+                var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim);
+
                 // create the CalcStartParameterSet containing all parameters for the calculation
-                var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectRef.Reference);
+                var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
                 calcStartParameterSet.ResultPath = resultDirectory;
 
                 // create a calcManager for each household
-                var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false, true);
-                simulationTargets.Add(new MassSimulationTarget(calcObjectRef.Id, calcManager, resultDirectory));
+                var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
+                simulationTargets.Add(new MassSimulationTarget(target.Id, calcManager, resultDirectory));
             }
 
             // make the common CalcParameters accessible

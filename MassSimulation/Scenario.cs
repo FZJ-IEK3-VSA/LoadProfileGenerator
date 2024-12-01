@@ -7,12 +7,12 @@ namespace MassSimulation
     /// Represents a simulation scenario with all objects that belong to that, including
     /// fully defined houses with households etc.
     /// </summary>
-    public class Scenario(string databasePath, JsonCalcSpecification calcSpec, MassSimTargetReference[] targetReferences, PointOfInterestConfig[] pointsOfInterest)
+    public class Scenario(string databasePath, JsonCalcSpecification calcSpec, IEnumerable<MassSimTargetReference> targetReferences, IEnumerable<PointOfInterestConfig> pointsOfInterest)
     {
         public string DatabasePath { get; private set; } = databasePath;
         public JsonCalcSpecification CalcSpecification { get; private set; } = calcSpec;
-        public MassSimTargetReference[] TargetReferences { get; private set; } = targetReferences;
-        public PointOfInterestConfig[] PointsOfInterest { get; private set; } = pointsOfInterest;
+        public IEnumerable<MassSimTargetReference> TargetReferences { get; private set; } = targetReferences;
+        public IEnumerable<PointOfInterestConfig> PointsOfInterest { get; private set; } = pointsOfInterest;
 
         /// <summary>
         /// Divide the scenario into scenario parts, one for each worker.

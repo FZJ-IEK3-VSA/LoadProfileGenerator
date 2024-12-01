@@ -43,8 +43,6 @@ namespace MassSimulation.CityGeneration
             // copy DB file to result directory and open a connection to it
             var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
 
-            var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim);
-
             // save settings to the database copy in the result directory
             JsonCalculator.SaveSettingsToDatabase(sim, hcj.CalcSpec);
 
@@ -52,14 +50,14 @@ namespace MassSimulation.CityGeneration
             var targetReferences = new MassSimTargetReference[numberOfHouseholds];
             for (int i = 0; i < numberOfHouseholds; i++)
             {
-                targetReferences[i] = new MassSimTargetReference("House " + i, calcObjectReference);
+                targetReferences[i] = new MassSimTargetReference("House " + i, houseJobFile);
             }
 
             // create the POIs defined in the house job file
             var poiConfigs = hcj.City?.PointsOfInterest.Keys.Select(poiId => new PointOfInterestConfig(new(poiId))).ToArray();
             if (poiConfigs is null || poiConfigs.Length == 0)
                 throw new LPGException("No POIs defined in job file");
-            
+
             return new Scenario(newDbPath, calcSpec, targetReferences, poiConfigs);
         }
     }
