@@ -67,8 +67,6 @@ namespace SimulationEngineLib.HouseJobProcessor
             // check if start and end date are set
             var startDate = calcSpec.StartDate ?? throw new LPGPBadParameterException("No StartDate specified.");
             var endDate = calcSpec.EndDate ?? throw new LPGPBadParameterException("No EndDate specified.");
-            //jcs.StartDate ??= new DateTime(DateTime.Now.Year, 1, 1);
-            //jcs.EndDate ??= new DateTime(DateTime.Now.Year, 12, 31);
 
             // parse time resolution parameters
             var internalResolution = ParseTimeResolution(calcSpec.InternalTimeResolution);

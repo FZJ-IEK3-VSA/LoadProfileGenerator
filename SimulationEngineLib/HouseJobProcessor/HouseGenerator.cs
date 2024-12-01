@@ -275,16 +275,22 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="databasePath">path to the source database file</param>
         /// <param name="resultDirectory">path to the result directory</param>
         /// <param name="resultDatabasePath">file path of the opened database copy</param>
+        /// <param name="newfileName">name of the new database file</param>
         /// <returns>database access object</returns>
         /// <exception cref="LPGException">if the source database path was invalid</exception>
-        public Simulator CopyAndOpenDatabase(string databasePath, string resultDirectory, out string resultDatabasePath)
+        public Simulator CopyAndOpenDatabase(string databasePath, string resultDirectory, out string resultDatabasePath, string newfileName = "profilegenerator.copy.db3")
         {
             if (databasePath.IsNullOrEmpty())
                 throw new LPGException("No db source path");
             if (!File.Exists(databasePath))
                 throw new LPGException("Could not find source database file: " + databasePath);
-            resultDatabasePath = Path.Combine(resultDirectory, "profilegenerator.copy.db3");
+            
+            // create the target directory if it does not exist yet
+            var targetDirectory = Directory.CreateDirectory(resultDirectory);
+            resultDatabasePath = targetDirectory.CombineName(newfileName);
+
             File.Copy(databasePath, resultDatabasePath, true);
+            
             string dstConnectionString = "Data Source=" + resultDatabasePath;
             Simulator sim = new Simulator(dstConnectionString);
             return sim;
