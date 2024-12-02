@@ -61,9 +61,7 @@ namespace CalculationController.CalcFactories
             CheckReachabilityofLocations(mhh.CollectLocations(), sitesFromAllTravelRoutes, mhh.Name,
                 travelRouteSet.Name);
             //check if all sites are reachable from all other sites
-            CheckRouteCompleteness(travelRouteSet, householdSites);
-            // check if at least one route from each site to each other site is doable with the given transport
-            CheckRouteTransportationDeviceCompleteness(travelRouteSet, householdSites, transportationDeviceSet);
+            CheckRouteCompleteness(mhh, travelRouteSet, householdSites, transportationDeviceSet);
 
             var categoriesDict = MakeCalcTransportationDeviceCategoryDtos(sim);
 
@@ -147,7 +145,7 @@ namespace CalculationController.CalcFactories
         public static void CheckReachabilityofLocations([JetBrains.Annotations.NotNull][ItemNotNull] List<Location> locations, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites,
                                                         [JetBrains.Annotations.NotNull] string calcHouseholdName, [JetBrains.Annotations.NotNull] string travelRouteSetName)
         {
-            List<Location> siteLocations = sites.SelectMany(x => x.Locations.Select(y => y.Location)).ToList();
+            var siteLocations = sites.SelectMany(x => x.Locations.Select(y => y.Location)).ToHashSet();
 
             List<Location> missingLocations = new List<Location>();
             foreach (Location hhloc in locations) {
@@ -170,26 +168,119 @@ namespace CalculationController.CalcFactories
             }
         }
 
-        public static void CheckRouteCompleteness([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites)
+        /// <summary>
+        /// Check if all necessary routes for every individual person are available. For that, this function identifies the relevant
+        /// sites for each person. This avoids checking for unnecessary routes from person A's workplace to person B's workplace, for example.
+        /// </summary>
+        /// <param name="mhh">the household for that the routes will be checked</param>
+        /// <param name="travelRouteSet">the travel route set providing the routes to check</param>
+        /// <param name="sites">the full list of sites of the specified household</param>
+        public static void CheckRouteCompleteness(ModularHousehold mhh, [JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites, TransportationDeviceSet transportationDeviceSet)
+        {
+            foreach (var person in mhh.Persons)
+            {
+                // determine all sites that this person visits
+                var relevantLocations = mhh.Traits.Where(t => t.DstPerson.Name == person.Name).SelectMany(t => t.HouseholdTrait.Locations).Select(t => t.Location).ToHashSet();
+                var relevantSites = sites.Where(s => s.Locations.Any(loc => relevantLocations.Contains(loc.Location))).ToList();
+
+                // check if there are travel routes between all of these sites
+                CheckIfSitesAreFullyConnected(travelRouteSet, relevantSites, transportationDeviceSet, person.Person);
+            }
+        }
+        
+        /// <summary>
+        /// Checks if there is a route from each of the specified sites to every other one.
+        /// If a transportation device set is specified, also checks wether the routes are available with
+        /// this set.
+        /// If a person is specified, also checks if the routes are available to this person.
+        /// </summary>
+        /// <param name="travelRouteSet">the travel route sets providing the routes</param>
+        /// <param name="sites">the sites to check</param>
+        /// <param name="transportationDeviceSet">the transportation device set</param>
+        /// <param name="person">the person, if the check is relevant for a single person only</param>
+        /// <exception cref="DataIntegrityException">if a route is missing</exception>
+        public static void CheckIfSitesAreFullyConnected([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites,
+            TransportationDeviceSet transportationDeviceSet = null, Person person = null)
         {
             //figure out if every site is connected to every other site
-            foreach (Site siteA in sites) {
-                foreach (Site siteB in sites) {
-                    if (siteB == siteA) {
+            foreach (Site siteA in sites)
+            {
+                foreach (Site siteB in sites)
+                {
+                    if (siteB == siteA)
+                    {
                         continue;
                     }
 
-                    var tr = travelRouteSet.TravelRoutes.FirstOrDefault(x =>
+                    var routeEntries = travelRouteSet.TravelRoutes.Where(x =>
                         x.TravelRoute.SiteA == siteA && x.TravelRoute.SiteB == siteB ||
                         x.TravelRoute.SiteA == siteB && x.TravelRoute.SiteB == siteA);
-                    if (tr == null) {
-                        throw new DataIntegrityException("There seems to be no route from " + siteA.PrettyName +
-                                                         " to " + siteB.PrettyName +
-                                                         " in the travel route set " + travelRouteSet.PrettyName +
-                                                         ". Every site needs to be connected to every other site, since the LPG has no routing functionality yet. Please fix.");
+                    if (!routeEntries.Any())
+                    {
+                        // no route found
+                        string personText = person is null ? "" : $" for person {person.PrettyName}";
+                        throw new DataIntegrityException($"There seems to be no route from {siteA.PrettyName} to {siteB.PrettyName} in the travel route set " +
+                            $"{travelRouteSet.PrettyName}, but this route is required{personText}, since the LPG has no routing functionality yet. Please fix.");
+                    }
+                    // at least one route is available
+                    if (person is not null)
+                    {
+                        // also check if at least one suitable route is available for the specified person
+                        routeEntries = routeEntries.Where(r => (r.PersonID == null || r.PersonID == person.IntID) && r.MinimumAge <= person.Age && r.MaximumAge >= person.Age);
+                        if (!routeEntries.Any())
+                        {
+                            throw new DataIntegrityException($"Person {person.PrettyName} needs a route from {siteA.PrettyName} to {siteB.PrettyName}, but none of the " +
+                                "existing routes is available to this person due to the restrictions in the travel route set.");
+                        }
+                    }
+
+                    if (transportationDeviceSet is not null)
+                    {
+                        // determine the available transportation device categories
+                        var devices = transportationDeviceSet.TransportationDeviceSetEntries.Select(x => x.TransportationDevice).ToList();
+                        var categories = devices.Select(x => x.TransportationDeviceCategory).Distinct().ToHashSet();
+                        
+                        // check if at least one of the routes is usable with the available transportation devices
+                        bool atLeastOneRouteIsOk = IsAtLeastOneRouteOk(routeEntries, categories);
+                        if (!atLeastOneRouteIsOk)
+                        {
+                            string personText = person is null ? "" : $" by person {person.PrettyName}";
+                            throw new DataIntegrityException($"There seems to be no route from {siteA.PrettyName} to {siteB.PrettyName} that is " +
+                                $"usable{personText} with the given transportation device set. Please fix.");
+                        }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks if at least one of the specified travel route set entries is usable with the available transportation devices
+        /// </summary>
+        /// <param name="travelRouteSetEntries">the available route entries</param>
+        /// <param name="categories">the available transportation device categories</param>
+        /// <returns>true if at least one of the route entries is usable; otherwise, false</returns>
+        private static bool IsAtLeastOneRouteOk([JetBrains.Annotations.NotNull] IEnumerable<TravelRouteSetEntry> travelRouteSetEntries,
+                                                [JetBrains.Annotations.NotNull][ItemNotNull] HashSet<TransportationDeviceCategory> categories)
+        {
+            bool atLeastOneRouteIsOk = false;
+            foreach (TravelRouteSetEntry routeSetEntry in travelRouteSetEntries)
+            {
+                bool allstepsareok = true;
+                foreach (TravelRouteStep step in routeSetEntry.TravelRoute.Steps)
+                {
+                    if (!categories.Contains(step.TransportationDeviceCategory))
+                    {
+                        allstepsareok = false;
+                    }
+                }
+
+                if (allstepsareok)
+                {
+                    atLeastOneRouteIsOk = true;
+                }
+            }
+
+            return atLeastOneRouteIsOk;
         }
 
         [JetBrains.Annotations.NotNull]
@@ -308,54 +399,6 @@ namespace CalculationController.CalcFactories
             }
 
             return travelRouteSites;
-        }
-
-        private static bool IsAtLeastOneRouteOk([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet,
-                                                [JetBrains.Annotations.NotNull][ItemNotNull] List<TransportationDeviceCategory> categories, [JetBrains.Annotations.NotNull] Site siteA, [JetBrains.Annotations.NotNull] Site siteB)
-        {
-            var tr = travelRouteSet.TravelRoutes.Where(x =>
-                x.TravelRoute.SiteA == siteA && x.TravelRoute.SiteB == siteB ||
-                x.TravelRoute.SiteA == siteB && x.TravelRoute.SiteB == siteA).ToList();
-            bool atLeastOneRouteIsOk = false;
-            foreach (TravelRouteSetEntry routeSetEntry in tr) {
-                bool allstepsareok = true;
-                foreach (TravelRouteStep step in routeSetEntry.TravelRoute.Steps) {
-                    if (!categories.Contains(step.TransportationDeviceCategory)) {
-                        allstepsareok = false;
-                    }
-                }
-
-                if (allstepsareok) {
-                    atLeastOneRouteIsOk = true;
-                }
-            }
-
-            return atLeastOneRouteIsOk;
-        }
-
-        private static void CheckRouteTransportationDeviceCompleteness([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet,
-                                                                       [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> householdSites,
-                                                                       [JetBrains.Annotations.NotNull] TransportationDeviceSet transportationDeviceSet)
-        {
-            var devices = transportationDeviceSet.TransportationDeviceSetEntries.Select(x => x.TransportationDevice)
-                .ToList();
-            var categories = devices.Select(x => x.TransportationDeviceCategory).Distinct().ToList();
-            //figure out if every site is connected to every other site
-            foreach (Site siteA in householdSites) {
-                foreach (Site siteB in householdSites) {
-                    if (siteB == siteA) {
-                        continue;
-                    }
-
-                    bool atLeastOneRouteIsOk = IsAtLeastOneRouteOk(travelRouteSet, categories, siteA, siteB);
-
-                    if (!atLeastOneRouteIsOk) {
-                        throw new DataIntegrityException("There seems to be no route from " + siteA.PrettyName +
-                                                         " to " + siteB.PrettyName +
-                                                         " that is usable by the given transportation device set. Please fix.");
-                    }
-                }
-            }
         }
 
         [JetBrains.Annotations.NotNull]
