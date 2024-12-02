@@ -64,7 +64,6 @@ namespace MassSimulation.CityGeneration
             return Directory.GetFiles(directory).Select(f => new MassSimTargetReference(Path.GetFileName(f), f));
         }
 
-
         /// <summary>
         /// Collects all POI config files in the input directory and creates a POI config object for
         /// each of them.
@@ -73,7 +72,7 @@ namespace MassSimulation.CityGeneration
         /// <returns>all POI configs from the directory</returns>
         private static IEnumerable<PointOfInterestConfig> CollectPOIConfigs(string directory)
         {
-            return Directory.GetFiles(directory).Select(f => new PointOfInterestConfig(new(Path.GetFileName(f)), f));
+            return Directory.GetFiles(directory).Select(f => new PointOfInterestConfig(new(Path.GetFileName(f))));
         }
 
         /// <summary>
