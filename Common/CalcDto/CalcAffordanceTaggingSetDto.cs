@@ -152,7 +152,11 @@ namespace Common.CalcDto {
         public void AddTravelTag(string routeName)
         {
             string routeActivityName = GetTravelActivityName(routeName);
-            AddTag(routeActivityName, TravelTag);
+            // check if the travel activity is not already contained (e.g., due to individual routes for multiple persons)
+            if (!ContainsAffordance(routeActivityName))
+            {
+                AddTag(routeActivityName, TravelTag);
+            }
         }
 
         public double LookupReferenceValue([NotNull] string tagName, PermittedGender gender, int age)
