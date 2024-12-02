@@ -4,6 +4,10 @@ using Database.Tables.Transportation;
 using System.Collections.Generic;
 using Common;
 using Automation.ResultFiles;
+using System;
+using Database.Tables.ModularHouseholds;
+using System.Linq;
+using Database.Tables.BasicHouseholds;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -35,7 +39,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             return householdData.PointOfInterestPreferences is not null;
         }
 
-        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData)
+        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household)
         {
             // create a new empty travel route set
             var travelRouteSet = sim.TravelRouteSets.CreateNewItem(sim.ConnectionString);
@@ -44,17 +48,30 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             foreach (var personPreference in householdData.PointOfInterestPreferences)
             {
-                AddRoutesForPerson(personPreference.Key, personPreference.Value, travelRouteSet);
+                string personName = personPreference.Key;
+
+                // determine the POIs that are actually relevant for this person
+                var relevantLocations = household.Traits.Where(t => t.DstPerson.Name == personName).SelectMany(t => t.HouseholdTrait.Locations).Select(t => t.Location).ToHashSet();
+                var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
+
+                Console.WriteLine($"Generating routes for {personPreference.Key}");
+                AddRoutesForPerson(personName, personPreference.Value, travelRouteSet, relevantPOIs);
             }
             travelRouteSet.SaveToDB();
             return travelRouteSet;
         }
 
-        private void AddRoutesForPerson(string personName, PersonPoiPreferences preferences, TravelRouteSet travelRouteSet)
+        private void AddRoutesForPerson(string personName, PersonPoiPreferences preferences, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs)
         {
             var person = sim.Persons.FindFirstByNameNotNull(personName);
             foreach (var routeData in preferences.Routes)
             {
+                if (!IsPOIRelevant(routeData.Start, relevantPOIs) || !IsPOIRelevant(routeData.Destination, relevantPOIs))
+                {
+                    // start or destination of this route is not relevant for this person, so the route is not needed
+                    continue;
+                }
+
                 // create the new travel route
                 var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString);
                 route.Description = "Generated from POI preferences";
@@ -85,6 +102,11 @@ namespace SimulationEngineLib.HouseJobProcessor
             }
         }
 
+        private bool IsPOIRelevant(string poiId, HashSet<string> relevantPOIs)
+        {
+            return poiId == Constants.HomeSiteName || relevantPOIs.Contains(poiId);
+        }
+
         public Site GetSiteFromPoi(string poiId)
         {
             if (poiId == Constants.HomeSiteName)
@@ -92,9 +114,9 @@ namespace SimulationEngineLib.HouseJobProcessor
                 // return the Home site
                 return TravelRouteSetBuilderFromPersonData.GetHomeSite(sim);
             }
-            if (!LocationReplacements.TryGetValue(poiId, out var routeData))
+            if (!LocationReplacements.TryGetValue(poiId, out var replacement))
                 throw new LPGException("The PointOfInterestPreferences specify a route with start/destination {poiId}, which is no known site or POI.");
-            return routeData.NewSite;
+            return replacement.NewSite;
         }
 
         /// <summary>
