@@ -204,6 +204,7 @@ namespace SimulationEngineLib
             WriteClass<LoadTypeInformation>(sw, encounteredTypes, writtenTypes);
             WriteClass<HouseholdKeyEntry>(sw, encounteredTypes, writtenTypes);
             WriteClass<JsonSumProfile>(sw, encounteredTypes, writtenTypes);
+            WriteClass<JsonEnumProfile>(sw, encounteredTypes, writtenTypes);
             WriteClass<JsonDeviceProfiles>(sw, encounteredTypes, writtenTypes);
             WriteClass<PersonPoiPreferences>(sw, encounteredTypes, writtenTypes);
             WriteClass<CityData>(sw, encounteredTypes, writtenTypes);
