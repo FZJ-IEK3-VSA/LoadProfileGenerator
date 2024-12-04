@@ -3,14 +3,15 @@ using System.Text;
 
 namespace MassSimulation
 {
-    internal class TestLogger(string fileName)
+    internal class TestLogger(string fileName, string? outputDirectory)
     {
-        public string Filename { get; } = fileName;
 
+        private readonly string outputDirectory = outputDirectory;
         private List<LogEntry> LogEntries = [];
 
         private int lastWrittenEntry = 0;
         private string lastPrefix = "";
+        public string Filename { get; } = fileName;
 
         public void Log(TimeStep timestep, DateTime dateTime, string message)
         {
@@ -23,7 +24,7 @@ namespace MassSimulation
         /// </summary>
         public void WriteToFile()
         {
-            var directory = "D:/LPG/MyResults/Logs/";
+            var directory = Path.Combine(outputDirectory, "logs");
             Directory.CreateDirectory(directory);
             StringBuilder logMessage = new();
             foreach (LogEntry entry in LogEntries.Skip(lastWrittenEntry))

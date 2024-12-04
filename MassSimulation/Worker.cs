@@ -1,17 +1,11 @@
-﻿using Automation;
-using Automation.ResultFiles;
+﻿using Automation.ResultFiles;
 using CalculationEngine.CitySimulation;
 using Common;
 using Common.JSON;
 using MassSimulation.CityGeneration;
 using MassSimulation.Simulators;
 using MPI;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MassSimulation
 {
@@ -97,10 +91,10 @@ namespace MassSimulation
             lpgSimulator.Init();
 
             // initialize the transport simulator
-            transportSimulator = new TransportSimulator(rank);
+            transportSimulator = new TransportSimulator(rank, scenarioPart.CalcSpecification);
 
             // initialize the point of interst simulators
-            poiSimulators = scenarioPart.PointsOfInterest.Select(poi => new PointOfInterestSimulator(rank, poi.Id)).ToList();
+            poiSimulators = scenarioPart.PointsOfInterest.Select(poi => new PointOfInterestSimulator(rank, poi.Id, scenarioPart.CalcSpecification)).ToList();
         }
 
         private void RunSimulation()

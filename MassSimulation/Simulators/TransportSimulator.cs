@@ -1,4 +1,5 @@
-﻿using CalculationEngine.CitySimulation;
+﻿using Automation;
+using CalculationEngine.CitySimulation;
 using Common;
 using System.Diagnostics;
 
@@ -14,11 +15,14 @@ namespace MassSimulation.Simulators
 
         private readonly TestLogger logger;
 
-        public TransportSimulator(int rank)
+        private readonly JsonCalcSpecification calcSpec;
+
+        public TransportSimulator(int rank, JsonCalcSpecification calcSpec)
         {
             WorkerId = rank;
+            this.calcSpec = calcSpec;
             var filename = $"Transport-{WorkerId}.txt";
-            logger = new(filename);
+            logger = new(filename, calcSpec.OutputDirectory);
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)

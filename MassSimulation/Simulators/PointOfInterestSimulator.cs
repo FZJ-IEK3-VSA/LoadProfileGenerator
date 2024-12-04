@@ -1,4 +1,5 @@
-﻿using CalculationEngine.CitySimulation;
+﻿using Automation;
+using CalculationEngine.CitySimulation;
 using Common;
 using System.Diagnostics;
 
@@ -13,13 +14,16 @@ namespace MassSimulation.Simulators
 
         private readonly TestLogger logger;
 
+        private readonly JsonCalcSpecification calcSpec;
+
         public PointOfInterestId PoiId { get; }
 
-        public PointOfInterestSimulator(int rank, PointOfInterestId id)
+        public PointOfInterestSimulator(int rank, PointOfInterestId id, JsonCalcSpecification calcSpec)
         {
             PoiId = id;
+            this.calcSpec = calcSpec;
             var filename = $"POI-{rank}-{PoiId.Id}.txt";
-            logger = new(filename);
+            logger = new(filename, calcSpec.OutputDirectory);
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
