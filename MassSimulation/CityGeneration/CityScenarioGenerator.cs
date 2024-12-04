@@ -61,7 +61,7 @@ namespace MassSimulation.CityGeneration
         /// <returns>all house configs from the directory</returns>
         private static IEnumerable<MassSimTargetReference> CollectHouseConfigs(string directory)
         {
-            return Directory.GetFiles(directory).Select(f => new MassSimTargetReference(Path.GetFileName(f), f));
+            return Directory.GetFiles(directory).Select(f => new MassSimTargetReference(Path.GetFileNameWithoutExtension(f), f));
         }
 
         /// <summary>
