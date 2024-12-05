@@ -35,13 +35,13 @@ namespace MassSimulation
 
         private PointOfInterestRegister BuildPointOfInterestRegister(int numberOfWorkers, IEnumerable<IEnumerable<PointOfInterestConfig>> poiSublists)
         {
-            Dictionary<PointOfInterestId, int> poiMapping = [];
+            Dictionary<string, int> poiMapping = [];
             int workerId = 0;
             foreach (var sublist in poiSublists)
             {
                 foreach (var poi in sublist)
                 {
-                    poiMapping.Add(poi.Id, workerId);
+                    poiMapping.Add(poi.Id.Id, workerId);
                 }
                 workerId++;
             }
