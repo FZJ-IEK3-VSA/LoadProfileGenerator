@@ -11,7 +11,7 @@ namespace MassSimulation
         /// <summary>
         /// Register for all point of interests
         /// </summary>
-        private readonly IReadOnlyDictionary<PointOfInterestId, int> poiRegister = poiToWorkerMapping;
+        public IReadOnlyDictionary<PointOfInterestId, int> PoiToWorkerMapping { get; } = poiToWorkerMapping;
 
         /// <summary>
         /// Returns the ID of the worker responsible for simulating the location. The location is either
@@ -38,7 +38,7 @@ namespace MassSimulation
         /// <exception cref="LPGException">if the worker could not be determined</exception>
         public int GetWorkerForPOI(PointOfInterestId pointOfInterestId)
         {
-            if (!poiRegister.TryGetValue(pointOfInterestId, out int workerId))
+            if (!PoiToWorkerMapping.TryGetValue(pointOfInterestId, out int workerId))
                 throw new LPGException($"Unregistered point of interest: {pointOfInterestId}; could not determine responsible worker.");
             return workerId;
         }
