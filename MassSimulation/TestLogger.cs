@@ -26,6 +26,7 @@ namespace MassSimulation
         {
             var directory = Path.Combine(outputDirectory, "logs");
             Directory.CreateDirectory(directory);
+            var logfilePath = Path.Combine(directory, Filename);
             StringBuilder logMessage = new();
             foreach (LogEntry entry in LogEntries.Skip(lastWrittenEntry))
             {
@@ -37,7 +38,7 @@ namespace MassSimulation
                 lastPrefix = linePrefix;
             }
             // append new entries to the log file
-            File.AppendAllText(directory + Filename, logMessage.ToString());
+            File.AppendAllText(logfilePath, logMessage.ToString());
 
             // save which entries have been logged already
             lastWrittenEntry = LogEntries.Count;
