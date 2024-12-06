@@ -2,7 +2,6 @@
 using Automation.ResultFiles;
 using CalcPostProcessor;
 using CalculationController.CalcFactories;
-using CalculationController.Queue;
 using CalculationEngine;
 using CalculationEngine.CitySimulation;
 using ChartCreator2;
@@ -12,13 +11,7 @@ using Common.JSON;
 using Database;
 using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MassSimulation
 {
@@ -31,6 +24,7 @@ namespace MassSimulation
         private readonly Simulator sim;
         private readonly ScenarioPart scenarioPart;
         private readonly List<MassSimulationTarget> simulationTargets;
+        private readonly Random random;
 
         public CalcParameters CalcParameters;
 
@@ -40,6 +34,8 @@ namespace MassSimulation
             this.scenarioPart = scenarioPart;
 
             string baseResultDir = scenarioPart.CalcSpecification.OutputDirectory ?? throw new LPGPBadParameterException("No OutputDirectory specified");
+
+            random = new Random(scenarioPart.RandomSeed);
 
             // configure logger so that each worker logs to a different file
             var baseResultDirInfo = new DirectoryInfo(baseResultDir);
@@ -72,7 +68,7 @@ namespace MassSimulation
                 hcj.CalcSpec = scenarioPart.CalcSpecification;
 
                 // create the target house/household if necessary and get its JsonReference
-                var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim);
+                var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, random);
 
                 // create the CalcStartParameterSet containing all parameters for the calculation
                 var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);

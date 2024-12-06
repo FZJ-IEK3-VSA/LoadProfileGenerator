@@ -377,9 +377,10 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         /// <param name="hcj">the simulation job configuration containing the house definition</param>
         /// <param name="sim">database access object</param>
+        /// <param name="random">an optional random object to use for creation of a house or household, if necessary</param>
         /// <returns>reference of the house to simulate</returns>
         /// <exception cref="LPGException">if the configuration does not contain a valid house definition</exception>
-        public JsonReference GetHouseReference([NotNull] HouseCreationAndCalculationJob hcj, [NotNull] Simulator sim)
+        public JsonReference GetHouseReference([NotNull] HouseCreationAndCalculationJob hcj, [NotNull] Simulator sim, Random? random = null)
         {
             if (hcj.House == null)
             {
@@ -388,7 +389,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             JsonReference calcObjectReference;
             if (hcj.HouseDefinitionType == HouseDefinitionType.HouseData)
             {
-                calcObjectReference = CreateSingleHouse(hcj, sim);
+                calcObjectReference = CreateSingleHouse(hcj, sim, random);
             }
             else
             {
@@ -450,10 +451,11 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         /// <param name="hj">the house configuration</param>
         /// <param name="sim">database access object</param>
+        /// <param name="random">an optional random object to use for house generation</param>
         /// <returns>JsonReference of the newly created house</returns>
         /// <exception cref="LPGPBadParameterException">if the provided house configuration was insufficient or invalid</exception>
         [NotNull]
-        private static JsonReference CreateSingleHouse([NotNull] HouseCreationAndCalculationJob hj, [NotNull] Simulator sim)
+        private static JsonReference CreateSingleHouse([NotNull] HouseCreationAndCalculationJob hj, [NotNull] Simulator sim, Random? random = null)
         {
             if (hj.House == null)
             {
@@ -478,12 +480,18 @@ namespace SimulationEngineLib.HouseJobProcessor
                 poiTraitReplacer = new PointOfInterestTraitReplacer(sim, hj.City);
             }
 
+            // use the specified random object or create a new one
+            if (random is null)
+            {
+                var seed = CalcParameters.GetActualRandomSeed(hj.CalcSpec?.RandomSeed);
+                random = new(seed);
+            }
+
             // create and add the Households
-            Random r = new();
             int householdidx = 1;
             foreach (var householdData in hj.House.Households)
             {
-                var hhs = MakeHousehold(sim, householdData, r);
+                var hhs = MakeHousehold(sim, householdData, random);
 
                 if (poiTraitReplacer is not null)
                 {

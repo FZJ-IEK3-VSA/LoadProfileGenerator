@@ -361,17 +361,30 @@ namespace Common.JSON {
 //            CheckDependenyOnOptions();
         }
 
+        /// <summary>
+        /// Determines the actual random seed to use, depending on what the user specified.
+        /// If the user specified -1 or nothing at all, a random seed is chosen, otherwise
+        /// the seed specified by the user is used directly.
+        /// </summary>
+        /// <param name="randomSeed">the user-specified seed</param>
+        /// <param name="forceRandom">if true, always determine a new random seed to use</param>
+        /// <returns>the random seed to use</returns>
+        public static int GetActualRandomSeed(int? randomSeed, bool forceRandom = false)
+        {
+            if (randomSeed is null || randomSeed == -1 || forceRandom)
+            {
+                // use a new random object to generate a random seed
+                return new Random().Next();
+            }
+            return randomSeed.Value;
+        }
+
         [NotNull]
         public CalcParameters SetRandomSeed(int randomSeed, bool forceRandom)
         {
             UserSelectedRandomSeed = randomSeed;
             ForceRandom = forceRandom;
-            if (UserSelectedRandomSeed == -1 || forceRandom) {
-                ActualRandomSeed = DateTime.Now.Millisecond + DateTime.Now.Second * 100;
-            }
-            else {
-                ActualRandomSeed = randomSeed;
-            }
+            ActualRandomSeed = GetActualRandomSeed(UserSelectedRandomSeed, ForceRandom);
 
             return this;
         }

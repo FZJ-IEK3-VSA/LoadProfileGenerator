@@ -1,5 +1,5 @@
 ﻿using Automation;
-using CalculationEngine.CitySimulation;
+using Common.JSON;
 
 namespace MassSimulation
 {
@@ -28,8 +28,12 @@ namespace MassSimulation
 
             var poiRegister = BuildPointOfInterestRegister(numberOfParts, poiSublists);
 
+            // initialize a random object to create individual seeds for each scenario part, based on the main seed
+            int randomSeed = CalcParameters.GetActualRandomSeed(CalcSpecification.RandomSeed);
+            var random = new Random(randomSeed);
+
             // create the list of scenario part objects, each with its own share of households and POIs
-            var parts = referencesSublists.Zip(poiSublists, (references, pois) => new ScenarioPart(references.ToList(), pois.ToList(), DatabasePath, CalcSpecification, poiRegister));
+            var parts = referencesSublists.Zip(poiSublists, (references, pois) => new ScenarioPart(references.ToList(), pois.ToList(), DatabasePath, CalcSpecification, poiRegister, random.Next()));
             return parts.ToArray();
         }
 
