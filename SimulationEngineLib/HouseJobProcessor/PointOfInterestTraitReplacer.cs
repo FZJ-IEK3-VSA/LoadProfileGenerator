@@ -161,6 +161,8 @@ namespace SimulationEngineLib.HouseJobProcessor
             var newTrait = originalTrait.MakeCopy(sim);
             newTrait.Name = originalTrait.Name + " - adapted for CitySimulation";
             newTrait.Description = $"Automatically generated as a copy of trait {originalTrait.Name}, but with new POI locations";
+            // this trait should not be used when generating other households from templates
+            newTrait.CanBeUsedForNewHouseholds = false;
 
             // replace all location entries of the trait as required
             var copyForIterating = newTrait.Locations.ToList();

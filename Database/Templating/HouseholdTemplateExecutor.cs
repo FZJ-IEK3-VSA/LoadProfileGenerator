@@ -252,7 +252,7 @@ namespace Database.Templating {
 
             //add the traits
             foreach (var entry in template.Entries) {
-                var potentialTraits = sim.HouseholdTraits.Items.Where(t =>
+                var potentialTraits = sim.HouseholdTraits.Items.Where(t => t.CanBeUsedForNewHouseholds &&
                     t.Tags.Any(tag => tag.Tag == entry.TraitTag) && numberofPersons >= t.MinimumPersonsInCHH &&
                     numberofPersons <= t.MaximumPersonsInCHH).ToList();
                 if (potentialTraits.Count == 0) {

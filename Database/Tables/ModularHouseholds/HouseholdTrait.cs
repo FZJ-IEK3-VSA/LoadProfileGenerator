@@ -163,6 +163,7 @@ namespace Database.Tables.ModularHouseholds
         private int _maximumPersonsInCHH;
         private int _minimumPersonsInCHH;
         [JetBrains.Annotations.NotNull] private string _shortDescription;
+        private bool _canBeUsedForNewHousehold;
 
         public HouseholdTrait([JetBrains.Annotations.NotNull] string pName,
                               [CanBeNull] int? id,
@@ -182,7 +183,8 @@ namespace Database.Tables.ModularHouseholds
                               double estimatedTimePerYearInH,
                               EstimateType estimateType,
                               [JetBrains.Annotations.NotNull] string shortDescription,
-                              [JetBrains.Annotations.NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
+                              [JetBrains.Annotations.NotNull] StrGuid guid,
+                              bool canBeUsedForNewHouseholds = true) : base(pName, TableName, connectionString, guid)
         {
             ID = id;
             _locations = new ObservableCollection<HHTLocation>();
@@ -208,6 +210,7 @@ namespace Database.Tables.ModularHouseholds
             _estimatedTimePerYearInH = estimatedTimePerYearInH;
             _estimateType = estimateType;
             _shortDescription = shortDescription;
+            _canBeUsedForNewHousehold = canBeUsedForNewHouseholds;
         }
 
         [ItemNotNull]
@@ -340,6 +343,16 @@ namespace Database.Tables.ModularHouseholds
         public int MinimumPersonsInCHH {
             get => _minimumPersonsInCHH;
             set => SetValueWithNotify(value, ref _minimumPersonsInCHH, nameof(MinimumPersonsInCHH));
+        }
+
+        /// <summary>
+        /// Specifies if this trait can be assigned to a new household
+        /// when generating it from a household template.
+        /// </summary>
+        public bool CanBeUsedForNewHouseholds
+        {
+            get => _canBeUsedForNewHousehold;
+            set => SetValueWithNotify(value, ref _canBeUsedForNewHousehold, nameof(CanBeUsedForNewHouseholds));
         }
 
         public int PermittedGender {
@@ -1003,7 +1016,8 @@ namespace Database.Tables.ModularHouseholds
                 item.EstimatedTimePerYearInH,
                 item.EstimateType,
                 item.ShortDescription,
-                item.Guid);
+                item.Guid,
+                item.CanBeUsedForNewHouseholds);
             hh.SaveToDB();
             foreach (var autodev in item.Autodevs) {
                 var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.Items,
@@ -1217,6 +1231,7 @@ namespace Database.Tables.ModularHouseholds
             MaximumPersonsInCHH = selectedImportHousehold.MaximumPersonsInCHH;
             MinimumPersonsInCHH = selectedImportHousehold.MinimumPersonsInCHH;
             ShortDescription = selectedImportHousehold.ShortDescription;
+            CanBeUsedForNewHouseholds = selectedImportHousehold.CanBeUsedForNewHouseholds;
 
             foreach (var hhAutonomousDevice in selectedImportHousehold._autodevs) {
                 if (hhAutonomousDevice.Device != null) {
@@ -1509,6 +1524,7 @@ namespace Database.Tables.ModularHouseholds
             cmd.AddParameter("EstimatedTimePerYearInH", _estimatedTimePerYearInH);
             cmd.AddParameter("EstimateType", _estimateType);
             cmd.AddParameter("ShortDescription", _shortDescription);
+            cmd.AddParameter("CanBeUsedForNewHouseholds", _canBeUsedForNewHousehold);
         }
 
         internal void AddAffordanceToLocation(Location location,
@@ -1762,6 +1778,7 @@ namespace Database.Tables.ModularHouseholds
             var estimatedTimePerYear = dr.GetDouble("EstimatedTimePerYearInH", false, 0, ignoreMissingFields);
             var estimateType = (EstimateType)dr.GetIntFromLong("EstimateType", false, ignoreMissingFields);
             var shortDescription = dr.GetString("ShortDescription", false, "", ignoreMissingFields);
+            var canBeUsedForNewHouseholds = dr.GetBool("CanBeUsedForNewHouseholds", false, true, ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);
             var hh = new HouseholdTrait(name,
                 hhid,
@@ -1781,7 +1798,8 @@ namespace Database.Tables.ModularHouseholds
                 estimatedTimePerYear,
                 estimateType,
                 shortDescription,
-                guid);
+                guid,
+                canBeUsedForNewHouseholds);
             return hh;
         }
 
