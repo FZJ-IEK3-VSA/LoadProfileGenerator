@@ -1511,9 +1511,9 @@ namespace Database.Tables.ModularHouseholds
             cmd.AddParameter("ShortDescription", _shortDescription);
         }
 
-        internal void AddAffordanceToLocation([JetBrains.Annotations.NotNull] Location location,
-                                              [JetBrains.Annotations.NotNull] Affordance aff,
-                                              [CanBeNull] TimeLimit timeLimit,
+        internal void AddAffordanceToLocation(Location location,
+                                              Affordance aff,
+                                              TimeLimit? timeLimit,
                                               int weight,
                                               int startMinusTime,
                                               int startPlusTime,
@@ -1529,14 +1529,14 @@ namespace Database.Tables.ModularHouseholds
             AddAffordanceToLocation(hhl, aff, timeLimit, weight, startMinusTime, startPlusTime, endMinusTime, endPlusTime);
         }
 
-        public void AddAffordanceToLocation([JetBrains.Annotations.NotNull] HHTLocation location,
-                                              [JetBrains.Annotations.NotNull] Affordance aff,
-                                              [CanBeNull] TimeLimit timeLimit,
-                                              double weight,
-                                              int startMinusTime,
-                                              int startPlusTime,
-                                              int endMinusTime,
-                                              int endPlusTime)
+        public void AddAffordanceToLocation(HHTLocation location,
+                                            Affordance aff,
+                                            TimeLimit? timeLimit,
+                                            double weight,
+                                            int startMinusTime,
+                                            int startPlusTime,
+                                            int endMinusTime,
+                                            int endPlusTime)
         {
             var hhl = _locations.First(loc => location.Location == loc.Location);
 

@@ -103,10 +103,10 @@ namespace Database.Helpers
         /// if true and null is passed as reference, null is returned</param>
         /// <returns>the object with the specified JsonReference</returns>
         /// <exception cref="LPGPBadParameterException">if an invalid JsonReference was passed</exception>
-        public T FindWithException(JsonReference reference, bool nullReferenceAllowed = false)
+        public T FindWithException(JsonReference? reference, bool nullReferenceAllowed = false)
         {
             var objectTypeName = typeof(T).Name;
-            if (reference == null)
+            if (reference is null)
             {
                 // no reference was specified
                 if (nullReferenceAllowed)
