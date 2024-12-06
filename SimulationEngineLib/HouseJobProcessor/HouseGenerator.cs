@@ -753,7 +753,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 case HouseholdDataSpecificationType.ByPersons:
                     return MakeHouseholdBaseOnPersonSpec(sim, householdData, r);
                 case HouseholdDataSpecificationType.ByTemplateName:
-                    return MakeHouseholdBaseOnTemplateSpec(sim, householdData);
+                    return MakeHouseholdBaseOnTemplateSpec(sim, householdData, r);
                 case HouseholdDataSpecificationType.ByHouseholdName:
                     return MakeHouseholdBaseOnHouseholdName(sim, householdData);
                 default:
@@ -786,7 +786,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             return newHH;
         }
         [NotNull]
-        private static ModularHousehold MakeHouseholdBaseOnTemplateSpec([NotNull] Simulator sim, [NotNull] HouseholdData householdData)
+        private static ModularHousehold MakeHouseholdBaseOnTemplateSpec([NotNull] Simulator sim, [NotNull] HouseholdData householdData, Random random)
         {
             HouseholdTemplateSpecification templateSpec = householdData.HouseholdTemplateSpec;
             if (templateSpec == null)
@@ -850,7 +850,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 }
             }
 
-            var hhs = template.GenerateHouseholds(sim, false, new List<STTraitLimit>(), forbiddenTraitTags);
+            var hhs = template.GenerateHouseholds(sim, false, new List<STTraitLimit>(), forbiddenTraitTags, random);
             if (hhs.Count != 1)
             {
                 throw new Exception("Could not generate this house");

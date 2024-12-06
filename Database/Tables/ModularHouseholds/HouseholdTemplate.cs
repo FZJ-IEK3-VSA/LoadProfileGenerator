@@ -381,8 +381,8 @@ namespace Database.Tables.ModularHouseholds
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
         public List<ModularHousehold> GenerateHouseholds([JetBrains.Annotations.NotNull] Simulator sim, bool generateSettlement, [ItemNotNull] [JetBrains.Annotations.NotNull] List<STTraitLimit> limits,
-                                                         List<TraitTag> forbiddenTraitTags) =>
-            HouseholdTemplateExecutor.GenerateHouseholds(sim, generateSettlement, limits, this, forbiddenTraitTags);
+                                                         List<TraitTag> forbiddenTraitTags, Random? random = null) =>
+            HouseholdTemplateExecutor.GenerateHouseholds(sim, generateSettlement, limits, this, forbiddenTraitTags, random);
 
         public void ImportExistingModularHouseholds([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
