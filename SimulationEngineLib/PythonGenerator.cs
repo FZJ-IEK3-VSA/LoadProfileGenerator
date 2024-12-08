@@ -408,7 +408,6 @@ namespace SimulationEngineLib
                 case "Automation.HouseholdDataPersonSpecification":
                 case "Automation.HouseholdTemplateSpecification":
                 case "Automation.HouseholdNameSpecification":
-                case "Automation.JsonReference":
                 case "Automation.TransportationDistanceModifier":
                 case "Automation.ResultFiles.LoadTypeInformation":
                 case "Automation.ResultFiles.HouseholdKeyEntry":
@@ -431,6 +430,10 @@ namespace SimulationEngineLib
                 case "Automation.Coordinates":
                     typename = type.Name;
                     return $"Optional[{typename}] = None";
+                case "Automation.JsonReference":
+                    // JsonReferences can also be loaded from a simple string
+                    typename = type.Name;
+                    return $"Optional[{typename}|str] = None";
                 case "Automation.ResultFiles.HouseholdKeyType":
                     typename = type.Name;
                     return $"Optional[{typename}] = \"\"";
