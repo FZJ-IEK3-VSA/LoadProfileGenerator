@@ -295,7 +295,7 @@ namespace Database.Templating {
                     var classificationExistsPercentage = (double)classificationexists / totalcount * 100.0;
                     var invalidForPersonpercentage = (double)invalidForPerson / totalcount * 100.0;
                     var limitViolationPercentage = (double)violatesLimit / totalcount * 100;
-                    var reasonString = "Reasons: \n\tTrait already exits up to the trait count limit: " + traitExistsPercentage.ToString("N1", CultureInfo.CurrentCulture) +
+                    var reasonString = "Reasons: \n\tTrait already exists up to the trait count limit: " + traitExistsPercentage.ToString("N1", CultureInfo.CurrentCulture) +
                                        "%,\n\tClassification exists up to the classification limit: " + classificationExistsPercentage.ToString("N1", CultureInfo.CurrentCulture) +
                                        "%,\n\tRandomly chosen Trait unsuitable for person: " + invalidForPersonpercentage.ToString("N1", CultureInfo.CurrentCulture) +
                                        "%,\n\tTrait violates age/gender limits: " + limitViolationPercentage.ToString("N1", CultureInfo.CurrentCulture) + "%";

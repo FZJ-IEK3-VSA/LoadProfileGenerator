@@ -54,7 +54,6 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var relevantLocations = household.Traits.Where(t => t.DstPerson.Name == personName).SelectMany(t => t.HouseholdTrait.Locations).Select(t => t.Location).ToHashSet();
                 var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
 
-                Console.WriteLine($"Generating routes for {personPreference.Key}");
                 AddRoutesForPerson(personName, personPreference.Value, travelRouteSet, relevantPOIs);
             }
             travelRouteSet.SaveToDB();
