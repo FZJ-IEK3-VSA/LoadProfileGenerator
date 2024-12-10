@@ -5,7 +5,6 @@ using Common.JSON;
 using MassSimulation.CityGeneration;
 using MassSimulation.Simulators;
 using MPI;
-using System.Diagnostics;
 
 namespace MassSimulation
 {
@@ -18,6 +17,7 @@ namespace MassSimulation
         private readonly int rank;
         private readonly int numWorkers;
         private readonly string workerName;
+        private readonly string inputPath;
 
         private LPGMassSimulator lpgSimulator;
         private List<PointOfInterestSimulator> poiSimulators = [];
@@ -29,8 +29,15 @@ namespace MassSimulation
 
         private readonly MPILogger logger;
 
-        public Worker(Intracommunicator comm)
+        public Worker(Intracommunicator comm, string[] args)
         {
+            // parse command line arguments
+            if (args.Length == 0)
+                throw new LPGException("Did not receive any command line arguments.");
+            if (args.Length > 1)
+                throw new LPGException("Received unexpected command line arguments: {args}");
+            inputPath = args[0];
+
             this.comm = comm;
             rank = comm.Rank;
             numWorkers = comm.Size;
@@ -41,19 +48,16 @@ namespace MassSimulation
 
         public void Run()
         {
-            var inputPath = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
-            inputPath = @"D:\Git-Repositories\CityScenarioGenerator\LPG_city_scenario";
-
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
             InitSimulation(inputPath);
             logger.Info("Finished initialization");
 
-            Stopwatch watch = Stopwatch.StartNew();
+            var start = DateTime.Now;
             RunSimulation();
             comm.Barrier();
-            watch.Stop();
-            logger.Info("Finished simulation. Time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
+            var duration = DateTime.Now - start;
+            logger.Info($"Finished core simulation in {duration} s");
 
             FinishSimulation();
             comm.Barrier();
