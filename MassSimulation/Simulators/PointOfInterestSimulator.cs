@@ -78,8 +78,8 @@ namespace MassSimulation.Simulators
                     var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
                     logger.Log(timestep, dateTime, $"Finished activitites: {finishedPersons}");
                 }
+                presenceLogger.Log(timestep, dateTime, $"{activityStates.Count}");
             }
-            presenceLogger.Log(timestep, dateTime, $"{activityStates.Count}");
         }
 
         private void UpdateRemainingStayTime(AgentStayState state)

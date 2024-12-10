@@ -78,8 +78,8 @@ namespace MassSimulation.Simulators
                 if (finishedActivities.Any())
                     message += "; arrived: " + string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
                 logger.Log(timestep, dateTime, message);
+                presenceLogger.Log(timestep, dateTime, $"{travelStates.Count}");
             }
-            presenceLogger.Log(timestep, dateTime, $"{travelStates.Count}");
         }
 
         public IEnumerable<RemoteActivityFinished> GetArrivedAgents()
