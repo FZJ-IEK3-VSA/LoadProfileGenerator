@@ -6,7 +6,9 @@ using SimulationEngineLib.HouseJobProcessor;
 namespace MassSimulation.CityGeneration
 {
     /// <summary>
-    /// Mockup for creation of a city scenario from external datasources (Builda etc.)
+    /// Class for loading a city scenario from a directory. The directory must contain
+    /// a Calcspec.json file with the calculation configuration, and files specifying all
+    /// residential and non-residential buildings in the target area.
     /// </summary>
     internal class CityScenario
     {

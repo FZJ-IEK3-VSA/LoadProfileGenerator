@@ -13,6 +13,7 @@ namespace MassSimulation.Simulators
         private List<AgentStayState> activityStates = [];
 
         private readonly TestLogger logger;
+        private readonly TestLogger presenceLogger;
 
         private readonly JsonCalcSpecification calcSpec;
 
@@ -24,6 +25,9 @@ namespace MassSimulation.Simulators
             this.calcSpec = calcSpec;
             var filename = $"POI-{rank}-{PoiId.Id}.txt";
             logger = new(filename, calcSpec.OutputDirectory);
+
+            // TODO: properly implement logging POI data
+            presenceLogger = new(filename, Path.Combine(calcSpec.OutputDirectory, "poi_presence"));
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
@@ -75,6 +79,7 @@ namespace MassSimulation.Simulators
                     logger.Log(timestep, dateTime, $"Finished activitites: {finishedPersons}");
                 }
             }
+            presenceLogger.Log(timestep, dateTime, $"{activityStates.Count}");
         }
 
         private void UpdateRemainingStayTime(AgentStayState state)

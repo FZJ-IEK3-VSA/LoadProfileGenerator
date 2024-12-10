@@ -14,6 +14,7 @@ namespace MassSimulation.Simulators
         private List<AgentTravelState> travelStates = [];
 
         private readonly TestLogger logger;
+        private readonly TestLogger presenceLogger;
 
         private readonly JsonCalcSpecification calcSpec;
 
@@ -23,6 +24,9 @@ namespace MassSimulation.Simulators
             this.calcSpec = calcSpec;
             var filename = $"Transport-{WorkerId}.txt";
             logger = new(filename, calcSpec.OutputDirectory);
+
+            // TODO: properly implement logging travel data
+            presenceLogger = new(filename, Path.Combine(calcSpec.OutputDirectory, "traveling_persons"));
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
@@ -75,6 +79,7 @@ namespace MassSimulation.Simulators
                     message += "; arrived: " + string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
                 logger.Log(timestep, dateTime, message);
             }
+            presenceLogger.Log(timestep, dateTime, $"{travelStates.Count}");
         }
 
         public IEnumerable<RemoteActivityFinished> GetArrivedAgents()
