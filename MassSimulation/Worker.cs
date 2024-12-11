@@ -50,7 +50,15 @@ namespace MassSimulation
         {
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
-            InitSimulation(inputPath);
+            try
+            {
+                InitSimulation(inputPath);
+            }
+            catch (Exception e)
+            {
+                logger.Error($"Exception during initialization on worker {rank}:\n{e}");
+                throw;
+            }
             logger.Info("Finished initialization");
 
             var start = DateTime.Now;
@@ -59,7 +67,15 @@ namespace MassSimulation
             var duration = DateTime.Now - start;
             logger.Info($"Finished core simulation in {duration} s");
 
-            FinishSimulation();
+            try
+            {
+                FinishSimulation();
+            }
+            catch (Exception e)
+            {
+                logger.Error($"Exception during finishing simulation on worker {rank}:\n{e}");
+                throw;
+            }
             comm.Barrier();
             logger.Info("Finished postprocessing");
         }
@@ -117,10 +133,18 @@ namespace MassSimulation
             while (simulationTime < calcParameters.InternalEndTime)
             {
                 // run all simulators for one timestep
-                var messageDistributor = SimulateOneStep(timestep, simulationTime, activityMessages);
+                try
+                {
+                    var messageDistributor = SimulateOneStep(timestep, simulationTime, activityMessages);
 
-                // exchange messages via MPI; this calls MPI.AllToAll
-                activityMessages = messageDistributor.DistributeMessages(comm);
+                    // exchange messages via MPI; this calls MPI.AllToAll
+                    activityMessages = messageDistributor.DistributeMessages(comm);
+                }
+                catch (CitySimWrapperException e)
+                {
+                    logger.Error($"Exception during simulation timestep {timestep.InternalStep} in target {e.Target.Id} on worker {rank}:\n{e.InnerException}");
+                    throw;
+                }
 
                 // increment timestep
                 simulationTime += calcParameters.InternalStepsize;

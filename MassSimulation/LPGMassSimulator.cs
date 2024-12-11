@@ -15,6 +15,17 @@ using System.Runtime.InteropServices;
 
 namespace MassSimulation
 {
+    internal class CitySimWrapperException : Exception
+    {
+        public MassSimulationTarget? Target { get; }
+
+        public CitySimWrapperException(Exception ex, MassSimulationTarget? target) : base($"Exception from target {target.Id}: {ex.Message}", ex)
+        {
+            Target = target;
+        }
+    }
+
+
     /// <summary>
     /// A class that simulates multiple LPG households simultaneously.
     /// </summary>
@@ -97,13 +108,20 @@ namespace MassSimulation
                 // simulate each target for one timestep
                 foreach (var target in simulationTargets)
                 {
-                    var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
-                    // collect all new activity messages
-                    foreach (var newActivityContext in newActivities)
+                    try
                     {
-                        // set the missing target ID and worker rank to make the person identifier simulation-wide unique
-                        newActivityContext.Person.AddMissingInfo(target.Id, rank);
-                        newRemoteActivities.Add(newActivityContext);
+                        var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
+                        // collect all new activity messages
+                        foreach (var newActivityContext in newActivities)
+                        {
+                            // set the missing target ID and worker rank to make the person identifier simulation-wide unique
+                            newActivityContext.Person.AddMissingInfo(target.Id, rank);
+                            newRemoteActivities.Add(newActivityContext);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw new CitySimWrapperException(e, target);
                     }
                 }
             }
