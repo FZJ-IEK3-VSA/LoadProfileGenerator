@@ -60,15 +60,21 @@ namespace MassSimulation
 
                 // read house job file for this target
                 string houseJobStr = File.ReadAllText(target.ConfigFilePath).Trim(HouseGenerator.charsToTrim);
-                HouseCreationAndCalculationJob? hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
-                if (hcj == null)
-                    throw new LPGException("housejob was null");
+                var hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr) ?? throw new LPGException("housejob was null");
 
                 // set the global Calcspec
                 hcj.CalcSpec = scenarioPart.CalcSpecification;
 
                 // create the target house/household if necessary and get its JsonReference
-                var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, random);
+                JsonReference calcObjectReference;
+                try
+                {
+                    calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, random);
+                }
+                catch (Exception ex)
+                {
+                    throw new CitySimWrapperException(ex, rank, target.Id, "household generation");
+                }
 
                 // create the CalcStartParameterSet containing all parameters for the calculation
                 var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
@@ -109,7 +115,7 @@ namespace MassSimulation
                 catch (Exception e)
                 {
                     // wrap the exception in a CitySimWrapperException contining more relevant information
-                    throw new CitySimWrapperException(e, rank, target, timeStep.InternalStep);
+                    throw new CitySimWrapperException(e, rank, target.Id, $"timestep {timeStep.InternalStep}");
                 }
             }
             return newRemoteActivities;
