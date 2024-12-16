@@ -142,7 +142,7 @@ namespace MassSimulation
                 }
                 catch (CitySimWrapperException e)
                 {
-                    logger.Error($"Exception during simulation timestep {timestep.InternalStep} in target {e.Target.Id} on worker {rank}:\n{e.InnerException}");
+                    logger.Error($"Exception during simulation timestep {timestep.InternalStep} in target {e.Target.Id} on worker {rank}:\n{e}");
                     throw;
                 }
 
