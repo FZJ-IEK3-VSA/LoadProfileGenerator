@@ -5,17 +5,17 @@
     /// an exception.
     /// </summary>
     internal class CitySimWrapperException(Exception ex, int worker, string? targetId = null, string? when = null)
-        : Exception(BuildExceptionMessage(ex, worker, targetId, when), ex)
+        : Exception(BuildExceptionMessage(worker, targetId, when), ex)
     {
         public int Worker { get; } = worker;
         public string? TargetId { get; } = targetId;
         public string? When { get; } = when;
 
-        private static string BuildExceptionMessage(Exception ex, int worker, string? targetId, string? when)
+        private static string BuildExceptionMessage(int worker, string? targetId, string? when)
         {
             var targetString = targetId is not null ? $" from target '{targetId}'" : "";
             var whenString = when is not null ? $" during {when}" : "";
-            return $"Exception on worker {worker}{targetString}{whenString}: {ex.Message}";
+            return $"Exception on worker {worker}{targetString}{whenString}.";
         }
     }
 }

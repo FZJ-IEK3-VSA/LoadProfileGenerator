@@ -65,24 +65,23 @@ namespace MassSimulation
                 // set the global Calcspec
                 hcj.CalcSpec = scenarioPart.CalcSpecification;
 
-                // create the target house/household if necessary and get its JsonReference
-                JsonReference calcObjectReference;
                 try
                 {
-                    calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, random);
+                    // create the target house/household if necessary and get its JsonReference
+                    var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, random);
+
+                    // create the CalcStartParameterSet containing all parameters for the calculation
+                    var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
+                    calcStartParameterSet.ResultPath = resultDirectory;
+
+                    // create a calcManager for each household
+                    var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
+                    simulationTargets.Add(new MassSimulationTarget(target.Id, calcManager, resultDirectory));
                 }
                 catch (Exception ex)
                 {
-                    throw new CitySimWrapperException(ex, rank, target.Id, "household generation");
+                    throw new CitySimWrapperException(ex, rank, target.Id, "initialization");
                 }
-
-                // create the CalcStartParameterSet containing all parameters for the calculation
-                var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
-                calcStartParameterSet.ResultPath = resultDirectory;
-
-                // create a calcManager for each household
-                var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
-                simulationTargets.Add(new MassSimulationTarget(target.Id, calcManager, resultDirectory));
             }
 
             // make the common CalcParameters accessible
