@@ -15,13 +15,18 @@ using System.Runtime.InteropServices;
 
 namespace MassSimulation
 {
-    internal class CitySimWrapperException : Exception
+    internal class CitySimWrapperException(Exception ex, int worker, MassSimulationTarget? target = null, int timestep = -1)
+        : Exception(BuildExceptionMessage(ex, worker, target, timestep), ex)
     {
-        public MassSimulationTarget? Target { get; }
+        public MassSimulationTarget? Target { get; } = target;
+        public int Worker { get; } = worker;
+        public int Timestep { get; } = timestep;
 
-        public CitySimWrapperException(Exception ex, MassSimulationTarget? target) : base($"Exception from target {target.Id}: {ex.Message}", ex)
+        private static string BuildExceptionMessage(Exception ex, int worker, MassSimulationTarget? target, int timestep)
         {
-            Target = target;
+            var targetString = target is not null ? $" from target '{target.Id}'" : "";
+            var timestepString = timestep != -1 ? $" in timestep {timestep}" : "";
+            return $"Exception on worker {worker}{targetString}{timestepString}: {ex.Message}";
         }
     }
 
@@ -103,32 +108,25 @@ namespace MassSimulation
             Dictionary<string, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>> finishedActivities)
         {
             var newRemoteActivities = new List<RemoteActivityInfo>();
-            try
+            // simulate each target for one timestep
+            foreach (var target in simulationTargets)
             {
-                // simulate each target for one timestep
-                foreach (var target in simulationTargets)
+                try
                 {
-                    try
+                    var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
+                    // collect all new activity messages
+                    foreach (var newActivityContext in newActivities)
                     {
-                        var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
-                        // collect all new activity messages
-                        foreach (var newActivityContext in newActivities)
-                        {
-                            // set the missing target ID and worker rank to make the person identifier simulation-wide unique
-                            newActivityContext.Person.AddMissingInfo(target.Id, rank);
-                            newRemoteActivities.Add(newActivityContext);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        throw new CitySimWrapperException(e, target);
+                        // set the missing target ID and worker rank to make the person identifier simulation-wide unique
+                        newActivityContext.Person.AddMissingInfo(target.Id, rank);
+                        newRemoteActivities.Add(newActivityContext);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Exception occurred in timestep " + timeStep.ToString() + ":\n" + ex.ToString());
-                throw;
+                catch (Exception e)
+                {
+                    // wrap the exception in a CitySimWrapperException contining more relevant information
+                    throw new CitySimWrapperException(e, rank, target, timeStep.InternalStep);
+                }
             }
             return newRemoteActivities;
         }

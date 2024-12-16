@@ -56,7 +56,7 @@ namespace MassSimulation
             }
             catch (Exception e)
             {
-                logger.Error($"Exception during initialization on worker {rank}:\n{e}");
+                logger.Error($"Exception during initialization:\n{e}");
                 throw;
             }
             logger.Info("Finished initialization");
@@ -73,7 +73,7 @@ namespace MassSimulation
             }
             catch (Exception e)
             {
-                logger.Error($"Exception during finishing simulation on worker {rank}:\n{e}");
+                logger.Error($"Exception during finishing simulation:\n{e}");
                 throw;
             }
             comm.Barrier();
@@ -133,18 +133,10 @@ namespace MassSimulation
             while (simulationTime < calcParameters.InternalEndTime)
             {
                 // run all simulators for one timestep
-                try
-                {
-                    var messageDistributor = SimulateOneStep(timestep, simulationTime, activityMessages);
+                var messageDistributor = SimulateOneStep(timestep, simulationTime, activityMessages);
 
-                    // exchange messages via MPI; this calls MPI.AllToAll
-                    activityMessages = messageDistributor.DistributeMessages(comm);
-                }
-                catch (CitySimWrapperException e)
-                {
-                    logger.Error($"Exception during simulation timestep {timestep.InternalStep} in target {e.Target.Id} on worker {rank}:\n{e}");
-                    throw;
-                }
+                // exchange messages via MPI; this calls MPI.AllToAll
+                activityMessages = messageDistributor.DistributeMessages(comm);
 
                 // increment timestep
                 simulationTime += calcParameters.InternalStepsize;
