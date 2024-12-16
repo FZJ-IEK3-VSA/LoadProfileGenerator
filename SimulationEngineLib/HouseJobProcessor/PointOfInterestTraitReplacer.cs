@@ -145,6 +145,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                     household.AddTrait(newTrait, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name, person.Person);
                 }
             }
+            CheckTraitLocations(sim, household);
         }
 
         /// <summary>
@@ -214,6 +215,32 @@ namespace SimulationEngineLib.HouseJobProcessor
                     var message = $"Invalid PointOfInterestPreferences: the point of interest '{missingPOI}' is used as start or " +
                         "destination of a route, but is not contained in the PoiWeights.";
                     throw new LPGPBadParameterException(message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if all locations that are used in the traits of a household either belong to the site "Home" or have 
+        /// been replaced with new ones for the city simulation.
+        /// </summary>
+        /// <param name="sim">database access object</param>
+        /// <param name="household">the household whose locations to check</param>
+        /// <exception cref="LPGPBadParameterException">if the household contains invalid locations for a city simulation</exception>
+        public void CheckTraitLocations(Simulator sim, ModularHousehold household)
+        {
+            var homeSite = TravelRouteSetBuilderFromPersonData.GetHomeSite(sim);
+            var homeLocations = homeSite.Locations.Select(loc => loc.Location).ToHashSet();
+            var newCityLocations = LocationReplacements.Select(kvp => kvp.Value.NewLocation).ToHashSet();
+            foreach (var trait in household.Traits)
+            {
+                foreach (var locationEntry in trait.HouseholdTrait.Locations)
+                {
+                    var location = locationEntry.Location;
+                    if (!newCityLocations.Contains(location) && !homeLocations.Contains(location))
+                    {
+                        throw new LPGPBadParameterException($"Invalid PointOfInterestPreferences: no point of interest for reference location {location} " +
+                            $"was specified, although this location is used in household {household.Name}");
+                    }
                 }
             }
         }
