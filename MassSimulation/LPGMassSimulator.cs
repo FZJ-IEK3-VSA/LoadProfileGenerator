@@ -55,7 +55,7 @@ namespace MassSimulation
             {
                 // create a separate subdirectory for each simulation target
                 string subdir = target.Id.ToString();
-                string resultDirectory = Path.Combine(baseResultDir, subdir);
+                string resultDirectory = Path.Combine(baseResultDir, "Houses", subdir);
                 Directory.CreateDirectory(resultDirectory);
 
                 // read house job file for this target
