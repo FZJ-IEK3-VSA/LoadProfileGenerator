@@ -271,7 +271,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 jcs.IgnorePreviousActivitiesWhenNeeded,
                 jcs.OutputDirectory, jcs.EnableTransportation, jcs.EnableIdlemode,
                 sim.MyGeneralConfig.DecimalSeperator,
-                jcs.EnableFlexibility
+                jcs.EnableFlexibility,
+                sim.MyGeneralConfig.UseQLearningBool
                 );
             calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
             /* debugging

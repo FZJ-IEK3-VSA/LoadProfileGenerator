@@ -600,7 +600,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     sim.MyGeneralConfig.DeviceProfileHeaderMode,
                     false,
                     operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool, sim.MyGeneralConfig.DecimalSeperator,
-                    sim.MyGeneralConfig.EnableFlexibilityBool);
+                    sim.MyGeneralConfig.EnableFlexibilityBool, sim.MyGeneralConfig.UseQLearningBool);
 
                 cs.Start(csps);
                 Thread.Sleep(3000);

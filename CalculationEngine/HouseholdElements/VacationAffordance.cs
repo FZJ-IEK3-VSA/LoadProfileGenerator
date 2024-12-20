@@ -58,6 +58,13 @@ namespace CalculationEngine.HouseholdElements {
 
         public override bool AreThereDuplicateEnergyProfiles() => false;
 
+        public override int GetDuration()
+        {
+            return 10080;
+        }
+
+        public override int GetRealDuration(TimeStep now) => 10080;
+
         public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time,
                                                                       bool onlyInterrupting,
                                                                       CalcLocation srcLocation) =>

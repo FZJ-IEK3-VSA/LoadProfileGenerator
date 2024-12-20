@@ -98,7 +98,7 @@ namespace CalculationEngine.OnlineLogging {
                         _calcParameters.InternalStepsize,CalcOption.DesiresLogfile, null, entry.CPerson.MakePersonInformation()));
                 var header = _dsc.GenerateDateStampHeader();
                 _desireFiles[GetKey(entry, householdKey)].Write(header + "Person");
-                _desireFiles[GetKey(entry, householdKey)].WriteLine(entry.GenerateHeader());
+                _desireFiles[GetKey(entry, householdKey)].WriteLine(entry.GenerateHeader() + ";");
                 _writeDesiresHeader.Add(GetKey(entry, householdKey), true);
             }
             if (!entry.Timestep.DisplayThisStep) {

@@ -112,6 +112,18 @@ namespace CalculationEngine.HouseholdElements {
 
         public abstract bool AreThereDuplicateEnergyProfiles();
 
+        /// <summary>
+        /// Abstract method to retrieve the total duration of an object.
+        /// </summary>
+        /// <returns>The total duration as an integer.</returns>
+        public abstract int GetDuration();
+
+        /// <summary>
+        /// Abstract method to calculate the real duration based on a given time step.
+        /// </summary>
+        /// <param name="now">The current time step used to calculate the duration.</param>
+        /// <returns>The adjusted duration as an integer.</returns>
+        public abstract int GetRealDuration(TimeStep now);
         public int CalcAffordanceSerial { get; }
 
         public CalcAffordanceType CalcAffordanceType { get; }

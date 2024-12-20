@@ -316,6 +316,19 @@ namespace CalculationEngine.HouseholdElements {
 
         public void FinishCalculation()
         {
+            // Logs Q-Table counts for each person and saves their Q-Tables to a file if the new algorithm is enabled.
+            //NEW
+            if (_calcRepo.CalcParameters.UseQLearningForAffordanceChoose)
+            {               
+                foreach (var person in _persons)
+                {
+                    var person_name = person.Name;
+                    Logger.Info("Name: " + person_name + ", Q-Table-Count: " + person.qTable.StatesCount);
+                    person.qTable.SaveQTableToFile_RL(person_name);                    
+                }                
+            }
+            //NEW
+
             DumpTimeProfiles();
         }
 
@@ -379,15 +392,81 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException(
                     "Somehow the number of affordances is 0 after initializing, which should never happen. Please report.");
             }
+
+
+            //NEW: Set the useQLearning flag for each person
+            foreach (var person in _persons)
+            {
+                person.useQLearningForAffordanceChoose = _calcRepo.CalcParameters.UseQLearningForAffordanceChoose;
+            }
+
+
             _startSimulation = DateTime.Now;
+
         }
 
-        /*
-        public void WriteInformation()
+        /// <summary>
+        /// Executes the next simulation step for the given person, updates state tracking, and handles end-of-day logic.
+        /// </summary>
+        /// <param name="timestep">The current simulation time step.</param>
+        /// <param name="now">The current simulation time.</param>
+        /// <param name="p">The person object being processed.</param>
+        public void RunNextStep_Linear(TimeStep timestep, DateTime now, CalcPerson p)
         {
-            throw new NotImplementedException();
+            // NEW: Collect remaining execution steps for all persons and assign them to the current person
+            var remainTimeFromAllPerson = _persons?
+                .ToDictionary(person => person.Name, person => person.remainExecutionSteps)
+                ?? new Dictionary<string, int>();
+            p.remainStepsFromOtherPerson = remainTimeFromAllPerson;
+
+            var personName = p.Name;
+
+            // Define the end of the day (23:59 of the current date)
+            DateTime EndOfDay = new(now.Year, now.Month, now.Day, 23, 59, 0);
+            bool isEndOfDay = now >= EndOfDay;
+
+            // Check if the simulation has reached the end of the day
+            if (isEndOfDay)
+            {
+                // Clear executed affordances at the end of the day
+                p.executedAffordance = new Dictionary<DateTime, (string, string)>();
+
+                string result;
+                string foundResultSum;
+
+                // Calculate search and found percentages for the current day and total
+                if (p.searchCounter != 0)
+                {
+                    double percentage = (double)p.foundCounter / p.searchCounter * 100;
+                    result = percentage.ToString("F3") + "%";
+
+                    // Update total counters
+                    p.sumFoundCounter += p.foundCounter;
+                    p.sumSearchCounter += p.searchCounter;
+
+                    double sumPercentage = (double)p.sumFoundCounter / p.sumSearchCounter * 100;
+                    foundResultSum = sumPercentage.ToString("F3") + "%";
+                }
+                else
+                {
+                    result = "N/A";
+                    double sumPercentage = (double)p.sumFoundCounter / p.sumSearchCounter * 100;
+                    foundResultSum = sumPercentage.ToString("F3") + "%";
+                }
+
+                // Reset daily counters
+                p.searchCounter = 0;
+                p.foundCounter = 0;
+
+                // Log end-of-day statistics
+                Logger.Info($"{now.Date:yyyy-MM-dd},  {p.qTable.StatesCount}, {result}, {foundResultSum}");
+            }
+
+            // Execute the next step in the simulation for the person
+            p.NextStep(timestep, _locations, _daylightArray, _householdKey, _persons, _simulationSeed, now);
+            // NEW
         }
-        */
+
         public void RunOneStep(TimeStep timestep, DateTime now, bool runProcessing)
         {
             if (_locations == null) {
@@ -417,12 +496,20 @@ namespace CalculationEngine.HouseholdElements {
             if (_autoDevs == null) {
                 throw new LPGException("_autoDevs should not be null");
             }
-
+            
             foreach (var p in _persons) {
-                p.NextStep(timestep, _locations, _daylightArray,
+                //NEW: Run the next step for each person using the new algorithm
+                if (_calcRepo.CalcParameters.UseQLearningForAffordanceChoose)
+                {
+                    RunNextStep_Linear(timestep, now, p);
+                }
+                else
+                {
+                    p.NextStep(timestep, _locations, _daylightArray,
                     _householdKey, _persons, _simulationSeed);
+                }                
             }
-
+            
             /*    if ((timestep % RangeCleaningFrequency) == 0)
             {
                 foreach (CalcDevice device in _devices)
@@ -430,7 +517,7 @@ namespace CalculationEngine.HouseholdElements {
                 foreach (CalcAutoDev autoDev in _autoDevs)
                     autoDev.ClearExpiredRanges(timestep);
             }*/
-            if(Logger.Threshold > Severity.Information) {
+            if (Logger.Threshold > Severity.Information) {
                 if (timestep.InternalStep % 5000 == 0 || (DateTime.Now - _lastDisplay).TotalSeconds > 5) {
                     var timeelapesed = DateTime.Now - _startSimulation;
                     var speed = timestep.InternalStep / timeelapesed.TotalSeconds;

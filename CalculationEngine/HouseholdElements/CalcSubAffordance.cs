@@ -123,6 +123,25 @@ namespace CalculationEngine.HouseholdElements {
         public override string SourceTrait { get; }
         public override string? TimeLimitName { get; }
         public override bool AreThereDuplicateEnergyProfiles() => false;
+        
+        /// <summary>
+        /// Gets the total duration of the step values in the person's profile.
+        /// </summary>
+        /// <returns>The total number of steps in the profile.</returns>
+        public override int GetDuration()
+        {
+            return _durations;
+        }
+
+        /// <summary>
+        /// Calculates the real duration based on the current time step and the time factor associated with it.
+        /// </summary>
+        /// <param name="now">The current time step of the simulation.</param>
+        /// <returns>The adjusted duration based on the time factor if available; otherwise, returns the default duration.</returns>
+        public override int GetRealDuration(TimeStep now)
+        {
+            return _durations;
+        }
 
         [NotNull]
         public override string AreDeviceProfilesEmpty()
@@ -135,6 +154,6 @@ namespace CalculationEngine.HouseholdElements {
             _durations = duration;
         }
 
-        public override string ToString() => "Sub-Affordance:" + Name;
+        public override string ToString() => "Sub-Affordance:" + Name;        
     }
 }

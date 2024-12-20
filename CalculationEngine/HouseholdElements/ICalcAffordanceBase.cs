@@ -69,6 +69,8 @@ namespace CalculationEngine.HouseholdElements
         string SourceTrait { get; }
         string? TimeLimitName { get; }
         bool AreThereDuplicateEnergyProfiles();
+        int GetDuration();
+        int GetRealDuration(TimeStep now);
         string? AreDeviceProfilesEmpty();
 
         CalcSite? Site { get; }

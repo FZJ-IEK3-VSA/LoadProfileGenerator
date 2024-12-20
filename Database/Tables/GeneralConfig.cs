@@ -421,6 +421,13 @@ namespace Database.Tables {
 
         public bool WriteExcelColumnBool => WriteExcelColumn.ToUpper() == "TRUE";
 
+        public string UseQLearning
+        {
+            get => _settings[nameof(UseQLearning)].SettingValue;
+            set => UpdateValue(nameof(UseQLearning), value);
+        }
+
+        public bool UseQLearningBool => UseQLearning.ToUpper() == "TRUE";
 
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
@@ -531,6 +538,8 @@ namespace Database.Tables {
             gc.CheckExistence(nameof(CarpetPlotWidth), "7", ignoreMissing);
             gc.CheckExistence(nameof(SelectedEnergyIntensity), "0", ignoreMissing);
             gc.CheckExistence(nameof(WriteExcelColumn), "True", ignoreMissing);
+            gc.CheckExistence(nameof(UseQLearning), "False", ignoreMissing);
+
 
             gc.CheckExistence(nameof(PerformCleanUpChecks), "True", ignoreMissing);
             gc.CheckExistence(nameof(EnableIdlemode), "True", ignoreMissing);

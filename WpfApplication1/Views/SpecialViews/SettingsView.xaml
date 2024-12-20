@@ -37,8 +37,9 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label Grid.Column="0"
                                Content="Database filename"
@@ -198,6 +199,18 @@
                                   SelectedValue="{Binding ThisConfig.DeviceProfileHeaderMode}"
                                   SelectedValuePath="Key"
                                   DisplayMemberPath="Value"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Label Grid.Row="14"
+                               Grid.Column="0"
+                               Content="Use Adapted Q-Learning Algorithm"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbUseQLearning}" />
+                        <ComboBox Name="CmbQLearning"
+                                  Grid.Row="14"
+                                  Grid.Column="1"
+                                  x:FieldModifier="private"
+                                  ItemsSource="{Binding BoolValues}"
+                                  SelectedItem="{Binding ThisConfig.UseQLearning}"
                                   Style="{StaticResource ComboBoxStyle}" />
                     </Grid>
                 </Expander>

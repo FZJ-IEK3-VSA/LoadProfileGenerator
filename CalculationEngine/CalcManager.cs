@@ -146,7 +146,7 @@ namespace CalculationEngine {
                     CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
                 }
 
-                var now = CalcRepo.CalcParameters.InternalStartTime;
+                var now = CalcRepo.CalcParameters.InternalStartTime;                
                 var timestep = new TimeStep(0, CalcRepo.CalcParameters);
                 try {
                     CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");

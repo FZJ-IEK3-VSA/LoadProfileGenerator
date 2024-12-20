@@ -91,7 +91,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public decimal CriticalThreshold { get; }
 
-        // public decimal DecayRate => _decayRate;
+        public decimal DecayRate => _decayRate;
 
         public decimal DecayTime { get; }
 

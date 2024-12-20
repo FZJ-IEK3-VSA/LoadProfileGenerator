@@ -116,8 +116,46 @@ namespace CalculationEngine.HouseholdElements {
         [JetBrains.Annotations.NotNull]
         public override string TimeLimitName { get; }
 
-        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
+        /// <summary>
+        /// Gets the total duration of the step values in the person's profile.
+        /// </summary>
+        /// <returns>The total number of steps in the profile.</returns>
+        public override int GetDuration()
         {
+            // Calculate the duration by counting the number of step values in the person's profile
+            var duration = _personProfile.StepValues.Count;
+
+            // Return the calculated duration
+            return duration;
+        }
+
+        /// <summary>
+        /// Calculates the real duration based on the current time step and the time factor associated with it.
+        /// </summary>
+        /// <param name="now">The current time step of the simulation.</param>
+        /// <returns>The adjusted duration based on the time factor if available; otherwise, returns the default duration.</returns>
+        public override int GetRealDuration(TimeStep now)
+        {
+            int duration;
+
+            // Attempt to get the time factor associated with the current time step
+            if (_timeFactorsForTimes.TryGetValue(now.InternalStep, out double timeFactor))
+            {
+                // If a time factor exists, calculate the new duration using the compression/expansion logic
+                duration = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count, timeFactor);
+            }
+            else
+            {
+                // If no time factor exists, use the default duration (step count)
+                duration = _personProfile.StepValues.Count;
+            }
+
+            // Return the calculated real duration
+            return duration;
+        }
+
+        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
+        {   
             TimeStep timeLastDeviceEnds = startTime.GetAbsoluteStep(0);
             //flexibility
             var allDevices = Energyprofiles.Select(x => x.CalcDevice).Distinct().ToList();
@@ -263,47 +301,60 @@ namespace CalculationEngine.HouseholdElements {
 
         public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
         {
-            if (!_timeFactorsForTimes.ContainsKey(time.InternalStep)) {
-                if (clearDictionaries) {
+            if (!_timeFactorsForTimes.ContainsKey(time.InternalStep))
+            {
+                if (clearDictionaries)
+                {
                     //        _timeFactorsForTimes.Clear();
                 }
 
                 _timeFactorsForTimes[time.InternalStep] = CalcRepo.NormalRandom.NextDouble(1, _timeStandardDeviation);
-                if (_timeFactorsForTimes[time.InternalStep] < 0) {
+                if (_timeFactorsForTimes[time.InternalStep] < 0)
+                {
                     throw new DataIntegrityException("The duration standard deviation on " + Name + " is too large: a negative value of " +
                                                      _timeFactorsForTimes[time.InternalStep] + " came up. The standard deviation is " +
                                                      _timeStandardDeviation);
                 }
             }
 
-            if (!_probabilitiesForTimes.ContainsKey(time.InternalStep)) {
-                if (clearDictionaries) {
+            if (!_probabilitiesForTimes.ContainsKey(time.InternalStep))
+            {
+                if (clearDictionaries)
+                {
                     //      _probabilitiesForTimes.Clear();
                 }
 
                 _probabilitiesForTimes[time.InternalStep] = CalcRepo.Rnd.NextDouble();
             }
 
-            if (_variableRequirements.Count > 0) {
-                foreach (var requirement in _variableRequirements) {
-                    if (!requirement.IsMet()) {
+            if (_variableRequirements.Count > 0)
+            {
+                foreach (var requirement in _variableRequirements)
+                {
+                    if (!requirement.IsMet())
+                    {
                         return BusynessType.VariableRequirementsNotMet; // return is busy right now and not available.
                     }
                 }
             }
 
-            if (time.InternalStep >= IsBusyArray.Length) {
+            if (time.InternalStep >= IsBusyArray.Length)
+            {
                 return BusynessType.BeyondTimeLimit;
             }
 
-            if (IsBusyArray[time.InternalStep]) {
+            if (IsBusyArray[time.InternalStep])
+            {
                 return BusynessType.Occupied;
             }
 
-            foreach (var dpt in Energyprofiles) {
-                if (dpt.Probability > _probabilitiesForTimes[time.InternalStep]) {
+            foreach (var dpt in Energyprofiles)
+            {
+                if (dpt.Probability > _probabilitiesForTimes[time.InternalStep])
+                {
                     if (dpt.CalcDevice.IsBusyDuringTimespan(time.AddSteps(dpt.TimeOffsetInSteps), dpt.TimeProfile.StepValues.Count,
-                        _timeFactorsForTimes[time.InternalStep], dpt.LoadType)) {
+                        _timeFactorsForTimes[time.InternalStep], dpt.LoadType))
+                    {
                         return BusynessType.Occupied;
                     }
                 }

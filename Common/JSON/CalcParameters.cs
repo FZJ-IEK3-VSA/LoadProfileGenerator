@@ -65,6 +65,7 @@ namespace Common.JSON {
 
         public int UserSelectedRandomSeed { get; set; }
         public bool WriteExcelColumn { get; set; }
+        public bool UseQLearningForAffordanceChoose { get; set; }
         public bool IgnorePreviousActivitesWhenNeeded { get; set; }
         public bool EnableIdlemode { get; set; }
 
@@ -391,6 +392,11 @@ namespace Common.JSON {
             return this;
         }
 
+        public CalcParameters SetUseQLearning(bool useQLearning)
+        {
+            UseQLearningForAffordanceChoose = useQLearning;
+            return this;
+        }
         /*public void ClearOptions()
             {
                 _options.Clear();
