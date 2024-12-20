@@ -4,10 +4,8 @@ using Database.Tables.Transportation;
 using System.Collections.Generic;
 using Common;
 using Automation.ResultFiles;
-using System;
 using Database.Tables.ModularHouseholds;
 using System.Linq;
-using Database.Tables.BasicHouseholds;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -39,7 +37,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             return householdData.PointOfInterestPreferences is not null;
         }
 
-        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household)
+        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, CityData city)
         {
             // create a new empty travel route set
             var travelRouteSet = sim.TravelRouteSets.CreateNewItem(sim.ConnectionString);
@@ -54,16 +52,16 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var relevantLocations = household.Traits.Where(t => t.DstPerson.Name == personName).SelectMany(t => t.HouseholdTrait.Locations).Select(t => t.Location).ToHashSet();
                 var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
 
-                AddRoutesForPerson(personName, personPreference.Value, travelRouteSet, relevantPOIs);
+                AddRoutesForPerson(personName, city, personPreference.Value, travelRouteSet, relevantPOIs);
             }
             travelRouteSet.SaveToDB();
             return travelRouteSet;
         }
 
-        private void AddRoutesForPerson(string personName, PersonPoiPreferences preferences, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs)
+        private void AddRoutesForPerson(string personName, CityData city, PersonPoiPreferences preferences, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs)
         {
             var person = sim.Persons.FindFirstByNameNotNull(personName);
-            foreach (var routeData in preferences.Routes)
+            foreach (var routeData in city.Routes)
             {
                 if (!IsPOIRelevant(routeData.Start, relevantPOIs) || !IsPOIRelevant(routeData.Destination, relevantPOIs))
                 {
@@ -88,7 +86,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 travelRouteSet.AddRoute(route, personID: person.IntID, weight: routeData.Weight);
 
                 // if required, also create an identical route in the opposite direction
-                if (preferences.MirrorRoutes)
+                if (city.MirrorRoutes)
                 {
                     var mirroredRoute = route.MakeACopy(sim);
                     mirroredRoute.SiteA = route.SiteB;
