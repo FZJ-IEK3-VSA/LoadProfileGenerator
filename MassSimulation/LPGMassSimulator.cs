@@ -78,6 +78,9 @@ namespace MassSimulation
                     var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
                     calcStartParameterSet.ResultPath = resultDirectory;
 
+                    // create a unique random seed for this target
+                    calcStartParameterSet.SelectedRandomSeed = random.Next();
+
                     // create a calcManager for each household
                     var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
                     simulationTargets.Add(new MassSimulationTarget(target.Id, calcManager, resultDirectory));

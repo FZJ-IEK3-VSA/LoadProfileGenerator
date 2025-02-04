@@ -227,7 +227,7 @@ namespace CalculationController.Queue {
         public Func< bool, string, string, bool> ReportFinishFuncForHousehold { get; }
 
         public bool ResumeSettlement { get; }
-        public int SelectedRandomSeed { get; }
+        public int SelectedRandomSeed { get; set; }
 
 
         public int SettlingDays { get; }

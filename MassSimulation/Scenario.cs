@@ -34,7 +34,7 @@ namespace MassSimulation
             var random = new Random(randomSeed);
 
             // create the list of scenario part objects, each with its own share of households and POIs
-            var parts = referencesSublists.Zip(poiSublists, (references, pois) => new ScenarioPart(references.ToList(), pois.ToList(), DatabasePath, CalcSpecification, poiRegister, routes, random.Next()));
+            var parts = referencesSublists.Zip(poiSublists, (references, pois) => new ScenarioPart(references.ToList(), pois.ToList(), DatabasePath, CalcSpecification, poiRegister, Routes, random.Next()));
             return parts.ToArray();
         }
 
