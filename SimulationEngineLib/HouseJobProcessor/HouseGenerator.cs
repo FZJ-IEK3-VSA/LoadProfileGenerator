@@ -505,7 +505,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 bool transportEnabled = hj.CalcSpec.EnableTransportation;
                 var chargingStationSet = sim.ChargingStationSets.FindWithException(householdData.ChargingStationSet, !transportEnabled);
                 var transportationDeviceSet = sim.TransportationDeviceSets.FindWithException(householdData.TransportationDeviceSet, !transportEnabled);
-                var travelRouteSet = transportEnabled ? DetermineTravelRouteSet(sim, householdData, hhs, hj.City, poiTraitReplacer?.LocationReplacements) : null;
+                var travelRouteSet = transportEnabled ? DetermineTravelRouteSet(sim, householdData, hhs, hj, poiTraitReplacer?.LocationReplacements) : null;
 
                 // check if the distances in the travel route set should be modified
                 if (!householdData.TransportationDistanceModifiers.IsNullOrEmpty() && travelRouteSet is not null)
@@ -526,7 +526,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
 
-        private static TravelRouteSet DetermineTravelRouteSet(Simulator sim, HouseholdData householdData, ModularHousehold household, CityData city, IReadOnlyDictionary<string, PoiLocationReplacement>? locationReplacements = null)
+        private static TravelRouteSet DetermineTravelRouteSet(Simulator sim, HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj, IReadOnlyDictionary<string, PoiLocationReplacement>? locationReplacements = null)
         {
             // there are multiple ways how traveling behavior can be specified in the calcspe; check if only exactly one is used
             bool travelRouteSetGiven = householdData.TravelRouteSet is not null;
@@ -549,7 +549,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             } else if (poiPreferencesGiven)
             {
                 var travelRouteSetBuilder = new TravelRouteSetBuilderCity(sim, locationReplacements);
-                travelrouteset = travelRouteSetBuilder.CreateTravelRouteSetFromPoiPreferences(householdData, household, city);
+                travelrouteset = travelRouteSetBuilder.CreateTravelRouteSetFromPoiPreferences(householdData, household, hj);
             }
             else if (travelPreferencesGiven)
             {

@@ -37,7 +37,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             return householdData.PointOfInterestPreferences is not null;
         }
 
-        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, CityData city)
+        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj)
         {
             // create a new empty travel route set
             var travelRouteSet = sim.TravelRouteSets.CreateNewItem(sim.ConnectionString);
@@ -51,29 +51,31 @@ namespace SimulationEngineLib.HouseJobProcessor
                 // determine the POIs that are actually relevant for this person
                 var relevantLocations = household.Traits.Where(t => t.DstPerson.Name == personName).SelectMany(t => t.HouseholdTrait.Locations).Select(t => t.Location).ToHashSet();
                 var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
+                relevantPOIs.Add(hj.House.Name);
 
-                AddRoutesForPerson(personName, city, travelRouteSet, relevantPOIs);
+                AddRoutesForPerson(personName, hj, travelRouteSet, relevantPOIs);
             }
             travelRouteSet.SaveToDB();
             return travelRouteSet;
         }
 
-        private void AddRoutesForPerson(string personName, CityData city, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs)
+        private void AddRoutesForPerson(string personName, HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs)
         {
             var person = sim.Persons.FindFirstByNameNotNull(personName);
-            foreach (var routeData in city.Routes)
+            foreach (var routeData in hj.City.Routes)
             {
-                if (!IsPOIRelevant(routeData.Start, relevantPOIs) || !IsPOIRelevant(routeData.Destination, relevantPOIs))
+                if (!relevantPOIs.Contains(routeData.Start) || !relevantPOIs.Contains(routeData.Destination))
                 {
                     // start or destination of this route is not relevant for this person, so the route is not needed
                     continue;
                 }
 
                 // create the new travel route
+                var houseId = hj.House.Name;
                 var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString);
                 route.Description = "Generated from POI preferences";
-                route.SiteA = GetSiteFromPoi(routeData.Start);
-                route.SiteB = GetSiteFromPoi(routeData.Destination);
+                route.SiteA = GetSiteFromPoi(routeData.Start, houseId);
+                route.SiteB = GetSiteFromPoi(routeData.Destination, houseId);
                 route.RouteKey = "Generated";
 
                 // create a single step with the specified transportation device category
@@ -86,7 +88,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 travelRouteSet.AddRoute(route, personID: person.IntID, weight: routeData.Weight);
 
                 // if required, also create an identical route in the opposite direction
-                if (city.MirrorRoutes)
+                if (hj.City.MirrorRoutes)
                 {
                     var mirroredRoute = route.MakeACopy(sim);
                     mirroredRoute.SiteA = route.SiteB;
@@ -99,20 +101,22 @@ namespace SimulationEngineLib.HouseJobProcessor
             }
         }
 
-        private bool IsPOIRelevant(string poiId, HashSet<string> relevantPOIs)
+        /// <summary>
+        /// Returns the corresponding site object for the given POI name. If the poiId is the same as the homeId, returns the home site.
+        /// </summary>
+        /// <param name="poiId">the name/ID of the POI</param>
+        /// <param name="homeId">the building ID of the home of the affected person</param>
+        /// <returns>the site object</returns>
+        /// <exception cref="LPGException">if the POI name does not match a site object</exception>
+        public Site GetSiteFromPoi(string poiId, string homeId)
         {
-            return poiId == Constants.HomeSiteName || relevantPOIs.Contains(poiId);
-        }
-
-        public Site GetSiteFromPoi(string poiId)
-        {
-            if (poiId == Constants.HomeSiteName)
+            if (poiId == homeId)
             {
                 // return the Home site
                 return TravelRouteSetBuilderFromPersonData.GetHomeSite(sim);
             }
             if (!LocationReplacements.TryGetValue(poiId, out var replacement))
-                throw new LPGException("The PointOfInterestPreferences specify a route with start/destination {poiId}, which is no known site or POI.");
+                throw new LPGException($"Found a route with start/destination {poiId}, which is no known site or POI.");
             return replacement.NewSite;
         }
 
