@@ -35,7 +35,7 @@ namespace MassSimulation
             if (args.Length == 0)
                 throw new LPGException("Did not receive any command line arguments.");
             if (args.Length > 1)
-                throw new LPGException("Received unexpected command line arguments: {args}");
+                throw new LPGException($"Received unexpected command line arguments: {args}");
             inputPath = args[0];
 
             this.comm = comm;

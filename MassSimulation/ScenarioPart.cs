@@ -7,5 +7,5 @@ namespace MassSimulation
     /// Includes all simulation targets this worker is responsible for.
     /// </summary>
     public record ScenarioPart(List<MassSimTargetReference> TargetReferences, List<PointOfInterestConfig> PointsOfInterest, string DatabasePath,
-        JsonCalcSpecification CalcSpecification, PointOfInterestRegister PoiRegister, int RandomSeed);
+        JsonCalcSpecification CalcSpecification, PointOfInterestRegister PoiRegister, IEnumerable<RouteData> Routes, int RandomSeed);
 }

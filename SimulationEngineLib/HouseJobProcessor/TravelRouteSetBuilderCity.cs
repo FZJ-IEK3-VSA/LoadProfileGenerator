@@ -52,13 +52,13 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var relevantLocations = household.Traits.Where(t => t.DstPerson.Name == personName).SelectMany(t => t.HouseholdTrait.Locations).Select(t => t.Location).ToHashSet();
                 var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
 
-                AddRoutesForPerson(personName, city, personPreference.Value, travelRouteSet, relevantPOIs);
+                AddRoutesForPerson(personName, city, travelRouteSet, relevantPOIs);
             }
             travelRouteSet.SaveToDB();
             return travelRouteSet;
         }
 
-        private void AddRoutesForPerson(string personName, CityData city, PersonPoiPreferences preferences, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs)
+        private void AddRoutesForPerson(string personName, CityData city, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs)
         {
             var person = sim.Persons.FindFirstByNameNotNull(personName);
             foreach (var routeData in city.Routes)

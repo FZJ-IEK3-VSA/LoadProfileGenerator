@@ -48,11 +48,11 @@ namespace MassSimulation.CityGeneration
 
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"));
-            //var poiConfigs = CollectPOIConfigs(inputDirectory.CombineName("POIs"));
             var poiConfigs = ReadCityDataFile(inputDirectory.CombineName("city.json"));
+            var routes = ReadRoutesFile(inputDirectory.CombineName("routes.json"));
 
             // create a new scenario object containing all house and POI configs
-            return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs);
+            return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs, routes);
         }
 
         /// <summary>
@@ -87,10 +87,25 @@ namespace MassSimulation.CityGeneration
         {
             string cityDataJson = File.ReadAllText(filename).Trim(HouseGenerator.charsToTrim);
             CityData? cityData = JsonConvert.DeserializeObject<CityData>(cityDataJson);
-            if (cityData == null)
+            if (cityData is null)
                 throw new LPGException($"Could not read CityData from file {filename}");
 
             return cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
+        }
+
+        /// <summary>
+        /// Parse all routes used in the city from the file routes.json in the input directory.
+        /// </summary>
+        /// <param name="filename">path to the routes.json file containing a dictionary of routes</param>
+        /// <returns>all parsed routes</returns>
+        /// <exception cref="LPGException">if the file was invalid</exception>
+        private static IEnumerable<RouteData> ReadRoutesFile(string filename)
+        {
+            string routesJson = File.ReadAllText(filename).Trim(HouseGenerator.charsToTrim);
+            var routesDict = JsonConvert.DeserializeObject<Dictionary<string, RouteData>>(routesJson);
+            if (routesDict is null)
+                throw new LPGException($"Could not read routes from file {filename}");
+            return routesDict.Values;
         }
     }
 }

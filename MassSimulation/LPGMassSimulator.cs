@@ -65,6 +65,10 @@ namespace MassSimulation
                 // set the global Calcspec
                 hcj.CalcSpec = scenarioPart.CalcSpecification;
 
+                // set the global list of routes
+                if (hcj.City is null) throw new LPGException("City object in house job file was null");
+                hcj.City.Routes = scenarioPart.Routes.ToList();
+
                 try
                 {
                     // create the target house/household if necessary and get its JsonReference

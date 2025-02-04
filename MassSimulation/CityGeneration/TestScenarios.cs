@@ -58,7 +58,9 @@ namespace MassSimulation.CityGeneration
             if (poiConfigs is null || poiConfigs.Length == 0)
                 throw new LPGException("No POIs defined in job file");
 
-            return new Scenario(newDbPath, calcSpec, targetReferences, poiConfigs);
+            throw new NotImplementedException("Did not implement routes yet.");
+            RouteData[] routes = [];
+            return new Scenario(newDbPath, calcSpec, targetReferences, poiConfigs, routes);
         }
     }
 }
