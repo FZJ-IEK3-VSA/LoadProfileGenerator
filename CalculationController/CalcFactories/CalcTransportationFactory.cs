@@ -358,7 +358,7 @@ namespace CalculationController.CalcFactories
                 foreach (TravelRouteStep step in entry.TravelRoute.Steps) {
                     CalcTransportationDeviceCategoryDto cat = categoriesDict[step.TransportationDeviceCategory];
                     ctr.AddTravelRouteStep(step.Name, step.IntID, cat, step.StepNumber, step.Distance,
-                        Guid.NewGuid().ToStrGuid());
+                        Guid.NewGuid().ToStrGuid(), step.DurationInS);
                 }
                 routes.Add(ctr);
             }
@@ -485,7 +485,7 @@ namespace CalculationController.CalcFactories
                 foreach (var step in travelRouteDto.Steps) {
                     CalcTransportationDeviceCategory category = th.GetCategory(step.TransportationDeviceCategory);
                     travelRoute.AddTravelRouteStep(step.Name,  category, step.StepNumber, step.DistanceInM,
-                        step.Guid);
+                        step.Guid, step.DurationInS);
                 }
                 if (siteA != siteB) {
                     th.TravelRoutes.Add(travelRoute);

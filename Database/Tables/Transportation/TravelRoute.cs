@@ -112,10 +112,10 @@ namespace Database.Tables.Transportation
             OnPropertyChanged(nameof(PrettyName));
         }
 
-        public void AddStep([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, bool save = true)
+        public void AddStep([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, double durationInS = -1, bool save = true)
         {
             var step = new TravelRouteStep(null, IntID, ConnectionString,
-                name, category, distance, stepNumber, System.Guid.NewGuid().ToStrGuid(), stepKey);
+                name, category, distance, stepNumber, System.Guid.NewGuid().ToStrGuid(), stepKey, durationInS);
             _steps.Add(step);
             if (save) {
                 step.SaveToDB();

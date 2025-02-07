@@ -9,19 +9,21 @@ using JetBrains.Annotations;
 namespace CalculationEngine.Transportation {
     public class CalcTravelRouteStep : CalcBase {
         private readonly double _distanceOfStepInM;
+        private readonly double _durationInS;
         [ItemNotNull] [NotNull] private readonly List<CalcTransportationDevice> _vehiclePool;
         private readonly CalcRepo _calcRepo;
 
         public CalcTravelRouteStep([NotNull] string pName,
                                    [NotNull] CalcTransportationDeviceCategory transportationDeviceCategory, int stepNumber, double distanceInM,
                                    StrGuid guid, [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool,
-                                   CalcRepo calcRepo) : base(pName, guid)
+                                   CalcRepo calcRepo, double durationInS = -1) : base(pName, guid)
         {
             TransportationDeviceCategory = transportationDeviceCategory;
             StepNumber = stepNumber;
             _distanceOfStepInM = distanceInM;
             _vehiclePool = vehiclePool;
             _calcRepo = calcRepo;
+            _durationInS = durationInS;
         }
 
         [NotNull]
@@ -29,6 +31,12 @@ namespace CalculationEngine.Transportation {
         public int StepNumber { get; }
 
         public double DistanceOfStepInM => _distanceOfStepInM;
+
+        /// <summary>
+        /// Optionally stores the duration for this timestep, if specified externally.
+        /// A negative number means no duration was specified.
+        /// </summary>
+        public double DurationInS => _durationInS;
 
         public void ActivateStep([NotNull] TimeStep startTimeStep, [NotNull] CalcTransportationDevice pickedDevice,
             int pickeddurationInTimesteps, [NotNull] CalcSite srcSite, [NotNull] CalcSite dstSite,
@@ -40,6 +48,22 @@ namespace CalculationEngine.Transportation {
             if (_vehiclePool.Contains(pickedDevice)) {
                 _vehiclePool.Remove(pickedDevice);
             }
+        }
+
+        /// <summary>
+        /// Determine the duration of this step, based on the selected device.
+        /// </summary>
+        /// <param name="td">the selected transportation device</param>
+        /// <returns>the duration of this step in timesteps</returns>
+        private int GetDurationInTimeSteps(CalcTransportationDevice td)
+        {
+            // if the travel route step has a fixed duration, return that
+            if (DurationInS >= 0)
+            {
+                return td.CalculateDurationinTimeSteps(DurationInS);
+            }
+            // otherwise, calculate the duration using the vehicle speed
+            return td.CalculateDurationOfTimestepsForDistance(_distanceOfStepInM);
         }
 
         public bool CalculateDurationInTimestepsAndPickDevice([NotNull] TimeStep timestepOfThisStep,
@@ -72,14 +96,17 @@ namespace CalculationEngine.Transportation {
                     srcdevices.AddRange(vehiclepool.Where(x=> x.Category == TransportationDeviceCategory));
                     addedVehiclePoolAlready = true;
                 }
-                while (srcdevices.Count > 0) {
+                while (srcdevices.Count > 0)
+                {
                     //pick a random one and try it out
                     CalcTransportationDevice td = srcdevices[_calcRepo.Rnd.Next(srcdevices.Count)];
-                    durationInTimesteps = td.CalculateDurationOfTimestepsForDistance(_distanceOfStepInM);
-                    if (td.IsBusy(timestepOfThisStep, durationInTimesteps)) {
+                    durationInTimesteps = GetDurationInTimeSteps(td);
+                    if (td.IsBusy(timestepOfThisStep, durationInTimesteps))
+                    {
                         srcdevices.Remove(td);
                     }
-                    else {
+                    else
+                    {
                         /*if (Config.IsInUnitTesting) {
                             Logger.Debug("Activating " + td.Name + " for " + durationInTimesteps);
                         }*/
@@ -87,7 +114,8 @@ namespace CalculationEngine.Transportation {
                         pickeddurationInTimesteps = durationInTimesteps;
                         return true;
                     }
-                    if (srcdevices.Count == 0 && !addedVehiclePoolAlready) {
+                    if (srcdevices.Count == 0 && !addedVehiclePoolAlready)
+                    {
                         srcdevices.AddRange(vehiclepool);
                         addedVehiclePoolAlready = true;
                     }
@@ -107,7 +135,7 @@ namespace CalculationEngine.Transportation {
             }
             pickedDevice = correctcategoryDevices[_calcRepo.Rnd.Next(correctcategoryDevices.Count)];
             //maybe put in some kind of time limits for busses for example to not run on the weekend
-            durationInTimesteps = pickedDevice.CalculateDurationOfTimestepsForDistance(_distanceOfStepInM);
+            durationInTimesteps = GetDurationInTimeSteps(pickedDevice);
             pickeddurationInTimesteps = durationInTimesteps;
             return true;
             /*if (Config.IsInUnitTesting)

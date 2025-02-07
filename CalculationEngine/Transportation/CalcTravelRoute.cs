@@ -119,11 +119,11 @@ namespace CalculationEngine.Transportation
         }
 
         public void AddTravelRouteStep([NotNull] string stepName, [NotNull] CalcTransportationDeviceCategory deviceCategory,
-            int stepNumber, double distanceInM, StrGuid guid)
+            int stepNumber, double distanceInM, StrGuid guid, double durationInS = -1)
         {
             CalcTravelRouteStep trs = new CalcTravelRouteStep(
                 stepName, deviceCategory, stepNumber,
-                distanceInM, guid,_vehiclePool, _calcRepo);
+                distanceInM, guid,_vehiclePool, _calcRepo, durationInS);
             Steps.Add(trs);
         }
 

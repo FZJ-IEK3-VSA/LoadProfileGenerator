@@ -46,9 +46,9 @@ namespace Common.CalcDto {
         }
         [NotNull][ItemNotNull]
         public List<CalcTravelRouteStepDto> Steps { get; } = new List<CalcTravelRouteStepDto>();
-        public void AddTravelRouteStep([NotNull]string stepName, int stepIntID, [NotNull]CalcTransportationDeviceCategoryDto deviceCategory, int stepNumber, double distanceInM, StrGuid guid)
+        public void AddTravelRouteStep([NotNull]string stepName, int stepIntID, [NotNull]CalcTransportationDeviceCategoryDto deviceCategory, int stepNumber, double distanceInM, StrGuid guid, double durationInS = -1)
         {
-            CalcTravelRouteStepDto trs = new CalcTravelRouteStepDto(stepName, stepIntID, deviceCategory, stepNumber, distanceInM, guid);
+            CalcTravelRouteStepDto trs = new CalcTravelRouteStepDto(stepName, stepIntID, deviceCategory, stepNumber, distanceInM, guid, durationInS);
             Steps.Add(trs);
         }
     }

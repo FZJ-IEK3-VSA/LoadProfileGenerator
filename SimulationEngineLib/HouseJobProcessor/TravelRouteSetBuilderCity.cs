@@ -2,10 +2,11 @@
 using Database;
 using Database.Tables.Transportation;
 using System.Collections.Generic;
-using Common;
 using Automation.ResultFiles;
 using Database.Tables.ModularHouseholds;
 using System.Linq;
+using PowerArgs;
+using Database.Tables.BasicHouseholds;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -13,18 +14,38 @@ namespace SimulationEngineLib.HouseJobProcessor
     /// Builds a new travel route set based on the defined points of interests and
     /// the POI preferences of each person.
     /// </summary>
-    internal class TravelRouteSetBuilderCity(Simulator simulator, IReadOnlyDictionary<string, PoiLocationReplacement> locationReplacements)
+    internal class TravelRouteSetBuilderCity
     {
         /// <summary>
         /// Database access object
         /// </summary>
-        private readonly Simulator sim = simulator;
+        private readonly Simulator sim;
 
         /// <summary>
         /// Stores which location must be replaced with which new one, for each point of interest
         /// separately. Uses the POI-ID as key.
         /// </summary>
-        public IReadOnlyDictionary<string, PoiLocationReplacement> LocationReplacements { get; } = locationReplacements;
+        public IReadOnlyDictionary<string, PoiLocationReplacement> LocationReplacements { get; }
+
+        /// <summary>
+        /// Maps each supported transport mode to the corresponding LPG transportation device category.
+        /// </summary>
+        private readonly Dictionary<string, TransportationDeviceCategory> TransportModes;
+
+        public TravelRouteSetBuilderCity(Simulator simulator, IReadOnlyDictionary<string, PoiLocationReplacement> locationReplacements)
+        {
+            sim = simulator;
+            LocationReplacements = locationReplacements;
+
+            // initialize the mapping of transport modes to LPG device categories
+            TransportModes = new Dictionary<string, TransportationDeviceCategory>
+            {
+                ["car"] = sim.TransportationDeviceCategories.FindFirstByName("Car Category"),
+                ["pt"] = sim.TransportationDeviceCategories.FindFirstByName("Bus Category"),
+                ["bicycle"] = sim.TransportationDeviceCategories.FindFirstByName("Bike Category"), // TODO: add Bike Category in LPG
+                ["walk"] = sim.TransportationDeviceCategories.FindFirstByName("Walking Category")
+            };
+        }
 
         /// <summary>
         /// Checks if all required data is given to create a travel route set based
@@ -37,7 +58,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             return householdData.PointOfInterestPreferences is not null;
         }
 
-        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj)
+        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj, TransportationDeviceSet transportationDeviceSet)
         {
             // create a new empty travel route set
             var travelRouteSet = sim.TravelRouteSets.CreateNewItem(sim.ConnectionString);
@@ -53,50 +74,64 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
                 relevantPOIs.Add(hj.House.Name);
 
-                AddRoutesForPerson(personName, hj, travelRouteSet, relevantPOIs);
+                AddRoutesForPerson(personName, hj, travelRouteSet, relevantPOIs, transportationDeviceSet);
             }
             travelRouteSet.SaveToDB();
             return travelRouteSet;
         }
 
-        private void AddRoutesForPerson(string personName, HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs)
+        private void AddRoutesForPerson(string personName, HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs,
+            TransportationDeviceSet transportationDeviceSet)
         {
             var person = sim.Persons.FindFirstByNameNotNull(personName);
             foreach (var routeData in hj.City.Routes)
             {
-                if (!relevantPOIs.Contains(routeData.Start) || !relevantPOIs.Contains(routeData.Destination))
+                if (!relevantPOIs.Contains(routeData.origin_id) || !relevantPOIs.Contains(routeData.destination_id))
                 {
                     // start or destination of this route is not relevant for this person, so the route is not needed
                     continue;
                 }
 
-                // create the new travel route
-                var houseId = hj.House.Name;
-                var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString);
-                route.Description = "Generated from POI preferences";
-                route.SiteA = GetSiteFromPoi(routeData.Start, houseId);
-                route.SiteB = GetSiteFromPoi(routeData.Destination, houseId);
-                route.RouteKey = "Generated";
+                // check if the household has a car
+                bool hasCar = transportationDeviceSet.TransportationDeviceSetEntries.Any(x => x.TransportationDevice.TransportationDeviceCategory.Name == "Car Category");
 
-                // create a single step with the specified transportation device category
-                var deviceCategory = sim.TransportationDeviceCategories.FindWithException(routeData.TransportationDeviceCategory);
-                var name = deviceCategory.Name;
-                route.AddStep(name, deviceCategory, routeData.Distance, 1, name, true);
+                // select the correct weights for the household type
+                var weights = hasCar ? routeData.prob_with_car_hh : routeData.prob_no_car_hh;
 
-                SetRouteName(route, personName, deviceCategory.Name);
-                route.SaveToDB();
-                travelRouteSet.AddRoute(route, personID: person.IntID, weight: routeData.Weight);
-
-                // if required, also create an identical route in the opposite direction
-                if (hj.City.MirrorRoutes)
+                foreach (var categoryDistancePair in routeData.mode_distances)
                 {
-                    var mirroredRoute = route.MakeACopy(sim);
-                    mirroredRoute.SiteA = route.SiteB;
-                    mirroredRoute.SiteB = route.SiteA;
-                    SetRouteName(mirroredRoute, personName, deviceCategory.Name);
+                    // create the new travel route
+                    var houseId = hj.House.Name;
+                    var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString);
+                    route.Description = "Generated from transport model data";
+                    route.SiteA = GetSiteFromPoi(routeData.origin_id, houseId);
+                    route.SiteB = GetSiteFromPoi(routeData.destination_id, houseId);
+                    route.RouteKey = "Generated";
 
-                    mirroredRoute.SaveToDB();
-                    travelRouteSet.AddRoute(mirroredRoute, personID: person.IntID, weight: routeData.Weight);
+                    // create a single step with the specified transportation device category
+                    var deviceCategory = TransportModes[categoryDistancePair.Key];
+                    var name = deviceCategory.Name;
+
+                    // check if a duration is specified for this route and mode
+                    double durationInS = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1);
+                    route.AddStep(name, deviceCategory, categoryDistancePair.Value, 1, name, durationInS, true);
+
+                    SetRouteName(route, personName, deviceCategory.Name);
+                    route.SaveToDB();
+                    var routeWeight = weights[categoryDistancePair.Key];
+                    travelRouteSet.AddRoute(route, personID: person.IntID, weight: routeWeight);
+
+                    // if required, also create an identical route in the opposite direction
+                    if (hj.City.MirrorRoutes)
+                    {
+                        var mirroredRoute = route.MakeACopy(sim);
+                        mirroredRoute.SiteA = route.SiteB;
+                        mirroredRoute.SiteB = route.SiteA;
+                        SetRouteName(mirroredRoute, personName, deviceCategory.Name);
+
+                        mirroredRoute.SaveToDB();
+                        travelRouteSet.AddRoute(mirroredRoute, personID: person.IntID, weight: routeWeight);
+                    }
                 }
             }
         }

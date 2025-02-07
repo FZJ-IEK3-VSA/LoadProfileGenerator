@@ -1,6 +1,10 @@
-﻿namespace Automation
+﻿using System.Collections.Generic;
+
+namespace Automation
 {
-    // TODO: I could also make RouteCollection objects that contain all route variants between one Start and End point
-    // TODO: do I need both distance and delay? How do I incorporate delay from the transport model?
-    public record RouteData(string Start, string Destination, int Distance, double Delay, JsonReference TransportationDeviceCategory, double Weight = 1);
+    public record RouteData(string origin_id, string destination_id, Dictionary<string, double> mode_times,
+        Dictionary<string, double> mode_distances, Dictionary<string, double> prob_all,
+        Dictionary<string, double> prob_with_car_hh, Dictionary<string, double> prob_with_car_hh_pt_abo,
+        Dictionary<string, double> prob_with_car_hh_no_pt_abo, Dictionary<string, double> prob_no_car_hh,
+        Dictionary<string, double> prob_no_car_hh_pt_abo, Dictionary<string, double> prob_no_car_hh_no_pt_abo);
 }

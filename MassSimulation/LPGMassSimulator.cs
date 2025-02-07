@@ -54,7 +54,7 @@ namespace MassSimulation
             foreach (var target in scenarioPart.TargetReferences)
             {
                 // create a separate subdirectory for each simulation target
-                string subdir = target.Id.ToString();
+                string subdir = target.Id;
                 string resultDirectory = Path.Combine(baseResultDir, "Houses", subdir);
                 Directory.CreateDirectory(resultDirectory);
 
@@ -65,9 +65,17 @@ namespace MassSimulation
                 // set the global Calcspec
                 hcj.CalcSpec = scenarioPart.CalcSpecification;
 
-                // set the global list of routes
-                if (hcj.City is null) throw new LPGException("City object in house job file was null");
-                hcj.City.Routes = scenarioPart.Routes.ToList();
+                // copy information from the global city data object
+                if (hcj.City is null)
+                {
+                    Logger.Info($"City object of house {target.Id} was null, using the global city data object with all POIs instead.");
+                    hcj.City = scenarioPart.CityData;
+                } else
+                {
+                    // POIs are not copied, as each house already contains all relevant POIs for efficiency reasons
+                    hcj.City.Routes = scenarioPart.CityData.Routes;
+                    hcj.City.MirrorRoutes = scenarioPart.CityData.MirrorRoutes;
+                }
 
                 try
                 {

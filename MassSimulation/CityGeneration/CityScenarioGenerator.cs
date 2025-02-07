@@ -1,6 +1,8 @@
 ﻿using Automation;
 using Automation.ResultFiles;
+using Common;
 using Newtonsoft.Json;
+using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
 
 namespace MassSimulation.CityGeneration
@@ -41,18 +43,30 @@ namespace MassSimulation.CityGeneration
 
             // copy DB file to result directory and open a connection to it
             var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
-            // TODO: absoluten Pfad der ursprünglich verwendeten Datenbankdatei loggen
+            string fullDbPath = Path.GetFullPath(hcj.PathToDatabase);
+            Logger.Info("Using database file: " + fullDbPath);
 
             // save settings to the database copy in the result directory
             JsonCalculator.SaveSettingsToDatabase(sim, hcj.CalcSpec);
 
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"));
-            var poiConfigs = ReadCityDataFile(inputDirectory.CombineName("city.json"));
-            var routes = ReadRoutesFile(inputDirectory.CombineName("routes.json"));
+            var cityData = ReadCityDataFile(inputDirectory.CombineName("city.json"));
+            var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
+
+            // check if routes are defined in a separate file
+            string routesFile = inputDirectory.CombineName("routes.json");
+            if (File.Exists(routesFile))
+            {
+                if (!cityData.Routes.IsNullOrEmpty())
+                    throw new LPGException("Routes are defined in both city.json and routes.json. Only one of them is allowed at a time.");
+
+                var routes = ReadRoutesFile(routesFile);
+                cityData.Routes = routes.ToList();
+            }
 
             // create a new scenario object containing all house and POI configs
-            return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs, routes);
+            return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs, cityData);
         }
 
         /// <summary>
@@ -78,19 +92,18 @@ namespace MassSimulation.CityGeneration
         }
 
         /// <summary>
-        /// Parse all POI definitions of the city from the file city.json in the input directory.
+        /// Parse all the city data from the file city.json in the input directory.
         /// </summary>
         /// <param name="filename">path to the city.json file containing a CityData object</param>
-        /// <returns>all POI configs parsed from the file</returns>
+        /// <returns>the parsed CityData object containing all relevant city information</returns>
         /// <exception cref="LPGException">if the file was invalid</exception>
-        private static IEnumerable<PointOfInterestConfig> ReadCityDataFile(string filename)
+        private static CityData ReadCityDataFile(string filename)
         {
             string cityDataJson = File.ReadAllText(filename).Trim(HouseGenerator.charsToTrim);
             CityData? cityData = JsonConvert.DeserializeObject<CityData>(cityDataJson);
             if (cityData is null)
                 throw new LPGException($"Could not read CityData from file {filename}");
-
-            return cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
+            return cityData;
         }
 
         /// <summary>

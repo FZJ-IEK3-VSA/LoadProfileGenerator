@@ -7,13 +7,13 @@ namespace MassSimulation
     /// Represents a simulation scenario with all objects that belong to that, including
     /// fully defined houses with households etc.
     /// </summary>
-    public class Scenario(string databasePath, JsonCalcSpecification calcSpec, IEnumerable<MassSimTargetReference> targetReferences, IEnumerable<PointOfInterestConfig> pointsOfInterest, IEnumerable<RouteData> routes)
+    public class Scenario(string databasePath, JsonCalcSpecification calcSpec, IEnumerable<MassSimTargetReference> targetReferences, IEnumerable<PointOfInterestConfig> pointsOfInterest, CityData cityData)
     {
         public string DatabasePath { get; private set; } = databasePath;
         public JsonCalcSpecification CalcSpecification { get; private set; } = calcSpec;
         public IEnumerable<MassSimTargetReference> TargetReferences { get; private set; } = targetReferences;
         public IEnumerable<PointOfInterestConfig> PointsOfInterest { get; private set; } = pointsOfInterest;
-        public IEnumerable<RouteData> Routes { get; set; } = routes;
+        public CityData CityData { get; set; } = cityData;
 
         /// <summary>
         /// Divide the scenario into scenario parts, one for each worker.
@@ -34,7 +34,7 @@ namespace MassSimulation
             var random = new Random(randomSeed);
 
             // create the list of scenario part objects, each with its own share of households and POIs
-            var parts = referencesSublists.Zip(poiSublists, (references, pois) => new ScenarioPart(references.ToList(), pois.ToList(), DatabasePath, CalcSpecification, poiRegister, Routes, random.Next()));
+            var parts = referencesSublists.Zip(poiSublists, (references, pois) => new ScenarioPart(references.ToList(), pois.ToList(), DatabasePath, CalcSpecification, poiRegister, CityData, random.Next()));
             return parts.ToArray();
         }
 

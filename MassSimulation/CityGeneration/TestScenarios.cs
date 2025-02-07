@@ -54,13 +54,12 @@ namespace MassSimulation.CityGeneration
             }
 
             // create the POIs defined in the house job file
-            var poiConfigs = hcj.City?.PointsOfInterest.Keys.Select(poiId => new PointOfInterestConfig(new(poiId))).ToArray();
+            if (hcj.City is null)
+                throw new LPGException($"City object in the housejob file was null: {houseJobFile}");
+            var poiConfigs = hcj.City.PointsOfInterest.Keys.Select(poiId => new PointOfInterestConfig(new(poiId))).ToArray();
             if (poiConfigs is null || poiConfigs.Length == 0)
                 throw new LPGException("No POIs defined in job file");
-
-            throw new NotImplementedException("Did not implement routes yet.");
-            RouteData[] routes = [];
-            return new Scenario(newDbPath, calcSpec, targetReferences, poiConfigs, routes);
+            return new Scenario(newDbPath, calcSpec, targetReferences, poiConfigs, hcj.City);
         }
     }
 }

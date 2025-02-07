@@ -183,6 +183,14 @@ namespace CalculationEngine.Transportation
                                                                   TimeSpan internalStepSize)
         {
             double durationInSeconds = distanceInM / speed;
+            return CalculateDurationinTimeSteps(durationInSeconds, internalStepSize);
+        }
+
+        public int CalculateDurationinTimeSteps(double durationInSeconds) =>
+            CalculateDurationinTimeSteps(durationInSeconds, _calcRepo.CalcParameters.InternalStepsize);
+
+        public static int CalculateDurationinTimeSteps(double durationInSeconds, TimeSpan internalStepSize)
+        {
             double numberOfTimesteps = durationInSeconds / internalStepSize.TotalSeconds;
             return (int)Math.Ceiling(numberOfTimesteps);
         }
