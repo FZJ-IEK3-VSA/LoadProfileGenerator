@@ -1,6 +1,6 @@
 ﻿using CalculationEngine.CitySimulation;
 
-namespace MassSimulation
+namespace MassSimulation.Simulators
 {
     internal class AgentTravelState(RemoteActivityStart travelActivity, double travelDistance)
     {

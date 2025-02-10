@@ -1,7 +1,8 @@
 ﻿using Automation;
 using Common.JSON;
+using MassSimulation.SimulationTargets;
 
-namespace MassSimulation
+namespace MassSimulation.Scenarios
 {
     /// <summary>
     /// Represents a simulation scenario with all objects that belong to that, including

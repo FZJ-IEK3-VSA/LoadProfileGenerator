@@ -9,6 +9,8 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.JSON;
 using Database;
+using MassSimulation.Scenarios;
+using MassSimulation.SimulationTargets;
 using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
 using System.Runtime.InteropServices;

@@ -1,6 +1,8 @@
 ﻿using Automation;
 using Automation.ResultFiles;
 using Common;
+using MassSimulation.Scenarios;
+using MassSimulation.SimulationTargets;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
@@ -12,7 +14,7 @@ namespace MassSimulation.CityGeneration
     /// a Calcspec.json file with the calculation configuration, and files specifying all
     /// residential and non-residential buildings in the target area.
     /// </summary>
-    internal class CityScenario
+    internal class CityScenarioImport
     {
         public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath)
         {

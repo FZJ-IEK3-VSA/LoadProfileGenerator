@@ -1,6 +1,6 @@
 ﻿using CalculationEngine.CitySimulation;
 
-namespace MassSimulation
+namespace MassSimulation.SimulationTargets
 {
     public record PointOfInterestConfig(PointOfInterestId Id);
 }

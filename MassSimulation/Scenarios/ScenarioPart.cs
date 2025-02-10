@@ -1,6 +1,7 @@
 ﻿using Automation;
+using MassSimulation.SimulationTargets;
 
-namespace MassSimulation
+namespace MassSimulation.Scenarios
 {
     /// <summary>
     /// Represents the part of a scenarion that a single worker simulates.

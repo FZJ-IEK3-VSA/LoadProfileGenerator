@@ -1,6 +1,6 @@
 ﻿using CalculationEngine;
 
-namespace MassSimulation
+namespace MassSimulation.SimulationTargets
 {
     internal class MassSimulationTarget
     {

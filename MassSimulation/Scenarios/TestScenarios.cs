@@ -1,5 +1,7 @@
 ﻿using Automation;
 using Automation.ResultFiles;
+using MassSimulation.Scenarios;
+using MassSimulation.SimulationTargets;
 using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
 
