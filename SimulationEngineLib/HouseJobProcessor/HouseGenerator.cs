@@ -382,10 +382,6 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <exception cref="LPGException">if the configuration does not contain a valid house definition</exception>
         public JsonReference GetHouseReference([NotNull] HouseCreationAndCalculationJob hcj, [NotNull] Simulator sim, Random? random = null)
         {
-            if (hcj.House == null)
-            {
-                throw new LPGException("No house was defined");
-            }
             JsonReference calcObjectReference;
             if (hcj.HouseDefinitionType == HouseDefinitionType.HouseData)
             {
