@@ -10,7 +10,7 @@ using MPI;
 namespace MassSimulation
 {
     /// <summary>
-    /// MPI Worker class that is instantiated once per MPI process.
+    /// MPI Worker class that is instantiated once per MPI process and handles the whole simulation.
     /// </summary>
     internal class Worker
     {
@@ -47,10 +47,14 @@ namespace MassSimulation
             logger = new MPILogger(true, rank);
         }
 
+        /// <summary>
+        /// Main method that runs the simulation, including setup, execution and postprocessing.
+        /// </summary>
         public void Run()
         {
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
+            var start = DateTime.Now;
             try
             {
                 InitSimulation(inputPath);
@@ -60,28 +64,30 @@ namespace MassSimulation
                 logger.Error($"Exception during initialization:\n{e}");
                 throw;
             }
-            logger.Info("Finished initialization");
+            logger.Info($"Finished initialization in {DateTime.Now - start}");
 
-            var start = DateTime.Now;
+            var simulationStart = DateTime.Now;
             RunSimulation();
             comm.Barrier();
-            var duration = DateTime.Now - start;
-            logger.Info($"Finished core simulation in {duration} s");
+            logger.Info($"Finished core simulation in {DateTime.Now - simulationStart}");
 
+
+            var postprocessingStart = DateTime.Now;
             try
             {
                 FinishSimulation();
             }
             catch (Exception e)
             {
-                logger.Error($"Exception during finishing simulation:\n{e}");
+                logger.Error($"Exception during postprocessing:\n{e}");
                 throw;
             }
             comm.Barrier();
-            logger.Info("Finished postprocessing");
+            logger.Info($"Finished postprocessing: {DateTime.Now - postprocessingStart}");
+            logger.Info($"Finished city simulation: {DateTime.Now - start}");
         }
 
-        public void InitSimulation(string inputPath)
+        private void InitSimulation(string inputPath)
         {
             // general settings
             // avoid MPI processes cluttering the console
@@ -184,22 +190,6 @@ namespace MassSimulation
             {
                 // remove unneeded files and subdirectories
                 SimulationEngineLib.HouseJobProcessor.JsonCalculator.CleanUpResultDirectory(scenario!.CalcSpecification);
-            }
-        }
-
-        private void CollectResults(List<PersonIdentifier> agents)
-        {
-            // collect all agents
-            int[] agentCounts = comm.Gather(agents.Count, 0);
-            if (rank == 0)
-                Console.WriteLine("Agent counts: " + string.Join(", ", agentCounts));
-            var allAgents = comm.GatherFlattened(agents.ToArray(), agentCounts, 0);
-            comm.Barrier();
-
-            // result processing
-            if (rank == 0)
-            {
-                //ProcessResults(allAgents);
             }
         }
     }
