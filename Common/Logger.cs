@@ -329,7 +329,7 @@ namespace Common {
                     if (!preserveNewLines) {
                         msg = message.Replace(Environment.NewLine, " ");
                     }
-                    var s = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("hh:mm:ss", CultureInfo.InvariantCulture) + " [" + sev +
+                    var s = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture) + " [" + sev +
                             "] " +msg;
                     sw.WriteLine(s);
                 }
