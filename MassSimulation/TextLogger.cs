@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MassSimulation
 {
-    internal class TestLogger(string fileName, string? outputDirectory)
+    internal class TextLogger(string fileName, string? outputDirectory)
     {
 
         private readonly string outputDirectory = outputDirectory;

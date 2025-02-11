@@ -12,8 +12,8 @@ namespace MassSimulation.Simulators
     {
         private List<AgentStayState> activityStates = [];
 
-        private readonly TestLogger logger;
-        private readonly TestLogger presenceLogger;
+        private readonly TextLogger logger;
+        private readonly TextLogger presenceLogger;
 
         private readonly JsonCalcSpecification calcSpec;
 

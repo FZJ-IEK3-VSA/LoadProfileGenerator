@@ -13,8 +13,8 @@ namespace MassSimulation.Simulators
         public readonly int WorkerId;
         private List<AgentTravelState> travelStates = [];
 
-        private readonly TestLogger logger;
-        private readonly TestLogger presenceLogger;
+        private readonly TextLogger logger;
+        private readonly TextLogger presenceLogger;
 
         private readonly JsonCalcSpecification calcSpec;
 
