@@ -23,6 +23,8 @@ namespace ChartCreator2.OxyCharts {
     public static class ChartMaker {
         public static void MakeFlameChart([NotNull] DirectoryInfo di, [NotNull] CalculationProfiler calculationProfiler)
         {
+            // create the directory if it does not exist yet
+            di.Create();
             string targetfile = Path.Combine(di.FullName, Constants.CalculationProfilerJson);
             using StreamWriter sw = new StreamWriter(targetfile);
             calculationProfiler.WriteJson(sw);
