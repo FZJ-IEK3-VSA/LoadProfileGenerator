@@ -42,7 +42,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             {
                 ["car"] = sim.TransportationDeviceCategories.FindFirstByName("Car Category"),
                 ["pt"] = sim.TransportationDeviceCategories.FindFirstByName("Bus Category"),
-                ["bicycle"] = sim.TransportationDeviceCategories.FindFirstByName("Bike Category"), // TODO: add Bike Category in LPG
+                ["bicycle"] = sim.TransportationDeviceCategories.FindFirstByName("Bicycle Category"),
                 ["walk"] = sim.TransportationDeviceCategories.FindFirstByName("Walking Category")
             };
         }
