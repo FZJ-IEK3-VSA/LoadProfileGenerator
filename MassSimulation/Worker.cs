@@ -6,6 +6,7 @@ using MassSimulation.CityGeneration;
 using MassSimulation.Scenarios;
 using MassSimulation.Simulators;
 using MPI;
+using System.Runtime.InteropServices;
 
 namespace MassSimulation
 {
@@ -205,8 +206,15 @@ namespace MassSimulation
             // create an additional flame chart for the calculation profiler of this MPI worker
             if (calculationProfiler is not null && calcParameters.Options.Contains(Automation.CalcOption.CalculationFlameChart))
             {
-                var profilerDirectory = Path.Combine(scenarioPart.CalcSpecification.OutputDirectory, "CalculationProfiler");
-                ChartCreator2.OxyCharts.ChartMaker.MakeFlameChart(new DirectoryInfo(profilerDirectory), calculationProfiler, $"Worker{rank}");
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    var profilerDirectory = Path.Combine(scenarioPart.CalcSpecification.OutputDirectory, "CalculationProfiler");
+                    ChartCreator2.OxyCharts.ChartMaker.MakeFlameChart(new DirectoryInfo(profilerDirectory), calculationProfiler, $"Worker{rank}");
+                }
+                else
+                {
+                    logger.Warning("CalculationProfiler flame chart creation is only supported on Windows.");
+                }
             }
 
             if (rank == 0)
