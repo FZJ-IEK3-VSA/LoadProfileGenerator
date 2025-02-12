@@ -1,4 +1,5 @@
 ﻿using Automation;
+using Common.Extensions;
 using Common.JSON;
 using MassSimulation.SimulationTargets;
 
@@ -24,8 +25,7 @@ namespace MassSimulation.Scenarios
         public ScenarioPart[] GetScenarioParts(int numberOfParts)
         {
             // divide the JsonReferences and POIs evenly
-            // TODO: use a better split to put neighboring buildings and POIs to the same worker
-            var referencesSublists = TargetReferences.Split(numberOfParts);
+            var targetSublists = TargetReferences.Split(numberOfParts);
             var poiSublists = PointsOfInterest.Split(numberOfParts);
 
             var poiRegister = BuildPointOfInterestRegister(numberOfParts, poiSublists);
@@ -35,7 +35,7 @@ namespace MassSimulation.Scenarios
             var random = new Random(randomSeed);
 
             // create the list of scenario part objects, each with its own share of households and POIs
-            var parts = referencesSublists.Zip(poiSublists, (references, pois) => new ScenarioPart(references.ToList(), pois.ToList(), DatabasePath, CalcSpecification, poiRegister, CityData, random.Next()));
+            var parts = targetSublists.ZipLongest(poiSublists, [], []).Select(listPair => new ScenarioPart(listPair.Item1.ToList(), listPair.Item2.ToList(), DatabasePath, CalcSpecification, poiRegister, CityData, random.Next()));
             return parts.ToArray();
         }
 
