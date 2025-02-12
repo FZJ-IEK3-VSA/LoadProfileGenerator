@@ -11,9 +11,9 @@ using Newtonsoft.Json;
 namespace Common
 {
     public interface ICalculationProfiler {
-        void StartPart([JetBrains.Annotations.NotNull] string key);
+        void StartPart([JetBrains.Annotations.NotNull] string key, bool log = true);
 
-        void StopPart([JetBrains.Annotations.NotNull] string key);
+        void StopPart([JetBrains.Annotations.NotNull] string key, bool log = true);
     }
 
     public class CalculationProfiler : ICalculationProfiler {
@@ -33,7 +33,7 @@ namespace Common
         [JetBrains.Annotations.NotNull]
         private Dictionary<string, ProgramPart> Current { get; set; }
 
-        public void StartPart(string key)
+        public void StartPart(string key, bool log = true)
         {
             lock (MainPart) {
                 //Logger.Info("Starting "+ key);
@@ -49,7 +49,8 @@ namespace Common
                     throw new LPGException("The current key is already " + key + ". Copy&Paste error?");
                 }
 
-                Logger.Info("Starting " + threadName + ": " + key);
+                if (log)
+                    Logger.Info("Starting " + threadName + ": " + key);
                 var newCurrent = new ProgramPart(Current[threadName], key);
                 Current[threadName].Children.Add(newCurrent);
                 Current[threadName] = newCurrent;
@@ -57,7 +58,7 @@ namespace Common
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public void StopPart(string key)
+        public void StopPart(string key, bool log = true)
         {
             lock (MainPart) {
                 var threadname = Thread.CurrentThread.GetNotNullThreadName();
@@ -65,7 +66,8 @@ namespace Common
                     throw new LPGException("Current was null");
                 }
 
-                Logger.Info("Stopping " + threadname + ": " + key);
+                if (log)
+                    Logger.Info("Stopping " + threadname + ": " + key);
 
                 if (Current[threadname].Key != key) {
                     StreamWriter sw = new StreamWriter("DebuggingCalcProfiler.json");
@@ -81,7 +83,8 @@ namespace Common
 
                 Current[threadname].Stop = DateTime.Now;
 
-                Logger.Info("Finished " + key + " after " + Current[threadname].Duration.ToString());
+                if (log)
+                    Logger.Info("Finished " + key + " after " + Current[threadname].Duration.ToString());
 
                 Current[threadname] = Current[threadname].Parent;
             }
