@@ -161,6 +161,10 @@ namespace MassSimulation
                 {
                     // create additional charts
                     ChartMaker.MakeChartsAndPDF(calcRepo.CalculationProfiler, target.ResultDirectory);
+
+                    // create the calculation profiler flame chart if requested
+                    if (calcRepo.CalcParameters.IsSet(CalcOption.CalculationFlameChart))
+                        ChartMaker.MakeFlameChart(new DirectoryInfo(target.ResultDirectory), calcRepo.CalculationProfiler);
                 }
 
                 if (calcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || calcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages))

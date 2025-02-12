@@ -29,6 +29,7 @@ namespace MassSimulation
         private ScenarioPart? scenarioPart;
 
         private readonly MPILogger logger;
+        private readonly CalculationProfiler? calculationProfiler;
 
         public Worker(Intracommunicator comm, string[] args)
         {
@@ -45,6 +46,7 @@ namespace MassSimulation
             workerName = MPI.Environment.ProcessorName;
 
             logger = new MPILogger(true, rank);
+            calculationProfiler = new();
         }
 
         /// <summary>
@@ -64,12 +66,12 @@ namespace MassSimulation
                 logger.Error($"Exception during initialization:\n{e}");
                 throw;
             }
-            logger.Info($"Finished initialization in {DateTime.Now - start}");
+            logger.Info($"Finished initialization in  {DateTime.Now - start}");
 
             var simulationStart = DateTime.Now;
             RunSimulation();
             comm.Barrier();
-            logger.Info($"Finished core simulation in {DateTime.Now - simulationStart}");
+            logger.Info($"Finished main simulation in {DateTime.Now - simulationStart}");
 
 
             var postprocessingStart = DateTime.Now;
@@ -83,8 +85,8 @@ namespace MassSimulation
                 throw;
             }
             comm.Barrier();
-            logger.Info($"Finished postprocessing: {DateTime.Now - postprocessingStart}");
-            logger.Info($"Finished city simulation: {DateTime.Now - start}");
+            logger.Info($"Finished postprocessing in  {DateTime.Now - postprocessingStart}");
+            logger.Info($"Finished city simulation in {DateTime.Now - start}");
         }
 
         private void InitSimulation(string inputPath)
@@ -130,25 +132,39 @@ namespace MassSimulation
             {
                 throw new LPGException("CalcParameters are not set");
             }
+
             // define iteration variables
             var simulationTime = calcParameters.InternalStartTime;
             var timestep = new TimeStep(0, calcParameters);
             // initialize the variable for storing exchanged messages across iterations, starting with no messages
             SortedMessageCollection activityMessages = new([], [], []);
 
+            calculationProfiler?.StartPart("Main simulation loop", false);
+            var startLoop = DateTime.Now;
+            TimeSpan totalDistribution = TimeSpan.Zero;
             // main simulation loop
             while (simulationTime < calcParameters.InternalEndTime)
             {
                 // run all simulators for one timestep
+                calculationProfiler?.StartPart("single simulation step", false);
                 var messageDistributor = SimulateOneStep(timestep, simulationTime, activityMessages);
+                calculationProfiler?.StopPart("single simulation step", false);
 
                 // exchange messages via MPI; this calls MPI.AllToAll
+                calculationProfiler?.StartPart("MPI message distribution", false);
+                var startDistribution = DateTime.Now;
                 activityMessages = messageDistributor.DistributeMessages(comm);
+                totalDistribution += DateTime.Now - startDistribution;
+                calculationProfiler?.StopPart("MPI message distribution", false);
 
                 // increment timestep
                 simulationTime += calcParameters.InternalStepsize;
                 timestep = timestep.AddSteps(1);
             }
+            TimeSpan totalLoop = DateTime.Now - startLoop;
+            calculationProfiler?.StopPart("Main simulation loop", false);
+            double stepsPerSecond = timestep.InternalStep / totalLoop.TotalSeconds;
+            logger.Info($"Main loop: {totalLoop}, MPI distribution: {totalDistribution} ({100 * totalDistribution / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second");
         }
 
         public MPIDistributor SimulateOneStep(TimeStep timestep, DateTime simulationTime, SortedMessageCollection activityMessages)
@@ -184,6 +200,13 @@ namespace MassSimulation
             foreach (var simulator in poiSimulators)
             {
                 simulator.FinishSimulation();
+            }
+
+            // create an additional flame chart for the calculation profiler of this MPI worker
+            if (calculationProfiler is not null && calcParameters.Options.Contains(Automation.CalcOption.CalculationFlameChart))
+            {
+                var profilerDirectory = Path.Combine(scenarioPart.CalcSpecification.OutputDirectory, "CalculationProfiler");
+                ChartCreator2.OxyCharts.ChartMaker.MakeFlameChart(new DirectoryInfo(profilerDirectory), calculationProfiler, $"Worker{rank}");
             }
 
             if (rank == 0)
