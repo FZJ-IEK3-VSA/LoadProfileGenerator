@@ -187,23 +187,29 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
         /// <summary>
-        /// Initialize the logger and log the JsonCalcSpecification
+        /// Initializes the logger and sets the log file path
         /// </summary>
         /// <param name="resultDirectory">result directory for the log file</param>
-        /// <param name="jcs">JsonCalcSpecification of the simulation job, which will be logged</param>
         /// <param name="logFileName">name of the log file to write to</param>
-        public static void InitLoggerAndLogCalcSpec(DirectoryInfo resultDirectory, JsonCalcSpecification jcs, string logFileName = "Log.CommandlineCalculation.txt")
+        public static void InitLogger(DirectoryInfo resultDirectory, string logFileName = "Log.CommandlineCalculation.txt")
         {
             Logger.SetLogFilePath(Path.Combine(resultDirectory.FullName, logFileName));
             Logger.LogToFile = true;
             Logger.Get().FlushExistingMessages();
+            Logger.Info("Directory: " + resultDirectory.FullName);
+        }
+
+        /// <summary>
+        /// Logs the JsonCalcSpecification
+        /// </summary>
+        /// <param name="jcs">the calcspec to log</param>
+        public static void LogCalcSpec(JsonCalcSpecification jcs)
+        {
             Logger.Info("---------------------------");
             Logger.Info("Used calculation specification:");
             Logger.Info(JsonConvert.SerializeObject(jcs, Formatting.Indented), true);
             Logger.Info("---------------------------");
-            Logger.Info("Directory: " + resultDirectory.FullName);
         }
-
 
         /// <summary>
         /// Deletes all but PDF files (and some other relevant files) in the result directory.
@@ -308,7 +314,8 @@ namespace SimulationEngineLib.HouseJobProcessor
             var resultDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
 
             // initialize logfile and log the calcspec
-            InitLoggerAndLogCalcSpec(resultDirectory, jcs);
+            InitLogger(resultDirectory);
+            LogCalcSpec(jcs);
 
             // save settings to the database copy in the result directory
             SaveSettingsToDatabase(sim, jcs);

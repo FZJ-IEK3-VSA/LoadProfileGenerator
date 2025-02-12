@@ -31,7 +31,7 @@ namespace MassSimulation.CityGeneration
                 throw new LPGException("Transport must be enabled for the city simulation.");
 
             // create result directory
-            var resultDir = hcj.CalcSpec.OutputDirectory ??= HouseGenerator.DefaultResultDirectory;
+            var resultDir = calcSpec.OutputDirectory ??= HouseGenerator.DefaultResultDirectory;
             if (!Directory.Exists(resultDir))
             {
                 Directory.CreateDirectory(resultDir);
@@ -49,7 +49,7 @@ namespace MassSimulation.CityGeneration
             Logger.Info("Using database file: " + fullDbPath);
 
             // save settings to the database copy in the result directory
-            JsonCalculator.SaveSettingsToDatabase(sim, hcj.CalcSpec);
+            JsonCalculator.SaveSettingsToDatabase(sim, calcSpec);
 
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"));

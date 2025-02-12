@@ -42,7 +42,7 @@ namespace MassSimulation
             // configure logger so that each worker logs to a different file
             var baseResultDirInfo = new DirectoryInfo(baseResultDir);
             Logger.Get().StartCollectingAllMessages();
-            JsonCalculator.InitLoggerAndLogCalcSpec(baseResultDirInfo, scenarioPart.CalcSpecification, "Log.CommandlineCalculation.Worker" + rank + ".txt");
+            JsonCalculator.LogCalcSpec(scenarioPart.CalcSpecification);
 
             HouseGenerator houseGenerator = new();
 

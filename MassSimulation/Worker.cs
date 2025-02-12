@@ -101,19 +101,23 @@ namespace MassSimulation
             if (rank == 0)
             {
                 // determine simulation targets
-                //scenario = TestScenarios.CreateDuplicateHousesScenario(inputPath, numWorkers);
                 scenario = CityScenarioImport.ReadScenarioFromConfigDirectory(inputPath);
                 scenarioParts = scenario.GetScenarioParts(numWorkers);
                 int length = scenarioParts.Length;
                 if (length < numWorkers)
                 {
                     // not enough parts for all workers
-                    throw new LPGException("Not enough work packages for all MPI processes (" + length + " work packages for " + numWorkers + " workers).");
+                    throw new LPGException($"Not enough work packages for all MPI processes ({length} work packages for {numWorkers} workers).");
                 }
             }
 
             // distribute simulation targets
             scenarioPart = comm.Scatter(scenarioParts, 0);
+
+            // configure the logger
+            string logFile = Path.Combine(scenarioPart.CalcSpecification.OutputDirectory, $"Log.CitySimulation.Worker{rank}.txt");
+            logger.SetLogFilePath(logFile);
+            logger.Info($"Worker {rank} is responsible for {scenarioPart.TargetReferences.Count} houses and {scenarioPart.PointsOfInterest.Count} POIs.");
 
             lpgSimulator = new(rank, scenarioPart);
             calcParameters = lpgSimulator.CalcParameters;
