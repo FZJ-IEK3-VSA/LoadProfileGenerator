@@ -1,10 +1,4 @@
 ﻿using Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MassSimulation
 {
@@ -53,26 +47,22 @@ namespace MassSimulation
 
         public void Debug(string message)
         {
-            if (rank == LoggingRank)
-                logger.DebugMessage(message);
+            logger.DebugMessage(message);
         }
 
         public void Info(string message)
         {
-            if (rank == LoggingRank)
-                logger.InfoMessage(message);
+            logger.InfoMessage(message);
         }
 
         public void Warning(string message)
         {
-            if (rank == LoggingRank)
-                logger.WarningMessage(message);
+            logger.WarningMessage(message);
         }
 
         public void Error(string message)
         {
-            if (rank == LoggingRank)
-                logger.ErrorMessage(message);
+            logger.ErrorMessage(message);
         }
     }
 
