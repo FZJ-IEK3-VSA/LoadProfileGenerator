@@ -72,21 +72,22 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
                 relevantPOIs.Add(hj.House.Name);
 
-                AddRoutesForPerson(personName, hj, travelRouteSet, relevantPOIs, transportationDeviceSet);
+                AddRoutesForPerson(hj, travelRouteSet, relevantPOIs, transportationDeviceSet, personName);
             }
             travelRouteSet.SaveToDB();
             return travelRouteSet;
         }
 
-        private void AddRoutesForPerson(string personName, HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs,
-            TransportationDeviceSet transportationDeviceSet)
+        private void AddRoutesForPerson(HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs,
+            TransportationDeviceSet transportationDeviceSet, string personName = null)
         {
             // use a single database connection to add all routes for a better performance
             using var con = new Database.Database.Connection(sim.ConnectionString);
             con.Open();
             using var tr = con.BeginTransaction();
 
-            var person = sim.Persons.FindFirstByNameNotNull(personName);
+            // determine the personId ID, if the routes are only for one person
+            int? personId = string.IsNullOrEmpty(personName) ? null : sim.Persons.FindFirstByNameNotNull(personName).IntID;
             foreach (var routeData in hj.City.Routes)
             {
                 if (!relevantPOIs.Contains(routeData.origin_id) || !relevantPOIs.Contains(routeData.destination_id))
@@ -114,7 +115,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                     // create a single step with the specified transportation device category
                     var deviceCategory = TransportModes[categoryDistancePair.Key];
                     var deviceCategoryName = deviceCategory.Name;
-                    SetRouteName(route, personName, deviceCategoryName);
+                    SetRouteName(route, deviceCategoryName, personName);
 
                     // check if a duration is specified for this route and mode
                     double durationInS = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1);
@@ -122,7 +123,7 @@ namespace SimulationEngineLib.HouseJobProcessor
 
                     route.SaveToDB(con);
                     var routeWeight = weights[categoryDistancePair.Key];
-                    travelRouteSet.AddRoute(route, personID: person.IntID, weight: routeWeight, savetodb: false);
+                    travelRouteSet.AddRoute(route, personID: personId, weight: routeWeight, savetodb: false);
 
                     // if required, also create an identical route in the opposite direction
                     if (hj.City.MirrorRoutes)
@@ -132,12 +133,12 @@ namespace SimulationEngineLib.HouseJobProcessor
                         mirroredRoute.SiteB = route.SiteA;
                         mirroredRoute.Description = route.Description;
                         mirroredRoute.RouteKey = route.RouteKey;
-                        SetRouteName(mirroredRoute, personName, deviceCategoryName);
+                        SetRouteName(mirroredRoute, deviceCategoryName, personName);
 
                         mirroredRoute.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
 
                         mirroredRoute.SaveToDB(con);
-                        travelRouteSet.AddRoute(mirroredRoute, personID: person.IntID, weight: routeWeight, savetodb: false);
+                        travelRouteSet.AddRoute(mirroredRoute, personID: personId, weight: routeWeight, savetodb: false);
                     }
                 }
             }
@@ -168,11 +169,13 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// of the person the route is made for.
         /// </summary>
         /// <param name="route">the route to set the name for</param>
-        /// <param name="personName">the name of the person who will use the route</param>
-        private static void SetRouteName(TravelRoute route, string personName, string deviceCategoryName)
+        /// <param name="deviceCategoryName">name of the transportation device category</param>
+        /// <param name="personName">the name of the personId who will use the route</param>
+        private static void SetRouteName(TravelRoute route, string deviceCategoryName, string personName = "")
         {
             var distanceInKm = route.CalculateTotalDistance() / 1000;
-            route.Name = $"Route for {personName} from {route.SiteA.Name} to {route.SiteB.Name} via {deviceCategoryName} {distanceInKm}km";
+            var personHint = string.IsNullOrEmpty(personName) ? "" : $" for {personName}";
+            route.Name = $"Route{personHint} from {route.SiteA.Name} to {route.SiteB.Name} via {deviceCategoryName} {distanceInKm}km";
         }
     }
 }
