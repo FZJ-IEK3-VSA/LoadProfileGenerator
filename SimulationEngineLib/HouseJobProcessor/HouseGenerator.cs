@@ -239,7 +239,8 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// Deletes existing files in the result directory before the calculation.
         /// </summary>
         /// <param name="resultDirectory">the result directory to clean up</param>
-        public void CleanResultDirectoryBeforeSimulation(string resultDirectory)
+        /// <param name="keepLogsAndDBFiles">if true, log files and .db3 files are not deleted</param>
+        public void CleanResultDirectoryBeforeSimulation(string resultDirectory, bool keepLogsAndDBFiles = true)
         {
             var resultDir = new DirectoryInfo(resultDirectory);
             if (Directory.Exists(resultDir.FullName))
@@ -248,11 +249,11 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var files = resultDir.GetFiles();
                 foreach (FileInfo file in files)
                 {
-                    if (file.Name.StartsWith("Log.", StringComparison.OrdinalIgnoreCase))
+                    if (keepLogsAndDBFiles && file.Name.StartsWith("Log.", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
-                    if (file.Name.EndsWith(".db3", StringComparison.OrdinalIgnoreCase))
+                    if (keepLogsAndDBFiles && file.Name.EndsWith(".db3", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }

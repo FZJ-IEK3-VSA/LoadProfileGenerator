@@ -41,7 +41,7 @@ namespace MassSimulation.CityGeneration
             HouseGenerator houseGenerator = new();
 
             // check for existing files in the result directory
-            houseGenerator.CleanResultDirectoryBeforeSimulation(resultDir);
+            houseGenerator.CleanResultDirectoryBeforeSimulation(resultDir, false);
 
             // copy DB file to result directory and open a connection to it
             var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
