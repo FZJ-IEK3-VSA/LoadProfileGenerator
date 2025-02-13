@@ -117,7 +117,7 @@ namespace MassSimulation
             // configure the logger
             string logFile = Path.Combine(scenarioPart.CalcSpecification.OutputDirectory, $"Log.CitySimulation.Worker{rank}.txt");
             logger.SetLogFilePath(logFile);
-            logger.Info($"Worker {rank} is responsible for {scenarioPart.TargetReferences.Count} houses and {scenarioPart.PointsOfInterest.Count} POIs.");
+            logger.Info($"Worker {rank} on {workerName} is responsible for {scenarioPart.TargetReferences.Count} houses and {scenarioPart.PointsOfInterest.Count} POIs.");
 
             lpgSimulator = new(rank, scenarioPart);
             calcParameters = lpgSimulator.CalcParameters;
