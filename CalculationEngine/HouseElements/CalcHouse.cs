@@ -70,6 +70,8 @@ namespace CalculationEngine.HouseElements
             HouseholdKey = houseKey;
         }
 
+        public IReadOnlyList<ICalcAbleObject> Households => _households ?? throw new LPGException("House contains no households");
+
         public List<CalcAutoDev> CollectAutoDevs()
         {
             var autoDevs = new List<CalcAutoDev>();

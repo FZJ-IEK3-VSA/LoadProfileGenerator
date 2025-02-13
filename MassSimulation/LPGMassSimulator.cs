@@ -4,6 +4,7 @@ using CalcPostProcessor;
 using CalculationController.CalcFactories;
 using CalculationEngine;
 using CalculationEngine.CitySimulation;
+using CalculationEngine.HouseElements;
 using ChartCreator2;
 using ChartCreator2.OxyCharts;
 using Common;
@@ -12,6 +13,7 @@ using Database;
 using MassSimulation.Scenarios;
 using MassSimulation.SimulationTargets;
 using Newtonsoft.Json;
+using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
 using System.Runtime.InteropServices;
 
@@ -172,6 +174,24 @@ namespace MassSimulation
                     target.CalcManager.InitializeFileLogging(calcRepo.Srls);
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns the total number of households this worker is simulating.
+        /// </summary>
+        /// <returns>total number of households in all houses of this simulator</returns>
+        public int TotalNumberOfHouseholds()
+        {
+            return simulationTargets.Select(t => t.CalcManager.CalcObject).As<CalcHouse>().Sum(house => house.Households.Count);
+        }
+
+        /// <summary>
+        /// Returns the total number of persons this worker is simulating.
+        /// </summary>
+        /// <returns>total number of persons in all houses of this simulator</returns>
+        public int TotalNumberOfPersons()
+        {
+            return simulationTargets.Select(t => t.CalcManager.CalcObject).Sum(house => house!.CollectPersons().Count);
         }
     }
 }

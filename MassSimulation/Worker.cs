@@ -121,6 +121,9 @@ namespace MassSimulation
 
             lpgSimulator = new(rank, scenarioPart);
             calcParameters = lpgSimulator.CalcParameters;
+            int totalPersons = lpgSimulator.TotalNumberOfPersons();
+            int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
+            logger.Info($"In total, this worker simulates {totalPersons} persons in {totalHouseholds} households.");
 
             lpgSimulator.Init();
 
@@ -144,8 +147,11 @@ namespace MassSimulation
             // initialize the variable for storing exchanged messages across iterations, starting with no messages
             SortedMessageCollection activityMessages = new([], [], []);
 
+            // this barrier is not required, but it makes all workers start the main loop at the same time
+            comm.Barrier();
+
             calculationProfiler?.StartPart("Main simulation loop", false);
-            var startLoop = DateTime.Now;
+            var startLoop = DateTime.UtcNow;
             TimeSpan totalDistribution = TimeSpan.Zero;
             // main simulation loop
             while (simulationTime < calcParameters.InternalEndTime)
@@ -157,19 +163,20 @@ namespace MassSimulation
 
                 // exchange messages via MPI; this calls MPI.AllToAll
                 calculationProfiler?.StartPart("MPI message distribution", false);
-                var startDistribution = DateTime.Now;
+                var startDistribution = DateTime.UtcNow;
                 activityMessages = messageDistributor.DistributeMessages(comm);
-                totalDistribution += DateTime.Now - startDistribution;
+                totalDistribution += DateTime.UtcNow - startDistribution;
                 calculationProfiler?.StopPart("MPI message distribution", false);
 
                 // increment timestep
                 simulationTime += calcParameters.InternalStepsize;
                 timestep = timestep.AddSteps(1);
             }
-            TimeSpan totalLoop = DateTime.Now - startLoop;
+            TimeSpan totalLoop = DateTime.UtcNow - startLoop;
             calculationProfiler?.StopPart("Main simulation loop", false);
             double stepsPerSecond = timestep.InternalStep / totalLoop.TotalSeconds;
-            logger.Info($"Main loop: {totalLoop}, MPI distribution: {totalDistribution} ({100 * totalDistribution / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second");
+            int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
+            logger.Info($"Main loop: {totalLoop}, MPI distribution: {totalDistribution} ({100 * totalDistribution / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second, {stepsPerSecond*totalHouseholds:f2} household steps/second");
         }
 
         public MPIDistributor SimulateOneStep(TimeStep timestep, DateTime simulationTime, SortedMessageCollection activityMessages)
