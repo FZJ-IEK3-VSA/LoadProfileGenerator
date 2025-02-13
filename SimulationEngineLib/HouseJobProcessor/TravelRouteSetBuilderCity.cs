@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using Automation.ResultFiles;
 using Database.Tables.ModularHouseholds;
 using System.Linq;
-using PowerArgs;
-using Database.Tables.BasicHouseholds;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -83,6 +81,11 @@ namespace SimulationEngineLib.HouseJobProcessor
         private void AddRoutesForPerson(string personName, HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs,
             TransportationDeviceSet transportationDeviceSet)
         {
+            // use a single database connection to add all routes for a better performance
+            using var con = new Database.Database.Connection(sim.ConnectionString);
+            con.Open();
+            using var tr = con.BeginTransaction();
+
             var person = sim.Persons.FindFirstByNameNotNull(personName);
             foreach (var routeData in hj.City.Routes)
             {
@@ -102,7 +105,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 {
                     // create the new travel route
                     var houseId = hj.House.Name;
-                    var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString);
+                    var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
                     route.Description = "Generated from transport model data";
                     route.SiteA = GetSiteFromPoi(routeData.origin_id, houseId);
                     route.SiteB = GetSiteFromPoi(routeData.destination_id, houseId);
@@ -110,30 +113,35 @@ namespace SimulationEngineLib.HouseJobProcessor
 
                     // create a single step with the specified transportation device category
                     var deviceCategory = TransportModes[categoryDistancePair.Key];
-                    var name = deviceCategory.Name;
+                    var deviceCategoryName = deviceCategory.Name;
+                    SetRouteName(route, personName, deviceCategoryName);
 
                     // check if a duration is specified for this route and mode
                     double durationInS = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1);
-                    route.AddStep(name, deviceCategory, categoryDistancePair.Value, 1, name, durationInS, true);
+                    route.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
 
-                    SetRouteName(route, personName, deviceCategory.Name);
-                    route.SaveToDB();
+                    route.SaveToDB(con);
                     var routeWeight = weights[categoryDistancePair.Key];
-                    travelRouteSet.AddRoute(route, personID: person.IntID, weight: routeWeight);
+                    travelRouteSet.AddRoute(route, personID: person.IntID, weight: routeWeight, savetodb: false);
 
                     // if required, also create an identical route in the opposite direction
                     if (hj.City.MirrorRoutes)
                     {
-                        var mirroredRoute = route.MakeACopy(sim);
+                        var mirroredRoute = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
                         mirroredRoute.SiteA = route.SiteB;
                         mirroredRoute.SiteB = route.SiteA;
-                        SetRouteName(mirroredRoute, personName, deviceCategory.Name);
+                        mirroredRoute.Description = route.Description;
+                        mirroredRoute.RouteKey = route.RouteKey;
+                        SetRouteName(mirroredRoute, personName, deviceCategoryName);
 
-                        mirroredRoute.SaveToDB();
-                        travelRouteSet.AddRoute(mirroredRoute, personID: person.IntID, weight: routeWeight);
+                        mirroredRoute.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
+
+                        mirroredRoute.SaveToDB(con);
+                        travelRouteSet.AddRoute(mirroredRoute, personID: person.IntID, weight: routeWeight, savetodb: false);
                     }
                 }
             }
+            tr.Commit();
         }
 
         /// <summary>

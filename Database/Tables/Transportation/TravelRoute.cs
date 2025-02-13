@@ -44,6 +44,19 @@ namespace Database.Tables.Transportation
                     return Name + " (" + _steps.Count + " steps, " + _steps.Select(x => x.Distance).Sum() + " m)";
             }
         }
+        public override void SaveToDB(Connection con)
+        {
+            base.SaveToDB(con);
+            using (var tr = con.BeginTransaction())
+            {
+                foreach (var travelRouteStep in _steps)
+                {
+                    travelRouteStep.SaveToDB(con);
+                }
+
+                tr.Commit();
+            }
+        }
         public override void SaveToDB()
         {
             base.SaveToDB();

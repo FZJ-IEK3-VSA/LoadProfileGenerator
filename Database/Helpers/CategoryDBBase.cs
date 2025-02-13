@@ -409,7 +409,7 @@ namespace Database.Helpers
         }
 
         [JetBrains.Annotations.NotNull]
-        public T CreateNewItem([JetBrains.Annotations.NotNull] string connectionString)
+        public T CreateNewItem([JetBrains.Annotations.NotNull] string connectionString, Database.Connection? con = null)
         {
             var thisType = typeof(T);
             var theMethod = thisType.GetMethod("CreateNewItem");
@@ -425,7 +425,14 @@ namespace Database.Helpers
             {
                 throw new LPGException("Missing Type!");
             }
-            item.SaveToDB();
+            if (con is not null)
+            {
+                item.SaveToDB(con);
+            }
+            else
+            {
+                item.SaveToDB();
+            }
             var d = (T)item;
             AddItemToList(d);
             return d;
