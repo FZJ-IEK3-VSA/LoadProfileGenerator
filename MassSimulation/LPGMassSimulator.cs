@@ -28,7 +28,6 @@ namespace MassSimulation
         private readonly Simulator sim;
         private readonly ScenarioPart scenarioPart;
         private readonly List<MassSimulationTarget> simulationTargets;
-        private readonly Random random;
 
         public CalcParameters CalcParameters;
 
@@ -38,8 +37,6 @@ namespace MassSimulation
             this.scenarioPart = scenarioPart;
 
             string baseResultDir = scenarioPart.CalcSpecification.OutputDirectory ?? throw new LPGPBadParameterException("No OutputDirectory specified");
-
-            random = new Random(scenarioPart.RandomSeed);
 
             // configure logger so that each worker logs to a different file
             var baseResultDirInfo = new DirectoryInfo(baseResultDir);
@@ -84,14 +81,14 @@ namespace MassSimulation
                 try
                 {
                     // create the target house/household if necessary and get its JsonReference
-                    var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, random);
+                    var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, new Random(target.Seed));
 
                     // create the CalcStartParameterSet containing all parameters for the calculation
                     var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
                     calcStartParameterSet.ResultPath = resultDirectory;
 
                     // create a unique random seed for this target
-                    calcStartParameterSet.SelectedRandomSeed = random.Next();
+                    calcStartParameterSet.SelectedRandomSeed = target.Seed;
 
                     // create a calcManager for each household
                     var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);

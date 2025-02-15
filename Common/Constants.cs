@@ -76,6 +76,11 @@ namespace Common
         public const string TableDescriptionTableName = "TableDescription";
 
         public const string CalculationProfilerJson = "CalculationProfiler.json";
+
+        /// <summary>
+        /// Name of the file containing the random seed used for each house in a city simulation.
+        /// </summary>
+        public const string HouseSeedMappingFile = "HouseRNGSeeds.json";
     }
 
     public enum TargetDirectory

@@ -6,6 +6,7 @@ using MassSimulation.SimulationTargets;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
+using System;
 
 namespace MassSimulation.CityGeneration
 {
@@ -51,10 +52,16 @@ namespace MassSimulation.CityGeneration
             // save settings to the database copy in the result directory
             JsonCalculator.SaveSettingsToDatabase(sim, calcSpec);
 
+            // initialize an RNG to generate an individual seed for each simulation target
+            var random = new Random(calcSpec.RandomSeed);
+
             // create house configs and POI configs from the files in the input directory
-            var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"));
+            var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), random);
             var cityData = ReadCityDataFile(inputDirectory.CombineName("city.json"));
             var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
+
+            // log the seed used for each target to make simulation reproducible
+            CreateTargetSeedFile(resultDir, houseConfigs);
 
             // check if routes are defined in a separate file
             string routesFile = inputDirectory.CombineName("routes.json");
@@ -77,9 +84,9 @@ namespace MassSimulation.CityGeneration
         /// </summary>
         /// <param name="directory">the subdirectory in the input directory containing the house configs</param>
         /// <returns>all house configs from the directory</returns>
-        private static IEnumerable<MassSimTargetReference> CollectHouseConfigs(string directory)
+        private static IEnumerable<MassSimTargetReference> CollectHouseConfigs(string directory, Random random)
         {
-            return Directory.GetFiles(directory).Select(f => new MassSimTargetReference(Path.GetFileNameWithoutExtension(f), f));
+            return Directory.GetFiles(directory).Select(f => new MassSimTargetReference(Path.GetFileNameWithoutExtension(f), f, random.Next()));
         }
 
         /// <summary>
@@ -121,6 +128,19 @@ namespace MassSimulation.CityGeneration
             if (routesDict is null)
                 throw new LPGException($"Could not read routes from file {filename}");
             return routesDict.Values;
+        }
+
+        /// <summary>
+        /// Create a JSON file containing the seed used for each simulation target. With this seed, the simulation
+        /// of individual targets can be reproduced.
+        /// </summary>
+        /// <param name="resultDir">the output directory where the file will be created</param>
+        /// <param name="targets">the target references with their seeds</param>
+        private static void CreateTargetSeedFile(string resultDir, IEnumerable<MassSimTargetReference> targets)
+        {
+            var seedDict = targets.ToDictionary(t => t.Id, t => t.Seed);
+            var jsonString = JsonConvert.SerializeObject(seedDict, Formatting.Indented);
+            File.WriteAllText(Path.Combine(resultDir, Constants.HouseSeedMappingFile), jsonString);
         }
     }
 }
