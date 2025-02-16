@@ -191,7 +191,7 @@ namespace CalculationController.DtoFactories
                     travelRouteSet, chargingStationSet,
                     out sites, out transportationDevices,
                     out routes, locationDtos, householdKey);
-                if (_calcRepo.CalcParameters.IsSet(CalcOption.TransportationStatistics)) {
+                if (_calcRepo.CalcParameters.IsSet(CalcOption.TransportationDefinitions)) {
                     _calcRepo.InputDataLogger.SaveList<CalcSiteDto>(sites.ConvertAll(x => (IHouseholdKey)x));
                     _calcRepo.InputDataLogger.SaveList<CalcTransportationDeviceDto>(
                         transportationDevices.ConvertAll(x => (IHouseholdKey)x));
