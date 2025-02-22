@@ -279,7 +279,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="newfileName">name of the new database file</param>
         /// <returns>database access object</returns>
         /// <exception cref="LPGException">if the source database path was invalid</exception>
-        public Simulator CopyAndOpenDatabase(string databasePath, string resultDirectory, out string resultDatabasePath, string newfileName = "profilegenerator.copy.db3")
+        public Simulator CopyAndOpenDatabase(string? databasePath, string resultDirectory, out string resultDatabasePath, string newfileName = "profilegenerator.copy.db3")
         {
             if (databasePath.IsNullOrEmpty())
                 throw new LPGException("No db source path");
