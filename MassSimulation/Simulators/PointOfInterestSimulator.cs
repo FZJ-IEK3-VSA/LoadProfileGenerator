@@ -10,12 +10,12 @@ namespace MassSimulation.Simulators
     /// </summary>
     internal class PointOfInterestSimulator : ISimulator
     {
-        private List<AgentStayState> activityStates = [];
+        protected List<AgentStayState> activeVisitors = [];
 
-        private readonly TextLogger logger;
-        private readonly TextLogger presenceLogger;
+        protected readonly TextLogger logger;
+        protected readonly TextLogger presenceLogger;
 
-        private readonly JsonCalcSpecification calcSpec;
+        protected readonly JsonCalcSpecification calcSpec;
 
         public PointOfInterestId PoiId { get; }
 
@@ -25,17 +25,15 @@ namespace MassSimulation.Simulators
             this.calcSpec = calcSpec;
             var filename = $"POI-{rank}-{PoiId.Id}.txt";
             logger = new(filename, calcSpec.OutputDirectory);
-
-            // TODO: properly implement logging POI data
             presenceLogger = new(filename, calcSpec.OutputDirectory, "logs/poi_presence");
         }
 
-        public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
+        public virtual IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
             AddNewPersons(newActivities);
 
             // TODO: dummy implementation
-            foreach (var state in activityStates)
+            foreach (var state in activeVisitors)
             {
                 // update travel progress
                 UpdateRemainingStayTime(state);
@@ -50,24 +48,24 @@ namespace MassSimulation.Simulators
         {
             foreach (var newActivity in newActivities)
             {
-                Debug.Assert(!newActivity.IsTravel, "TransportSimulator received a non-travel activity.");
+                Debug.Assert(!newActivity.IsTravel, "PointOfInterestSimulator received a travel activity.");
 
                 double duration = DetermineDuration(newActivity);
-                activityStates.Add(new AgentStayState(newActivity, duration));
+                activeVisitors.Add(new AgentStayState(newActivity, duration));
             }
         }
 
-        private int DetermineDuration(RemoteActivityStart activity)
+        protected int DetermineDuration(RemoteActivityStart activity)
         {
             // -2 to account for the timesteps lost due to messaging until the CalcPerson receives the ActivityFinished message
             return activity.ExpectedDuration - 2 ?? throw new NotImplementedException("No default duration for remote activity implemented");
         }
 
-        private void LogState(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities, IEnumerable<RemoteActivityFinished> finishedActivities)
+        protected virtual void LogState(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities, IEnumerable<RemoteActivityFinished> finishedActivities)
         {
             if (newActivities.Any() || finishedActivities.Any())
             {
-                logger.Log(timestep, dateTime, $"Persons present: {activityStates.Count}");
+                logger.Log(timestep, dateTime, $"Persons present: {activeVisitors.Count}");
                 // log each newly started activity
                 foreach (var newActivity in newActivities)
                 {
@@ -78,22 +76,22 @@ namespace MassSimulation.Simulators
                     var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
                     logger.Log(timestep, dateTime, $"Finished activitites: {finishedPersons}");
                 }
-                presenceLogger.Log(timestep, dateTime, $"{activityStates.Count}");
+                presenceLogger.Log(timestep, dateTime, $"{activeVisitors.Count}");
             }
         }
 
-        private void UpdateRemainingStayTime(AgentStayState state)
+        protected void UpdateRemainingStayTime(AgentStayState state)
         {
             state.RemainingDuration--;
         }
 
-        private IEnumerable<RemoteActivityFinished> GetFinishedAgents()
+        protected IEnumerable<RemoteActivityFinished> GetFinishedAgents()
         {
             // collect all persons that finished their activity in the current Timestep
             Predicate<AgentStayState> isFinished = t => t.RemainingDuration <= 0;
-            var arrived = activityStates.FindAll(isFinished);
+            var arrived = activeVisitors.FindAll(isFinished);
             // remove the finished persons from the list of present persons
-            activityStates.RemoveAll(isFinished);
+            activeVisitors.RemoveAll(isFinished);
             // create the corresponding finished activity messages
             return arrived.Select(t => new RemoteActivityFinished(t.Activity.Person, PoiId));
         }

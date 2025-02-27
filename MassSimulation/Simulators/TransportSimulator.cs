@@ -24,8 +24,6 @@ namespace MassSimulation.Simulators
             this.calcSpec = calcSpec;
             var filename = $"Transport-{WorkerId}.txt";
             logger = new(filename, calcSpec.OutputDirectory);
-
-            // TODO: properly implement logging travel data
             presenceLogger = new(filename, calcSpec.OutputDirectory, "logs/traveling_persons");
         }
 
