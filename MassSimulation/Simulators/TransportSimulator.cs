@@ -26,7 +26,7 @@ namespace MassSimulation.Simulators
             logger = new(filename, calcSpec.OutputDirectory);
 
             // TODO: properly implement logging travel data
-            presenceLogger = new(filename, Path.Combine(calcSpec.OutputDirectory, "traveling_persons"));
+            presenceLogger = new(filename, calcSpec.OutputDirectory, "logs/traveling_persons");
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)

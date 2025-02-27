@@ -27,7 +27,7 @@ namespace MassSimulation.Simulators
             logger = new(filename, calcSpec.OutputDirectory);
 
             // TODO: properly implement logging POI data
-            presenceLogger = new(filename, Path.Combine(calcSpec.OutputDirectory, "poi_presence"));
+            presenceLogger = new(filename, calcSpec.OutputDirectory, "logs/poi_presence");
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
