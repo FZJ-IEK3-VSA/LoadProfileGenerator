@@ -3,10 +3,10 @@ using System.Text;
 
 namespace MassSimulation
 {
-    internal class TextLogger(string fileName, string? outputDirectory)
+    internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "logs")
     {
 
-        private readonly string outputDirectory = outputDirectory;
+        private readonly string outputDirectory = Path.Combine(outputDirectory, subdirectory);
         private List<LogEntry> LogEntries = [];
 
         private int lastWrittenEntry = 0;
@@ -24,9 +24,8 @@ namespace MassSimulation
         /// </summary>
         public void WriteToFile()
         {
-            var directory = Path.Combine(outputDirectory, "logs");
-            Directory.CreateDirectory(directory);
-            var logfilePath = Path.Combine(directory, Filename);
+            Directory.CreateDirectory(outputDirectory);
+            var logfilePath = Path.Combine(outputDirectory, Filename);
             StringBuilder logMessage = new();
             foreach (LogEntry entry in LogEntries.Skip(lastWrittenEntry))
             {
