@@ -45,7 +45,7 @@ namespace MassSimulation.CityGeneration
 
             // copy DB file to result directory and open a connection to it
             var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
-            string fullDbPath = Path.GetFullPath(hcj.PathToDatabase);
+            string fullDbPath = Path.GetFullPath(hcj.PathToDatabase!);
             Logger.Info("Using database file: " + fullDbPath);
 
             // save settings to the database copy in the result directory

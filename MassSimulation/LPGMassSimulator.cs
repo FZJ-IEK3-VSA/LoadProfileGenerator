@@ -71,7 +71,8 @@ namespace MassSimulation
                 {
                     Logger.Info($"City object of house {target.Id} was null, using the global city data object with all POIs instead.");
                     hcj.City = scenarioPart.CityData;
-                } else
+                }
+                else
                 {
                     // POIs are not copied, as each house already contains all relevant POIs for efficiency reasons
                     hcj.City.Routes = scenarioPart.CityData.Routes;
@@ -112,26 +113,23 @@ namespace MassSimulation
         public IEnumerable<RemoteActivityInfo> SimulateOneStep(TimeStep timeStep, DateTime dateTime,
             Dictionary<string, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>> finishedActivities)
         {
-            var newRemoteActivities = new List<RemoteActivityInfo>();
-            // simulate each target for one timestep
-            foreach (var target in simulationTargets)
+            // simulate each target for one timestep and collect all new activities
+            return simulationTargets.SelectMany(target => SimulateOneStepOneTarget(timeStep, dateTime, finishedActivities, target));
+        }
+
+        private ICollection<RemoteActivityInfo> SimulateOneStepOneTarget(TimeStep timeStep, DateTime dateTime, Dictionary<string, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>> finishedActivities, MassSimulationTarget target)
+        {
+            ICollection<RemoteActivityInfo> newRemoteActivities = [];
+            try
             {
-                try
-                {
-                    var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
-                    // collect all new activity messages
-                    foreach (var newActivityContext in newActivities)
-                    {
-                        // set the missing target ID and worker rank to make the person identifier simulation-wide unique
-                        newActivityContext.Person.AddMissingInfo(target.Id, rank);
-                        newRemoteActivities.Add(newActivityContext);
-                    }
-                }
-                catch (Exception e)
-                {
-                    // wrap the exception in a CitySimWrapperException contining more relevant information
-                    throw new CitySimWrapperException(e, rank, target.Id, $"timestep {timeStep.InternalStep}");
-                }
+                var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
+                // set the missing target ID and worker rank to make the person identifier simulation-wide unique
+                newRemoteActivities.ForEach(activity => activity.Person.AddMissingInfo(target.Id, rank));
+            }
+            catch (Exception e)
+            {
+                // wrap the exception in a CitySimWrapperException contining more relevant information
+                throw new CitySimWrapperException(e, rank, target.Id, $"timestep {timeStep.InternalStep}");
             }
             return newRemoteActivities;
         }
