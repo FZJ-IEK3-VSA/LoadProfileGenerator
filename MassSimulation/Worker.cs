@@ -71,7 +71,7 @@ namespace MassSimulation
 
             var simulationStart = DateTime.Now;
             RunSimulation();
-            comm.Barrier();
+            MPIBarrierWithLog();
             logger.Info($"Finished main simulation in {DateTime.Now - simulationStart}");
 
 
@@ -85,7 +85,7 @@ namespace MassSimulation
                 logger.Error($"Exception during postprocessing:\n{e}");
                 throw;
             }
-            comm.Barrier();
+            MPIBarrierWithLog();
             logger.Info($"Finished postprocessing in  {DateTime.Now - postprocessingStart}");
             logger.Info($"Finished city simulation in {DateTime.Now - start}");
         }
@@ -112,6 +112,7 @@ namespace MassSimulation
             }
 
             // distribute simulation targets
+            logger.Debug("Calling MPI Scatter to distribute scenario parts.");
             scenarioPart = comm.Scatter(scenarioParts, 0);
 
             // configure the logger
@@ -148,7 +149,7 @@ namespace MassSimulation
             SortedMessageCollection activityMessages = new([], [], []);
 
             // this barrier is not required, but it makes all workers start the main loop at the same time
-            comm.Barrier();
+            MPIBarrierWithLog();
 
             calculationProfiler?.StartPart("Main simulation loop", false);
             var startLoop = DateTime.UtcNow;
@@ -176,7 +177,15 @@ namespace MassSimulation
             calculationProfiler?.StopPart("Main simulation loop", false);
             double stepsPerSecond = timestep.InternalStep / totalLoop.TotalSeconds;
             int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
-            logger.Info($"Main loop: {totalLoop}, MPI distribution: {totalDistribution} ({100 * totalDistribution / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second, {stepsPerSecond*totalHouseholds:f2} household steps/second");
+            logger.Info($"Main loop: {totalLoop}, MPI distribution: {totalDistribution} ({100 * totalDistribution / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second, {stepsPerSecond * totalHouseholds:f2} household steps/second");
+        }
+
+        private void MPIBarrierWithLog()
+        {
+            logger.Debug("Calling MPI Barrier");
+            var startBarrier = DateTime.UtcNow;
+            comm.Barrier();
+            logger.Debug($"MPI Barrier is over after {DateTime.UtcNow - startBarrier}");
         }
 
         public MPIDistributor SimulateOneStep(TimeStep timestep, DateTime simulationTime, SortedMessageCollection activityMessages)
