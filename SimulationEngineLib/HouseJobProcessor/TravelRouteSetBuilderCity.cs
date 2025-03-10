@@ -26,6 +26,11 @@ namespace SimulationEngineLib.HouseJobProcessor
         public IReadOnlyDictionary<string, PoiLocationReplacement> LocationReplacements { get; }
 
         /// <summary>
+        /// The car transportation device category. Is used to apply a minimum driving age, if specified.
+        /// </summary>
+        private readonly TransportationDeviceCategory CarCategory;
+
+        /// <summary>
         /// Maps each supported transport mode to the corresponding LPG transportation device category.
         /// </summary>
         private readonly Dictionary<string, TransportationDeviceCategory> TransportModes;
@@ -35,10 +40,12 @@ namespace SimulationEngineLib.HouseJobProcessor
             sim = simulator;
             LocationReplacements = locationReplacements;
 
+            CarCategory = sim.TransportationDeviceCategories.FindFirstByName("Car Category");
+
             // initialize the mapping of transport modes to LPG device categories
             TransportModes = new Dictionary<string, TransportationDeviceCategory>
             {
-                ["car"] = sim.TransportationDeviceCategories.FindFirstByName("Car Category"),
+                ["car"] = CarCategory,
                 ["pt"] = sim.TransportationDeviceCategories.FindFirstByName("Bus Category"),
                 ["bicycle"] = sim.TransportationDeviceCategories.FindFirstByName("Bicycle Category"),
                 ["walk"] = sim.TransportationDeviceCategories.FindFirstByName("Walking Category")
@@ -137,8 +144,11 @@ namespace SimulationEngineLib.HouseJobProcessor
 
                         mirroredRoute.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
 
+                        // set the specified minimum driving age for cars; -1 means no restriction
+                        int minimumAge = deviceCategory == CarCategory ? hj.City.MinimumDrivingAge : -1;
+
                         mirroredRoute.SaveToDB(con);
-                        travelRouteSet.AddRoute(mirroredRoute, personID: personId, weight: routeWeight, savetodb: false);
+                        travelRouteSet.AddRoute(mirroredRoute, personID: personId, minimumAge: minimumAge, weight: routeWeight, savetodb: false);
                     }
                 }
             }

@@ -15,7 +15,7 @@ namespace Automation
         public Dictionary<string, PointOfInterestData> PointsOfInterest { get; set; } = [];
 
         /// <summary>
-        /// The routes that are available to the persons in the house of this house job.
+        /// The routes that are available to the persons in the house of this house job
         /// </summary>
         public List<RouteData> Routes { get; set; } = [];
 
@@ -23,5 +23,10 @@ namespace Automation
         /// Whether each route should be duplicated for the inverse direction
         /// </summary>
         public bool MirrorRoutes { get; set; } = false;
+
+        /// <summary>
+        /// Optional minimum age to be able to drive cars
+        /// </summary>
+        public int MinimumDrivingAge { get; set; } = -1;
     }
 }
