@@ -19,11 +19,9 @@ namespace MassSimulation.CityGeneration
         public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath)
         {
             var inputDirectory = new DirectoryInfo(inputDirectoryPath);
-            // read house job file; only calcspec and database path are actually needed here
-            string houseJobStr = File.ReadAllText(inputDirectory.CombineName("Calcspec.json")).Trim(HouseGenerator.charsToTrim);
-            HouseCreationAndCalculationJob? hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
-            if (hcj == null)
-                throw new LPGException("housejob was null");
+            // read file Calcspec.json; it is a HouseCreationAndCalculationJob object, but only calcspec
+            // and database path are required
+            var hcj = ParseJsonFile<HouseCreationAndCalculationJob>(inputDirectory.CombineName("Calcspec.json"));
             var calcSpec = hcj.CalcSpec ?? throw new LPGException("No CalcSpec was given in the input file");
             // TODO: calcspec should be complete and single-source-of-parameters
             // --> check and fill all missing values in the calcspec first, then move on
@@ -56,7 +54,7 @@ namespace MassSimulation.CityGeneration
 
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), random);
-            var cityData = ReadCityDataFile(inputDirectory.CombineName("city.json"));
+            var cityData = ParseJsonFile< CityData>(inputDirectory.CombineName("city.json"));
             var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
 
             // log the seed used for each target to make simulation reproducible
@@ -69,8 +67,8 @@ namespace MassSimulation.CityGeneration
                 if (!cityData.Routes.IsNullOrEmpty())
                     throw new LPGException("Routes are defined in both city.json and routes.json. Only one of them is allowed at a time.");
 
-                var routes = ReadRoutesFile(routesFile);
-                cityData.Routes = routes.ToList();
+                var routes = ParseJsonFile<Dictionary<string, RouteData>>(routesFile);
+                cityData.Routes = [.. routes.Values];
             }
 
             // create a new scenario object containing all house and POI configs
@@ -89,47 +87,6 @@ namespace MassSimulation.CityGeneration
         }
 
         /// <summary>
-        /// Collects all POI config files in the input directory and creates a POI config object for
-        /// each of them.
-        /// </summary>
-        /// <param name="directory">the subdirectory in the input directory containing the POI configs</param>
-        /// <returns>all POI configs from the directory</returns>
-        private static IEnumerable<PointOfInterestConfig> CollectPOIConfigs(string directory)
-        {
-            return Directory.GetFiles(directory).Select(f => new PointOfInterestConfig(new(Path.GetFileName(f))));
-        }
-
-        /// <summary>
-        /// Parse all the city data from the file city.json in the input directory.
-        /// </summary>
-        /// <param name="filename">path to the city.json file containing a CityData object</param>
-        /// <returns>the parsed CityData object containing all relevant city information</returns>
-        /// <exception cref="LPGException">if the file was invalid</exception>
-        private static CityData ReadCityDataFile(string filename)
-        {
-            string cityDataJson = File.ReadAllText(filename).Trim(HouseGenerator.charsToTrim);
-            CityData? cityData = JsonConvert.DeserializeObject<CityData>(cityDataJson);
-            if (cityData is null)
-                throw new LPGException($"Could not read CityData from file {filename}");
-            return cityData;
-        }
-
-        /// <summary>
-        /// Parse all routes used in the city from the file routes.json in the input directory.
-        /// </summary>
-        /// <param name="filename">path to the routes.json file containing a dictionary of routes</param>
-        /// <returns>all parsed routes</returns>
-        /// <exception cref="LPGException">if the file was invalid</exception>
-        private static IEnumerable<RouteData> ReadRoutesFile(string filename)
-        {
-            string routesJson = File.ReadAllText(filename).Trim(HouseGenerator.charsToTrim);
-            var routesDict = JsonConvert.DeserializeObject<Dictionary<string, RouteData>>(routesJson);
-            if (routesDict is null)
-                throw new LPGException($"Could not read routes from file {filename}");
-            return routesDict.Values;
-        }
-
-        /// <summary>
         /// Create a JSON file containing the seed used for each simulation target. With this seed, the simulation
         /// of individual targets can be reproduced.
         /// </summary>
@@ -140,6 +97,23 @@ namespace MassSimulation.CityGeneration
             var seedDict = targets.ToDictionary(t => t.Id, t => t.Seed);
             var jsonString = JsonConvert.SerializeObject(seedDict, Formatting.Indented);
             File.WriteAllText(Path.Combine(resultDir, Constants.HouseSeedMappingFile), jsonString);
+        }
+
+        /// <summary>
+        /// Reads a JSON file and tries to parse the specified object from it.
+        /// </summary>
+        /// <typeparam name="T">the type of the object to parse</typeparam>
+        /// <param name="filename">the name of the file containing the JSON</param>
+        /// <returns>the parsed object</returns>
+        /// <exception cref="LPGException">if the parsed object is null</exception>
+        private static T ParseJsonFile<T>(string filename)
+        {
+            // use a StreamReader to avoid loading large files as a single string
+            using var filereader = new StreamReader(filename);
+            using var jsonreader = new JsonTextReader(filereader);
+            var serializer = new JsonSerializer();
+            var parsedObject = serializer.Deserialize<T>(jsonreader);
+            return parsedObject ?? throw new LPGException($"Input file {filename} did not contain valid data.");
         }
     }
 }
