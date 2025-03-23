@@ -210,7 +210,7 @@ namespace SimulationEngineLib
             WriteClass<CityData>(sw, encounteredTypes, writtenTypes);
             WriteClass<RouteData>(sw, encounteredTypes, writtenTypes);
             WriteClass<PointOfInterestData>(sw, encounteredTypes, writtenTypes);
-            WriteClass<Coordinates>(sw, encounteredTypes, writtenTypes);
+            WriteClass<Coordinates>(sw, encounteredTypes, writtenTypes, true);
             encounteredTypes.Remove("System.String");
             encounteredTypes.Remove("System.Int32");
             encounteredTypes.Remove("System.Double");
@@ -229,12 +229,13 @@ namespace SimulationEngineLib
         }
 
 
-        private static void WriteClass<T>([JetBrains.Annotations.NotNull] StreamWriter sw, HashSet<string> encounteredTypes, [JetBrains.Annotations.NotNull] HashSet<string> writtenTypes)
+        private static void WriteClass<T>([JetBrains.Annotations.NotNull] StreamWriter sw, HashSet<string> encounteredTypes, [JetBrains.Annotations.NotNull] HashSet<string> writtenTypes, bool frozen = false)
         {
             sw.WriteLine();
             sw.WriteLine("# noinspection PyPep8Naming, PyUnusedLocal");
             sw.WriteLine("@dataclass_json");
-            sw.WriteLine("@dataclass");
+            string txtFrozen = frozen ? "(frozen=True)" : "";
+            sw.WriteLine("@dataclass" + txtFrozen);
             var myclass = typeof(T).Name;
             writtenTypes.Add(typeof(T).FullName);
             sw.WriteLine("class " + myclass + ":");
