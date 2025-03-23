@@ -248,11 +248,14 @@ namespace SimulationEngineLib
             foreach (var info in relevant_props)
             {
                 propertyLines.Add("    " + GetPropLine(info, encounteredTypes, out var parametertype));
-                propertyLines.Add("");
-                propertyLines.Add("    def set_" + info.Name + "(self, value: " + parametertype + ") -> " + myclass + ":");
-                propertyLines.Add("        self." + info.Name + " = value");
-                propertyLines.Add("        return self");
-                propertyLines.Add("");
+                if (!frozen)
+                {
+                    propertyLines.Add("");
+                    propertyLines.Add("    def set_" + info.Name + "(self, value: " + parametertype + ") -> " + myclass + ":");
+                    propertyLines.Add("        self." + info.Name + " = value");
+                    propertyLines.Add("        return self");
+                    propertyLines.Add("");
+                }
 
                 docstring += GetPropertyDocstringEntry(info, parametertype);
             }
