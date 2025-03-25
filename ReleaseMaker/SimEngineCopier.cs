@@ -6,7 +6,7 @@ namespace ReleaseMaker {
         [JetBrains.Annotations.NotNull]
         public static List<string> CopySimEngineFiles([JetBrains.Annotations.NotNull] string src, [JetBrains.Annotations.NotNull] string dst)
         {
-            List<string> programFiles = new List<string>();
+            List<string> programFiles = [];
             var srcDi = new DirectoryInfo(src);
             var dlls = srcDi.GetFiles("*.dll");
             foreach (var dll in dlls)
