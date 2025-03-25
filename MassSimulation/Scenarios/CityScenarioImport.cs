@@ -1,6 +1,7 @@
 ﻿using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.JSON;
 using MassSimulation.Scenarios;
 using MassSimulation.SimulationTargets;
 using Newtonsoft.Json;
@@ -50,7 +51,8 @@ namespace MassSimulation.CityGeneration
             JsonCalculator.SaveSettingsToDatabase(sim, calcSpec);
 
             // initialize an RNG to generate an individual seed for each simulation target
-            var random = new Random(calcSpec.RandomSeed);
+            int seed = CalcParameters.GetActualRandomSeed(calcSpec.RandomSeed);
+            var random = new Random(seed);
 
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), random);
@@ -81,9 +83,13 @@ namespace MassSimulation.CityGeneration
         /// </summary>
         /// <param name="directory">the subdirectory in the input directory containing the house configs</param>
         /// <returns>all house configs from the directory</returns>
-        private static IEnumerable<MassSimTargetReference> CollectHouseConfigs(string directory, Random random)
+        private static ICollection<MassSimTargetReference> CollectHouseConfigs(string directory, Random random)
         {
-            return Directory.GetFiles(directory).Select(f => new MassSimTargetReference(Path.GetFileNameWithoutExtension(f), f, random.Next()));
+            var files = Directory.GetFiles(directory);
+            // sort filenames to ensure that they are always in the same order
+            Array.Sort(files);
+            // return the result as a collection instead of an enumerable to avoid assigning different random values on each access
+            return [.. files.Select(f => new MassSimTargetReference(Path.GetFileNameWithoutExtension(f), f, random.Next()))];
         }
 
         /// <summary>
