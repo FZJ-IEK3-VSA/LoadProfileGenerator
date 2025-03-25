@@ -30,10 +30,6 @@ namespace MassSimulation.Scenarios
 
             var poiRegister = BuildPointOfInterestRegister(numberOfParts, poiSublists);
 
-            // initialize a random object to create individual seeds for each scenario part, based on the main seed
-            int randomSeed = CalcParameters.GetActualRandomSeed(CalcSpecification.RandomSeed);
-            var random = new Random(randomSeed);
-
             // create the list of scenario part objects, each with its own share of households and POIs
             var parts = targetSublists.ZipLongest(poiSublists, [], []).Select(listPair => new ScenarioPart(listPair.Item1.ToList(), listPair.Item2.ToList(), DatabasePath, CalcSpecification, poiRegister, CityData));
             return parts.ToArray();

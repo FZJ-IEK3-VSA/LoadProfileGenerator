@@ -371,12 +371,17 @@ namespace Common.JSON {
         /// <returns>the random seed to use</returns>
         public static int GetActualRandomSeed(int? randomSeed, bool forceRandom = false)
         {
+            int selectedSeed;
             if (randomSeed is null || randomSeed == -1 || forceRandom)
             {
-                // use a new random object to generate a random seed
-                return new Random().Next();
+                // use a new Random object to generate a random seed
+                selectedSeed = new Random().Next();
+            } else
+            {
+                selectedSeed = randomSeed.Value;
             }
-            return randomSeed.Value;
+            Logger.Info($"Using RNG seed {selectedSeed}");
+            return selectedSeed;
         }
 
         [NotNull]

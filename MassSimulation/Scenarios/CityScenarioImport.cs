@@ -56,7 +56,7 @@ namespace MassSimulation.CityGeneration
 
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), random);
-            var cityData = ParseJsonFile< CityData>(inputDirectory.CombineName("city.json"));
+            var cityData = ParseJsonFile<CityData>(inputDirectory.CombineName("city.json"));
             var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
 
             // log the seed used for each target to make simulation reproducible
