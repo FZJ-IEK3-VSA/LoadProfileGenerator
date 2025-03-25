@@ -56,12 +56,11 @@ namespace Common {
     }
     public static class UnitTestDetector
     {
-        public static readonly HashSet<string> UnitTestAttributes = new HashSet<string>
-        {
+        public static readonly HashSet<string> UnitTestAttributes = [
             "Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute",
             "NUnit.Framework.TestFixtureAttribute",
             "XUnit.FactAttribute"
-        };
+        ];
 
         private static bool? _isRunning;
 
@@ -81,7 +80,7 @@ namespace Common {
                 foreach (var f in stcktrace) {
                     var g = f.GetMethod()?.DeclaringType;
                     if (g == null) {
-                        throw new LPGException("declaringtype was null");
+                        continue;
                     }
                     if (g.GetCustomAttributes(false).Any(x => UnitTestAttributes.Contains(x.GetType().FullName))) {
                         _isRunning = true;

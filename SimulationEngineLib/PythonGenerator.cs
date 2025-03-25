@@ -346,14 +346,14 @@ namespace SimulationEngineLib
         private static string GetPropLine([JetBrains.Annotations.NotNull] PropertyInfo info, [JetBrains.Annotations.NotNull] HashSet<string> encounteredTypes, [JetBrains.Annotations.NotNull] out string pythonTypeName)
         {
             var propertyType = info.PropertyType;
-            if (info.PropertyType.IsGenericType)
+            if (propertyType.IsGenericType)
             {
                 // the property is a generic, e.g. a list or dict
                 string propertyTypeName = propertyType.FullName;
                 // create the property line depending on the generic
                 if (propertyTypeName.StartsWith("System.Collections.Generic.List`1[["))
                 {
-                    var genericType = info.PropertyType.GenericTypeArguments[0];
+                    var genericType = propertyType.GenericTypeArguments[0];
                     encounteredTypes.Add(genericType.FullName);
                     GetPropertyTypeAndInit(genericType, out var generictypename);
                     pythonTypeName = $"List[{generictypename}]";
@@ -366,9 +366,10 @@ namespace SimulationEngineLib
 
                     return info.Name + $": {pythonTypeName} = field(default_factory=list)";
                 }
-                if (propertyTypeName.StartsWith("System.Collections.Generic.Dictionary`2[[System.String,"))
+                if (propertyTypeName.StartsWith("System.Collections.Generic.Dictionary`2[[System.String,") ||
+                    propertyTypeName.StartsWith("System.Collections.Generic.OrderedDictionary`2[[System.String,"))
                 {
-                    var genericType = info.PropertyType.GenericTypeArguments[1];
+                    var genericType = propertyType.GenericTypeArguments[1];
                     encounteredTypes.Add(genericType.FullName);
                     GetPropertyTypeAndInit(genericType, out var generictypename);
                     pythonTypeName = $"Dict[str, {generictypename}]";
@@ -378,7 +379,7 @@ namespace SimulationEngineLib
                 // for nullables, just use the contained type
                 if (propertyTypeName.StartsWith("System.Nullable`1"))
                 {
-                    propertyType = info.PropertyType.GenericTypeArguments[0];
+                    propertyType = propertyType.GenericTypeArguments[0];
                 }
             }
             else

@@ -12,7 +12,7 @@ namespace Automation
         /// Specifies all points of interest in the city. Each of them will be represented by
         /// a dedicated new location and site.
         /// </summary>
-        public Dictionary<string, PointOfInterestData> PointsOfInterest { get; set; } = [];
+        public OrderedDictionary<string, PointOfInterestData> PointsOfInterest { get; set; } = [];
 
         /// <summary>
         /// The routes that are available to the persons in the house of this house job
