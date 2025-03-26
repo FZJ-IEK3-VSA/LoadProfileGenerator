@@ -3,7 +3,7 @@ using System.Text;
 
 namespace MassSimulation
 {
-    internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "logs")
+    internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "Logs")
     {
 
         private readonly string outputDirectory = Path.Combine(outputDirectory, subdirectory);

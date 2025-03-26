@@ -12,7 +12,7 @@ namespace MassSimulation.CityGeneration
 {
     /// <summary>
     /// Class for loading a city scenario from a directory. The directory must contain
-    /// a Calcspec.json file with the calculation configuration, and files specifying all
+    /// a calcspec.json file with the calculation configuration, and files specifying all
     /// residential and non-residential buildings in the target area.
     /// </summary>
     internal class CityScenarioImport
@@ -20,9 +20,9 @@ namespace MassSimulation.CityGeneration
         public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath)
         {
             var inputDirectory = new DirectoryInfo(inputDirectoryPath);
-            // read file Calcspec.json; it is a HouseCreationAndCalculationJob object, but only calcspec
+            // read file calcspec.json; it is a HouseCreationAndCalculationJob object, but only calcspec
             // and database path are required
-            var hcj = ParseJsonFile<HouseCreationAndCalculationJob>(inputDirectory.CombineName("Calcspec.json"));
+            var hcj = ParseJsonFile<HouseCreationAndCalculationJob>(inputDirectory.CombineName("calcspec.json"));
             var calcSpec = hcj.CalcSpec ?? throw new LPGException("No CalcSpec was given in the input file");
             // TODO: calcspec should be complete and single-source-of-parameters
             // --> check and fill all missing values in the calcspec first, then move on
