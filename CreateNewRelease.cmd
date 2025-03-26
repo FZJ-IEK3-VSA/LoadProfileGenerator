@@ -1,8 +1,8 @@
+REM Builds a new release version of the LoadProfileGenerator for all target platforms, and creates new python bindings
+
 REM get the path to the current directory
 set "srcdirectory=%~dp0"
 set "vsdirectory=D:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin"
-
-REM copy V:\Dropbox\LPG\WpfApplication1\profilegenerator-latest.db3 c:\Main\Git-Repositories\LoadProfileGenerator\WpfApplication1\profilegenerator-latest.db3
 
 cd /D %srcdirectory%
 %srcdirectory%\VersionIncreaser\bin\Debug\versionincreaser.exe
@@ -28,7 +28,7 @@ releasemaker
 pause
 
 
-REM create pylpg
+REM create new python bindings for the pylpg
 set "releasedirectory=C:\LPGReleaseMakerResults\LPGReleases\releases10.10"
 set "pylpgdirectory=C:\LPGPythonBindings\pylpg\"
 
