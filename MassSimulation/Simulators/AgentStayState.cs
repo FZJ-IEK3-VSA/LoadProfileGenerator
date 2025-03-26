@@ -1,6 +1,6 @@
 ﻿using CalculationEngine.CitySimulation;
 
-namespace MassSimulation.Simulators
+namespace CitySimulation.Simulators
 {
     internal class AgentStayState(RemoteActivityStart activity, double stayDuration)
     {

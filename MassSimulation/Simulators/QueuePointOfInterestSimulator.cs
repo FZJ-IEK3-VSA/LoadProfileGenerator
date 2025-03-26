@@ -4,7 +4,7 @@ using Common;
 using System.Diagnostics;
 using System.Transactions;
 
-namespace MassSimulation.Simulators
+namespace CitySimulation.Simulators
 {
     class QueuePointOfInterestSimulator(int rank, PointOfInterestId id, JsonCalcSpecification calcSpec, int concurrentActivities) : PointOfInterestSimulator(rank, id, calcSpec)
     {

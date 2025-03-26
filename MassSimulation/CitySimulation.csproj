@@ -21,7 +21,7 @@
 		<PackageReference Include="MPI.NET" Version="1.4.0" />
 	</ItemGroup>
 	<ItemGroup Condition=" '$(RuntimeIdentifier)' == 'linux-x64' ">
-		<!-- For linux, MPI.net needs to be compiled and copied to the MassSimulation/lib directory -->
+		<!-- For linux, MPI.net needs to be compiled and copied to the CitySimulation/lib directory -->
 		<Reference Include="MPI" />
 		<Content Include="lib/libmpinet.so">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

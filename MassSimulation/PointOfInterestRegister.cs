@@ -1,7 +1,7 @@
 ﻿using Automation.ResultFiles;
 using CalculationEngine.CitySimulation;
 
-namespace MassSimulation
+namespace CitySimulation
 {
     /// <summary>
     /// Register that stores all POIs and the worker responsible for simulating them.

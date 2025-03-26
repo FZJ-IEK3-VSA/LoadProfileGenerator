@@ -2,13 +2,13 @@
 using CalculationEngine.CitySimulation;
 using Common;
 using Common.JSON;
-using MassSimulation.CityGeneration;
-using MassSimulation.Scenarios;
-using MassSimulation.Simulators;
+using CitySimulation.CityGeneration;
+using CitySimulation.Scenarios;
+using CitySimulation.Simulators;
 using MPI;
 using System.Runtime.InteropServices;
 
-namespace MassSimulation
+namespace CitySimulation
 {
     /// <summary>
     /// MPI Worker class that is instantiated once per MPI process and handles the whole simulation.

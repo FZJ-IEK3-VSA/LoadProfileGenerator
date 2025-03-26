@@ -1,6 +1,6 @@
 ﻿using MPI;
 
-namespace MassSimulation
+namespace CitySimulation
 {
     internal static class Program
     {

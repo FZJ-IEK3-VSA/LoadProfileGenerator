@@ -1,14 +1,14 @@
 ﻿using CalculationEngine;
 
-namespace MassSimulation.SimulationTargets
+namespace CitySimulation.SimulationTargets
 {
-    internal class MassSimulationTarget
+    internal class CitySimulationHouse
     {
         public readonly string Id;
         public readonly CalcManager CalcManager;
         public readonly string ResultDirectory;
 
-        public MassSimulationTarget(string id, CalcManager calcManager, string resultDirectory)
+        public CitySimulationHouse(string id, CalcManager calcManager, string resultDirectory)
         {
             Id = id;
             CalcManager = calcManager;

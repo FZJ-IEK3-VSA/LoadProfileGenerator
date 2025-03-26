@@ -4,7 +4,7 @@ using Common.Extensions;
 using MPI;
 using System.Diagnostics;
 
-namespace MassSimulation
+namespace CitySimulation
 {
     /// <summary>
     /// Stores all activity messages collected after distribution via MPI in a suitable format for easy distribution.

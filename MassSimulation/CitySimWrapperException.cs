@@ -1,4 +1,4 @@
-﻿namespace MassSimulation
+﻿namespace CitySimulation
 {
     /// <summary>
     /// Wrapper exception that can be used to add relevant information about the part of the simulation that caused

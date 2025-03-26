@@ -10,14 +10,14 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.JSON;
 using Database;
-using MassSimulation.Scenarios;
-using MassSimulation.SimulationTargets;
+using CitySimulation.Scenarios;
+using CitySimulation.SimulationTargets;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
 using System.Runtime.InteropServices;
 
-namespace MassSimulation
+namespace CitySimulation
 {
     /// <summary>
     /// A class that simulates multiple LPG households simultaneously.
@@ -27,7 +27,7 @@ namespace MassSimulation
         private readonly int rank;
         private readonly Simulator sim;
         private readonly ScenarioPart scenarioPart;
-        private readonly List<MassSimulationTarget> simulationTargets;
+        private readonly List<CitySimulationHouse> simulationTargets;
 
         public CalcParameters CalcParameters;
 
@@ -49,7 +49,7 @@ namespace MassSimulation
             var databaseDirectory = Path.Combine(baseResultDir, "Databases");
             sim = houseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, $"profilegenerator.worker_{rank}.db3");
 
-            simulationTargets = new List<MassSimulationTarget>(scenarioPart.TargetReferences.Count);
+            simulationTargets = new List<CitySimulationHouse>(scenarioPart.TargetReferences.Count);
             var cmf = new CalcManagerFactory();
 
             foreach (var target in scenarioPart.TargetReferences)
@@ -93,7 +93,7 @@ namespace MassSimulation
 
                     // create a calcManager for each household
                     var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
-                    simulationTargets.Add(new MassSimulationTarget(target.Id, calcManager, resultDirectory));
+                    simulationTargets.Add(new CitySimulationHouse(target.Id, calcManager, resultDirectory));
                 }
                 catch (Exception ex)
                 {
@@ -117,7 +117,7 @@ namespace MassSimulation
             return simulationTargets.SelectMany(target => SimulateOneStepOneTarget(timeStep, dateTime, finishedActivities, target));
         }
 
-        private ICollection<RemoteActivityInfo> SimulateOneStepOneTarget(TimeStep timeStep, DateTime dateTime, Dictionary<string, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>> finishedActivities, MassSimulationTarget target)
+        private ICollection<RemoteActivityInfo> SimulateOneStepOneTarget(TimeStep timeStep, DateTime dateTime, Dictionary<string, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>> finishedActivities, CitySimulationHouse target)
         {
             ICollection<RemoteActivityInfo> newRemoteActivities = [];
             try

@@ -1,6 +1,6 @@
 ﻿using Common;
 
-namespace MassSimulation
+namespace CitySimulation
 {
     internal static class Utils
     {

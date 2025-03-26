@@ -1,7 +1,7 @@
 ﻿using Common;
 using System.Text;
 
-namespace MassSimulation
+namespace CitySimulation
 {
     internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "Logs")
     {

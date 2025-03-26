@@ -1,19 +1,19 @@
 ﻿using Automation;
 using Common.Extensions;
 using Common.JSON;
-using MassSimulation.SimulationTargets;
+using CitySimulation.SimulationTargets;
 
-namespace MassSimulation.Scenarios
+namespace CitySimulation.Scenarios
 {
     /// <summary>
     /// Represents a simulation scenario with all objects that belong to that, including
     /// fully defined houses with households etc.
     /// </summary>
-    public class Scenario(string databasePath, JsonCalcSpecification calcSpec, IEnumerable<MassSimTargetReference> targetReferences, IEnumerable<PointOfInterestConfig> pointsOfInterest, CityData cityData)
+    public class Scenario(string databasePath, JsonCalcSpecification calcSpec, IEnumerable<ResidentialBuildingConfig> targetReferences, IEnumerable<PointOfInterestConfig> pointsOfInterest, CityData cityData)
     {
         public string DatabasePath { get; private set; } = databasePath;
         public JsonCalcSpecification CalcSpecification { get; private set; } = calcSpec;
-        public IEnumerable<MassSimTargetReference> TargetReferences { get; private set; } = targetReferences;
+        public IEnumerable<ResidentialBuildingConfig> TargetReferences { get; private set; } = targetReferences;
         public IEnumerable<PointOfInterestConfig> PointsOfInterest { get; private set; } = pointsOfInterest;
         public CityData CityData { get; set; } = cityData;
 

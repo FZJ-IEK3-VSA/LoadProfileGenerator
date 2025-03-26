@@ -3,7 +3,7 @@ using CalculationEngine.CitySimulation;
 using Common;
 using System.Diagnostics;
 
-namespace MassSimulation.Simulators
+namespace CitySimulation.Simulators
 {
     /// <summary>
     /// Stores all currently traveling agents and simulates their travel times.

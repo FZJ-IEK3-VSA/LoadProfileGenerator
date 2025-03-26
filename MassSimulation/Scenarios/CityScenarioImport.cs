@@ -2,13 +2,13 @@
 using Automation.ResultFiles;
 using Common;
 using Common.JSON;
-using MassSimulation.Scenarios;
-using MassSimulation.SimulationTargets;
+using CitySimulation.Scenarios;
+using CitySimulation.SimulationTargets;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
 
-namespace MassSimulation.CityGeneration
+namespace CitySimulation.CityGeneration
 {
     /// <summary>
     /// Class for loading a city scenario from a directory. The directory must contain
@@ -83,13 +83,13 @@ namespace MassSimulation.CityGeneration
         /// </summary>
         /// <param name="directory">the subdirectory in the input directory containing the house configs</param>
         /// <returns>all house configs from the directory</returns>
-        private static ICollection<MassSimTargetReference> CollectHouseConfigs(string directory, Random random)
+        private static ICollection<ResidentialBuildingConfig> CollectHouseConfigs(string directory, Random random)
         {
             var files = Directory.GetFiles(directory);
             // sort filenames to ensure that they are always in the same order
             Array.Sort(files);
             // return the result as a collection instead of an enumerable to avoid assigning different random values on each access
-            return [.. files.Select(f => new MassSimTargetReference(Path.GetFileNameWithoutExtension(f), f, random.Next()))];
+            return [.. files.Select(f => new ResidentialBuildingConfig(Path.GetFileNameWithoutExtension(f), f, random.Next()))];
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace MassSimulation.CityGeneration
         /// </summary>
         /// <param name="resultDir">the output directory where the file will be created</param>
         /// <param name="targets">the target references with their seeds</param>
-        private static void CreateTargetSeedFile(string resultDir, IEnumerable<MassSimTargetReference> targets)
+        private static void CreateTargetSeedFile(string resultDir, IEnumerable<ResidentialBuildingConfig> targets)
         {
             var seedDict = targets.ToDictionary(t => t.Id, t => t.Seed);
             var jsonString = JsonConvert.SerializeObject(seedDict, Formatting.Indented);

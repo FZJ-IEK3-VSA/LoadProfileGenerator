@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace MassSimulation
+namespace CitySimulation
 {
     /// <summary>
     /// This is a simple adapter that can be used in MPI.NET

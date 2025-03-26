@@ -3,7 +3,7 @@ using CalculationEngine.CitySimulation;
 using Common;
 using System.Diagnostics;
 
-namespace MassSimulation.Simulators
+namespace CitySimulation.Simulators
 {
     /// <summary>
     /// Simulates agent stays in any point of interest, for example a small enterprise.
