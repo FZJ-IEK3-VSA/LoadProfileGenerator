@@ -91,7 +91,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseMaker", "ReleaseMake
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionIncreaser", "VersionIncreaser\VersionIncreaser.csproj", "{C7053527-71B4-4FD2-9211-B652BA07074D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CitySimulation", "MassSimulation\CitySimulation.csproj", "{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CitySimulation", "CitySimulation\CitySimulation.csproj", "{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
