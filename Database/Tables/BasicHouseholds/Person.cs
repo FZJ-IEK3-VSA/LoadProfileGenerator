@@ -150,6 +150,16 @@ namespace Database.Tables.BasicHouseholds
                     }
                 }
             }
+            foreach (var template in sim.HouseholdTemplates.Items)
+            {
+                foreach (var person in template.Persons)
+                {
+                    if (person.Person == this)
+                    {
+                        used.Add(new UsedIn(template, "Household Template"));
+                    }
+                }
+            }
             return used;
         }
 
