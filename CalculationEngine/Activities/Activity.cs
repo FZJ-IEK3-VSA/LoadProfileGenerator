@@ -2,7 +2,6 @@
 using CalculationEngine.CitySimulation;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.Transportation;
 using Common;
 
 namespace CalculationEngine.Activities

@@ -1,8 +1,7 @@
 ﻿#region
 
+using Automation.ResultFiles;
 using CalculationEngine.Activities;
-using CalculationEngine.CitySimulation;
-using Common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +16,7 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         private readonly LinkedList<IActivity> activityQueue = [];
 
-        public IActivity CurrentActivity => activityQueue.First!.Value;
+        public IActivity CurrentActivity => activityQueue.First?.Value ?? throw new LPGException("There is no currently active activity");
 
         public bool IsEmpty => activityQueue.Count == 0;
 
@@ -30,12 +29,6 @@ namespace CalculationEngine.HouseholdElements
         }
 
         public void RemoveCurrentActivity() => activityQueue.RemoveFirst();
-
-        //public void FinishCurrentActivity(TimeStep timestep, RemoteActivityFinished? remoteActivityResult = null)
-        //{
-        //    CurrentActivity.Finish(timestep, remoteActivityResult);
-        //    activityQueue.RemoveFirst();
-        //}
 
         public void AddFirst(IEnumerable<IActivity> activities)
         {

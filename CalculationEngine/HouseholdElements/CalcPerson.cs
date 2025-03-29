@@ -98,12 +98,16 @@ namespace CalculationEngine.HouseholdElements
 
         private bool _isCurrentlySick;
 
-        private bool _alreadyloggedvacation;
+        /// <summary>
+        /// Indicates whether the person went on a vacation that has not ended yet.
+        /// </summary>
+        private bool _isCurrentlyOnVacation;
 
         public HouseholdKey HouseholdKey => _calcPerson.HouseholdKey;
 
         //guid for all vacations of this person
         private readonly StrGuid _vacationAffordanceGuid = StrGuid.New();
+        private const string VacationAffordanceName = "take a vacation";
 
         // use one vacation location guid for all persons
         private static readonly StrGuid _vacationLocationGuid = StrGuid.New();
@@ -320,8 +324,8 @@ namespace CalculationEngine.HouseholdElements
                 // select initial activities
                 PlanAndStartNewActivity(time, isDaylight, persons);
             }
-            Debug.Assert(!activityQueue.IsEmpty, "Activity queue was empty in the beginning of a step. This should never happen.");
 
+            // cleanup list of previous affordances
             if (_previousAffordances.Count > _calcRepo.CalcParameters.AffordanceRepetitionCount)
             {
                 _previousAffordances.RemoveAt(0);
@@ -333,10 +337,17 @@ namespace CalculationEngine.HouseholdElements
                 CurrentDesires.CheckForCriticalThreshold(this, time, _calcRepo.FileFactoryAndTracker, householdKey);
             }
 
-            if (IsOnVacation[time.InternalStep])
+            // check the vacation state
+            if (_isCurrentlyOnVacation)
             {
-                BeOnVacation(time);
-                return false;
+                // person is currently on vacation
+                if (IsOnVacation[time.InternalStep])
+                {
+                    // vacation is still ongoing
+                    return false;
+                }
+                // vacation just ended, resume as usual
+                _isCurrentlyOnVacation = false;
             }
 
             UpdateHealthState(time);
@@ -345,9 +356,10 @@ namespace CalculationEngine.HouseholdElements
             WriteDesiresToLogfileIfNeeded(time, householdKey);
 
             // check if the current activity is finished
-            if (activityQueue.CurrentActivity.IsFinished(time, remoteActivityResult))
+            if (activityQueue.IsEmpty || activityQueue.CurrentActivity.IsFinished(time, remoteActivityResult))
             {
-                FinishActivity(time, activityQueue.CurrentActivity, remoteActivityResult);
+                if (!activityQueue.IsEmpty)
+                    FinishActivity(time, activityQueue.CurrentActivity, remoteActivityResult);
                 return StartNextActivity(time, isDaylight, persons);
             }
 
@@ -362,7 +374,6 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="time">the current timestep</param>
         private void UpdateHealthState(TimeStep time)
         {
-            _alreadyloggedvacation = false;
             if (!_isCurrentlySick && IsSick[time.InternalStep])
             {
                 // person gets sick
@@ -392,20 +403,20 @@ namespace CalculationEngine.HouseholdElements
             LogThought(time, "I've just become sick.");
         }
 
-        private void BeOnVacation(TimeStep time)
+        private void StartVacation(TimeStep time)
         {
-            LogThought(time, "I'm on vacation.");
+            LogThought(time, "Starting a vacation.");
 
-            // only log vacation if not done already and if the current time step does not belong to the setup time frame
-            if (!_alreadyloggedvacation && time.DisplayThisStep)
+            // only log the vacation if the current time step does not belong to the setup time frame
+            if (time.DisplayThisStep)
             {
                 _calcRepo.OnlineLoggingData.AddActionEntry(time, _calcPerson.Guid, _calcPerson.Name,
                     _isCurrentlySick, "taking a vacation", _vacationAffordanceGuid, _calcPerson.HouseholdKey,
                     "Vacation", BodilyActivityLevel.Outside, false);
                 _calcRepo.OnlineLoggingData.AddLocationEntry(new LocationEntry(_calcPerson.HouseholdKey,
                     _calcPerson.Name, _calcPerson.Guid, time, "Vacation", _vacationLocationGuid));
-                _alreadyloggedvacation = true;
             }
+            _isCurrentlyOnVacation = true;
         }
 
         /// <summary>
@@ -436,6 +447,14 @@ namespace CalculationEngine.HouseholdElements
                 _isCurrentActivityInterruption = false;
                 return !activityQueue.CurrentActivity.IsDetermined;
             }
+
+            // finished all ongoing activites, now check if a vacation is scheduled
+            if (IsOnVacation[time.InternalStep])
+            {
+                StartVacation(time);
+                return false;
+            }
+
             // no more activities planned, choose and start new activities
             return PlanAndStartNewActivity(time, isDaylight, persons);
         }
@@ -464,7 +483,8 @@ namespace CalculationEngine.HouseholdElements
         }
 
         /// <summary>
-        /// Activate the specified affordance for this person.
+        /// Plans and prepares activation of the specified affordance for this person by creating
+        /// corresponding activity objects that can then be activated.
         /// </summary>
         /// <param name="timestep">timestep for activating the affordance</param>
         /// <param name="isDaylight">daylight information object</param>
@@ -547,7 +567,7 @@ namespace CalculationEngine.HouseholdElements
 
             // log wether light was switched on
             string message = activity.LightingSwitchedOn ? "Turning on the light for " : "No light needed for ";
-            LogThought(timestep, message + activity.Affordance.ParentLocation.Name);
+            LogThought(timestep, message + affordance.ParentLocation.Name);
         }
 
         /// <summary>
@@ -1052,9 +1072,22 @@ namespace CalculationEngine.HouseholdElements
 
         public void LogPersonStatus(TimeStep timestep)
         {
+            string affordanceName;
+            StrGuid affordanceGuid;
+            if (_isCurrentlyOnVacation)
+            {
+                // currently on vacation, therefore log the vacation affordance data
+                affordanceName = VacationAffordanceName;
+                affordanceGuid = _vacationAffordanceGuid;
+            }
+            else
+            {
+                affordanceName = CurentAffordance.Name;
+                affordanceGuid = CurentAffordance.Guid;
+            }
             var ps = new PersonStatus(_calcPerson.HouseholdKey, _calcPerson.Name,
                 _calcPerson.Guid, _currentLocation.Name, _currentLocation.Guid, _currentSite?.Name ?? "no site",
-                _currentLocation.CalcSite?.Guid, CurentAffordance.Name, CurentAffordance?.Guid, timestep);
+                _currentLocation.CalcSite?.Guid, affordanceName, affordanceGuid, timestep);
             _calcRepo.OnlineLoggingData.AddPersonStatus(ps);
         }
 
