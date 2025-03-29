@@ -119,19 +119,18 @@ namespace CitySimulation
 
         private ICollection<RemoteActivityInfo> SimulateOneStepOneTarget(TimeStep timeStep, DateTime dateTime, Dictionary<string, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>> finishedActivities, CitySimulationHouse target)
         {
-            ICollection<RemoteActivityInfo> newRemoteActivities = [];
             try
             {
                 var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
                 // set the missing target ID and worker rank to make the person identifier simulation-wide unique
-                newRemoteActivities.ForEach(activity => activity.Person.AddMissingInfo(target.Id, rank));
+                newActivities.ForEach(activity => activity.Person.AddMissingInfo(target.Id, rank));
+                return [.. newActivities];
             }
             catch (Exception e)
             {
                 // wrap the exception in a CitySimWrapperException contining more relevant information
                 throw new CitySimWrapperException(e, rank, target.Id, $"timestep {timeStep.InternalStep}");
             }
-            return newRemoteActivities;
         }
 
         public void FinishSimulation()
