@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Automation;
 using CalculationEngine.HouseholdElements;
@@ -58,12 +59,17 @@ namespace CalculationEngine.Transportation {
         private int GetDurationInTimeSteps(CalcTransportationDevice td)
         {
             // if the travel route step has a fixed duration, return that
+            int duration;
             if (DurationInS >= 0)
             {
-                return td.CalculateDurationinTimeSteps(DurationInS);
+                duration = td.CalculateDurationinTimeSteps(DurationInS);
+            }else
+            {
+                // otherwise, calculate the duration using the vehicle speed
+                duration = td.CalculateDurationOfTimestepsForDistance(_distanceOfStepInM);
             }
-            // otherwise, calculate the duration using the vehicle speed
-            return td.CalculateDurationOfTimestepsForDistance(_distanceOfStepInM);
+            // every step must take at least one timestep
+            return Math.Max(duration, 1);
         }
 
         public bool CalculateDurationInTimestepsAndPickDevice([NotNull] TimeStep timestepOfThisStep,
