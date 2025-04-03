@@ -22,7 +22,7 @@ namespace CitySimulation.CityGeneration
             var inputDirectory = new DirectoryInfo(inputDirectoryPath);
             // read file calcspec.json; it is a HouseCreationAndCalculationJob object, but only calcspec
             // and database path are required
-            var hcj = ParseJsonFile<HouseCreationAndCalculationJob>(inputDirectory.CombineName("calcspec.json"));
+            var hcj = AutomationUtili.ParseJsonFile<HouseCreationAndCalculationJob>(inputDirectory.CombineName("calcspec.json"));
             var calcSpec = hcj.CalcSpec ?? throw new LPGException("No CalcSpec was given in the input file");
             // TODO: calcspec should be complete and single-source-of-parameters
             // --> check and fill all missing values in the calcspec first, then move on
@@ -56,7 +56,7 @@ namespace CitySimulation.CityGeneration
 
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), random);
-            var cityData = ParseJsonFile<CityData>(inputDirectory.CombineName("city.json"));
+            var cityData = AutomationUtili.ParseJsonFile<CityData>(inputDirectory.CombineName("city.json"));
             var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
 
             // log the seed used for each target to make simulation reproducible
@@ -69,7 +69,7 @@ namespace CitySimulation.CityGeneration
                 if (!cityData.Routes.IsNullOrEmpty())
                     throw new LPGException("Routes are defined in both city.json and routes.json. Only one of them is allowed at a time.");
 
-                var routes = ParseJsonFile<Dictionary<string, RouteData>>(routesFile);
+                var routes = AutomationUtili.ParseJsonFile<Dictionary<string, RouteData>>(routesFile);
                 cityData.Routes = [.. routes.Values];
             }
 
@@ -103,23 +103,6 @@ namespace CitySimulation.CityGeneration
             var seedDict = targets.ToDictionary(t => t.Id, t => t.Seed);
             var jsonString = JsonConvert.SerializeObject(seedDict, Formatting.Indented);
             File.WriteAllText(Path.Combine(resultDir, Constants.HouseSeedMappingFile), jsonString);
-        }
-
-        /// <summary>
-        /// Reads a JSON file and tries to parse the specified object from it.
-        /// </summary>
-        /// <typeparam name="T">the type of the object to parse</typeparam>
-        /// <param name="filename">the name of the file containing the JSON</param>
-        /// <returns>the parsed object</returns>
-        /// <exception cref="LPGException">if the parsed object is null</exception>
-        private static T ParseJsonFile<T>(string filename)
-        {
-            // use a StreamReader to avoid loading large files as a single string
-            using var filereader = new StreamReader(filename);
-            using var jsonreader = new JsonTextReader(filereader);
-            var serializer = new JsonSerializer();
-            var parsedObject = serializer.Deserialize<T>(jsonreader);
-            return parsedObject ?? throw new LPGException($"Input file {filename} did not contain valid data.");
         }
     }
 }

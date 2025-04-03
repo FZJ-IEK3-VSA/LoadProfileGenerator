@@ -6,9 +6,28 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Automation.ResultFiles;
+using Newtonsoft.Json;
 
 namespace Automation {
-    public static class AutomationUtili {
+    public static class AutomationUtili
+    {
+        /// <summary>
+        /// Reads a JSON file and tries to parse the specified object from it.
+        /// </summary>
+        /// <typeparam name="T">the type of the object to parse</typeparam>
+        /// <param name="filename">the name of the file containing the JSON</param>
+        /// <returns>the parsed object</returns>
+        /// <exception cref="LPGException">if the parsed object is null</exception>
+        public static T ParseJsonFile<T>(string filename)
+        {
+            // use a StreamReader to avoid loading large files as a single string
+            using var filereader = new StreamReader(filename);
+            using var jsonreader = new JsonTextReader(filereader);
+            var serializer = new JsonSerializer();
+            var parsedObject = serializer.Deserialize<T>(jsonreader);
+            return parsedObject ?? throw new LPGException($"Input file {filename} does not contain valid data.");
+        }
+
         [JetBrains.Annotations.NotNull]
         public static List<CalcOption> GetOptionList([JetBrains.Annotations.NotNull] params CalcOption[] list)
         {
