@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Automation.ResultFiles;
 using Database.Tables.ModularHouseholds;
 using System.Linq;
+using PowerArgs;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -65,6 +66,11 @@ namespace SimulationEngineLib.HouseJobProcessor
 
         internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj, TransportationDeviceSet transportationDeviceSet)
         {
+            if (householdData.PointOfInterestPreferences.IsNullOrEmpty())
+                throw new LPGPBadParameterException("Cannot create dynamic city routes without point of interest preferences for each person.");
+            if (hj.City.Routes.Count == 0)
+                throw new LPGPBadParameterException("Point of interest preferences were given, but no route data was provided.");
+
             // create a new empty travel route set
             var travelRouteSet = sim.TravelRouteSets.CreateNewItem(sim.ConnectionString);
             travelRouteSet.Name = $"Generated Travel Route Set for {householdData.Name}";
