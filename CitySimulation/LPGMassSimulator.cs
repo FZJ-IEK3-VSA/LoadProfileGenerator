@@ -38,6 +38,9 @@ namespace CitySimulation
 
             string baseResultDir = scenarioPart.CalcSpecification.OutputDirectory ?? throw new LPGPBadParameterException("No OutputDirectory specified");
 
+            if (scenarioPart.TargetReferences.Count == 0)
+                throw new LPGPBadParameterException($"LPGMassSimulator on worker {rank} received no simulation targets.");
+
             // configure logger so that each worker logs to a different file
             var baseResultDirInfo = new DirectoryInfo(baseResultDir);
             Logger.Get().StartCollectingAllMessages();
