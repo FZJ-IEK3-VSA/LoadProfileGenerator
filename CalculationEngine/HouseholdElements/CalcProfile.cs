@@ -94,20 +94,23 @@ namespace CalculationEngine.HouseholdElements
         }
 
         [JetBrains.Annotations.NotNull]
-        private Dictionary<double, CalcProfile> ChangedProfiles { get; } = [];
+        private Dictionary<int, CalcProfile> ChangedProfiles { get; } = [];
 
         [JetBrains.Annotations.NotNull]
         public CalcProfile CompressExpandDoubleArray(double timeFactor)
         {
-            timeFactor = Math.Round(timeFactor, 2);
-            if (ChangedProfiles.ContainsKey(timeFactor)) {
-                return ChangedProfiles[timeFactor];
-            }
-
             var newlength = GetNewLengthAfterCompressExpand(StepValues.Count, timeFactor);
+            // check if a profile of this length was already generated before
+            if (ChangedProfiles.TryGetValue(newlength, out CalcProfile? cachedProfile))
+            {
+                return cachedProfile;
+            }
+            timeFactor = RoundTimeFactor(timeFactor);
+
             var stepvaluesCompressed = new double[newlength];
             if (timeFactor < 1)
             {
+                // profile needs to be compressed
                 for (var timeidx = 0; timeidx < StepValues.Count; timeidx++)
                 {
                     stepvaluesCompressed[(int)(timeidx * timeFactor)] = StepValues[timeidx];
@@ -117,9 +120,11 @@ namespace CalculationEngine.HouseholdElements
                     stepvaluesCompressed[newlength - 1] = StepValues[StepValues.Count - 1];
                 }
                 CalcProfile newcp = new CalcProfile(Name, System.Guid.NewGuid().ToStrGuid(), stepvaluesCompressed.ToList(), ProfileType, DataSource);
-                ChangedProfiles.Add(timeFactor,newcp);
+                ChangedProfiles.Add(newlength, newcp);
                 return newcp;
             }
+
+            // profile needs to be expanded
             var lastidx = 0;
             for (var timeidx = 0; timeidx < StepValues.Count; timeidx++)
             {
@@ -131,7 +136,7 @@ namespace CalculationEngine.HouseholdElements
                 lastidx = nextidx;
             }
             CalcProfile cp = new CalcProfile(Name, System.Guid.NewGuid().ToStrGuid(), stepvaluesCompressed.ToList(), ProfileType, DataSource);
-            ChangedProfiles.Add(timeFactor, cp);
+            ChangedProfiles.Add(newlength, cp);
             return cp;
         }
 
@@ -283,6 +288,7 @@ namespace CalculationEngine.HouseholdElements
 
         public static int GetNewLengthAfterCompressExpand(double valuecount, double timefactor)
         {
+            timefactor = RoundTimeFactor(timefactor);
             var newdoublelength = valuecount * timefactor;
             var newlength = (int) Math.Ceiling(newdoublelength);
             if (newlength == 0) {
@@ -290,6 +296,18 @@ namespace CalculationEngine.HouseholdElements
             }
 
             return newlength;
+        }
+
+        /// <summary>
+        /// Rounds the time factor to a fixed precision to be able 
+        /// to reuse more cached CalcProfiles.
+        /// </summary>
+        /// <param name="timefactor">the time factor</param>
+        /// <returns>the rounded time factor</returns>
+        private static double RoundTimeFactor(double timefactor)
+        {
+            // round the time factor to be able to reuse more cached CalcProfiles
+            return Math.Round(timefactor, 2);
         }
 
         public override string ToString() => Name + "\t Datapoints:" + TimeSpanDataPoints.Count;
