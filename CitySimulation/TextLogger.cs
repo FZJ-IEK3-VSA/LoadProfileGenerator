@@ -3,10 +3,10 @@ using System.Text;
 
 namespace CitySimulation
 {
-    internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "Logs")
+    internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "")
     {
-
-        private readonly string outputDirectory = Path.Combine(outputDirectory, subdirectory);
+        public const string LOG_SUBDIR = "Logs";
+        private readonly string outputDirectory = Path.Combine(outputDirectory, LOG_SUBDIR, subdirectory);
         private List<LogEntry> LogEntries = [];
 
         private int lastWrittenEntry = 0;

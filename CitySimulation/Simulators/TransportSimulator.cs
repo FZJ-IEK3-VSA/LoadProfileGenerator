@@ -22,9 +22,9 @@ namespace CitySimulation.Simulators
         {
             WorkerId = rank;
             this.calcSpec = calcSpec;
-            var filename = $"Transport-{WorkerId}.txt";
-            logger = new(filename, calcSpec.OutputDirectory);
-            presenceLogger = new(filename, calcSpec.OutputDirectory, "Logs/traveling_persons");
+            var filename = $"Worker{WorkerId}.txt";
+            logger = new(filename, calcSpec.OutputDirectory, "travel_events");
+            presenceLogger = new(filename, calcSpec.OutputDirectory, "traveling_persons");
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
