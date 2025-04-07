@@ -70,10 +70,31 @@ namespace CalculationEngine.Activities
         /// <returns>thought message about starting the activity</returns>
         string GetStartThought();
 
+        /// <summary>
+        /// Starts execution of the activity, including activating a related affordance
+        /// if necessary.
+        /// </summary>
+        /// <param name="timestep">start timestep for the activity</param>
+        /// <param name="dayLightStatus">daylight status object for lighting simulation</param>
         void Start(TimeStep timestep, DayLightStatus dayLightStatus);
 
+        /// <summary>
+        /// Checks whether the activity is over. May only be called after the activity
+        /// has been started.
+        /// </summary>
+        /// <param name="timestep">the current timestep</param>
+        /// <param name="remoteActivityResult">an 'activity finished' message object, if
+        /// one was received</param>
+        /// <returns>true if the activity is over and can be finished, else false</returns>
         bool IsFinished(TimeStep timestep, RemoteActivityFinished? remoteActivityResult);
 
+        /// <summary>
+        /// Finishes the activity. This includes related data logging and freeing devices.
+        /// </summary>
+        /// <param name="timestep">the current timestep</param>
+        /// <param name="remoteActivityResult">an 'activity finished' message object, if
+        /// one was received</param>
+        /// <returns>the actual duration of the activity in timesteps</returns>
         int Finish(TimeStep timestep, RemoteActivityFinished? remoteActivityResult);
     }
 }

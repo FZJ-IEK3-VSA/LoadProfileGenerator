@@ -84,7 +84,7 @@ namespace CalculationEngine.HouseholdElements
         /// <summary>
         /// The currently active affordance. This can be a transport decorator.
         /// </summary>
-        private ICalcAffordanceBase CurentAffordance => activityQueue.CurrentActivity.Affordance;
+        private ICalcAffordanceBase CurrentAffordance => activityQueue.CurrentActivity.Affordance;
 
         private readonly CalcPersonDto _calcPerson;
 
@@ -623,7 +623,7 @@ namespace CalculationEngine.HouseholdElements
         private bool InterruptIfNeeded(TimeStep time, DayLightStatus isDaylight, bool ignorePreviousAffordances)
         {
             // check if the affordance may be interrupted and did not already interrupt another affordance itself
-            if (CurentAffordance?.IsInterruptable == true && !_isCurrentActivityInterruption)
+            if (CurrentAffordance?.IsInterruptable == true && !_isCurrentActivityInterruption)
             {
                 if (activityQueue.CurrentActivity.IsTravel)
                 {
@@ -631,7 +631,7 @@ namespace CalculationEngine.HouseholdElements
                     return false;
                 }
                 if (!activityQueue.CurrentActivity.IsDetermined)
-                    throw new LPGException($"Dynamic affordance {CurentAffordance} is marked as interruptable, this is not allowed.");
+                    throw new LPGException($"Dynamic affordance {CurrentAffordance} is marked as interruptable, this is not allowed.");
 
                 // find all affordances that can interrupt the current affordance
                 var availableInterruptingAffordances = GetAvailableAffordances(time, null, true, ignorePreviousAffordances);
@@ -810,7 +810,7 @@ namespace CalculationEngine.HouseholdElements
                 var name = "(none)";
                 if (!calcPerson.activityQueue.IsEmpty)
                 {
-                    name = calcPerson.CurentAffordance.Name;
+                    name = calcPerson.CurrentAffordance.Name;
                 }
 
                 s.Append(Environment.NewLine + calcPerson.Name + ": " + name);
@@ -1082,8 +1082,8 @@ namespace CalculationEngine.HouseholdElements
             }
             else
             {
-                affordanceName = CurentAffordance.Name;
-                affordanceGuid = CurentAffordance.Guid;
+                affordanceName = CurrentAffordance.Name;
+                affordanceGuid = CurrentAffordance.Guid;
             }
             var ps = new PersonStatus(_calcPerson.HouseholdKey, _calcPerson.Name,
                 _calcPerson.Guid, _currentLocation.Name, _currentLocation.Guid, _currentSite?.Name ?? "no site",

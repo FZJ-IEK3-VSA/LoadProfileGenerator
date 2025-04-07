@@ -43,7 +43,6 @@ namespace CalculationEngine.Activities
             return time.InternalStep - StartTime.InternalStep;
         }
 
-
         public abstract string GetStartThought();
 
         public abstract bool IsFinished(TimeStep timestep, RemoteActivityFinished? remoteActivityResult);
