@@ -5,6 +5,7 @@ using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
+using Common.Enums;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 
@@ -187,28 +188,44 @@ namespace CalculationEngine.Transportation
         public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] ICalcSite dstSite, [ItemNotNull][NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
             [NotNull] CalcPersonDto person)
         {
-            if (srcSite == SiteA && dstSite == SiteB) {
-                var neededCategories = CollectNeededCalcTransportationDeviceCategory();
-                if (neededCategories.Count == 0) {
-                    return true;
-                }
+            if (srcSite != SiteA || dstSite != SiteB)
+                return false;
+            if (!IsAllowedForPerson(person))
+                return false;
 
-                // if the person currently owns a device then this device must be used
-                var ownedDevice = _deviceOwnerships.GetDevice(person.Name);
-                if (ownedDevice != null)
-                {
-                    bool canUseOwnedDevice = neededCategories.Any(category => category == ownedDevice.Category);
-                    if (!canUseOwnedDevice)
-                    {
-                        // the person still owns a device that cannot be left at the current site, so this route is not available
-                        return false;
-                    }
-                }
-                bool areCategoriesAvailable = srcSite.AreCategoriesAvailable(neededCategories, _vehiclePool, devicesAtSrcLoc, person, _deviceOwnerships);
-                return areCategoriesAvailable;
+            var neededCategories = CollectNeededCalcTransportationDeviceCategory();
+            if (neededCategories.Count == 0)
+            {
+                return true;
             }
 
-            return false;
+            // if the person currently owns a device then this device must be used
+            var ownedDevice = _deviceOwnerships.GetDevice(person.Name);
+            if (ownedDevice != null)
+            {
+                bool canUseOwnedDevice = neededCategories.Any(category => category == ownedDevice.Category);
+                if (!canUseOwnedDevice)
+                {
+                    // the person still owns a device that cannot be left at the current site, so this route is not available
+                    return false;
+                }
+            }
+            bool areCategoriesAvailable = srcSite.AreCategoriesAvailable(neededCategories, _vehiclePool, devicesAtSrcLoc, person, _deviceOwnerships);
+            return areCategoriesAvailable;
+        }
+
+        /// <summary>
+        /// Checks if this route can be used by the specified person. Checks all applicable restrictions, including
+        /// age, gender, and whether the route is for a specific person only.
+        /// </summary>
+        /// <param name="person">the person to check</param>
+        /// <returns>true if the person can use the route; otherwhise, false</returns>
+        private bool IsAllowedForPerson(CalcPersonDto person)
+        {
+            return (PersonID == null || PersonID == person.ID)
+                && (Gender == PermittedGender.All || person.Gender == PermittedGender.All || Gender == person.Gender)
+                && (MinimumAge < 0 || MinimumAge <= person.Age)
+                && (MaximumAge < 0 || MaximumAge >= person.Age);
         }
 
         [NotNull]

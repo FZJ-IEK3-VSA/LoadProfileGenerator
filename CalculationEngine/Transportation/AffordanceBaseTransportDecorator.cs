@@ -65,7 +65,6 @@ namespace CalculationEngine.Transportation
             // check if the person is already at the correct site
             if (personSourceSite == SourceAffordance.Site)
             {
-                // TODO: this case should not happen anymore, as no travel activity will be created in this case
                 // no transport is necessary - simply pass on to the source affordance
                 return SourceAffordance.PlanActivation(startTime, activator, personSourceSite);
             }

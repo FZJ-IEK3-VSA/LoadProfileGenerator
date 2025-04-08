@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
-using Common.Enums;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation
 {
@@ -22,7 +19,7 @@ namespace CalculationEngine.Transportation
 
         public List<CalcTransportationDevice> AllMoveableDevices { get; } = [];
 
-        // TODO: remove SameSiteRoutes if not needes anymore
+        // TODO: remove SameSiteRoutes if not needed anymore
         public Dictionary<CalcSite, CalcTravelRoute> SameSiteRoutes { get; } = [];
 
         public List<CalcTransportationDeviceCategory> DeviceCategories { get; } = [];
@@ -50,6 +47,22 @@ namespace CalculationEngine.Transportation
         public CalcTravelRoute? GetTravelRouteFromSrcLoc(CalcSite srcSite, CalcSite dstSite, TimeStep startTimeStep,
             CalcPersonDto person, ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
+            var allowedRoutes = CollectPossibleRoutes(srcSite, dstSite, person, affordance);
+            return SelectRoute(startTimeStep, person, calcRepo, allowedRoutes);
+        }
+
+        /// <summary>
+        /// Determines all travel routes that match the requirements and are available for the specified situation.
+        /// </summary>
+        /// <param name="srcSite">the source site of the travel</param>
+        /// <param name="dstSite">the destination site of the travel</param>
+        /// <param name="person">the person who wants to travel</param>
+        /// <param name="affordance">the target affordance for which the travel should be made; this is
+        /// the source affordance of the transport decorator</param>
+        /// <returns>the available travel routes</returns>
+        /// <exception cref="LPGException">if source and destination are the same</exception>
+        private List<CalcTravelRoute> CollectPossibleRoutes(CalcSite srcSite, CalcSite dstSite, CalcPersonDto person, ICalcAffordanceBase affordance)
+        {
             if (srcSite == dstSite)
                 throw new LPGException($"Source and destination of a travel must not be the same site ({srcSite}).");
 
@@ -62,26 +75,45 @@ namespace CalculationEngine.Transportation
             var devicesAtSrc = AllMoveableDevices.Where(x => x.Currentsite == srcSite).ToList();
             var possibleRoutes = srcSite.GetAllRoutesTo(dstSite, devicesAtSrc, person);
             // filter routes based on the affordance tag
-            var allowedRoutes = possibleRoutes
-                .Where(route => route.PersonID == null || route.PersonID == person.ID)
-                .Where(route => route.Gender == PermittedGender.All || person.Gender == PermittedGender.All || route.Gender == person.Gender)
-                .Where(route => route.MinimumAge < 0 || route.MinimumAge <= person.Age)
-                .Where(route => route.MaximumAge < 0 || route.MaximumAge >= person.Age)
-                .Where(route =>
-                {
-                    if (route.AffordanceTaggingSetName == null || route.AffordanceTagName == null)
-                    {
-                        // if no AffordanceTagging information is given for a route, then it is allowed for all affordances
-                        return true;
-                    }
-                    var affordanceTaggingSet = AffordanceTaggingSets[route.AffordanceTaggingSetName];
-                    if (!affordanceTaggingSet.ContainsAffordance(affordance.Name))
-                    {
-                        // if the affordance is not tagged, then all routes are allowed
-                        return true;
-                    }
-                    return affordanceTaggingSet.GetAffordanceTag(affordance.Name) == route.AffordanceTagName;
-                }).ToList();
+            var allowedRoutes = possibleRoutes.Where(route => IsRouteAllowedForAffordance(route, affordance)).ToList();
+            return allowedRoutes;
+        }
+
+        /// <summary>
+        /// Checks if the route can be used for traveling to carry out the specified affordance.
+        /// This is used to define routes with different weights depending on the purpose of the travel.
+        /// </summary>
+        /// <param name="route">the route to check</param>
+        /// <param name="affordance">the affordance that is the reason for traveling</param>
+        /// <returns>true if the route is available for the travel; otherwhise, false</returns>
+        public bool IsRouteAllowedForAffordance(CalcTravelRoute route, ICalcAffordanceBase affordance)
+        {
+            if (route.AffordanceTaggingSetName == null || route.AffordanceTagName == null)
+            {
+                // if no AffordanceTagging information is given for a route, then it is allowed for all affordances
+                return true;
+            }
+            var affordanceTaggingSet = AffordanceTaggingSets[route.AffordanceTaggingSetName];
+            if (!affordanceTaggingSet.ContainsAffordance(affordance.Name))
+            {
+                // if the affordance is not tagged, then all routes are allowed
+                return true;
+            }
+            return affordanceTaggingSet.GetAffordanceTag(affordance.Name) == route.AffordanceTagName;
+        }
+
+        /// <summary>
+        /// Randomly selects a route out of the list, taking the respective weights into account.
+        /// Depending on the selected TravelRouteSet, routes can be filtered based on the person or 
+        /// the target affordance.
+        /// </summary>
+        /// <param name="startTimeStep">the timestep for starting the route</param>
+        /// <param name="person">the person who wants to travel</param>
+        /// <param name="calcRepo">the CaclRepo object</param>
+        /// <param name="allowedRoutes">the list of possible routes to choose from</param>
+        /// <returns>the selected route, or null if no route was feasible</returns>
+        private CalcTravelRoute? SelectRoute(TimeStep startTimeStep, CalcPersonDto person, CalcRepo calcRepo, List<CalcTravelRoute> allowedRoutes)
+        {
             if (allowedRoutes.Count == 0)
             {
                 return null;
