@@ -111,12 +111,12 @@ namespace Database.Helpers
                 // no reference was specified
                 if (nullReferenceAllowed)
                     return null;
-                throw new LPGPBadParameterException("No " + objectTypeName + " reference was specified.");
+                throw new LPGPBadParameterException($"No {objectTypeName} reference was specified.");
             }
             T x = FindByJsonReference(reference);
             // check if the object was found
-            if (x == null)
-                throw new LPGPBadParameterException("No " + objectTypeName + " with the specified JsonReference found: " + reference);
+            if (x is null)
+                throw new LPGPBadParameterException($"No {objectTypeName} with the specified JsonReference found: {reference}");
             return x;
         }
 
@@ -144,6 +144,12 @@ namespace Database.Helpers
                 {
                     if (x.Guid == reference.Guid)
                     {
+                        // if the name was also given, check if it matches to avoid confusion
+                        if (!string.IsNullOrEmpty(reference.Name) && x.Name != reference.Name)
+                        {
+                            var objectTypeName = typeof(T).Name;
+                            throw new LPGPBadParameterException($"Found {objectTypeName} reference by Guid '{reference.Guid}', but name '{reference.Name}' does not match.");
+                        }
                         return x;
                     }
                 }
