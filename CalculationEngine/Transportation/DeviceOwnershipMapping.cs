@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CalculationEngine.Transportation
 {
@@ -13,9 +9,9 @@ namespace CalculationEngine.Transportation
     /// <typeparam name="TDevice">Type of the device objects</typeparam>
     public class DeviceOwnershipMapping<TOwner, TDevice> where TOwner : class where TDevice : class
     {
-        private Dictionary<TOwner, TDevice> OwnerToDevice { get; } = new Dictionary<TOwner, TDevice>();
+        private Dictionary<TOwner, TDevice> OwnerToDevice { get; } = [];
 
-        private Dictionary<TDevice, TOwner> DeviceToOwner { get; } = new Dictionary<TDevice, TOwner>();
+        private Dictionary<TDevice, TOwner> DeviceToOwner { get; } = [];
 
         /// <summary>
         /// Checks whether an owner can use a device, which is the case when he already owns it or when he could own it.
@@ -39,12 +35,12 @@ namespace CalculationEngine.Transportation
         /// <returns>true if the ownership was possible and could be added, otherwhise false</returns>
         public bool TrySetOwnership(TOwner owner, TDevice device)
         {
-            if (OwnerToDevice.ContainsKey(owner) && OwnerToDevice[owner] != device)
+            if (OwnerToDevice.TryGetValue(owner, out TDevice? ownedDevice) && ownedDevice != device)
             {
                 // owner already owns another device
                 return false;
             }
-            if (DeviceToOwner.ContainsKey(device) && DeviceToOwner[device] != owner)
+            if (DeviceToOwner.TryGetValue(device, out TOwner? deviceOwner) && deviceOwner != owner)
             {
                 // device is already owned by another owner
                 return false;
@@ -61,7 +57,7 @@ namespace CalculationEngine.Transportation
         /// <returns>The owned device or null, if no device is owned</returns>
         public TDevice? GetDevice(TOwner owner)
         {
-            return OwnerToDevice.ContainsKey(owner) ? OwnerToDevice[owner] : null;
+            return OwnerToDevice.TryGetValue(owner, out TDevice? device) ? device : null;
         }
 
         /// <summary>
@@ -71,7 +67,7 @@ namespace CalculationEngine.Transportation
         /// <returns>The owner or null, if the device has no owner</returns>
         public TOwner? GetOwner(TDevice device)
         {
-            return DeviceToOwner.ContainsKey(device) ? DeviceToOwner[device] : null;
+            return DeviceToOwner.TryGetValue(device, out TOwner? owner) ? owner : null;
         }
 
         /// <summary>
@@ -80,11 +76,10 @@ namespace CalculationEngine.Transportation
         /// <param name="owner">The owner object</param>
         public void RemoveOwnership(TOwner owner)
         {
-            if (!OwnerToDevice.ContainsKey(owner))
+            if (!OwnerToDevice.TryGetValue(owner, out TDevice? device))
             {
                 return;
             }
-            TDevice device = OwnerToDevice[owner];
             RemoveOwnership(owner, device);
         }
 
@@ -94,11 +89,10 @@ namespace CalculationEngine.Transportation
         /// <param name="device">The device object</param>
         public void RemoveOwnership(TDevice device)
         {
-            if (!DeviceToOwner.ContainsKey(device))
+            if (!DeviceToOwner.TryGetValue(device, out TOwner? owner))
             {
                 return;
             }
-            TOwner owner = DeviceToOwner[device];
             RemoveOwnership(owner, device);
         }
 

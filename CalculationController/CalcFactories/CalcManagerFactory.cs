@@ -409,6 +409,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<ChargingStationStateLogger>().As<IDataSaverBase>();
             builder.RegisterType<VariableEntryLogger>().As<IDataSaverBase>();
             builder.RegisterType<TransportationDeviceStatisticsLogger>().As<IDataSaverBase>();
+            builder.RegisterType<TransportationDeviceChoiceLogger>().As<IDataSaverBase>();
 
             builder.RegisterType<AffordanceEnergyUseLogger>().As<IDataSaverBase>();
             //builder.Register(x=> x.Resolve<CalcVariableDtoFactory>().GetRepository()).As<CalcVariableRepository>().SingleInstance();

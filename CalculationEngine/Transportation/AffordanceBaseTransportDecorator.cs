@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Speech.Recognition.SrgsGrammar;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Activities;
@@ -83,8 +84,14 @@ namespace CalculationEngine.Transportation
             // create the source affordance activity objects
             var sourceActivities = SourceAffordance.PlanActivation(affordanceStartTime, activator, personSourceSite);
 
+            // collect all available alternative transportation devices the person could use for traveling
+            var routes = _transportationHandler.CollectPossibleRoutes(personSourceSite.SiteCategory, Site.SiteCategory, activator, SourceAffordance);
+            var devicesAtSrc = _transportationHandler.GetDevicesAtSite(personSourceSite.SiteCategory);
+            var usableDevices = routes.SelectMany(route => route.GetUsableDevices(devicesAtSrc, activator)).Where(d => d.Category.IsLimitedToSingleLocation).Select(d => d.Name).Distinct().ToList();
+            var deviceChoice = new TransportationDeviceChoice(_householdkey, startTime, activator.Name, usableDevices, personSourceSite.Name, Site.SiteCategory.Name, "");
+
             // create the travel activity
-            var travelActivity = CreateActivity(activator, route, travelDuration, sourceActivities.First());
+            var travelActivity = CreateActivity(activator, route, travelDuration, sourceActivities.First(), deviceChoice);
 
             // return the activity objects
             List<IActivity> activities = [travelActivity];
@@ -92,13 +99,13 @@ namespace CalculationEngine.Transportation
             return activities;
         }
 
-        protected virtual IActivity CreateActivity(CalcPersonDto activator, CalcTravelRoute route, int travelDuration, IActivity firstSourceActivity)
+        protected virtual IActivity CreateActivity(CalcPersonDto activator, CalcTravelRoute route, int travelDuration, IActivity firstSourceActivity, TransportationDeviceChoice deviceChoice)
         {
             var name = "Travel Profile for Route " + route.Name + " to affordance " + SourceAffordance.Name;
             var stepValues = CalcProfile.MakeListwithValue1AndCustomDuration(travelDuration);
             string dataSource = firstSourceActivity.DataSource ?? SourceAffordance.Name;
             var travelProfile = new CalcProfile(name, StrGuid.New(), stepValues, ProfileType.Absolute, dataSource);
-            return new StaticTravelActivity(activator.Name, travelProfile, this, new(route));
+            return new StaticTravelActivity(activator.Name, travelProfile, this, new(route, deviceChoice));
         }
 
         public virtual void StartActivation(TimeStep startTime, string activatorName)
@@ -118,20 +125,15 @@ namespace CalculationEngine.Transportation
         /// <param name="startTime">start timestep of the travel</param>
         /// <param name="personSourceSite">source site of the traveler</param>
         /// <param name="travelDuration">expected travel duration in timesteps</param>
-        public void LogTransportationStatus(TimeStep startTime, ICalcSite personSourceSite, int travelDuration)
+        public void LogTransportationStatus(TimeStep startTime, ICalcSite personSourceSite, int travelDuration, TransportationDeviceChoice deviceChoice)
         {
-            string status;
-            if (travelDuration == 0)
-            {
-                status = $"\tActivating {Name} at {startTime} with no transportation and moving from {personSourceSite} to "
-                    + $"{Site.Name} for affordance {SourceAffordance.Name}";
-            }
-            else
-            {
-                status = $"\tActivating {Name} at {startTime} with a transportation duration of {travelDuration} for moving from "
-                    + $"{personSourceSite} to {Site.Name}";
-            }
+            string transportation = travelDuration == 0 ? "no transportation" : $"a transportation duration of {travelDuration}";
+            string status = $"\tActivating {Name} at {startTime} with {transportation}, moving from {personSourceSite} to {Site.Name}";
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
+
+            // set the correct owned devices
+            deviceChoice.OwnedDevice = _transportationHandler.DeviceOwnerships.GetDevice(deviceChoice.PersonName)?.Name ?? "";
+            _calcRepo.OnlineLoggingData.AddTransportationDeviceChoice(deviceChoice);
         }
 
         /// <summary>

@@ -1,9 +1,7 @@
 ﻿using CalculationEngine.CitySimulation;
 using CalculationEngine.HouseholdElements;
 using Common.CalcDto;
-using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace CalculationEngine.Transportation
 {
@@ -20,11 +18,6 @@ namespace CalculationEngine.Transportation
         List<CalcChargingStation> ChargingDevices { get; }
 
         PointOfInterestId? PointOfInterest { get; }
-
-
-        bool AreCategoriesAvailable(List<CalcTransportationDeviceCategory> neededDeviceCategories,
-            List<CalcTransportationDevice> vehiclepool, List<CalcTransportationDevice> devicesAtLoc,
-            CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships);
 
         List<CalcChargingStation> CollectChargingDevicesFor(CalcTransportationDeviceCategory category, CalcLoadType carLoadType);
 

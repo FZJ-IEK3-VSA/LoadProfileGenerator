@@ -61,6 +61,7 @@
         HouseholdSumProfilesCsvNoFlex,
         FlexibilityEvents,
         DeleteDatFiles,
-        TransportationDefinitions
+        TransportationDefinitions,
+        TransportationDeviceChoices
     }
 }

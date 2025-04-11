@@ -90,11 +90,11 @@ namespace CalculationEngine.Transportation {
                 {
                     // it can be assumed that each route has at most one ownable device
                     // --> simply select the owned device if the category fits
-                    srcdevices = new List<CalcTransportationDevice> { ownedDevice };
+                    srcdevices = [ownedDevice];
                 } else
                 {
                     // if no matching device is owned, try the other unowned devices at the src site
-                    srcdevices = devicesAtSrcLoc.Where(x => x.Category == TransportationDeviceCategory && deviceOwnerships.CanUse(person.Name, x)).ToList();
+                    srcdevices = GetUsableDevices(devicesAtSrcLoc, person, deviceOwnerships);
                 }
                 bool addedVehiclePoolAlready = false;
                 if (srcdevices.Count == 0)
@@ -113,9 +113,6 @@ namespace CalculationEngine.Transportation {
                     }
                     else
                     {
-                        /*if (Config.IsInUnitTesting) {
-                            Logger.Debug("Activating " + td.Name + " for " + durationInTimesteps);
-                        }*/
                         pickedDevice = td;
                         pickeddurationInTimesteps = durationInTimesteps;
                         return true;
@@ -144,10 +141,18 @@ namespace CalculationEngine.Transportation {
             durationInTimesteps = GetDurationInTimeSteps(pickedDevice);
             pickeddurationInTimesteps = durationInTimesteps;
             return true;
-            /*if (Config.IsInUnitTesting)
-            {
-                Logger.Debug("Activating " + pickedDevice.Name + " for " + durationInTimesteps);
-            }*/
+        }
+
+        /// <summary>
+        /// Returns those devices out of the passed list that can be used for this step.
+        /// </summary>
+        /// <param name="devicesAtLoc">the devices to check</param>
+        /// <param name="person">the traveling person</param>
+        /// <param name="deviceOwnerships">the device ownership object</param>
+        /// <returns>devices that can be used in this step</returns>
+        public List<CalcTransportationDevice> GetUsableDevices(List<CalcTransportationDevice> devicesAtLoc, CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
+        {
+            return [.. devicesAtLoc.Where(x => x.Category == TransportationDeviceCategory && deviceOwnerships.CanUse(person.Name, x))];
         }
     }
 }

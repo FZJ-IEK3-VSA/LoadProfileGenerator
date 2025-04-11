@@ -72,42 +72,6 @@ namespace CalculationEngine.Transportation
             MyRoutes.Add(route);
         }
 
-        public bool AreCategoriesAvailable(List<CalcTransportationDeviceCategory> neededDeviceCategories,
-              List<CalcTransportationDevice> vehiclepool, List<CalcTransportationDevice> devicesAtLoc,
-             CalcPersonDto person, DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
-        {
-            //TODO: check for fuel on each transportation device
-            foreach (var neededDeviceCategory in neededDeviceCategories)
-            {
-                bool foundDevice = false;
-                foreach (var deviceAtSite in devicesAtLoc)
-                {
-                    if (deviceAtSite.Category == neededDeviceCategory && deviceOwnerships.CanUse(person.Name, deviceAtSite))
-                    {
-                        foundDevice = true;
-                    }
-                }
-
-                if (!foundDevice)
-                {
-                    foreach (var poolDevice in vehiclepool)
-                    {
-                        if (poolDevice.Category == neededDeviceCategory)
-                        {
-                            foundDevice = true;
-                        }
-                    }
-                }
-
-                if (!foundDevice)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc, CalcPersonDto person)
         {
             return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite, devicesAtSrc, person)).ToList();

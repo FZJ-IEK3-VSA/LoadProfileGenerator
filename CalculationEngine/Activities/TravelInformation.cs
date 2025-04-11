@@ -2,6 +2,7 @@
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
+using Common.SQLResultLogging.Loggers;
 using System.Collections.Generic;
 
 namespace CalculationEngine.Activities
@@ -10,12 +11,17 @@ namespace CalculationEngine.Activities
     /// Stores information on a travel activity.
     /// </summary>
     /// <param name="route">the route to the destination site</param>
-    public class TravelInformation(CalcTravelRoute route)
+    public class TravelInformation(CalcTravelRoute route, TransportationDeviceChoice deviceChoice)
     {
         /// <summary>
         /// The route object, if this activation is a dynamic travel affordance.
         /// </summary>
         public CalcTravelRoute Route { get; } = route;
+
+        /// <summary>
+        /// A collection of all alternative transportation devices the person could use for traveling.
+        /// </summary>
+        public TransportationDeviceChoice DeviceChoice { get; } = deviceChoice;
 
         /// <summary>
         /// List of transportation device usages for this travel activity
@@ -34,7 +40,7 @@ namespace CalculationEngine.Activities
             TravelDeviceUseEvents = usedDeviceEvents;
 
             // log transportation info
-            affordance.LogTransportationStatus(timestep, Route.SiteA, travelDuration);
+            affordance.LogTransportationStatus(timestep, Route.SiteA, travelDuration, DeviceChoice);
         }
 
         public void FinishTravel(TimeStep startTime, string personName, int duration, AffordanceBaseTransportDecorator affordance)

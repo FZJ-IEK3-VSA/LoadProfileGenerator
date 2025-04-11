@@ -11,7 +11,8 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation
 {
-    public class CalcTravelRoute : CalcBase {
+    public class CalcTravelRoute : CalcBase
+    {
         [NotNull]
         private readonly HouseholdKey _householdkey;
 
@@ -23,7 +24,7 @@ namespace CalculationEngine.Transportation
 
         private readonly DeviceOwnershipMapping<string, CalcTransportationDevice> _deviceOwnerships;
 
-        private PreviouslyPickedDevices _mypicks = new PreviouslyPickedDevices("", new TimeStep(-1,0,false));
+        private PreviouslyPickedDevices _mypicks = new PreviouslyPickedDevices("", new TimeStep(-1, 0, false));
 
         public CalcTravelRoute(string pName, int minimumAge, int maximumAge, Common.Enums.PermittedGender gender,
             string affordanceTaggingSetName, string affordanceTagName, int? personID, double weight, CalcSite siteA,
@@ -51,7 +52,7 @@ namespace CalculationEngine.Transportation
 
         public int MinimumAge { get; }
         public int MaximumAge { get; }
-        public Common.Enums.PermittedGender Gender { get; }
+        public PermittedGender Gender { get; }
         public string AffordanceTaggingSetName { get; }
         public string AffordanceTagName { get; }
         public int? PersonID { get; }
@@ -77,7 +78,8 @@ namespace CalculationEngine.Transportation
         public int Activate([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName,
                             [NotNull][ItemNotNull] out List<CalcTravelDeviceUseEvent> usedDeviceEvents)
         {
-            if (_mypicks.Timestep != currentTimeStep || _mypicks.CalcPersonName != calcPersonName) {
+            if (_mypicks.Timestep != currentTimeStep || _mypicks.CalcPersonName != calcPersonName)
+            {
                 throw new LPGException("Device was not previously picked?");
             }
 
@@ -85,10 +87,11 @@ namespace CalculationEngine.Transportation
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 currentTimeStep, _householdkey, "\tActivating " + Name));
             usedDeviceEvents = new List<CalcTravelDeviceUseEvent>();
-            
+
             // calculate the total duration of the route
             int totalDuration = 0;
-            foreach (CalcTravelRouteStep step in Steps) {
+            foreach (CalcTravelRouteStep step in Steps)
+            {
                 int pickedDuration = _mypicks.PickedDurations[step];
                 totalDuration += pickedDuration;
             }
@@ -96,7 +99,8 @@ namespace CalculationEngine.Transportation
             // activate each step separately
             TimeStep transportationEventEndTimestep = currentTimeStep.AddSteps(totalDuration);
             TimeStep timeStepOfThisStep = currentTimeStep;
-            foreach (CalcTravelRouteStep step in Steps) {
+            foreach (CalcTravelRouteStep step in Steps)
+            {
                 // obtain ownership for devices such as cars
                 var device = _mypicks.PickedDevices[step];
                 if (device.Category.IsLimitedToSingleLocation)
@@ -108,11 +112,11 @@ namespace CalculationEngine.Transportation
                 usedDeviceEvents.Add(new CalcTravelDeviceUseEvent(device, pickedDuration, step.DistanceOfStepInM));
                 string status = "\tActiviating step " + step.Name + " Device " + device.Name + " Distance: "
                     + step.DistanceOfStepInM + " Step Duration: " + pickedDuration;
-                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus( currentTimeStep, _householdkey, status));
+                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(currentTimeStep, _householdkey, status));
                 step.ActivateStep(timeStepOfThisStep, device, pickedDuration,
                     SiteA, SiteB, Name, calcPersonName, currentTimeStep,
                     transportationEventEndTimestep);
-                timeStepOfThisStep = timeStepOfThisStep.AddSteps( pickedDuration);
+                timeStepOfThisStep = timeStepOfThisStep.AddSteps(pickedDuration);
             }
             // cache the total route duration
             _mypicks.PreviouslyCalculatedTimeSteps = totalDuration;
@@ -124,7 +128,7 @@ namespace CalculationEngine.Transportation
         {
             CalcTravelRouteStep trs = new CalcTravelRouteStep(
                 stepName, deviceCategory, stepNumber,
-                distanceInM, guid,_vehiclePool, _calcRepo, durationInS);
+                distanceInM, guid, _vehiclePool, _calcRepo, durationInS);
             Steps.Add(trs);
         }
 
@@ -142,7 +146,8 @@ namespace CalculationEngine.Transportation
                                 [ItemNotNull][NotNull] List<CalcTransportationDevice> allTransportationDevices)
         {
             // check if the duration is already cached
-            if (_mypicks.Timestep == currentTimeStep && _mypicks.CalcPersonName == person.Name) {
+            if (_mypicks.Timestep == currentTimeStep && _mypicks.CalcPersonName == person.Name)
+            {
                 return _mypicks.PreviouslyCalculatedTimeSteps;
             }
 
@@ -151,22 +156,26 @@ namespace CalculationEngine.Transportation
             int totalDuration = 0;
             TimeStep slidingTimeStep = currentTimeStep;
             var deviceAtSrc = allTransportationDevices.Where(x => x.Currentsite == SiteA).ToList();
-            foreach (CalcTravelRouteStep step in Steps) {
+            foreach (CalcTravelRouteStep step in Steps)
+            {
                 bool success = step.CalculateDurationInTimestepsAndPickDevice(slidingTimeStep,
                     out CalcTransportationDevice? pickedDevice,
                     out int? durationForPickedDeviceInTimesteps,
                     _vehiclePool, _locationUnlimitedDevices,
                     deviceAtSrc, person, _deviceOwnerships);
-                if (!success) {
+                if (!success)
+                {
                     //this travel route step not now available, thus the entire route is invalid.
                     return null;
                 }
 
                 // double check whether the step is valid
-                if(pickedDevice?.Category != step.TransportationDeviceCategory) {
+                if (pickedDevice?.Category != step.TransportationDeviceCategory)
+                {
                     throw new LPGException("Invalid device was picked.");
                 }
-                if(durationForPickedDeviceInTimesteps == null) {
+                if (durationForPickedDeviceInTimesteps == null)
+                {
                     throw new LPGException("Failed Travel duration calculation!");
                 }
 
@@ -193,11 +202,7 @@ namespace CalculationEngine.Transportation
             if (!IsAllowedForPerson(person))
                 return false;
 
-            var neededCategories = CollectNeededCalcTransportationDeviceCategory();
-            if (neededCategories.Count == 0)
-            {
-                return true;
-            }
+            var neededCategories = CollectNeededCalcTransportationDeviceCategories();
 
             // if the person currently owns a device then this device must be used
             var ownedDevice = _deviceOwnerships.GetDevice(person.Name);
@@ -210,8 +215,43 @@ namespace CalculationEngine.Transportation
                     return false;
                 }
             }
-            bool areCategoriesAvailable = srcSite.AreCategoriesAvailable(neededCategories, _vehiclePool, devicesAtSrcLoc, person, _deviceOwnerships);
+            bool areCategoriesAvailable = AreCategoriesAvailable(neededCategories, devicesAtSrcLoc, person);
             return areCategoriesAvailable;
+        }
+
+        /// <summary>
+        /// Checks if one device of each of the required categories for a route is available.
+        /// </summary>
+        /// <param name="neededDeviceCategories">the required device categories</param>
+        /// <param name="devicesAtLoc">the devices available at a location</param>
+        /// <param name="person">the person who wants to travel</param>
+        /// <returns>true if a device for every category is available; otherwhise, false</returns>
+        public bool AreCategoriesAvailable(List<CalcTransportationDeviceCategory> neededDeviceCategories, List<CalcTransportationDevice> devicesAtLoc, CalcPersonDto person)
+        {
+            //TODO: check for fuel on each transportation device
+            foreach (var category in neededDeviceCategories)
+            {
+                // check if one of the available devices fits and can be used
+                if (devicesAtLoc.Any(device => device.Category == category && _deviceOwnerships.CanUse(person.Name, device)))
+                    continue;
+
+                // if no device is found, check the vehicle pool
+                if (!_vehiclePool.Any(d => d.Category == category))
+                    return false;
+            }
+            // a device was found for each required category
+            return true;
+        }
+
+        /// <summary>
+        /// Returns those devices from the list than can be used by the specified person to travel on this route.
+        /// </summary>
+        /// <param name="devicesAtLoc">the transportation devices to consider</param>
+        /// <param name="person">the traveling person</param>
+        /// <returns>the devices the person can use</returns>
+        public List<CalcTransportationDevice> GetUsableDevices(List<CalcTransportationDevice> devicesAtLoc, CalcPersonDto person)
+        {
+            return [.. Steps.SelectMany(step => step.GetUsableDevices(devicesAtLoc, person, _deviceOwnerships)).ToHashSet()];
         }
 
         /// <summary>
@@ -228,18 +268,15 @@ namespace CalculationEngine.Transportation
                 && (MaximumAge < 0 || MaximumAge >= person.Age);
         }
 
+        /// <summary>
+        /// Collects all device categories that are limited to a single location, like cars
+        /// </summary>
+        /// <returns>movable device categories required for this route</returns>
         [NotNull]
         [ItemNotNull]
-        private List<CalcTransportationDeviceCategory> CollectNeededCalcTransportationDeviceCategory()
+        private List<CalcTransportationDeviceCategory> CollectNeededCalcTransportationDeviceCategories()
         {
-            List<CalcTransportationDeviceCategory> dev = new List<CalcTransportationDeviceCategory>();
-            foreach (CalcTravelRouteStep step in Steps) {
-                if (step.TransportationDeviceCategory.IsLimitedToSingleLocation) {
-                    dev.Add(step.TransportationDeviceCategory);
-                }
-            }
-
-            return dev;
+            return [.. Steps.Select(step => step.TransportationDeviceCategory).Where(devCat => devCat.IsLimitedToSingleLocation)];
         }
 
         private class PreviouslyPickedDevices([NotNull] string calcPersonName, [NotNull] TimeStep timestep)

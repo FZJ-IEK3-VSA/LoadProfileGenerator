@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Transportation;
@@ -93,6 +94,7 @@ namespace CalculationEngine.OnlineLogging {
         void AddChargingStationState([NotNull] ChargingStationState state);
         void AddVariableStatus([NotNull] CalcVariableEntry calcVariableEntry);
         void AddTimeShiftableEntry([NotNull] TimeShiftableDeviceActivation timeShiftableDeviceActivation);
+        void AddTransportationDeviceChoice(TransportationDeviceChoice choice);
     }
 
     public class OnlineLoggingData : IOnlineLoggingData {
@@ -117,35 +119,39 @@ namespace CalculationEngine.OnlineLogging {
         [ItemNotNull] [NotNull] private readonly List<ChargingStationState> _chargingStationStates;
         [ItemNotNull] [NotNull] private readonly List<CalcVariableEntry> _variableEntries;
         [ItemNotNull] [NotNull] private readonly List<TimeShiftableDeviceActivation> _timeShiftableDeviceActivations;
-        [ItemNotNull] [NotNull] private readonly List<dynamic> _lists = new List<dynamic>();
+        private readonly List<TransportationDeviceChoice> _transportationDeviceChoices;
+
+        [ItemNotNull] [NotNull] private readonly List<dynamic> _lists = [];
         public OnlineLoggingData([NotNull] DateStampCreator dsc, [NotNull] IInputDataLogger idl,
                                  [NotNull] CalcParameters calcParameters)
         {
             _dsc = dsc;
             _idl = idl;
             _calcParameters = calcParameters;
-            _columnEntries = new List<ColumnEntry>();
+            _columnEntries = [];
             _lists.Add(_columnEntries);
-            _deviceActivationEntries = new List<DeviceActivationEntry>();
+            _deviceActivationEntries = [];
             _lists.Add(_deviceActivationEntries);
-            _transportationStatuses = new List<TransportationStatus>();
+            _transportationStatuses = [];
             _lists.Add(_transportationStatuses);
-            _transportationDeviceState = new List<TransportationDeviceStateEntry>();
+            _transportationDeviceState = [];
             _lists.Add(_transportationDeviceState);
-            _transportationEvents = new List<TransportationEventEntry>();
+            _transportationEvents = [];
             _lists.Add(_transportationEvents);
-            _locationEntries = new List<LocationEntry>();
+            _locationEntries = [];
             _lists.Add(_locationEntries);
-            _personStatus = new List<PersonStatus>();
+            _personStatus = [];
             _lists.Add(_personStatus);
-            _chargingStationStates = new List<ChargingStationState>();
+            _chargingStationStates = [];
             _lists.Add(_chargingStationStates);
-            _variableEntries = new List<CalcVariableEntry>();
+            _variableEntries = [];
             _lists.Add(_variableEntries);
-            _deviceEntries = new List<CalcDeviceArchiveDto>();
+            _deviceEntries = [];
             _lists.Add(_deviceEntries);
-            _timeShiftableDeviceActivations = new List<TimeShiftableDeviceActivation>();
+            _timeShiftableDeviceActivations = [];
             _lists.Add(_timeShiftableDeviceActivations);
+            _transportationDeviceChoices = [];
+            _lists.Add(_transportationDeviceChoices);
         }
 
         public void AddTransportationDeviceState(TransportationDeviceStateEntry tdse)
@@ -194,6 +200,11 @@ namespace CalculationEngine.OnlineLogging {
         public void AddTimeShiftableEntry(TimeShiftableDeviceActivation tsda)
         {
             _timeShiftableDeviceActivations.Add(tsda);
+        }
+
+        public void AddTransportationDeviceChoice(TransportationDeviceChoice choice)
+        {
+            _transportationDeviceChoices.Add(choice);
         }
 
         public void AddTransportationEvent(HouseholdKey householdkey,
@@ -291,10 +302,18 @@ namespace CalculationEngine.OnlineLogging {
                 _transportationStatuses.Clear();
             }
 
-            if (_transportationEvents.Count > 0) {
+            if (_transportationEvents.Count > 0)
+            {
                 _idl.SaveList<TransportationEventEntry>(_transportationEvents.ConvertAll(x => (IHouseholdKey)x));
                 _transportationEvents.Clear();
             }
+
+            if (_transportationDeviceChoices.Count > 0)
+            {
+                _idl.SaveList<TransportationDeviceChoice>([.. _transportationDeviceChoices.Cast<IHouseholdKey>()]);
+                _transportationDeviceChoices.Clear();
+            }
+
             if (_personStatus.Count > 0)
             {
                 _idl.SaveList<PersonStatus>(_personStatus.ConvertAll(x => (IHouseholdKey)x));

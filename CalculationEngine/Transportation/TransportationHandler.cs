@@ -61,7 +61,7 @@ namespace CalculationEngine.Transportation
         /// the source affordance of the transport decorator</param>
         /// <returns>the available travel routes</returns>
         /// <exception cref="LPGException">if source and destination are the same</exception>
-        private List<CalcTravelRoute> CollectPossibleRoutes(CalcSite srcSite, CalcSite dstSite, CalcPersonDto person, ICalcAffordanceBase affordance)
+        public List<CalcTravelRoute> CollectPossibleRoutes(CalcSite srcSite, CalcSite dstSite, CalcPersonDto person, ICalcAffordanceBase affordance)
         {
             if (srcSite == dstSite)
                 throw new LPGException($"Source and destination of a travel must not be the same site ({srcSite}).");
@@ -72,11 +72,21 @@ namespace CalculationEngine.Transportation
                 DeviceOwnerships.RemoveOwnership(person.Name);
             }
             //first get the routes, no matter if busy
-            var devicesAtSrc = AllMoveableDevices.Where(x => x.Currentsite == srcSite).ToList();
+            List<CalcTransportationDevice> devicesAtSrc = GetDevicesAtSite(srcSite);
             var possibleRoutes = srcSite.GetAllRoutesTo(dstSite, devicesAtSrc, person);
             // filter routes based on the affordance tag
             var allowedRoutes = possibleRoutes.Where(route => IsRouteAllowedForAffordance(route, affordance)).ToList();
             return allowedRoutes;
+        }
+
+        /// <summary>
+        /// Collects all movable devices that are currently at the given location.
+        /// </summary>
+        /// <param name="site">the site to collect devices from</param>
+        /// <returns>the devices at the site</returns>
+        public List<CalcTransportationDevice> GetDevicesAtSite(CalcSite site)
+        {
+            return [.. AllMoveableDevices.Where(x => x.Currentsite == site)];
         }
 
         /// <summary>
