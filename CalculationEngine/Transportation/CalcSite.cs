@@ -72,9 +72,9 @@ namespace CalculationEngine.Transportation
             MyRoutes.Add(route);
         }
 
-        public List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc, CalcPersonDto person)
+        public List<CalcTravelRoute> GetAllRoutesTo(TimeStep timeStep, ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc, CalcPersonDto person)
         {
-            return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite, devicesAtSrc, person)).ToList();
+            return MyRoutes.Where(x => x.IsAvailableRouteFor(timeStep, this, dstSite, devicesAtSrc, person)).ToList();
         }
 
         public List<CalcChargingStation> CollectChargingDevicesFor(CalcTransportationDeviceCategory category, CalcLoadType carLoadType)

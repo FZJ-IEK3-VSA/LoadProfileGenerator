@@ -190,7 +190,7 @@ namespace CalculationController.CalcFactories {
                     _ctf.MakeTransportation(householdDto, dtoCalcLocationDict, chh, affordanceTaggingSets);
                 }
                 else {
-                    Logger.Info("No travel route was set for for household " + householdDto.Name + ", skipping transportation");
+                    Logger.Info("No travel route was set for household " + householdDto.Name + ", skipping transportation");
                 }
 
                 return chh;

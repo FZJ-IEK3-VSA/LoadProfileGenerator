@@ -26,16 +26,13 @@ namespace CalculationController.DtoFactories
         private readonly IDeviceCategoryPicker _picker;
         [JetBrains.Annotations.NotNull]
         private readonly CalcVariableDtoFactory _variableRepository;
-        [JetBrains.Annotations.NotNull]
-        private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 
         public CalcAffordanceDtoFactory([JetBrains.Annotations.NotNull] CalcParameters cp, [JetBrains.Annotations.NotNull] IDeviceCategoryPicker picker,
-            [JetBrains.Annotations.NotNull] CalcVariableDtoFactory variableRepository, [JetBrains.Annotations.NotNull] AvailabilityDtoRepository availabilityDtoRepository)
+            [JetBrains.Annotations.NotNull] CalcVariableDtoFactory variableRepository)
         {
             _cp = cp;
             _picker = picker;
             _variableRepository = variableRepository;
-            _availabilityDtoRepository = availabilityDtoRepository;
         }
 
         /// <summary>
@@ -44,21 +41,17 @@ namespace CalculationController.DtoFactories
         [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcAffordanceDto> SetCalcAffordances([JetBrains.Annotations.NotNull][ItemNotNull] IEnumerable<CalcLocationDto> locs,
-            [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
-            [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltdict,
-            [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
-            [JetBrains.Annotations.NotNull] Random rnd,
-            int timeStepsPerHour, TimeSpan internalStepSize,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> vacationTimeframes, [JetBrains.Annotations.NotNull] string holidayKey,
+            [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltdict, int timeStepsPerHour,
+            TimeSpan internalStepSize,
             [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
             [JetBrains.Annotations.NotNull] Dictionary<CalcLocationDto, List<AffordanceWithTimeLimit>> affordanceDict,
             [JetBrains.Annotations.NotNull] LocationDtoDict locDict,
-            [JetBrains.Annotations.NotNull] out List<DateTime> bridgeDays,
-            [JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDeviceDto> allCalcDeviceDtos,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos )
+            [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDeviceDto> allCalcDeviceDtos,
+            [ItemNotNull][JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
+            AvailabilityFactory availabilityFactory)
         {
             List<CalcAffordanceDto> allCalcAffordances = new List<CalcAffordanceDto>();
-            bridgeDays = new List<DateTime>();
             // get affordances
             foreach (var calcLocation in locs)
             {
@@ -70,18 +63,9 @@ namespace CalculationController.DtoFactories
                 }
 
                 var devicesAtLoc = allCalcDeviceDtos.Where(x => x.LocationGuid == calcLocation.Guid).ToList();
-                var affordances= GetCalcAffordancesAtLocation(calcLocation, affs, internalStepSize, timeStepsPerHour, temperatureProfile,
-                    ltdict, geographicLocation, rnd, vacationTimeframes, holidayKey, deviceActions,
-                    locDict,
-                    out var tmpBridgeDays, householdKey,devicesAtLoc, deviceCategoryDtos);
+                var affordances= GetCalcAffordancesAtLocation(calcLocation, affs, internalStepSize, timeStepsPerHour, ltdict,
+                    deviceActions, locDict, householdKey, devicesAtLoc, deviceCategoryDtos, availabilityFactory);
                 allCalcAffordances.AddRange(affordances);
-                foreach (var tmpBridgeDay in tmpBridgeDays)
-                {
-                    if (!bridgeDays.Contains(tmpBridgeDay))
-                    {
-                        bridgeDays.Add(tmpBridgeDay);
-                    }
-                }
 
                 //calcLocation.SortAffordances();
             }
@@ -96,20 +80,15 @@ namespace CalculationController.DtoFactories
         private List<CalcAffordanceDto> GetCalcAffordancesAtLocation([JetBrains.Annotations.NotNull] CalcLocationDto calcloc,
             [JetBrains.Annotations.NotNull] List<AffordanceWithTimeLimit> affordancesAtLocation,
             TimeSpan internalStepSize, int timeStepsPerHour,
-            [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
             [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltdict,
-            [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation, [JetBrains.Annotations.NotNull] Random rnd,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> vacationTimeframes,
-            [JetBrains.Annotations.NotNull] string holidayKey,
             [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions,
-            [JetBrains.Annotations.NotNull]
-            LocationDtoDict locDict,
-            [JetBrains.Annotations.NotNull] out List<DateTime> bridgeDays, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+            [JetBrains.Annotations.NotNull] LocationDtoDict locDict,
+            [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
             [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDeviceDto> deviceDtosAtLocation,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos)
+            [ItemNotNull][JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
+            AvailabilityFactory availabilityFactory)
         {
             List<CalcAffordanceDto> createdAffordances = new List<CalcAffordanceDto>();
-            bridgeDays = new List<DateTime>();
             foreach (AffordanceWithTimeLimit aff in affordancesAtLocation)
             {
                 var affordanceName =CalcAffordanceFactory.FixAffordanceName(aff.Affordance.Name, _cp.CSVCharacter);
@@ -123,8 +102,7 @@ namespace CalculationController.DtoFactories
                 List<VariableRequirementDto> variableRequirements =
                     MakeVariableRequirements(calcloc, locDict, householdKey, aff);
 
-                MakeAffordanceTimelimit(temperatureProfile, geographicLocation, rnd, vacationTimeframes,
-                    holidayKey, bridgeDays, aff, out var availabilityDataReference);
+                var availabilityDataReference = availabilityFactory.CreateAvailabilityForTimeLimitAff(aff);
 
                 //make the affordance
                 Logger.Debug("Converting the time limit to a bitarray for the affordance " + aff.Affordance.Name);
@@ -145,7 +123,7 @@ namespace CalculationController.DtoFactories
                     aff.Affordance.IsInterruptable, aff.Affordance.IsInterrupting, variableOps, variableRequirements,
                     aff.Affordance.ActionAfterInterruption, timeLimitName, aff.Weight,
                     aff.Affordance.RequireAllDesires, aff.SrcTraitName,
-                    Guid.NewGuid().ToStrGuid(), availabilityDataReference,householdKey, aff.Affordance.BodilyActivityLevel);
+                    Guid.NewGuid().ToStrGuid(), availabilityDataReference, householdKey, aff.Affordance.BodilyActivityLevel);
                 foreach (var devtup in aff.Affordance.AffordanceDevices)
                 {
                     MakeAffordanceDevices(calcloc, internalStepSize, ltdict, allDeviceActions, aff, caff, devtup, deviceDtosAtLocation,
@@ -280,49 +258,6 @@ namespace CalculationController.DtoFactories
                     throw new LPGException(
                         "Missing an AssignableDeviceType at GetCalcAffordancesAtLocation! Please report to the programmer.");
             }
-        }
-
-        private void MakeAffordanceTimelimit([JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
-            [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
-            [JetBrains.Annotations.NotNull] Random rnd, [JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> vacationTimeframes,
-            [JetBrains.Annotations.NotNull] string holidayKey, [JetBrains.Annotations.NotNull] List<DateTime> bridgeDays,
-            [JetBrains.Annotations.NotNull] AffordanceWithTimeLimit aff,
-                                                 [JetBrains.Annotations.NotNull] out AvailabilityDataReferenceDto availabilityDataReference)
-        {
-            //time limit stuff
-            if (aff.Affordance.TimeLimit == null)
-            {
-                throw new DataIntegrityException("The time limit on the affordance was null. Please fix",
-                    aff.Affordance);
-            }
-
-            var tl = aff.Affordance.TimeLimit;
-            if (aff.TimeLimit != null)
-            {
-                tl = aff.TimeLimit;
-            }
-            if(tl.RootEntry == null) {
-                throw new LPGException("Root Entry was null");
-            }
-
-            var tmparr = tl.RootEntry.GetOneYearArray(
-                _cp.InternalStepsize,
-                _cp.InternalStartTime,
-                _cp.InternalEndTime, temperatureProfile, geographicLocation, rnd,
-                vacationTimeframes, holidayKey, out var tmpBridgeDays, aff.StartMinusTime, aff.StartPlusTime,
-                aff.EndMinusTime,
-                aff.EndPlusTime);
-            foreach (var tmpBridgeDay in tmpBridgeDays)
-            {
-                if (!bridgeDays.Contains(tmpBridgeDay))
-                {
-                    bridgeDays.Add(tmpBridgeDay);
-                }
-            }
-
-            // invertieren von erlaubten zu verbotenen zeiten
-            tmparr = tmparr.Not();
-            availabilityDataReference = _availabilityDtoRepository.MakeNewReference(tl.Name, tmparr);
         }
 
         [JetBrains.Annotations.NotNull]

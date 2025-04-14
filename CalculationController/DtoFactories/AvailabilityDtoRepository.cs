@@ -36,6 +36,20 @@ namespace CalculationController.DtoFactories
             return Entries[guid].Array;
         }
 
+        /// <summary>
+        /// Returns the matching BitArray for the guid. The same as GetByGuid, but also
+        /// allows null as parameter, in which case null is returned. Useful when TimeLimits
+        /// are optional.
+        /// </summary>
+        /// <param name="guid">the guid of the availability entry</param>
+        /// <returns>the BitArray of the matching availability entry</returns>
+        public BitArray? GetByGuidOptional([NotNull] StrGuid? guid)
+        {
+            if (guid is null)
+                return null;
+            return GetByGuid(guid);
+        }
+
         [NotNull]
         public AvailabilityDataReferenceDto MakeNewReference([NotNull] string name, [NotNull][ItemNotNull] BitArray timearray)
         {

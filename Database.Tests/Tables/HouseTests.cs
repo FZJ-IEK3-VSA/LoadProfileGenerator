@@ -92,7 +92,7 @@ namespace Database.Tests.Tables
                     deviceSelections, persons, vacations, householdTags,
                     traitTags, lpTags);
                 db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
-                    out var _, out var _, loadTypes, out var chargingStationSets, affordanceTaggingSets);
+                    out var _, out var _, loadTypes, out var chargingStationSets, affordanceTaggingSets, timeLimits);
                 House.LoadFromDatabase(houses1, db.ConnectionString,
                     temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
@@ -138,7 +138,7 @@ namespace Database.Tests.Tables
                     deviceSelections, persons, vacations, householdTags, traitTags, lpTags);
                 db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
                     out var _,
-                    out var _, loadTypes, out var chargingStationSets, affordanceTaggingSets);
+                    out var _, loadTypes, out var chargingStationSets, affordanceTaggingSets, timeLimits);
                 House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
                 (houses.Count).Should().Be(0);

@@ -115,7 +115,7 @@ namespace Database.Tests.Tables.Houses
                 var householdTags = db.LoadHouseholdTags();
                 db.LoadTransportation(allLocations, out var transportationDeviceSets,
                     out var travelRouteSets, out _,out _,
-                    loadTypes,out var chargingStationSets, affordanceTaggingSets);
+                    loadTypes,out var chargingStationSets, affordanceTaggingSets, timeLimits);
                 db.ClearTable(SettlementTemplate.TableName);
                 db.ClearTable(STHouseholdDistribution.TableName);
                 db.ClearTable(STHouseholdTemplate.TableName);

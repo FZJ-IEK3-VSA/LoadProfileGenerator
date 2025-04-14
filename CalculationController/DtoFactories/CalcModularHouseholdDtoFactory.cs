@@ -38,6 +38,9 @@ namespace CalculationController.DtoFactories
 
         [NotNull] private readonly CalcTransportationDtoFactory _transportationDtoFactory;
 
+        private readonly AvailabilityDtoRepository _availabilityDtoRepository;
+
+
 
         public CalcModularHouseholdDtoFactory([NotNull] CalcLoadTypeDtoDictionary ltDict, [NotNull] Random random,
                                               [NotNull] CalcPersonDtoFactory calcPersonDtoFactory,
@@ -46,7 +49,7 @@ namespace CalculationController.DtoFactories
                                               [NotNull] CalcVariableDtoFactory calcVariableRepositoryDtoFactory,
                                               [NotNull] CalcAffordanceDtoFactory calcAffordanceDtoFactory,
                                               [NotNull] CalcTransportationDtoFactory transportationDtoFactory,
-                                              CalcRepo calcRepo)
+                                              CalcRepo calcRepo, AvailabilityDtoRepository availabilityDtoRepository)
         {
             _ltDict = ltDict;
             _random = random;
@@ -57,6 +60,7 @@ namespace CalculationController.DtoFactories
             _calcAffordanceDtoFactory = calcAffordanceDtoFactory;
             _transportationDtoFactory = transportationDtoFactory;
             _calcRepo = calcRepo;
+            _availabilityDtoRepository = availabilityDtoRepository;
         }
 
         [NotNull]
@@ -165,12 +169,20 @@ namespace CalculationController.DtoFactories
                 throw new LPGException("Vacation was null");
             }
 
-            var allAffordances = _calcAffordanceDtoFactory.SetCalcAffordances(locationDtos, temperatureProfile,
-                _ltDict,
-                geographicLocation, _random, sim.MyGeneralConfig.TimeStepsPerHour,
-                sim.MyGeneralConfig.InternalStepSize, mhh.Vacation.VacationTimeframes(),
-                mhh.Name + "###" + householdKey, sim.DeviceActions.Items, affordancesAtLoc, locationDict,
-                out var bridgeDays, householdKey, deviceDtos, deviceCategoryDtos);
+            // create a factory to generate AvailabilityReference objects from timelimits for this household
+            var availabilityFactory = new AvailabilityFactory(
+                _availabilityDtoRepository,
+                _calcRepo.CalcParameters,
+                _random,
+                temperatureProfile,
+                geographicLocation,
+                mhh.Vacation.VacationTimeframes(),
+                mhh.Name + "###" + householdKey);
+
+            var allAffordances = _calcAffordanceDtoFactory.SetCalcAffordances(locationDtos, _ltDict,
+                sim.MyGeneralConfig.TimeStepsPerHour,
+                sim.MyGeneralConfig.InternalStepSize, sim.DeviceActions.Items, affordancesAtLoc,
+                locationDict, householdKey, deviceDtos, deviceCategoryDtos, availabilityFactory);
             if (_calcRepo.CalcParameters.Options.Contains(CalcOption.AffordanceDefinitions)) {
                 _calcRepo.InputDataLogger.SaveList<CalcAffordanceDto>(allAffordances.ConvertAll(x => (IHouseholdKey)x));
             }
@@ -190,7 +202,7 @@ namespace CalculationController.DtoFactories
                 _transportationDtoFactory.MakeTransportationDtos(sim, mhh, transportationDeviceSet,
                     travelRouteSet, chargingStationSet,
                     out sites, out transportationDevices,
-                    out routes, locationDtos, householdKey);
+                    out routes, locationDtos, householdKey, availabilityFactory);
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.TransportationDefinitions)) {
                     _calcRepo.InputDataLogger.SaveList<CalcSiteDto>(sites.ConvertAll(x => (IHouseholdKey)x));
                     _calcRepo.InputDataLogger.SaveList<CalcTransportationDeviceDto>(
@@ -202,7 +214,7 @@ namespace CalculationController.DtoFactories
             var chh = new CalcHouseholdDto(name, mhh.IntID, temperatureProfile.Name, householdKey,
                 Guid.NewGuid().ToStrGuid(),
                 geographicLocation.Name,
-                bridgeDays, autoDevDtos, locationDtos, personDtos, deviceDtos,
+                [.. availabilityFactory.BridgeDays], autoDevDtos, locationDtos, personDtos, deviceDtos,
                 allAffordances, mhh.Vacation.VacationTimeframes(),
                 sites, routes, transportationDevices,
                 mhh.Description);

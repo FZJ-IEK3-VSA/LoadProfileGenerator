@@ -85,7 +85,7 @@ namespace CalculationEngine.Transportation
             var sourceActivities = SourceAffordance.PlanActivation(affordanceStartTime, activator, personSourceSite);
 
             // collect all available alternative transportation devices the person could use for traveling
-            var routes = _transportationHandler.CollectPossibleRoutes(personSourceSite.SiteCategory, Site.SiteCategory, activator, SourceAffordance);
+            var routes = _transportationHandler.CollectPossibleRoutes(startTime, personSourceSite.SiteCategory, Site.SiteCategory, activator, SourceAffordance);
             var devicesAtSrc = _transportationHandler.GetDevicesAtSite(personSourceSite.SiteCategory);
             var usableDevices = routes.SelectMany(route => route.GetUsableDevices(devicesAtSrc, activator)).Where(d => d.Category.IsLimitedToSingleLocation).Select(d => d.Name).Distinct().ToList();
             var deviceChoice = new TransportationDeviceChoice(_householdkey, startTime, activator.Name, usableDevices, personSourceSite.Name, Site.SiteCategory.Name, "");

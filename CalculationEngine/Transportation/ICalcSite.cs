@@ -1,5 +1,6 @@
 ﻿using CalculationEngine.CitySimulation;
 using CalculationEngine.HouseholdElements;
+using Common;
 using Common.CalcDto;
 using System.Collections.Generic;
 
@@ -21,7 +22,7 @@ namespace CalculationEngine.Transportation
 
         List<CalcChargingStation> CollectChargingDevicesFor(CalcTransportationDeviceCategory category, CalcLoadType carLoadType);
 
-        List<CalcTravelRoute> GetAllRoutesTo(ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc,
+        List<CalcTravelRoute> GetAllRoutesTo(TimeStep timeStep, ICalcSite dstSite, List<CalcTransportationDevice> devicesAtSrc,
             CalcPersonDto person);
     }
 }

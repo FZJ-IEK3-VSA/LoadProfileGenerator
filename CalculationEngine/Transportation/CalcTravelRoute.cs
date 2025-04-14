@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
@@ -27,7 +28,7 @@ namespace CalculationEngine.Transportation
         private PreviouslyPickedDevices _mypicks = new PreviouslyPickedDevices("", new TimeStep(-1, 0, false));
 
         public CalcTravelRoute(string pName, int minimumAge, int maximumAge, Common.Enums.PermittedGender gender,
-            string affordanceTaggingSetName, string affordanceTagName, int? personID, double weight, CalcSite siteA,
+            string affordanceTaggingSetName, string affordanceTagName, int? personID, double weight, BitArray? isAvailableArray, CalcSite siteA,
             CalcSite siteB, List<CalcTransportationDevice> vehiclePool,
             List<CalcTransportationDevice> locationUnlimitedDevices,
             DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships, HouseholdKey householdkey,
@@ -40,6 +41,7 @@ namespace CalculationEngine.Transportation
             AffordanceTagName = affordanceTagName;
             PersonID = personID;
             Weight = weight;
+            IsAvailableArray = isAvailableArray;
             _householdkey = householdkey;
             _calcRepo = calcRepo;
             SiteA = siteA;
@@ -57,6 +59,7 @@ namespace CalculationEngine.Transportation
         public string AffordanceTagName { get; }
         public int? PersonID { get; }
         public double Weight { get; }
+        public BitArray? IsAvailableArray { get; }
         public CalcSite SiteA { get; }
         public CalcSite SiteB { get; }
         private List<CalcTravelRouteStep> Steps { get; } = [];
@@ -194,14 +197,26 @@ namespace CalculationEngine.Transportation
             return totalDuration;
         }
 
-        public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] ICalcSite dstSite, [ItemNotNull][NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
-            [NotNull] CalcPersonDto person)
+        /// <summary>
+        /// Checks if the route is available for a travle given the specified conditions.
+        /// </summary>
+        /// <param name="timeStep">the starting timestep of the travel</param>
+        /// <param name="srcSite">the site where the person is currently located</param>
+        /// <param name="dstSite">the destination of the travel</param>
+        /// <param name="devicesAtSrcLoc">the available movable devices at the current site</param>
+        /// <param name="person">the person who wants to travel</param>
+        /// <returns>true if the route can be used for traveling; otherwhise, false</returns>
+        public bool IsAvailableRouteFor(TimeStep timeStep, CalcSite srcSite, ICalcSite dstSite,
+            List<CalcTransportationDevice> devicesAtSrcLoc, CalcPersonDto person)
         {
             if (srcSite != SiteA || dstSite != SiteB)
                 return false;
             if (!IsAllowedForPerson(person))
                 return false;
+            if (IsAvailableArray?[timeStep.InternalStep] == true)
+                return false;
 
+            // determine which devices categories are required for the route
             var neededCategories = CollectNeededCalcTransportationDeviceCategories();
 
             // if the person currently owns a device then this device must be used
@@ -215,6 +230,7 @@ namespace CalculationEngine.Transportation
                     return false;
                 }
             }
+            // check whether suitable devices of each required category are currently available for the person
             bool areCategoriesAvailable = AreCategoriesAvailable(neededCategories, devicesAtSrcLoc, person);
             return areCategoriesAvailable;
         }

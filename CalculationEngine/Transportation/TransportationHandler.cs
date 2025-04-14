@@ -47,13 +47,14 @@ namespace CalculationEngine.Transportation
         public CalcTravelRoute? GetTravelRouteFromSrcLoc(CalcSite srcSite, CalcSite dstSite, TimeStep startTimeStep,
             CalcPersonDto person, ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
-            var allowedRoutes = CollectPossibleRoutes(srcSite, dstSite, person, affordance);
+            var allowedRoutes = CollectPossibleRoutes(startTimeStep, srcSite, dstSite, person, affordance);
             return SelectRoute(startTimeStep, person, calcRepo, allowedRoutes);
         }
 
         /// <summary>
         /// Determines all travel routes that match the requirements and are available for the specified situation.
         /// </summary>
+        /// <param name="timeStep">the starting timestep of the desired travel</param>
         /// <param name="srcSite">the source site of the travel</param>
         /// <param name="dstSite">the destination site of the travel</param>
         /// <param name="person">the person who wants to travel</param>
@@ -61,7 +62,7 @@ namespace CalculationEngine.Transportation
         /// the source affordance of the transport decorator</param>
         /// <returns>the available travel routes</returns>
         /// <exception cref="LPGException">if source and destination are the same</exception>
-        public List<CalcTravelRoute> CollectPossibleRoutes(CalcSite srcSite, CalcSite dstSite, CalcPersonDto person, ICalcAffordanceBase affordance)
+        public List<CalcTravelRoute> CollectPossibleRoutes(TimeStep timeStep, CalcSite srcSite, CalcSite dstSite, CalcPersonDto person, ICalcAffordanceBase affordance)
         {
             if (srcSite == dstSite)
                 throw new LPGException($"Source and destination of a travel must not be the same site ({srcSite}).");
@@ -73,7 +74,7 @@ namespace CalculationEngine.Transportation
             }
             //first get the routes, no matter if busy
             List<CalcTransportationDevice> devicesAtSrc = GetDevicesAtSite(srcSite);
-            var possibleRoutes = srcSite.GetAllRoutesTo(dstSite, devicesAtSrc, person);
+            var possibleRoutes = srcSite.GetAllRoutesTo(timeStep, dstSite, devicesAtSrc, person);
             // filter routes based on the affordance tag
             var allowedRoutes = possibleRoutes.Where(route => IsRouteAllowedForAffordance(route, affordance)).ToList();
             return allowedRoutes;

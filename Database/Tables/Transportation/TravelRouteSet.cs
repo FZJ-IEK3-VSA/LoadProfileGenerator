@@ -53,7 +53,7 @@ namespace Database.Tables.Transportation
         public ObservableCollection<TravelRouteSetEntry> TravelRoutes => _routes;
 
         public void AddRoute([JetBrains.Annotations.NotNull] TravelRoute route, int minimumAge = -1, int maximumAge = -1,
-            PermittedGender gender = PermittedGender.All, AffordanceTag affordanceTag = null, int? personID = null, double weight = 1.0, bool savetodb = true)
+            PermittedGender gender = PermittedGender.All, AffordanceTag affordanceTag = null, int? personID = null, double weight = 1.0, TimeLimit? timeLimit = null, bool savetodb = true)
         {
             if (route == null) {
                 throw new LPGException("Can't add a null route.");
@@ -62,7 +62,7 @@ namespace Database.Tables.Transportation
             if (route.ConnectionString != ConnectionString) {
                 throw new LPGException("A location from another DB was just added!");
             }
-            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, minimumAge, maximumAge, gender, affordanceTag, personID, weight, System.Guid.NewGuid().ToStrGuid());
+            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, minimumAge, maximumAge, gender, affordanceTag, personID, weight, timeLimit, System.Guid.NewGuid().ToStrGuid());
             _routes.Add(entry);
             if(savetodb) {
                 entry.SaveToDB();
@@ -130,7 +130,7 @@ namespace Database.Tables.Transportation
                         routeEntry.AffordanceTag.Name);
                 }
 
-                loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, newAffordanceTag, routeEntry.PersonID, routeEntry.Weight);
+                loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, newAffordanceTag, routeEntry.PersonID, routeEntry.Weight, routeEntry.TimeLimit);
             }
             return loc;
         }
@@ -153,16 +153,16 @@ namespace Database.Tables.Transportation
         }
 
         public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteSet> result, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes, ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets)
+            bool ignoreMissingTables, [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes, ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets,
+            ObservableCollection<TimeLimit> timeLimits)
         {
-            var aic = new AllItemCollections(travelRoutes: travelRoutes, affordanceTaggingSets: affordanceTaggingSets);
+            var aic = new AllItemCollections(timeLimits: timeLimits, affordanceTaggingSets: affordanceTaggingSets, travelRoutes: travelRoutes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             var ld = new ObservableCollection<TravelRouteSetEntry>();
             // Store all AffordanceTags in the AllItemCollections object so that the TravelRouteSetEntries can access them
-            aic.AffordanceTags = new ObservableCollection<AffordanceTag>(affordanceTaggingSets.SelectMany(set => set.Tags));
+            aic.AffordanceTags = [.. affordanceTaggingSets.SelectMany(set => set.Tags)];
             TravelRouteSetEntry.LoadFromDatabase(ld, connectionString, ignoreMissingTables, aic);
-            SetSubitems(new List<DBBase>(result), new List<DBBase>(ld), IsCorrectTravelRouteSetParent,
-                ignoreMissingTables);
+            SetSubitems([.. result], [.. ld], IsCorrectTravelRouteSetParent, ignoreMissingTables);
         }
 
         public override void SaveToDB()

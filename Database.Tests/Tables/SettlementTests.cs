@@ -64,7 +64,7 @@ namespace Database.Tests.Tables
                 db.LoadTransportation(locations, out var transportationDeviceSets,
                     out var travelRouteSets, out var _,
                     out var _, loadtypes,
-                    out var chargingStationSets, affordanceTaggingSets);
+                    out var chargingStationSets, affordanceTaggingSets, timeLimits);
                 db.LoadHouseholdsAndHouses(out var modularHouseholds,
                     out var houses, out _, traitTags, chargingStationSets,
                     travelRouteSets, transportationDeviceSets);
@@ -114,7 +114,7 @@ namespace Database.Tests.Tables
                 db.LoadTransportation(locations, out var transportationDeviceSets,
                     out var travelRouteSets, out var _,
                     out var _, loadtypes,
-                    out var chargingStationSets, affordanceTaggingSets);
+                    out var chargingStationSets, affordanceTaggingSets, timeLimits);
                 db.LoadHouseholdsAndHouses(out var modularHouseholds,
                     out var houses, out _, traitTags,
                     chargingStationSets, travelRouteSets, transportationDeviceSets);
