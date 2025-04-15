@@ -213,7 +213,7 @@ namespace CalculationEngine.Transportation
                 return false;
             if (!IsAllowedForPerson(person))
                 return false;
-            if (IsAvailableArray?[timeStep.InternalStep] == true)
+            if (IsAvailableArray?[timeStep.InternalStep] == false)
                 return false;
 
             // determine which devices categories are required for the route

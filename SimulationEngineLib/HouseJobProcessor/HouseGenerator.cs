@@ -601,7 +601,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 if (addUnmodifiedRoute)
                 {
                     adjustedTravelrouteset.AddRoute(oldTravelRouteSetEntry.TravelRoute, oldTravelRouteSetEntry.MinimumAge, oldTravelRouteSetEntry.MaximumAge,
-                        oldTravelRouteSetEntry.Gender, oldTravelRouteSetEntry.AffordanceTag, oldTravelRouteSetEntry.PersonID, oldTravelRouteSetEntry.Weight);
+                        oldTravelRouteSetEntry.Gender, oldTravelRouteSetEntry.AffordanceTag, oldTravelRouteSetEntry.PersonID, oldTravelRouteSetEntry.Weight, oldTravelRouteSetEntry.TimeLimit);
                 }
             }
             //Config.ShowDeleteMessages = true;
@@ -644,7 +644,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             newRoute.SaveToDB();
             //Logger.Info("Adjusted route " + newRoute.Name);
             adjustedTravelrouteset.AddRoute(newRoute, oldTravelRouteSetEntry.MinimumAge, oldTravelRouteSetEntry.MaximumAge, oldTravelRouteSetEntry.Gender,
-                oldTravelRouteSetEntry.AffordanceTag, oldTravelRouteSetEntry.PersonID, oldTravelRouteSetEntry.Weight);
+                oldTravelRouteSetEntry.AffordanceTag, oldTravelRouteSetEntry.PersonID, oldTravelRouteSetEntry.Weight, oldTravelRouteSetEntry.TimeLimit);
         }
 
         public static void WriteGuidList([NotNull] string filename, [NotNull][ItemNotNull] List<DBBase> elements, [NotNull] DirectoryInfo relativePath)

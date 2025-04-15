@@ -78,8 +78,7 @@ namespace CitySimulation
                 else
                 {
                     // POIs are not copied, as each house already contains all relevant POIs for efficiency reasons
-                    hcj.City.Routes = scenarioPart.CityData.Routes;
-                    hcj.City.MirrorRoutes = scenarioPart.CityData.MirrorRoutes;
+                    hcj.City.TravelDefinition = scenarioPart.CityData.TravelDefinition;
                 }
 
                 try

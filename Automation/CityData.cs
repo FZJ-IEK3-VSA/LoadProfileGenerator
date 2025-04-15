@@ -6,7 +6,7 @@ namespace Automation
     /// Specifies all relevant information about the city and the environment of the simulation targets,
     /// including all specific points of interest.
     /// </summary>
-    public class CityData
+    public class CityData(TravelDefinition travelDefinition)
     {
         /// <summary>
         /// Specifies all points of interest in the city. Each of them will be represented by
@@ -15,18 +15,9 @@ namespace Automation
         public OrderedDictionary<string, PointOfInterestData> PointsOfInterest { get; set; } = [];
 
         /// <summary>
-        /// The routes that are available to the persons in the house of this house job
+        /// Contains all travel-related data that is required to generate routes and travel route sets
+        /// for each household.
         /// </summary>
-        public List<RouteData> Routes { get; set; } = [];
-
-        /// <summary>
-        /// Whether each route should be duplicated for the inverse direction
-        /// </summary>
-        public bool MirrorRoutes { get; set; } = false;
-
-        /// <summary>
-        /// Optional minimum age to be able to drive cars
-        /// </summary>
-        public int MinimumDrivingAge { get; set; } = -1;
+        public TravelDefinition TravelDefinition { get; set; } = travelDefinition;
     }
 }

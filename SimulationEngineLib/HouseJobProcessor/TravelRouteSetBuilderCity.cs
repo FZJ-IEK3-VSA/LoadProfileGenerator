@@ -6,6 +6,9 @@ using Automation.ResultFiles;
 using Database.Tables.ModularHouseholds;
 using System.Linq;
 using PowerArgs;
+using System;
+using Database.Tables.BasicElements;
+using Common;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -36,6 +39,11 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         private readonly Dictionary<string, TransportationDeviceCategory> TransportModes;
 
+        /// <summary>
+        /// Maps each encountered time slot object to the corresponding timelimit.
+        /// </summary>
+        private readonly Dictionary<TimeSlot, TimeLimit> TimeLimitMap = [];
+
         public TravelRouteSetBuilderCity(Simulator simulator, IReadOnlyDictionary<string, PoiLocationReplacement> locationReplacements)
         {
             sim = simulator;
@@ -64,12 +72,33 @@ namespace SimulationEngineLib.HouseJobProcessor
             return householdData.PointOfInterestPreferences is not null;
         }
 
+        /// <summary>
+        /// Builds a new travel route set for the household, based on the POI preferences and the route data in the
+        /// city specification.
+        /// </summary>
+        /// <param name="householdData">the household data</param>
+        /// <param name="household">the ModularHousehold object</param>
+        /// <param name="hj">the house job object</param>
+        /// <param name="transportationDeviceSet">the transportation device set to use</param>
+        /// <returns></returns>
+        /// <exception cref="LPGPBadParameterException"></exception>
         internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj, TransportationDeviceSet transportationDeviceSet)
         {
             if (householdData.PointOfInterestPreferences.IsNullOrEmpty())
                 throw new LPGPBadParameterException("Cannot create dynamic city routes without point of interest preferences for each person.");
-            if (hj.City.Routes.Count == 0)
+            if (hj.City.TravelDefinition.TimeSlotRouteLists.Count == 0)
                 throw new LPGPBadParameterException("Point of interest preferences were given, but no route data was provided.");
+
+            // create a timelimit for every route data time slot
+            foreach (var tlRouteData in hj.City.TravelDefinition.TimeSlotRouteLists)
+            {
+                var timeLimit = GenerateTimeLimitFromTimeSlot(tlRouteData.TimeSlot);
+                // store the timelimit in the map to access it later
+                TimeLimitMap.Add(tlRouteData.TimeSlot, timeLimit);
+            }
+
+            // check if the household has a car
+            bool hasCar = transportationDeviceSet.TransportationDeviceSetEntries.Any(x => x.TransportationDevice.TransportationDeviceCategory.Name == "Car Category");
 
             // create a new empty travel route set
             var travelRouteSet = sim.TravelRouteSets.CreateNewItem(sim.ConnectionString);
@@ -85,14 +114,85 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
                 relevantPOIs.Add(hj.House.Name);
 
-                AddRoutesForPerson(hj, travelRouteSet, relevantPOIs, transportationDeviceSet, personName);
+                AddRoutesForPerson(hj, travelRouteSet, relevantPOIs, hasCar, personName);
             }
             travelRouteSet.SaveToDB();
             return travelRouteSet;
         }
 
+        /// <summary>
+        /// Creates a new timelimit for the time slot, matching its day type and time frame
+        /// </summary>
+        /// <param name="timeSlot">the time slot to create a timelimit for</param>
+        /// <returns>the new timelimit</returns>
+        private TimeLimit GenerateTimeLimitFromTimeSlot(TimeSlot timeSlot)
+        {
+            string name = $"TimeLimit generated for Route {timeSlot}";
+            var timeLimit = sim.TimeLimits.FindFirstByName(name);
+            if (timeLimit is not null)
+            {
+                // a matching timelimit already exists
+                return timeLimit;
+            }
+
+            timeLimit = sim.TimeLimits.CreateNewItem(sim.ConnectionString);
+            timeLimit.Name = name;
+
+            // create a timelimit entry for the time and day type of the time slot
+            var entry = timeLimit.AddTimeLimitEntry(null, sim.DateBasedProfiles.Items);
+            entry.RepeaterType = Database.Helpers.PermissionMode.EveryXWeeks;
+            entry.RandomizeTimeAmount = 15;
+            entry.WeeklyWeekCount = 1;
+            entry.StartWeek = -3;
+
+            // convert the timeslot numbers (seconds since midnight) to time spans
+            entry.StartTimeTimeSpan = GetTimeSpanFromSecondsSinceMidnight(timeSlot.Start);
+            entry.EndTimeTimeSpan = GetTimeSpanFromSecondsSinceMidnight(timeSlot.End);
+
+            // set the correct days depending on the DayType of the timeSlot
+            entry.WeeklyMonday = false;
+            entry.WeeklyTuesday = false;
+            entry.WeeklyWednesday = false;
+            entry.WeeklyThursday = false;
+            entry.WeeklyFriday = false;
+            entry.WeeklySaturday = false;
+            entry.WeeklySunday = false;
+            if (timeSlot.DayType == DayType.Weekday || timeSlot.DayType == DayType.EveryDay)
+            {
+                entry.WeeklyMonday = true;
+                entry.WeeklyTuesday = true;
+                entry.WeeklyWednesday = true;
+                entry.WeeklyThursday = true;
+                entry.WeeklyFriday = true;
+            }
+            if (timeSlot.DayType == DayType.Weekend || timeSlot.DayType == DayType.EveryDay)
+            {
+                entry.WeeklySaturday = true;
+                entry.WeeklySunday = true;
+            }
+
+            timeLimit.SaveToDB();
+            return timeLimit;
+        }
+
+        /// <summary>
+        /// Turns the time specification from a time slot, which is in seconds since midnight,
+        /// into a time span. Ensures that the time span is not longer than one day so
+        /// that the timelimit calculation works.
+        /// </summary>
+        /// <param name="time">time slot time, in seconds since midnight</param>
+        /// <returns>the corresponding time span</returns>
+        /// <exception cref="LPGPBadParameterException">if the time span was longer than one day</exception>
+        private static TimeSpan GetTimeSpanFromSecondsSinceMidnight(int time)
+        {
+            var timeSpan = TimeSpan.FromSeconds(time);
+            if (timeSpan.TotalDays > 1)
+                throw new LPGPBadParameterException($"Time declaration in a timeslot must be max. one day: {time} (as TimeSpan: {timeSpan})");
+            return timeSpan;
+        }
+
         private void AddRoutesForPerson(HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs,
-            TransportationDeviceSet transportationDeviceSet, string personName = null)
+            bool hasCar, string personName = null)
         {
             // use a single database connection to add all routes for a better performance
             using var con = new Database.Database.Connection(sim.ConnectionString);
@@ -101,60 +201,68 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             // determine the personId ID, if the routes are only for one person
             int? personId = string.IsNullOrEmpty(personName) ? null : sim.Persons.FindFirstByNameNotNull(personName).IntID;
-            foreach (var routeData in hj.City.Routes)
+            var houseId = hj.House.Name;
+            // iterate through all routes in all RoutesForTimeSlot objects and identify the relevant ones
+            foreach (var routesForOneTimeSlot in hj.City.TravelDefinition.TimeSlotRouteLists)
             {
-                if (!relevantPOIs.Contains(routeData.origin_id) || !relevantPOIs.Contains(routeData.destination_id))
+                // get the timelimit that applies for these routes
+                var timeLimit = TimeLimitMap[routesForOneTimeSlot.TimeSlot];
+                foreach (var routeData in routesForOneTimeSlot.Routes)
                 {
-                    // start or destination of this route is not relevant for this person, so the route is not needed
-                    continue;
-                }
+                    var origin = routeData.origin_id;
+                    var destination = routeData.destination_id;
 
-                // check if the household has a car
-                bool hasCar = transportationDeviceSet.TransportationDeviceSetEntries.Any(x => x.TransportationDevice.TransportationDeviceCategory.Name == "Car Category");
+                    // TODO: map cluster IDs to POI IDs
 
-                // select the correct weights for the household type
-                var weights = hasCar ? routeData.prob_with_car_hh : routeData.prob_no_car_hh;
-
-                foreach (var categoryDistancePair in routeData.mode_distances)
-                {
-                    // create the new travel route
-                    var houseId = hj.House.Name;
-                    var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
-                    route.Description = "Generated from transport model data";
-                    route.SiteA = GetSiteFromPoi(routeData.origin_id, houseId);
-                    route.SiteB = GetSiteFromPoi(routeData.destination_id, houseId);
-                    route.RouteKey = "Generated";
-
-                    // create a single step with the specified transportation device category
-                    var deviceCategory = TransportModes[categoryDistancePair.Key];
-                    var deviceCategoryName = deviceCategory.Name;
-                    SetRouteName(route, deviceCategoryName, personName);
-
-                    // check if a duration is specified for this route and mode
-                    double durationInS = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1);
-                    route.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
-
-                    route.SaveToDB(con);
-                    var routeWeight = weights[categoryDistancePair.Key];
-                    travelRouteSet.AddRoute(route, personID: personId, weight: routeWeight, savetodb: false);
-
-                    // if required, also create an identical route in the opposite direction
-                    if (hj.City.MirrorRoutes)
+                    if (!relevantPOIs.Contains(origin) || !relevantPOIs.Contains(destination))
                     {
-                        var mirroredRoute = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
-                        mirroredRoute.SiteA = route.SiteB;
-                        mirroredRoute.SiteB = route.SiteA;
-                        mirroredRoute.Description = route.Description;
-                        mirroredRoute.RouteKey = route.RouteKey;
-                        SetRouteName(mirroredRoute, deviceCategoryName, personName);
+                        // start or destination of this route is not relevant for this person, so the route is not needed
+                        continue;
+                    }
 
-                        mirroredRoute.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
+                    // select the correct weights for the household type
+                    var weights = hasCar ? routeData.prob_with_car_hh : routeData.prob_no_car_hh;
+
+                    foreach (var categoryDistancePair in routeData.mode_distances)
+                    {
+                        // create the new travel route
+                        var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
+                        route.Description = "Generated from transport model data";
+                        route.SiteA = GetSiteFromPoi(origin, houseId);
+                        route.SiteB = GetSiteFromPoi(destination, houseId);
+                        route.RouteKey = "Generated";
+
+                        // create a single step with the specified transportation device category
+                        var deviceCategory = TransportModes[categoryDistancePair.Key];
+                        var deviceCategoryName = deviceCategory.Name;
+                        SetRouteName(route, deviceCategoryName, personName);
+
+                        // check if a duration is specified for this route and mode
+                        double durationInS = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1);
+                        route.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
 
                         // set the specified minimum driving age for cars; -1 means no restriction
-                        int minimumAge = deviceCategory == CarCategory ? hj.City.MinimumDrivingAge : -1;
+                        int minimumAge = deviceCategory == CarCategory ? hj.City.TravelDefinition.MinimumDrivingAge : -1;
 
-                        mirroredRoute.SaveToDB(con);
-                        travelRouteSet.AddRoute(mirroredRoute, personID: personId, minimumAge: minimumAge, weight: routeWeight, savetodb: false);
+                        route.SaveToDB(con);
+                        var routeWeight = weights[categoryDistancePair.Key];
+                        travelRouteSet.AddRoute(route, minimumAge: minimumAge, personID: personId, weight: routeWeight, timeLimit: timeLimit, savetodb: false);
+
+                        // if required, also create an identical route in the opposite direction
+                        if (hj.City.TravelDefinition.MirrorRoutes)
+                        {
+                            var mirroredRoute = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
+                            mirroredRoute.SiteA = route.SiteB;
+                            mirroredRoute.SiteB = route.SiteA;
+                            mirroredRoute.Description = route.Description;
+                            mirroredRoute.RouteKey = route.RouteKey;
+                            SetRouteName(mirroredRoute, deviceCategoryName, personName);
+
+                            mirroredRoute.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
+
+                            mirroredRoute.SaveToDB(con);
+                            travelRouteSet.AddRoute(mirroredRoute, minimumAge: minimumAge, personID: personId, weight: routeWeight, timeLimit: timeLimit, savetodb: false);
+                        }
                     }
                 }
             }

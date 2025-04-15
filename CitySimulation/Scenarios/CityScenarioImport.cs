@@ -7,6 +7,8 @@ using CitySimulation.SimulationTargets;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
+using CalculationEngine.OnlineLogging;
+using System.Text.RegularExpressions;
 
 namespace CitySimulation.CityGeneration
 {
@@ -17,6 +19,15 @@ namespace CitySimulation.CityGeneration
     /// </summary>
     internal class CityScenarioImport
     {
+        /// <summary>
+        /// Maps the day type key in route data filenames to the corresponding enum value
+        /// </summary>
+        private static readonly Dictionary<string, DayType> DayTypeMapping = new() {
+            { "Mon", DayType.Weekday },
+            { "Sun", DayType.Weekend },
+            { "All", DayType.EveryDay }
+        };
+
         public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath)
         {
             var inputDirectory = new DirectoryInfo(inputDirectoryPath);
@@ -62,19 +73,70 @@ namespace CitySimulation.CityGeneration
             // log the seed used for each target to make simulation reproducible
             CreateTargetSeedFile(resultDir, houseConfigs);
 
-            // check if routes are defined in a separate file
-            string routesFile = inputDirectory.CombineName("routes.json");
-            if (File.Exists(routesFile))
-            {
-                if (!cityData.Routes.IsNullOrEmpty())
-                    throw new LPGException("Routes are defined in both city.json and routes.json. Only one of them is allowed at a time.");
-
-                var routes = AutomationUtili.ParseJsonFile<Dictionary<string, RouteData>>(routesFile);
-                cityData.Routes = [.. routes.Values];
-            }
+            // check if there is travel data in separate files and assign it to the CityData object
+            ParseTravelData(inputDirectory, cityData);
 
             // create a new scenario object containing all house and POI configs
             return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs, cityData);
+        }
+
+        /// <summary>
+        /// Parses route data from a separate "routes" subdirectory, if it exists.
+        /// Each contained json file specifies the available routes for a different time slot.
+        /// Additionally, the optional fiel "cluster_info.json" can provide a mapping of building IDs to
+        /// clusters, if buildings were clustered for the route definitions.
+        /// </summary>
+        /// <param name="inputDirectory">the scenario input directory</param>
+        /// <param name="city">the parsed city definition</param>
+        /// <exception cref="LPGException">if two conflicting travel definitions are found</exception>
+        private static void ParseTravelData(DirectoryInfo inputDirectory, CityData city)
+        {
+            // check if routes are defined in a separate file
+            var routesDir = new DirectoryInfo(inputDirectory.CombineName("routes"));
+            if (!routesDir.Exists)
+            {
+                // no separate travel data files
+                return;
+            }
+            if (city.TravelDefinition.TimeSlotRouteLists.IsNullOrEmpty() is true)
+                throw new LPGException("Routes are defined in both city.json and the routes subdirectory. Only one of them is allowed at a time.");
+
+            // check if POIs are clustered for the route data, and if so, load the corresponding mapping
+            string clusterFile = routesDir.CombineName("cluster_info.json");
+            if (File.Exists(clusterFile))
+            {
+                city.TravelDefinition.PoiClusterMapping = AutomationUtili.ParseJsonFile<Dictionary<string, string>>(clusterFile);
+            }
+
+            var routeFiles = routesDir.GetFiles();
+            Logger.Info($"Found {routeFiles.Length} files in the routes subdirectory.");
+            foreach (var routeFile in routeFiles)
+            {
+                if (routeFile.FullName == clusterFile)
+                    continue;
+                var routes = AutomationUtili.ParseJsonFile<Dictionary<string, RouteData>>(routeFile.FullName);
+                var timeSlot = ParseTimeSlot(routeFile.Name);
+                city.TravelDefinition.TimeSlotRouteLists.Add(new(timeSlot, [.. routes.Values]));
+            }
+        }
+
+        /// <summary>
+        /// Parses the time slot for route data from the route data filename.
+        /// </summary>
+        /// <param name="text">the text to parse the time slot from</param>
+        /// <returns>the parsed time slot that applies for the corresponding route data</returns>
+        /// <exception cref="LPGPBadParameterException">if the time slot could not be parsed</exception>
+        private static TimeSlot ParseTimeSlot(string text)
+        {
+            var dayTypes = String.Join("|", DayTypeMapping.Keys);
+            Match match = Regex.Match(text, @"_(" + dayTypes + @")_(\d+)to(\d+)");
+            if (!match.Success)
+                throw new LPGPBadParameterException($"Could not parse time slot: {text}");
+
+            var dayType = DayTypeMapping[match.Groups[1].Value];
+            int start = int.Parse(match.Groups[2].Value);
+            int end = int.Parse(match.Groups[3].Value);
+            return new TimeSlot(start, end, dayType);
         }
 
         /// <summary>

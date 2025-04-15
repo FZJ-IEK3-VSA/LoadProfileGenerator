@@ -184,6 +184,7 @@ namespace SimulationEngineLib
             WriteEnum<Gender>(sw, writtenTypes);
             WriteEnum<HouseholdDataSpecificationType>(sw, writtenTypes);
             WriteEnum<HouseholdKeyType>(sw, writtenTypes);
+            WriteEnum<DayType>(sw, writtenTypes);
             var encounteredTypes = new HashSet<string>();
             WriteClass<StrGuid>(sw, encounteredTypes, writtenTypes);
             WriteClass<TransportationPreference>(sw, encounteredTypes, writtenTypes);
@@ -208,6 +209,9 @@ namespace SimulationEngineLib
             WriteClass<JsonEnumProfile>(sw, encounteredTypes, writtenTypes);
             WriteClass<JsonDeviceProfiles>(sw, encounteredTypes, writtenTypes);
             WriteClass<PersonPoiPreferences>(sw, encounteredTypes, writtenTypes);
+            WriteClass<TimeSlot>(sw, encounteredTypes, writtenTypes);
+            WriteClass<RoutesForTimeSlot>(sw, encounteredTypes, writtenTypes);
+            WriteClass<TravelDefinition>(sw, encounteredTypes, writtenTypes);
             WriteClass<CityData>(sw, encounteredTypes, writtenTypes);
             WriteClass<RouteData>(sw, encounteredTypes, writtenTypes);
             WriteClass<PointOfInterestData>(sw, encounteredTypes, writtenTypes);
@@ -434,6 +438,10 @@ namespace SimulationEngineLib
                 case "Automation.SingleDeviceProfile":
                 case "Automation.RouteData":
                 case "Automation.Coordinates":
+                case "Automation.DayType":
+                case "Automation.TimeSlot":
+                case "Automation.RoutesForTimeSlot":
+                case "Automation.TravelDefinition":
                     typename = type.Name;
                     return $"Optional[{typename}] = None";
                 case "Automation.JsonReference":
