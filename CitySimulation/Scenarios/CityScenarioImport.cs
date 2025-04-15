@@ -98,7 +98,7 @@ namespace CitySimulation.CityGeneration
                 // no separate travel data files
                 return;
             }
-            if (city.TravelDefinition.TimeSlotRouteLists.IsNullOrEmpty() is true)
+            if (city.TravelDefinition.TimeSlotRouteLists.IsNullOrEmpty() is false)
                 throw new LPGException("Routes are defined in both city.json and the routes subdirectory. Only one of them is allowed at a time.");
 
             // check if POIs are clustered for the route data, and if so, load the corresponding mapping

@@ -34,7 +34,9 @@ namespace Database.Tables.Transportation {
             _durationInS = durationInS;
         }
 
-        [UsedImplicitly]
+        /// <summary>
+        /// Distance of this step in meters
+        /// </summary>
         public double Distance => _distance;
 
         [UsedImplicitly]

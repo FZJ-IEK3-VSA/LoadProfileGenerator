@@ -8,10 +8,16 @@ using System.Linq;
 using PowerArgs;
 using System;
 using Database.Tables.BasicElements;
-using Common;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
+    /// <summary>
+    /// Auxiliary record to store origin and destination Building ID for a route.
+    /// </summary>
+    /// <param name="Origin">Building ID of the route start</param>
+    /// <param name="Destination">Building ID of the route end</param>
+    internal record RouteEndpoints(string Origin, string Destination);
+
     /// <summary>
     /// Builds a new travel route set based on the defined points of interests and
     /// the POI preferences of each person.
@@ -80,7 +86,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="household">the ModularHousehold object</param>
         /// <param name="hj">the house job object</param>
         /// <param name="transportationDeviceSet">the transportation device set to use</param>
-        /// <returns></returns>
+        /// <returns> the new travel route set</returns>
         /// <exception cref="LPGPBadParameterException"></exception>
         internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj, TransportationDeviceSet transportationDeviceSet)
         {
@@ -209,64 +215,102 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var timeLimit = TimeLimitMap[routesForOneTimeSlot.TimeSlot];
                 foreach (var routeData in routesForOneTimeSlot.Routes)
                 {
-                    var origin = routeData.origin_id;
-                    var destination = routeData.destination_id;
-
-                    // TODO: map cluster IDs to POI IDs
-
-                    if (!relevantPOIs.Contains(origin) || !relevantPOIs.Contains(destination))
+                    // get all combinations of origins and destinations that this route applies to
+                    var routeEndpoints = GetAllSiteCombinationsForRoute(relevantPOIs, routeData, hj.City.TravelDefinition.PoiClusterMapping);
+                    foreach (var endpoints in routeEndpoints)
                     {
-                        // start or destination of this route is not relevant for this person, so the route is not needed
-                        continue;
-                    }
-
-                    // select the correct weights for the household type
-                    var weights = hasCar ? routeData.prob_with_car_hh : routeData.prob_no_car_hh;
-
-                    foreach (var categoryDistancePair in routeData.mode_distances)
-                    {
-                        // create the new travel route
-                        var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
-                        route.Description = "Generated from transport model data";
-                        route.SiteA = GetSiteFromPoi(origin, houseId);
-                        route.SiteB = GetSiteFromPoi(destination, houseId);
-                        route.RouteKey = "Generated";
-
-                        // create a single step with the specified transportation device category
-                        var deviceCategory = TransportModes[categoryDistancePair.Key];
-                        var deviceCategoryName = deviceCategory.Name;
-                        SetRouteName(route, deviceCategoryName, personName);
-
-                        // check if a duration is specified for this route and mode
-                        double durationInS = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1);
-                        route.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
-
-                        // set the specified minimum driving age for cars; -1 means no restriction
-                        int minimumAge = deviceCategory == CarCategory ? hj.City.TravelDefinition.MinimumDrivingAge : -1;
-
-                        route.SaveToDB(con);
-                        var routeWeight = weights[categoryDistancePair.Key];
-                        travelRouteSet.AddRoute(route, minimumAge: minimumAge, personID: personId, weight: routeWeight, timeLimit: timeLimit, savetodb: false);
-
+                        CreateRoutesForOneOriginDestinatino(hj, travelRouteSet, hasCar, personName, personId, houseId, timeLimit, routeData, endpoints.Origin, endpoints.Destination, con);
                         // if required, also create an identical route in the opposite direction
                         if (hj.City.TravelDefinition.MirrorRoutes)
                         {
-                            var mirroredRoute = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
-                            mirroredRoute.SiteA = route.SiteB;
-                            mirroredRoute.SiteB = route.SiteA;
-                            mirroredRoute.Description = route.Description;
-                            mirroredRoute.RouteKey = route.RouteKey;
-                            SetRouteName(mirroredRoute, deviceCategoryName, personName);
-
-                            mirroredRoute.AddStep(deviceCategoryName, deviceCategory, categoryDistancePair.Value, 1, deviceCategoryName, durationInS, false);
-
-                            mirroredRoute.SaveToDB(con);
-                            travelRouteSet.AddRoute(mirroredRoute, minimumAge: minimumAge, personID: personId, weight: routeWeight, timeLimit: timeLimit, savetodb: false);
+                            CreateRoutesForOneOriginDestinatino(hj, travelRouteSet, hasCar, personName, personId, houseId, timeLimit, routeData, endpoints.Destination, endpoints.Origin, con);
                         }
                     }
                 }
             }
             tr.Commit();
+        }
+
+        /// <summary>
+        /// Creates all routes for one person for one fixed origin and destination. One TravelRoute object per mode is created.
+        /// </summary>
+        /// <param name="hj">the house job</param>
+        /// <param name="travelRouteSet">the travel route set to add the routes to</param>
+        /// <param name="hasCar">whether the household has a car</param>
+        /// <param name="personName">the name of the person the routes are for</param>
+        /// <param name="personId">the ID of the person the routes are for</param>
+        /// <param name="houseId">ID of the house the household belongs to</param>
+        /// <param name="timeLimit">timelimit that applies for the routes</param>
+        /// <param name="routeData">the route definition; origin and destination might be cluster IDs</param>
+        /// <param name="origin">actual starting point of the route</param>
+        /// <param name="destination">actual destination point of the route</param>
+        /// <param name="con">database connection to use for faster storage</param>
+        private void CreateRoutesForOneOriginDestinatino(HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, bool hasCar,
+            string personName, int? personId, string houseId, TimeLimit timeLimit, RouteData routeData,
+            string origin, string destination, Database.Database.Connection con)
+        {
+            // select the correct weights for the household type
+            var weights = hasCar ? routeData.prob_with_car_hh : routeData.prob_no_car_hh;
+            var originSite = GetSiteFromPoi(origin, houseId);
+            var destinationSite = GetSiteFromPoi(destination, houseId);
+
+            foreach (var categoryDistancePair in routeData.mode_distances)
+            {
+                // create the new travel route
+                var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
+                route.Description = "Generated from transport model data";
+                route.SiteA = originSite;
+                route.SiteB = destinationSite;
+                route.RouteKey = "Generated";
+
+                // create a single step with the specified transportation device category
+                var deviceCategory = TransportModes[categoryDistancePair.Key];
+                var deviceCategoryName = deviceCategory.Name;
+                SetRouteName(route, deviceCategoryName, personName);
+
+                // check if a duration is specified for this route and mode
+                double durationInS = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1) * 60;
+                double distanceInM = categoryDistancePair.Value * 1000;
+                route.AddStep(deviceCategoryName, deviceCategory, distanceInM, 1, deviceCategoryName, durationInS, false);
+
+                // set the specified minimum driving age for cars; -1 means no restriction
+                int minimumAge = deviceCategory == CarCategory ? hj.City.TravelDefinition.MinimumDrivingAge : -1;
+
+                route.SaveToDB(con);
+                var routeWeight = weights[categoryDistancePair.Key];
+                travelRouteSet.AddRoute(route, minimumAge: minimumAge, personID: personId, weight: routeWeight, timeLimit: timeLimit, savetodb: false);
+            }
+        }
+
+        /// <summary>
+        /// Generates a list of all possible origin and destination site IDs that a RouteData object is relevant for.
+        /// If no clustering is used, this is at most one combination, namely the origin and destination declared in the
+        /// RouteData object. But if clustering is used and multiple POIs belong to the same cluster, this results in many
+        /// combinations. For each combination, individual TravelRoute objects need to be generated.
+        /// </summary>
+        /// <param name="relevantPOIs">all POIs that are relevant for a single person</param>
+        /// <param name="route">the route definition</param>
+        /// <param name="poiClusterMapping">the dictionary mapping POI IDs to the respective clusters</param>
+        /// <returns>the origin-destination combinations for which TravelRoutes must be generated</returns>
+        private static IEnumerable<RouteEndpoints> GetAllSiteCombinationsForRoute(HashSet<string> relevantPOIs, RouteData route, Dictionary<string, string>? poiClusterMapping)
+        {
+            if (poiClusterMapping.IsNullOrEmpty())
+            {
+                // no clustering is used, origin and destination of each route are POI IDs
+                if (!relevantPOIs.Contains(route.origin_id) || !relevantPOIs.Contains(route.destination_id))
+                    return [];
+
+                // both origin and destination are relevant POIs, so this route is relevant
+                return [new(route.origin_id, route.destination_id)];
+            }
+
+            // A clustering is used, so origin and destination of each route are cluster IDs instead of POI IDs.
+            // First, collect all POIs that belong to the origin or destination cluster of the route.
+            var routeOrigins = relevantPOIs.Where(poi => poiClusterMapping[poi] == route.origin_id);
+            var routeDestinations = relevantPOIs.Where(poi => poiClusterMapping[poi] == route.destination_id);
+            // do a cartesian product to get all possible origin-destination combinations, excluding routes with identical start and end POI
+            var combinations = from orig in routeOrigins from dest in routeDestinations where orig != dest select new RouteEndpoints(orig, dest);
+            return combinations;
         }
 
         /// <summary>
