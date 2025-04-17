@@ -261,26 +261,28 @@ namespace SimulationEngineLib.HouseJobProcessor
                 double? distanceInKm = categoryDistancePair.Value;
                 if (!durationInMin.HasValue || !distanceInKm.HasValue)
                     continue; // skip this mode
+
                 double durationInS = durationInMin.Value * 60;
                 double distanceInM = distanceInKm.Value * 1000;
-
-                // create the new travel route
-                var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
-                route.Description = "Generated from transport model data";
-                route.SiteA = originSite;
-                route.SiteB = destinationSite;
-                route.RouteKey = "Generated";
 
                 // create a single step with the specified transportation device category
                 var deviceCategory = TransportModes[categoryDistancePair.Key];
                 var deviceCategoryName = deviceCategory.Name;
-                SetRouteName(route, deviceCategoryName, personName);
+
+                // create the new travel route
+                var personHint = string.IsNullOrEmpty(personName) ? "" : $" for {personName}";
+                string routeName = $"Route{personHint} from {originSite.Name} to {destinationSite.Name} via {deviceCategoryName} {distanceInKm:f1}km";
+                const string description = "Generated from transport model data";
+                var route = new TravelRoute(null, sim.ConnectionString, routeName, description, originSite, destinationSite, StrGuid.New(), "Generated");
+                sim.TravelRoutes.Items.Add(route);
+                // save here already to receive an ID (necessary for adding steps)
+                route.SaveToDB(con);
+
                 route.AddStep(deviceCategoryName, deviceCategory, distanceInM, 1, deviceCategoryName, durationInS, false);
+                route.SaveToDB(con);
 
                 // set the specified minimum driving age for cars; -1 means no restriction
                 int minimumAge = deviceCategory == CarCategory ? hj.City.TravelDefinition.MinimumDrivingAge : -1;
-
-                route.SaveToDB(con);
                 var routeWeight = weights[categoryDistancePair.Key];
                 travelRouteSet.AddRoute(route, minimumAge: minimumAge, personID: personId, weight: routeWeight, timeLimit: timeLimit, savetodb: false);
             }
@@ -334,20 +336,6 @@ namespace SimulationEngineLib.HouseJobProcessor
             if (!LocationReplacements.TryGetValue(poiId, out var replacement))
                 throw new LPGException($"Found a route with start/destination {poiId}, which is no known site or POI.");
             return replacement.NewSite;
-        }
-
-        /// <summary>
-        /// Sets the name for a travel route depending on start and destination, and the name
-        /// of the person the route is made for.
-        /// </summary>
-        /// <param name="route">the route to set the name for</param>
-        /// <param name="deviceCategoryName">name of the transportation device category</param>
-        /// <param name="personName">the name of the personId who will use the route</param>
-        private static void SetRouteName(TravelRoute route, string deviceCategoryName, string personName = "")
-        {
-            var distanceInKm = route.CalculateTotalDistance() / 1000;
-            var personHint = string.IsNullOrEmpty(personName) ? "" : $" for {personName}";
-            route.Name = $"Route{personHint} from {route.SiteA.Name} to {route.SiteB.Name} via {deviceCategoryName} {distanceInKm}km";
         }
     }
 }
