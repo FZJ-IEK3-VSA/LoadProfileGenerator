@@ -167,9 +167,17 @@ namespace Database.Tables.Transportation
 
         public override void SaveToDB()
         {
-            base.SaveToDB();
-            foreach (var routeEntry in _routes) {
-                routeEntry.SaveToDB();
+            using Connection con = new(ConnectionString);
+            con.Open();
+            base.SaveToDB(con);
+            using (var tr = con.BeginTransaction())
+            {
+                foreach (var routeEntry in _routes)
+                {
+                    routeEntry.SaveToDB(con);
+                }
+
+                tr.Commit();
             }
         }
 
