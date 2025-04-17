@@ -358,8 +358,7 @@ namespace SimulationEngineLib
                 if (propertyTypeName.StartsWith("System.Collections.Generic.List`1[["))
                 {
                     var genericType = propertyType.GenericTypeArguments[0];
-                    encounteredTypes.Add(genericType.FullName);
-                    GetPropertyTypeAndInit(genericType, out var generictypename);
+                    GetPropertyTypeAndInit(genericType, encounteredTypes, out var generictypename);
                     pythonTypeName = $"List[{generictypename}]";
 
                     // special case: optional property
@@ -374,29 +373,21 @@ namespace SimulationEngineLib
                     propertyTypeName.StartsWith("System.Collections.Generic.OrderedDictionary`2[[System.String,"))
                 {
                     var genericType = propertyType.GenericTypeArguments[1];
-                    encounteredTypes.Add(genericType.FullName);
-                    GetPropertyTypeAndInit(genericType, out var generictypename);
+                    GetPropertyTypeAndInit(genericType, encounteredTypes, out var generictypename);
                     pythonTypeName = $"Dict[str, {generictypename}]";
                     return info.Name + $": {pythonTypeName} = field(default_factory=dict)";
                 }
-
-                // for nullables, just use the contained type
-                if (propertyTypeName.StartsWith("System.Nullable`1"))
+                if (propertyTypeName.StartsWith("System.Collections.Generic.HashSet`1[["))
                 {
-                    propertyType = propertyType.GenericTypeArguments[0];
+                    var genericType = propertyType.GenericTypeArguments[0];
+                    GetPropertyTypeAndInit(genericType, encounteredTypes, out var generictypename);
+                    pythonTypeName = $"set[{generictypename}]";
+                    return info.Name + $": {pythonTypeName} = field(default_factory=set)";
                 }
-            }
-            else
-            {
-                encounteredTypes.Add(propertyType.FullName);
-            }
-            if (propertyType == null)
-            {
-                throw new LPGException();
             }
 
             // create the line for this property
-            var declarationLine = GetPropertyTypeAndInit(propertyType, out pythonTypeName);
+            var declarationLine = GetPropertyTypeAndInit(propertyType, encounteredTypes, out pythonTypeName);
             return $"{info.Name}: {declarationLine}";
         }
 
@@ -405,11 +396,19 @@ namespace SimulationEngineLib
         /// containing the type annotation and the default value (but not the property name itself).
         /// </summary>
         /// <param name="type">the C# type of the property</param>
+        /// <param name="encounteredTypes">collects the names of all encountered types</param>
         /// <param name="typename">the resulting python type name</param>
         /// <returns>the definition line without the property name</returns>
         /// <exception cref="LPGException">if the type is unknown</exception>
-        private static string GetPropertyTypeAndInit(Type type, out string typename)
+        private static string GetPropertyTypeAndInit(Type type, HashSet<string> encounteredTypes, out string typename)
         {
+            if (type.IsGenericType && type.FullName.StartsWith("System.Nullable`1"))
+            {
+                // for nullables, just use the contained type
+                type = type.GenericTypeArguments[0];
+            }
+            encounteredTypes.Add(type.FullName);
+
             switch (type.FullName)
             {
                 case "Automation.HouseData":
@@ -442,6 +441,8 @@ namespace SimulationEngineLib
                 case "Automation.TimeSlot":
                 case "Automation.RoutesForTimeSlot":
                 case "Automation.TravelDefinition":
+                case "Automation.StrGuid":
+                case "System.DayOfWeek":
                     typename = type.Name;
                     return $"Optional[{typename}] = None";
                 case "Automation.JsonReference":
@@ -458,9 +459,6 @@ namespace SimulationEngineLib
                 case "System.DateTime":
                     typename = "str";
                     return "Optional[str] = \"\"";
-                case "Automation.StrGuid":
-                    typename = "StrGuid";
-                    return "Optional[StrGuid] = None";
                 case "System.Double":
                     typename = "float";
                     return "float = 0";
