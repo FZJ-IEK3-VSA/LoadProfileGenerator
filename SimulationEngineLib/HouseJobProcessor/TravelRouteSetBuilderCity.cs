@@ -256,6 +256,14 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             foreach (var categoryDistancePair in routeData.mode_distances)
             {
+                // check if a duration is specified for this route and mode
+                double? durationInMin = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1);
+                double? distanceInKm = categoryDistancePair.Value;
+                if (!durationInMin.HasValue || !distanceInKm.HasValue)
+                    continue; // skip this mode
+                double durationInS = durationInMin.Value * 60;
+                double distanceInM = distanceInKm.Value * 1000;
+
                 // create the new travel route
                 var route = sim.TravelRoutes.CreateNewItem(sim.ConnectionString, con);
                 route.Description = "Generated from transport model data";
@@ -267,10 +275,6 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var deviceCategory = TransportModes[categoryDistancePair.Key];
                 var deviceCategoryName = deviceCategory.Name;
                 SetRouteName(route, deviceCategoryName, personName);
-
-                // check if a duration is specified for this route and mode
-                double durationInS = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1) * 60;
-                double distanceInM = categoryDistancePair.Value * 1000;
                 route.AddStep(deviceCategoryName, deviceCategory, distanceInM, 1, deviceCategoryName, durationInS, false);
 
                 // set the specified minimum driving age for cars; -1 means no restriction
