@@ -184,7 +184,7 @@ namespace SimulationEngineLib
             WriteEnum<Gender>(sw, writtenTypes);
             WriteEnum<HouseholdDataSpecificationType>(sw, writtenTypes);
             WriteEnum<HouseholdKeyType>(sw, writtenTypes);
-            WriteEnum<DayType>(sw, writtenTypes);
+            WriteEnum<DayOfWeek>(sw, writtenTypes);
             var encounteredTypes = new HashSet<string>();
             WriteClass<StrGuid>(sw, encounteredTypes, writtenTypes);
             WriteClass<TransportationPreference>(sw, encounteredTypes, writtenTypes);

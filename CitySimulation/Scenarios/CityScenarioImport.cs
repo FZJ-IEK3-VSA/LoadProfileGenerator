@@ -20,12 +20,16 @@ namespace CitySimulation.CityGeneration
     internal class CityScenarioImport
     {
         /// <summary>
-        /// Maps the day type key in route data filenames to the corresponding enum value
+        /// Maps the day of week key in route data filenames to the corresponding enum value
         /// </summary>
-        private static readonly Dictionary<string, DayType> DayTypeMapping = new() {
-            { "Mon", DayType.Weekday },
-            { "Sun", DayType.Weekend },
-            { "All", DayType.EveryDay }
+        private static readonly Dictionary<string, DayOfWeek> DayTypeMapping = new() {
+            { "Mon", DayOfWeek.Monday },
+            { "Tue", DayOfWeek.Tuesday },
+            { "Wed", DayOfWeek.Wednesday },
+            { "Thu", DayOfWeek.Thursday },
+            { "Fri", DayOfWeek.Friday },
+            { "Sat", DayOfWeek.Saturday },
+            { "Sun", DayOfWeek.Sunday },
         };
 
         public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath)
@@ -128,15 +132,33 @@ namespace CitySimulation.CityGeneration
         /// <exception cref="LPGPBadParameterException">if the time slot could not be parsed</exception>
         private static TimeSlot ParseTimeSlot(string text)
         {
-            var dayTypes = String.Join("|", DayTypeMapping.Keys);
+            const string KEY_ALL = "All";
+            var dayTypes = String.Join("|", DayTypeMapping.Keys) + $"|{KEY_ALL}";
             Match match = Regex.Match(text, @"_(" + dayTypes + @")_(\d+)to(\d+)");
             if (!match.Success)
                 throw new LPGPBadParameterException($"Could not parse time slot: {text}");
 
-            var dayType = DayTypeMapping[match.Groups[1].Value];
+            // parse the weekday this time slot applies to
+            string dayTypeText = match.Groups[1].Value;
+            HashSet<DayOfWeek> daysOfWeek;
+            if (DayTypeMapping.TryGetValue(dayTypeText, out var dayOfWeek))
+            {
+                // time slot only applies to this specific day of week
+                daysOfWeek = [dayOfWeek];
+            }
+            else if (dayTypeText == KEY_ALL)
+            {
+                // time slot applies on all days
+                daysOfWeek = [.. Enum.GetValues<DayOfWeek>()];
+            }
+            else
+            {
+                throw new LPGPBadParameterException($"Unkown day type in time slot: {dayTypeText}");
+            }
+
             int start = int.Parse(match.Groups[2].Value);
             int end = int.Parse(match.Groups[3].Value);
-            return new TimeSlot(start, end, dayType);
+            return new TimeSlot(start, end, daysOfWeek);
         }
 
         /// <summary>

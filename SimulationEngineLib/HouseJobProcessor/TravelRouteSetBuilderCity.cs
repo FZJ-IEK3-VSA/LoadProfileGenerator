@@ -163,18 +163,18 @@ namespace SimulationEngineLib.HouseJobProcessor
             entry.WeeklyFriday = false;
             entry.WeeklySaturday = false;
             entry.WeeklySunday = false;
-            if (timeSlot.DayType == DayType.Weekday || timeSlot.DayType == DayType.EveryDay)
+            foreach (var dayOfWeek in timeSlot.WeekDays)
             {
-                entry.WeeklyMonday = true;
-                entry.WeeklyTuesday = true;
-                entry.WeeklyWednesday = true;
-                entry.WeeklyThursday = true;
-                entry.WeeklyFriday = true;
-            }
-            if (timeSlot.DayType == DayType.Weekend || timeSlot.DayType == DayType.EveryDay)
-            {
-                entry.WeeklySaturday = true;
-                entry.WeeklySunday = true;
+                switch (dayOfWeek)
+                {
+                    case DayOfWeek.Monday: entry.WeeklyMonday = true; break;
+                    case DayOfWeek.Tuesday: entry.WeeklyTuesday = true; break;
+                    case DayOfWeek.Wednesday: entry.WeeklyWednesday = true; break;
+                    case DayOfWeek.Thursday: entry.WeeklyThursday = true; break;
+                    case DayOfWeek.Friday: entry.WeeklyFriday = true; break;
+                    case DayOfWeek.Saturday: entry.WeeklySaturday = true; break;
+                    case DayOfWeek.Sunday: entry.WeeklySunday = true; break;
+                }
             }
 
             timeLimit.SaveToDB();
