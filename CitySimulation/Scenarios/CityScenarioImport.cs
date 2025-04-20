@@ -75,7 +75,7 @@ namespace CitySimulation.CityGeneration
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), random);
             var cityData = AutomationUtili.ParseJsonFile<CityData>(inputDirectory.CombineName("city.json"));
-            var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key)));
+            var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key), entry.Value.LocationType));
 
             // log the seed used for each target to make simulation reproducible
             CreateTargetSeedFile(resultDir, houseConfigs);

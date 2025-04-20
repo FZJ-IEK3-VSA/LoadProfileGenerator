@@ -2,7 +2,6 @@
 using CalculationEngine.CitySimulation;
 using Common;
 using System.Diagnostics;
-using System.Transactions;
 
 namespace CitySimulation.Simulators
 {

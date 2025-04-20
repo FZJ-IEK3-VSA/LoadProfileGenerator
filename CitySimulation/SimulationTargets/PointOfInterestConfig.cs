@@ -1,6 +1,7 @@
-﻿using CalculationEngine.CitySimulation;
+﻿using Automation;
+using CalculationEngine.CitySimulation;
 
 namespace CitySimulation.SimulationTargets
 {
-    public record PointOfInterestConfig(PointOfInterestId Id);
+    public record PointOfInterestConfig(PointOfInterestId Id, JsonReference LocationType);
 }

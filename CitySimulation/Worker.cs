@@ -7,6 +7,7 @@ using CitySimulation.Scenarios;
 using CitySimulation.Simulators;
 using MPI;
 using System.Runtime.InteropServices;
+using CitySimulation.SimulationTargets;
 
 namespace CitySimulation
 {
@@ -130,9 +131,22 @@ namespace CitySimulation
 
             // initialize the transport simulator
             transportSimulator = new TransportSimulator(rank, scenarioPart.CalcSpecification);
+            CreatePoiSimulators();
+        }
 
-            // initialize the point of interst simulators
-            poiSimulators = scenarioPart.PointsOfInterest.Select(poi => new PointOfInterestSimulator(rank, poi.Id, scenarioPart.CalcSpecification)).ToList();
+        private void CreatePoiSimulators()
+        {
+            // initialize the point of interest simulators
+            poiSimulators = [.. scenarioPart.PointsOfInterest.Select(CreatePoiSimulator)];
+        }
+
+        private PointOfInterestSimulator CreatePoiSimulator(PointOfInterestConfig poi)
+        {
+            return poi.LocationType.Name switch
+            {
+                //"Doctors Office" => new QueuePointOfInterestSimulator(rank, poi.Id, scenarioPart.CalcSpecification, 2),
+                _ => new PointOfInterestSimulator(rank, poi.Id, scenarioPart.CalcSpecification),
+            };
         }
 
         private void RunSimulation()
