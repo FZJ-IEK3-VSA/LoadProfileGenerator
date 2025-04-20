@@ -62,6 +62,9 @@ namespace CitySimulation.CityGeneration
             string fullDbPath = Path.GetFullPath(hcj.PathToDatabase!);
             Logger.Info("Using database file: " + fullDbPath);
 
+            // disable cleanup checks, as they can severly degrade performance in large scenarios, e.g., with many travel routes
+            sim.MyGeneralConfig.PerformCleanUpChecksBool = false;
+
             // save settings to the database copy in the result directory
             JsonCalculator.SaveSettingsToDatabase(sim, calcSpec);
 
