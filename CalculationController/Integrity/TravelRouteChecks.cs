@@ -121,23 +121,32 @@ namespace CalculationController.Integrity
                 }
             }
 
-            foreach (TravelRoute one in sim.TravelRoutes.Items) {
-                foreach (TravelRoute two in sim.TravelRoutes.Items) {
-                    if (one == two) {
-                        continue;
-                    }
+            // skip the following checks for the generated routes in a city simulation
+            if (!options.CitySimulationEnabled)
+            {
+                // check if travel route keys match for routes in the opposite direction
+                foreach (TravelRoute one in sim.TravelRoutes.Items)
+                {
+                    foreach (TravelRoute two in sim.TravelRoutes.Items)
+                    {
+                        if (one == two)
+                        {
+                            continue;
+                        }
 
-                    if (one.SiteA == two.SiteB && one.SiteB == two.SiteA) {
-                        if (one.RouteKey != two.RouteKey) {
-                            List<BasicElement> routes = new List<BasicElement>();
-                            routes.Add(one);
-                            routes.Add(two);
-                            throw new DataIntegrityException("The travel route keys on the matching routes " + one.PrettyName + " and " + two.PrettyName + " don't match. Please fix.", routes);
+                        if (one.SiteA == two.SiteB && one.SiteB == two.SiteA)
+                        {
+                            if (one.RouteKey != two.RouteKey)
+                            {
+                                List<BasicElement> routes = [one, two];
+                                throw new DataIntegrityException($"The travel route keys on the matching routes {one.PrettyName} and {two.PrettyName} don't match. Please fix.", routes);
 
+                            }
                         }
                     }
                 }
             }
+            
         }
     }
 }
