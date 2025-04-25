@@ -10,6 +10,19 @@ using Common.CalcDto;
 namespace CalculationController.DtoFactories
 {
     /// <summary>
+    /// Specifies additional parameters to use for creating the bitarry for an availability reference.
+    /// Unlike the parameters specified in the availability factory constructor, these parameters can
+    /// vary within a household.
+    /// </summary>
+    /// <param name="TimeLimitName">the name of the used timelimit</param>
+    /// <param name="Invert">whether the bitarray should be inverted (swap true and false)</param>
+    /// <param name="StartMinus">minus variation of the start time</param>
+    /// <param name="StartPlus">plus variation of the start time</param>
+    /// <param name="EndMinus">minus variation of the end time</param>
+    /// <param name="EndPlus">plus variation of the end time</param>
+    internal record AvailabilityParams(string TimeLimitName, bool Invert = false, int StartMinus = 0, int StartPlus = 0, int EndMinus = 0, int EndPlus = 0);
+
+    /// <summary>
     /// Manages creation of availability reference objects from timelimits for a single household.
     /// </summary>
     /// <param name="availabilityDtoRepository">the global repository to store all availability references</param>
@@ -22,6 +35,12 @@ namespace CalculationController.DtoFactories
     public class AvailabilityFactory(AvailabilityDtoRepository availabilityDtoRepository, CalcParameters calcParams, Random rnd,
         TemperatureProfile temperatureProfile, GeographicLocation geographicLocation, List<VacationTimeframe> vacationTimeframes, string holidayKey)
     {
+        /// <summary>
+        /// Stores all availability references created by this factory. As the basic parameters are always the same,
+        /// availabilities for a specific timelimit can be reused, if the AvailabilityParams are the same.
+        /// </summary>
+        private Dictionary<AvailabilityParams, AvailabilityDataReferenceDto> CreatedReferences { get; } = [];
+
         /// <summary>
         /// Collects the bridge days from all timelimits
         /// </summary>
@@ -49,7 +68,8 @@ namespace CalculationController.DtoFactories
             {
                 throw new LPGException("Root Entry was null");
             }
-            return CreateAvailabilityArray(tl, true, affordance.StartMinusTime, affordance.StartPlusTime, affordance.EndMinusTime, affordance.EndPlusTime);
+            var parameters = new AvailabilityParams(tl.Name, true, affordance.StartMinusTime, affordance.StartPlusTime, affordance.EndMinusTime, affordance.EndPlusTime);
+            return CreateAvailabilityArray(tl, parameters);
         }
 
         /// <summary>
@@ -60,30 +80,37 @@ namespace CalculationController.DtoFactories
         /// <returns>the new availability reference</returns>
         public AvailabilityDataReferenceDto CreateAvailabilityFromTimeLimit(TimeLimit timeLimit, bool invert = false)
         {
-            return CreateAvailabilityArray(timeLimit, invert);
+            var parameters = new AvailabilityParams(timeLimit.Name, invert);
+            return CreateAvailabilityArray(timeLimit, parameters);
         }
 
         /// <summary>
         /// Creates the bitarray of the timelimit and turns it into an availability reference, with optional adjustments.
         /// </summary>
         /// <param name="tl">the timelimit to use</param>
-        /// <param name="invert">whether the bitarray should be inverted (swap true and false)</param>
-        /// <param name="startMinus">minus variation of the start time</param>
-        /// <param name="startPlus">plus variation of the start time</param>
-        /// <param name="endMinus">minus variation of the end time</param>
-        /// <param name="endPlus">plus variation of the end time</param>
+        /// <param name="parameters">additional parameter influencing the final bitarray</param>
         /// <returns>the new availability reference></returns>
-        private AvailabilityDataReferenceDto CreateAvailabilityArray(TimeLimit tl, bool invert = false, int startMinus = 0, int startPlus = 0, int endMinus = 0, int endPlus = 0)
+        private AvailabilityDataReferenceDto CreateAvailabilityArray(TimeLimit tl, AvailabilityParams parameters)
         {
+            if (CreatedReferences.TryGetValue(parameters, out var reference))
+            {
+                // the bitarray and availability reference for these parameters was already created by this factory and can be reused
+                return reference;
+            }
+
             // create the bitarray for the timelimit
             var bitarray = tl.RootEntry.GetOneYearArray(calcParams.InternalStepsize, calcParams.InternalStartTime,
                 calcParams.InternalEndTime, temperatureProfile, geographicLocation, rnd, vacationTimeframes, holidayKey,
-                out var newBridgeDays, startMinus, startPlus, endMinus, endPlus);
+                out var newBridgeDays, parameters.StartMinus, parameters.StartPlus, parameters.EndMinus, parameters.EndPlus);
             BridgeDays.UnionWith(newBridgeDays);
 
-            if (invert)
+            if (parameters.Invert)
                 bitarray = bitarray.Not();
-            return availabilityDtoRepository.MakeNewReference(tl.Name, bitarray);
+
+            // create the new reference and cache it so it can be reused
+            var newReference = availabilityDtoRepository.MakeNewReference(tl.Name, bitarray);
+            CreatedReferences[parameters] = newReference;
+            return newReference;
         }
     }
 }
