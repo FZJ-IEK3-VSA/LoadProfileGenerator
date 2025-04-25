@@ -148,11 +148,20 @@ namespace CalculationController.DtoFactories
                 throw new LPGException("Vacation was null");
             }
 
+            // create a factory to generate AvailabilityReference objects from timelimits for this household
+            var availabilityFactory = new AvailabilityFactory(
+                _availabilityDtoRepository,
+                _calcRepo.CalcParameters,
+                _random,
+                temperatureProfile,
+                geographicLocation,
+                mhh.Vacation.VacationTimeframes(),
+                mhh.Name + "###" + householdKey);
+
             var autoDevDtos = _calcDeviceDtoFactory.MakeCalcAutoDevDtos(autonomousDevices,
-                et, householdKey, mhh.Vacation.VacationTimeframes(),
-                mhh.Name + "###" + householdKey,
-                sim.DeviceActions.Items, locationDict,
-                temperatureProfile, geographicLocation, deviceCategoryDtos);
+                et, householdKey, sim.DeviceActions.Items,
+                locationDict,
+                deviceCategoryDtos, availabilityFactory);
             if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
                 _calcRepo.InputDataLogger.SaveList<CalcAutoDevDto>(autoDevDtos.ConvertAll(x => (IHouseholdKey)x));
             }
@@ -168,16 +177,6 @@ namespace CalculationController.DtoFactories
             if (mhh.Vacation == null) {
                 throw new LPGException("Vacation was null");
             }
-
-            // create a factory to generate AvailabilityReference objects from timelimits for this household
-            var availabilityFactory = new AvailabilityFactory(
-                _availabilityDtoRepository,
-                _calcRepo.CalcParameters,
-                _random,
-                temperatureProfile,
-                geographicLocation,
-                mhh.Vacation.VacationTimeframes(),
-                mhh.Name + "###" + householdKey);
 
             var allAffordances = _calcAffordanceDtoFactory.SetCalcAffordances(locationDtos, _ltDict,
                 sim.MyGeneralConfig.TimeStepsPerHour,

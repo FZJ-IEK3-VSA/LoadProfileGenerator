@@ -56,10 +56,11 @@ namespace CalculationController.DtoFactories
         /// Creates an availability reference from a timelimit.
         /// </summary>
         /// <param name="timeLimit">the timelimit to use</param>
+        /// <param name="invert">if true, the timelimit is inverted, so all bit values are changed</param>
         /// <returns>the new availability reference</returns>
-        public AvailabilityDataReferenceDto CreateAvailabilityFromTimeLimit(TimeLimit timeLimit)
+        public AvailabilityDataReferenceDto CreateAvailabilityFromTimeLimit(TimeLimit timeLimit, bool invert = false)
         {
-            return CreateAvailabilityArray(timeLimit);
+            return CreateAvailabilityArray(timeLimit, invert);
         }
 
         /// <summary>

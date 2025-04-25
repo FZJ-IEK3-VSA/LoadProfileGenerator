@@ -54,12 +54,10 @@ namespace CalculationController.DtoFactories
             [JetBrains.Annotations.NotNull][ItemNotNull] List<IAutonomousDevice> autoDevices,
             EnergyIntensityType energyIntensity,
             [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> vacationTimeframes,
-            [JetBrains.Annotations.NotNull] string holidayKey,
             [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
             [JetBrains.Annotations.NotNull] LocationDtoDict locationDict,
-            [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile, [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos)
+            [ItemNotNull][JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
+            AvailabilityFactory availabilityFactory)
         {
             var autodevs = new List<CalcAutoDevDto>(autoDevices.Count);
             //// zur kategorien zuordnung
@@ -75,16 +73,7 @@ namespace CalculationController.DtoFactories
                     throw new DataIntegrityException("Time limit was null");
                 }
 
-                busyarr =
-                    hhautodev.TimeLimit.RootEntry.GetOneYearArray(
-                        _calcParameters.InternalStepsize,
-                        _calcParameters.InternalStartTime,
-                        _calcParameters.InternalEndTime, temperatureProfile, geographicLocation,
-                        _rnd, vacationTimeframes, holidayKey, out _, 0, 0, 0, 0);
-                // invertieren von erlaubten zu verbotenen zeiten
-                busyarr = busyarr.Not();
-                var timeprofilereference =
-                    _availabilityDtoRepository.MakeNewReference(hhautodev.TimeLimit.Name, busyarr);
+                var timeprofilereference = availabilityFactory.CreateAvailabilityFromTimeLimit(hhautodev.TimeLimit, true);
                 if (hhautodev.Location == null) {
                     throw new DataIntegrityException("Location was null");
                 }

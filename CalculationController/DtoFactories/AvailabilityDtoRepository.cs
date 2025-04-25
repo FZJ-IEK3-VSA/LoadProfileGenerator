@@ -10,24 +10,18 @@ namespace CalculationController.DtoFactories
 {
     public class AvailabilityDtoRepository
     {
-        public class Entry {
-            public Entry([NotNull] string name, StrGuid guid, [NotNull][ItemNotNull] BitArray array)
-            {
-                Name = name;
-                Guid = guid;
-                Array = array;
-            }
-
+        public class Entry([NotNull] string name, StrGuid guid, [NotNull][ItemNotNull] BitArray array)
+        {
             [NotNull]
-            public string Name { get; }
+            public string Name { get; } = name;
             [NotNull]
             [ItemNotNull]
-            public BitArray Array { get; }
-            public StrGuid Guid { get; }
+            public BitArray Array { get; } = array;
+            public StrGuid Guid { get; } = guid;
         }
 
         [NotNull]
-        private Dictionary<StrGuid, Entry> Entries { get; } = new Dictionary<StrGuid, Entry>();
+        private Dictionary<StrGuid, Entry> Entries { get; } = [];
 
         [NotNull]
         [ItemNotNull]
@@ -43,7 +37,7 @@ namespace CalculationController.DtoFactories
         /// </summary>
         /// <param name="guid">the guid of the availability entry</param>
         /// <returns>the BitArray of the matching availability entry</returns>
-        public BitArray? GetByGuidOptional([NotNull] StrGuid? guid)
+        public BitArray? GetByGuidOptional(StrGuid? guid)
         {
             if (guid is null)
                 return null;
