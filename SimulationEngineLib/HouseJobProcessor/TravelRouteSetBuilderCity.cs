@@ -310,6 +310,9 @@ namespace SimulationEngineLib.HouseJobProcessor
                 return [new(route.origin_id, route.destination_id)];
             }
 
+            if (!relevantPOIs.All(poi => poiClusterMapping.ContainsKey(poi)))
+                throw new LPGPBadParameterException("POIs are missing in the POI cluster mapping");
+
             // A clustering is used, so origin and destination of each route are cluster IDs instead of POI IDs.
             // First, collect all POIs that belong to the origin or destination cluster of the route.
             var routeOrigins = relevantPOIs.Where(poi => poiClusterMapping[poi] == route.origin_id);
