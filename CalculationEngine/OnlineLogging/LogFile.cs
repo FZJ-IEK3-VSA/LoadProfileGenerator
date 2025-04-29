@@ -204,7 +204,10 @@ namespace CalculationEngine.OnlineLogging {
 
         public void AddTransportationDeviceChoice(TransportationDeviceChoice choice)
         {
-            _transportationDeviceChoices.Add(choice);
+            if (_calcParameters.IsSet(CalcOption.TransportationDeviceChoices))
+            {
+                _transportationDeviceChoices.Add(choice);
+            }
         }
 
         public void AddTransportationEvent(HouseholdKey householdkey,

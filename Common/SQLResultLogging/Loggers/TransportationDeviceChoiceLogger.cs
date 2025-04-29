@@ -2,7 +2,6 @@
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.Loggers

@@ -414,8 +414,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<AffordanceEnergyUseLogger>().As<IDataSaverBase>();
             //builder.Register(x=> x.Resolve<CalcVariableDtoFactory>().GetRepository()).As<CalcVariableRepository>().SingleInstance();
             builder.Register(_ => MakeLightNeededArray(csps.GeographicLocation, csps.TemperatureProfile,
-                rnd,
-                new List<VacationTimeframe>(), hh.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
+                rnd, [], hh.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
         }
 
         private static void RegisterAllDtoVariables([JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository)
