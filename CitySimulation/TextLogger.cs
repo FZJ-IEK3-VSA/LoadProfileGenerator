@@ -3,10 +3,11 @@ using System.Text;
 
 namespace CitySimulation
 {
-    internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "")
+    internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "", bool csvMode = false)
     {
         public const string LOG_SUBDIR = "Logs";
         private readonly string outputDirectory = Path.Combine(outputDirectory, LOG_SUBDIR, subdirectory);
+        private readonly bool CsvMode = csvMode;
         private List<LogEntry> LogEntries = [];
 
         private int lastWrittenEntry = 0;
@@ -29,10 +30,20 @@ namespace CitySimulation
             StringBuilder logMessage = new();
             foreach (LogEntry entry in LogEntries.Skip(lastWrittenEntry))
             {
-                string linePrefix = $"{entry.Timestep.InternalStep:000000} {entry.DateTime} - ";
-                // if there are multiple lines for the same timestep, skip the prefix for better readability
-                if (linePrefix == lastPrefix)
-                    linePrefix = new string(' ', lastPrefix.Length);
+                string dateString = entry.DateTime.ToString("O");
+                string linePrefix;
+                if (CsvMode)
+                {
+                    // csv file mode: log comma-separated values without additional whitespace
+                    linePrefix = $"{entry.Timestep.InternalStep},{dateString},";
+                } else
+                {
+                    // log mode: use a more readable format, with whitespaces, number alignment etc.
+                    linePrefix = $"{entry.Timestep.InternalStep:000000} {dateString} - ";
+                    // if there are multiple lines for the same timestep, skip the prefix for better readability
+                    if (linePrefix == lastPrefix)
+                        linePrefix = new string(' ', lastPrefix.Length);
+                }
                 logMessage.Append(linePrefix + entry.Message + Environment.NewLine);
                 lastPrefix = linePrefix;
             }
