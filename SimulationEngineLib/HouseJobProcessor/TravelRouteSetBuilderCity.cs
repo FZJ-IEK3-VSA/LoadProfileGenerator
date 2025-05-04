@@ -8,6 +8,7 @@ using System.Linq;
 using PowerArgs;
 using System;
 using Database.Tables.BasicElements;
+using System.Diagnostics;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -100,6 +101,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             {
                 var timeLimit = GenerateTimeLimitFromTimeSlot(tlRouteData.TimeSlot);
                 // store the timelimit in the map to access it later
+                Debug.Assert(!TimeLimitMap.ContainsKey(tlRouteData.TimeSlot), "Duplicate time slot in route definition");
                 TimeLimitMap.Add(tlRouteData.TimeSlot, timeLimit);
             }
 
@@ -133,6 +135,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <returns>the new timelimit</returns>
         private TimeLimit GenerateTimeLimitFromTimeSlot(TimeSlot timeSlot)
         {
+            // create an unambiguous name for the time limit matching this time slot
             string name = $"TimeLimit generated for Route {timeSlot}";
             var timeLimit = sim.TimeLimits.FindFirstByName(name);
             if (timeLimit is not null)
