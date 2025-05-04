@@ -42,7 +42,6 @@ namespace CitySimulation
                 throw new LPGPBadParameterException($"LPGMassSimulator on worker {rank} received no simulation targets.");
 
             // configure logger so that each worker logs to a different file
-            var baseResultDirInfo = new DirectoryInfo(baseResultDir);
             Logger.Get().StartCollectingAllMessages();
             JsonCalculator.LogCalcSpec(scenarioPart.CalcSpecification);
 
@@ -139,7 +138,7 @@ namespace CitySimulation
         {
             foreach (var target in simulationTargets)
             {
-                target.CalcManager.CalcObject!.FinishCalculation();
+                target.CalcManager.CalcObject.FinishCalculation();
                 var calcRepo = target.CalcManager.CalcRepo;
                 calcRepo.Flush();
                 calcRepo.Dispose();

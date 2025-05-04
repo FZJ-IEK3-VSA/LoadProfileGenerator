@@ -45,11 +45,13 @@ using JetBrains.Annotations; //using Common.SQLResultLogging;
 
 namespace CalculationEngine
 {
-    public sealed class CalcManager : IDisposable
+    public sealed class CalcManager(ICalcAbleObject calcObject, [NotNull] string resultPath, int randomSeed,
+        [NotNull] DayLightStatus lightNeededArray, [NotNull] CalcVariableRepository variableRepository,
+        CalcRepo calcRepo) : IDisposable
     {
         private static bool _exitCalcFunction;
 
-        [NotNull] private readonly DayLightStatus _lightNeededArray;
+        [NotNull] private readonly DayLightStatus _lightNeededArray = lightNeededArray;
 
         //[ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcAffordanceTaggingSet> _affordanceTaggingSets;
 
@@ -57,40 +59,21 @@ namespace CalculationEngine
         //[JetBrains.Annotations.NotNull] private readonly string _name;
 
 
-        private readonly int _randomSeed;
+        private readonly int _randomSeed = randomSeed;
 
-        [NotNull] private readonly string _resultPath;
+        [NotNull] private readonly string _resultPath = resultPath;
 
         //[JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
 
-        [NotNull] private readonly CalcVariableRepository _variableRepository;
-
-        public CalcManager([NotNull] string resultPath,
-                           int randomSeed,
-                           [NotNull] DayLightStatus lightNeededArray,
-                           [NotNull] CalcVariableRepository variableRepository,
-                           CalcRepo calcRepo)
-        {
-            _lightNeededArray = lightNeededArray;
-            //_srls = srls;
-            _randomSeed = randomSeed;
-            //_fileVersion = fileVersion;
-            //_calcHouseholdPlans = calcHouseholdPlans;
-            //_affordanceTaggingSets = affordanceTaggingSets;
-            //_deviceTaggingSets = deviceTaggingSets;
-            _resultPath = resultPath;
-            //_name = pName;
-            _variableRepository = variableRepository;
-            CalcRepo = calcRepo;
-        }
+        [NotNull] private readonly CalcVariableRepository _variableRepository = variableRepository;
 
         /* [JetBrains.Annotations.NotNull]
          [ItemNotNull]
          public List<CalcAffordanceTaggingSet> AffordanceTaggingSets => _affordanceTaggingSets;*/
 
-        public ICalcAbleObject? CalcObject { get; private set; }
+        public ICalcAbleObject CalcObject { get; private set; } = calcObject;
 
-        public CalcRepo CalcRepo { get; }
+        public CalcRepo CalcRepo { get; } = calcRepo;
 
         public static bool ContinueRunning { get; private set; } = true;
 
@@ -110,7 +93,7 @@ namespace CalculationEngine
         // ReSharper disable once UnusedParameter.Local
         public void Dispose()
         {
-            CalcObject?.Dispose();
+            CalcObject.Dispose();
             CalcRepo.Dispose();
         }
 
@@ -327,15 +310,6 @@ namespace CalculationEngine
                 WriteCalcProfilingResults(_resultPath);
             }
             return true;
-        }
-
-        public void SetCalcObject([NotNull] ICalcAbleObject calcObject)
-        {
-            CalcObject = calcObject;
-            if (calcObject == null)
-            {
-                throw new LPGException("CalcObject was null");
-            }
         }
 
         /*
