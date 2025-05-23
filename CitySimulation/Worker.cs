@@ -191,7 +191,9 @@ namespace CitySimulation
             calculationProfiler?.StopPart("Main simulation loop", false);
             double stepsPerSecond = timestep.InternalStep / totalLoop.TotalSeconds;
             int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
-            logger.Info($"Main loop: {totalLoop}, MPI distribution: {totalDistribution} ({100 * totalDistribution / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second, {stepsPerSecond * totalHouseholds:f2} household steps/second");
+            int totalPersons = lpgSimulator.TotalNumberOfPersons();
+            logger.Info($"Main loop: {totalLoop}, MPI distribution: {totalDistribution} ({100 * totalDistribution / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second, " +
+                $"{stepsPerSecond * totalHouseholds:f2} household steps/second, {stepsPerSecond * totalPersons:f2} person steps/second");
         }
 
         private void MPIBarrierWithLog()
