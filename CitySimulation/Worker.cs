@@ -165,9 +165,15 @@ namespace CitySimulation
             // this barrier is not required, but it makes all workers start the main loop at the same time
             MPIBarrierWithLog();
 
+            // prepare data for performance measurements
+            int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
+            int totalPersons = lpgSimulator.TotalNumberOfPersons();
             calculationProfiler?.StartPart("Main simulation loop", false);
             var startLoop = DateTime.UtcNow;
-            TimeSpan totalDistribution = TimeSpan.Zero;
+            TimeSpan totalTimeMPI = TimeSpan.Zero;
+            var lastLog = startLoop;
+            var timestepLastLog = timestep.InternalStep;
+            var logInterval = new TimeSpan(0, 1, 0);
             // main simulation loop
             while (simulationTime < calcParameters.InternalEndTime)
             {
@@ -180,19 +186,31 @@ namespace CitySimulation
                 calculationProfiler?.StartPart("MPI message distribution", false);
                 var startDistribution = DateTime.UtcNow;
                 activityMessages = messageDistributor.DistributeMessages(comm);
-                totalDistribution += DateTime.UtcNow - startDistribution;
+                totalTimeMPI += DateTime.UtcNow - startDistribution;
                 calculationProfiler?.StopPart("MPI message distribution", false);
 
                 // increment timestep
                 simulationTime += calcParameters.InternalStepsize;
                 timestep = timestep.AddSteps(1);
+
+                // log the simulation performance
+                var timeSinceLastLog = startDistribution - lastLog;
+                if (timeSinceLastLog > logInterval)
+                {
+                    var elapsedTime = startDistribution - startLoop;
+                    double currentSpeed = (timestep.InternalStep - timestepLastLog) / timeSinceLastLog.TotalSeconds;
+                    var estimatedRemainingTime = TimeSpan.FromSeconds((calcParameters.InternalTimesteps - timestep.InternalStep) / currentSpeed);
+                    logger.Info($"Simulating timestep {timestep.InternalStep}, datetime: {simulationTime}, elapsed time: {elapsedTime}, speed: {currentSpeed:f2} steps/second, " +
+                        $"{currentSpeed * totalHouseholds:f2} household steps/second, {currentSpeed * totalPersons:f2} person steps/second, time left: {estimatedRemainingTime}");
+                    lastLog = startDistribution;
+                    timestepLastLog = timestep.InternalStep;
+                }
             }
+            // main simulation is over, log speed and share of MPI communication
             TimeSpan totalLoop = DateTime.UtcNow - startLoop;
             calculationProfiler?.StopPart("Main simulation loop", false);
             double stepsPerSecond = timestep.InternalStep / totalLoop.TotalSeconds;
-            int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
-            int totalPersons = lpgSimulator.TotalNumberOfPersons();
-            logger.Info($"Main loop: {totalLoop}, MPI distribution: {totalDistribution} ({100 * totalDistribution / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second, " +
+            logger.Info($"Main loop: {totalLoop}, MPI communication: {totalTimeMPI} ({100 * totalTimeMPI / totalLoop:f2} %), speed: {stepsPerSecond:f2} steps/second, " +
                 $"{stepsPerSecond * totalHouseholds:f2} household steps/second, {stepsPerSecond * totalPersons:f2} person steps/second");
         }
 
