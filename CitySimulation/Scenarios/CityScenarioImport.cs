@@ -84,7 +84,7 @@ namespace CitySimulation.CityGeneration
             ParseTravelData(inputDirectory, cityData);
 
             // create a new scenario object containing all house and POI configs
-            return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs, cityData);
+            return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs, cityData, inputDirectoryPath);
         }
 
         /// <summary>
