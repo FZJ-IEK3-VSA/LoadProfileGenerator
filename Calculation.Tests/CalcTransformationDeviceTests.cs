@@ -39,6 +39,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -47,7 +48,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests {
+namespace Calculation.Tests
+{
     public class CalcTransformationDeviceTests : CalcUnitTestBase
     {
         [Fact]
@@ -66,7 +68,7 @@ namespace Calculation.Tests {
             var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToStrGuid());
             var devguid = Guid.NewGuid().ToStrGuid();
             var locguid = Guid.NewGuid().ToStrGuid();
-            var cdd = new CalcDeviceDto("dev1", "devcatguid".ToStrGuid(), new HouseholdKey("HH1"), OefcDeviceType.Device, "devcatname", "", devguid, locguid,
+            var cdd = new CalcDeviceDto("dev1", StringExtensions.ToStrGuid("devcatguid"), new HouseholdKey("HH1"), OefcDeviceType.Device, "devcatname", "", devguid, locguid,
                 "loc", FlexibilityType.NoFlexibility, 0);
             var key = new OefcKey(cdd, clt.Guid);
             odap.RegisterDevice(clt.ConvertToDto(), cdd);
@@ -125,7 +127,7 @@ namespace Calculation.Tests {
             var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToStrGuid());
             var deviceGuid = Guid.NewGuid().ToStrGuid();
             var locGuid = Guid.NewGuid().ToStrGuid();
-            var cdd = new CalcDeviceDto("dev1", "devcatguid".ToStrGuid(), new HouseholdKey("HH1"),
+            var cdd = new CalcDeviceDto("dev1", StringExtensions.ToStrGuid("devcatguid"), new HouseholdKey("HH1"),
                 OefcDeviceType.Device, "devcatname", string.Empty,
                 deviceGuid, locGuid, "loc", FlexibilityType.NoFlexibility,0);
             var key = new OefcKey(cdd, clt.Guid);
@@ -141,7 +143,7 @@ namespace Calculation.Tests {
             double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow1 = {0, 20.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow2 = {0, 30.0, 0, 0, 0, 0, 0, 0, 0, 0};
-            var trafocdd = new CalcDeviceDto("trafo1", "devcatguid".ToStrGuid(), new HouseholdKey("housekey"), OefcDeviceType.Device, "devcatname",
+            var trafocdd = new CalcDeviceDto("trafo1", StringExtensions.ToStrGuid("devcatguid"), new HouseholdKey("housekey"), OefcDeviceType.Device, "devcatname",
                 string.Empty, Guid.NewGuid().ToStrGuid(), locGuid, "loc", FlexibilityType.NoFlexibility, 0);
             var ctd = new CalcTransformationDevice(odap, -1, 080, -1000, 1000, trafocdd, clt);
             var clt2 = new CalcLoadType("clt2", "W2", "kWh2", 1, true, Guid.NewGuid().ToStrGuid());

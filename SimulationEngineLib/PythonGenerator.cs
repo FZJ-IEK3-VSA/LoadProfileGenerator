@@ -68,6 +68,7 @@ namespace SimulationEngineLib
             WriteJsonRefs(sim.ModularHouseholds.Items.Select(x => (DBBase)x).ToList(), sw, "Households");
             WriteJsonRefs(sim.GeographicLocations.Items.Select(x => (DBBase)x).ToList(), sw, "GeographicLocations");
             WriteJsonRefs(sim.TemperatureProfiles.Items.Select(x => (DBBase)x).ToList(), sw, "TemperatureProfiles");
+            WriteJsonRefs(sim.TransportationDevices.Items.Select(x => (DBBase)x).ToList(), sw, "TransportationDevices");
             WriteJsonRefs(sim.TransportationDeviceSets.Items.Select(x => (DBBase)x).ToList(), sw, "TransportationDeviceSets");
             WriteJsonRefs(sim.ChargingStationSets.Items.Select(x => (DBBase)x).ToList(), sw, "ChargingStationSets");
             WriteJsonRefs(sim.TravelRouteSets.Items.Select(x => (DBBase)x).ToList(), sw, "TravelRouteSets");
@@ -174,7 +175,7 @@ namespace SimulationEngineLib
             sw.WriteLine("from enum import Enum");
 
             sw.WriteLine();
-            var writtenTypes = new List<string>();
+            var writtenTypes = new HashSet<string>();
             WriteEnum<LoadTypePriority>(sw, writtenTypes);
             WriteEnum<OutputFileDefault>(sw, writtenTypes);
             WriteEnum<EnergyIntensityType>(sw, writtenTypes);
@@ -183,7 +184,8 @@ namespace SimulationEngineLib
             WriteEnum<Gender>(sw, writtenTypes);
             WriteEnum<HouseholdDataSpecificationType>(sw, writtenTypes);
             WriteEnum<HouseholdKeyType>(sw, writtenTypes);
-            var encounteredTypes = new List<string>();
+            WriteEnum<DayOfWeek>(sw, writtenTypes);
+            var encounteredTypes = new HashSet<string>();
             WriteClass<StrGuid>(sw, encounteredTypes, writtenTypes);
             WriteClass<TransportationPreference>(sw, encounteredTypes, writtenTypes);
             WriteClass<PersonData>(sw, encounteredTypes, writtenTypes);
@@ -206,30 +208,39 @@ namespace SimulationEngineLib
             WriteClass<JsonSumProfile>(sw, encounteredTypes, writtenTypes);
             WriteClass<JsonEnumProfile>(sw, encounteredTypes, writtenTypes);
             WriteClass<JsonDeviceProfiles>(sw, encounteredTypes, writtenTypes);
+            WriteClass<PersonPoiPreferences>(sw, encounteredTypes, writtenTypes);
+            WriteClass<TimeSlot>(sw, encounteredTypes, writtenTypes);
+            WriteClass<RoutesForTimeSlot>(sw, encounteredTypes, writtenTypes);
+            WriteClass<TravelDefinition>(sw, encounteredTypes, writtenTypes);
+            WriteClass<CityData>(sw, encounteredTypes, writtenTypes);
+            WriteClass<RouteData>(sw, encounteredTypes, writtenTypes);
+            WriteClass<PointOfInterestData>(sw, encounteredTypes, writtenTypes);
+            WriteClass<Coordinates>(sw, encounteredTypes, writtenTypes, true);
             encounteredTypes.Remove("System.String");
             encounteredTypes.Remove("System.Int32");
             encounteredTypes.Remove("System.Double");
             encounteredTypes.Remove("System.Boolean");
             encounteredTypes.Remove("System.DateTime");
             encounteredTypes.Remove("System.TimeSpan");
-            foreach (var encounteredType in encounteredTypes)
+
+            // check if all encountered types have been written to the python bindings
+            if (!encounteredTypes.IsSubsetOf(writtenTypes))
             {
-                if (!writtenTypes.Contains(encounteredType))
-                {
-                    throw new LPGException("Missing Type:" + encounteredType);
-                }
+                var missing = encounteredTypes.Except(writtenTypes);
+                throw new LPGException("Missing Types: " + string.Join(", ", missing));
             }
 
             sw.Close();
         }
 
 
-        private static void WriteClass<T>([JetBrains.Annotations.NotNull] StreamWriter sw, List<string> encounteredTypes, [JetBrains.Annotations.NotNull] List<string> writtenTypes)
+        private static void WriteClass<T>([JetBrains.Annotations.NotNull] StreamWriter sw, HashSet<string> encounteredTypes, [JetBrains.Annotations.NotNull] HashSet<string> writtenTypes, bool frozen = false)
         {
             sw.WriteLine();
             sw.WriteLine("# noinspection PyPep8Naming, PyUnusedLocal");
             sw.WriteLine("@dataclass_json");
-            sw.WriteLine("@dataclass");
+            string txtFrozen = frozen ? "(frozen=True)" : "";
+            sw.WriteLine("@dataclass" + txtFrozen);
             var myclass = typeof(T).Name;
             writtenTypes.Add(typeof(T).FullName);
             sw.WriteLine("class " + myclass + ":");
@@ -242,11 +253,14 @@ namespace SimulationEngineLib
             foreach (var info in relevant_props)
             {
                 propertyLines.Add("    " + GetPropLine(info, encounteredTypes, out var parametertype));
-                propertyLines.Add("");
-                propertyLines.Add("    def set_" + info.Name + "(self, value: " + parametertype + ") -> " + myclass + ":");
-                propertyLines.Add("        self." + info.Name + " = value");
-                propertyLines.Add("        return self");
-                propertyLines.Add("");
+                if (!frozen)
+                {
+                    propertyLines.Add("");
+                    propertyLines.Add("    def set_" + info.Name + "(self, value: " + parametertype + ") -> " + myclass + ":");
+                    propertyLines.Add("        self." + info.Name + " = value");
+                    propertyLines.Add("        return self");
+                    propertyLines.Add("");
+                }
 
                 docstring += GetPropertyDocstringEntry(info, parametertype);
             }
@@ -333,96 +347,69 @@ namespace SimulationEngineLib
         }
 
         [JetBrains.Annotations.NotNull]
-        private static string GetPropLine([JetBrains.Annotations.NotNull] PropertyInfo info, [JetBrains.Annotations.NotNull] List<string> encounteredTypes, [JetBrains.Annotations.NotNull] out string typename)
+        private static string GetPropLine([JetBrains.Annotations.NotNull] PropertyInfo info, [JetBrains.Annotations.NotNull] HashSet<string> encounteredTypes, [JetBrains.Annotations.NotNull] out string pythonTypeName)
         {
-            string fulltypename = info.PropertyType.FullName;
-            if (fulltypename == null)
+            var propertyType = info.PropertyType;
+            if (propertyType.IsGenericType)
             {
-                throw new LPGException();
-            }
-            string shorttypename = info.PropertyType.Name;
-            if (info.PropertyType.IsGenericType)
-            {
-                var genericfulltypename = info.PropertyType.GenericTypeArguments[0].FullName;
-                var genericshorttypename = info.PropertyType.GenericTypeArguments[0].Name;
-                if (!encounteredTypes.Contains(genericfulltypename))
+                // the property is a generic, e.g. a list or dict
+                string propertyTypeName = propertyType.FullName;
+                // create the property line depending on the generic
+                if (propertyTypeName.StartsWith("System.Collections.Generic.List`1[["))
                 {
-                    encounteredTypes.Add(genericfulltypename);
+                    var genericType = propertyType.GenericTypeArguments[0];
+                    GetPropertyTypeAndInit(genericType, encounteredTypes, out var generictypename);
+                    pythonTypeName = $"List[{generictypename}]";
+
+                    // special case: optional property
+                    if (genericType.FullName == "Automation.TransportationDistanceModifier")
+                    {
+                        return info.Name + $": Optional[{pythonTypeName}] = field(default_factory=list)";
+                    }
+
+                    return info.Name + $": {pythonTypeName} = field(default_factory=list)";
                 }
-                if (fulltypename.StartsWith("System.Nullable`1"))
+                if (propertyTypeName.StartsWith("System.Collections.Generic.Dictionary`2[[System.String,") ||
+                    propertyTypeName.StartsWith("System.Collections.Generic.OrderedDictionary`2[[System.String,"))
                 {
-                    fulltypename = genericfulltypename;
-                    shorttypename = genericshorttypename;
+                    var genericType = propertyType.GenericTypeArguments[1];
+                    GetPropertyTypeAndInit(genericType, encounteredTypes, out var generictypename);
+                    pythonTypeName = $"Dict[str, {generictypename}]";
+                    return info.Name + $": {pythonTypeName} = field(default_factory=dict)";
                 }
-            }
-            else
-            {
-                if (!encounteredTypes.Contains(fulltypename))
+                if (propertyTypeName.StartsWith("System.Collections.Generic.HashSet`1[["))
                 {
-                    encounteredTypes.Add(fulltypename);
+                    var genericType = propertyType.GenericTypeArguments[0];
+                    GetPropertyTypeAndInit(genericType, encounteredTypes, out var generictypename);
+                    pythonTypeName = $"set[{generictypename}]";
+                    return info.Name + $": {pythonTypeName} = field(default_factory=set)";
                 }
-            }
-            if (fulltypename == null)
-            {
-                throw new LPGException();
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[System.String,"))
-            {
-                typename = "List[str]";
-                return info.Name + ": List[str] = field(default_factory=list)";
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.CalcOption"))
-            {
-                typename = "List[CalcOption]";
-                return info.Name + ": List[CalcOption] = field(default_factory=list)";
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.PersonLivingTag"))
-            {
-                typename = "List[PersonLivingTag]";
-                return info.Name + ": List[PersonLivingTag] = field(default_factory=list)";
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.PersonData,"))
-            {
-                typename = "List[PersonData]";
-                return info.Name + ": List[PersonData] = field(default_factory=list)";
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.TransportationPreference"))
-            {
-                typename = "List[TransportationPreference]";
-                return info.Name + ": List[TransportationPreference] = field(default_factory=list)";
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.JsonReference"))
-            {
-                typename = "List[JsonReference]";
-                return info.Name + ": List[JsonReference] = field(default_factory=list)";
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.TransportationDistanceModifier, "))
-            {
-                typename = "List[TransportationDistanceModifier]";
-                return info.Name + ": Optional[List[TransportationDistanceModifier]] = field(default_factory=list)";
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.HouseholdData,"))
-            {
-                typename = "List[HouseholdData]";
-                return info.Name + ": List[HouseholdData] = field(default_factory=list)";
-            }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[System.Double,"))
-            {
-                typename = "List[float]";
-                return info.Name + ": List[float] = field(default_factory=list)";
             }
 
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.SingleDeviceProfile,"))
+            // create the line for this property
+            var declarationLine = GetPropertyTypeAndInit(propertyType, encounteredTypes, out pythonTypeName);
+            return $"{info.Name}: {declarationLine}";
+        }
+
+        /// <summary>
+        /// Determines the python type name of the propery and creates its definition line
+        /// containing the type annotation and the default value (but not the property name itself).
+        /// </summary>
+        /// <param name="type">the C# type of the property</param>
+        /// <param name="encounteredTypes">collects the names of all encountered types</param>
+        /// <param name="typename">the resulting python type name</param>
+        /// <returns>the definition line without the property name</returns>
+        /// <exception cref="LPGException">if the type is unknown</exception>
+        private static string GetPropertyTypeAndInit(Type type, HashSet<string> encounteredTypes, out string typename)
+        {
+            if (type.IsGenericType && type.FullName.StartsWith("System.Nullable`1"))
             {
-                typename = "List[SingleDeviceProfile]";
-                return info.Name + ": List[SingleDeviceProfile] = field(default_factory=list)";
+                // for nullables, just use the contained type
+                type = type.GenericTypeArguments[0];
             }
-            if (fulltypename.StartsWith("System.Collections.Generic.Dictionary`2[[System.String,") && fulltypename.Contains("],[System.String"))
-            {
-                typename = "Dict[str, str]";
-                return info.Name + ": Dict[str, str] = field(default_factory=dict)";
-            }
-            switch (fulltypename)
+            encounteredTypes.Add(type.FullName);
+
+            switch (type.FullName)
             {
                 case "Automation.HouseData":
                 case "Automation.JsonCalcSpecification":
@@ -430,7 +417,6 @@ namespace SimulationEngineLib
                 case "Automation.HouseholdDataPersonSpecification":
                 case "Automation.HouseholdTemplateSpecification":
                 case "Automation.HouseholdNameSpecification":
-                case "Automation.JsonReference":
                 case "Automation.TransportationDistanceModifier":
                 case "Automation.ResultFiles.LoadTypeInformation":
                 case "Automation.ResultFiles.HouseholdKeyEntry":
@@ -438,48 +424,58 @@ namespace SimulationEngineLib
                 case "Automation.PersonData":
                 case "Automation.TransportationPreference":
                 case "Automation.HouseholdData":
-                    typename = shorttypename;
-                    return info.Name + ": Optional[" + shorttypename + "] = None";
-                case "Automation.ResultFiles.HouseholdKeyType":
-                    typename = shorttypename;
-                    return info.Name + ": Optional[" + shorttypename + "] = \"\"";
                 case "Automation.HouseholdDataSpecificationType":
                 case "Automation.Gender":
                 case "Automation.CalcOption":
                 case "Automation.OutputFileDefault":
                 case "Automation.EnergyIntensityType":
                 case "Automation.LoadTypePriority":
-                    typename = shorttypename;
-                    return info.Name + ": Optional[" + shorttypename + "] = None";
+                case "Automation.CityData":
+                case "Automation.PointOfInterestData":
+                case "Automation.PersonLivingTag":
+                case "Automation.PersonPoiPreferences":
+                case "Automation.SingleDeviceProfile":
+                case "Automation.RouteData":
+                case "Automation.Coordinates":
+                case "Automation.DayType":
+                case "Automation.TimeSlot":
+                case "Automation.RoutesForTimeSlot":
+                case "Automation.TravelDefinition":
+                case "Automation.StrGuid":
+                case "System.DayOfWeek":
+                    typename = type.Name;
+                    return $"Optional[{typename}] = None";
+                case "Automation.JsonReference":
+                    // JsonReferences can also be loaded from a simple string
+                    typename = type.Name;
+                    return $"Optional[{typename}|str] = None";
+                case "Automation.ResultFiles.HouseholdKeyType":
+                    typename = type.Name;
+                    return $"Optional[{typename}] = \"\"";
+                case "Automation.HouseDefinitionType":
+                    typename = type.Name;
+                    return $"Optional[{typename}] = HouseDefinitionType.{HouseDefinitionType.HouseData}";
                 case "System.String":
                 case "System.DateTime":
                     typename = "str";
-                    return info.Name + ": Optional[str] = \"\"";
-                case "Automation.HouseDefinitionType":
-                    typename = shorttypename;
-                    return info.Name + ": Optional[" + shorttypename + "] = HouseDefinitionType." + HouseDefinitionType.HouseData.ToString();
-                case "Automation.StrGuid":
-                    typename = "StrGuid";
-                    return info.Name + ": Optional[StrGuid] = None";
+                    return "Optional[str] = \"\"";
                 case "System.Double":
                     typename = "float";
-                    return info.Name + ": float = 0";
+                    return "float = 0";
                 case "System.Int32":
                     typename = "int";
-                    return info.Name + ": int = 0";
+                    return "int = 0";
                 case "System.Boolean":
                     typename = "bool";
-                    return info.Name + ": bool = False";
+                    return "bool = False";
                 case "System.TimeSpan":
                     typename = "str";
-                    return info.Name + ": str = \"00:01:00\"";
-
-                    //"System.Nullable`1[[Automation.StrGuid, Automation, Version=9.6.0.0, Culture=neutral, PublicKeyToken=null]]'"
+                    return "str = \"00:01:00\"";
             }
-            throw new LPGException("unknown type: \n" + fulltypename);
+            throw new LPGException("unknown type: \n" + type.FullName);
         }
 
-        private static void WriteEnum<T>([JetBrains.Annotations.NotNull] StreamWriter sw, [JetBrains.Annotations.NotNull] List<string> writtenTypes)
+        private static void WriteEnum<T>([JetBrains.Annotations.NotNull] StreamWriter sw, [JetBrains.Annotations.NotNull] HashSet<string> writtenTypes)
         {
             sw.WriteLine();
             var myclass = typeof(T).Name;

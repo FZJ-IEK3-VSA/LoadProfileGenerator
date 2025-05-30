@@ -36,13 +36,15 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.ModularHouseholds {
+namespace Database.Tables.ModularHouseholds
+{
     public enum EstimateType {
         Theoretical,
         FromCalculations
@@ -51,7 +53,7 @@ namespace Database.Tables.ModularHouseholds {
     public record AffordanceWithTimeLimit {
         public AffordanceWithTimeLimit([JetBrains.Annotations.NotNull] Affordance affordance,
                                        [CanBeNull] TimeLimit timeLimit,
-                                       int weight,
+                                       double weight,
                                        int startMinusTime,
                                        int startPlusTime,
                                        int endMinusTime,
@@ -80,7 +82,7 @@ namespace Database.Tables.ModularHouseholds {
         public TimeLimit TimeLimit { get; }
 
         [UsedImplicitly]
-        public int Weight { get; }
+        public double Weight { get; }
 
         [UsedImplicitly]
         public int StartMinusTime { get; }
@@ -1525,9 +1527,9 @@ namespace Database.Tables.ModularHouseholds {
             cmd.AddParameter("CanBeUsedForNewHouseholds", _canBeUsedForNewHousehold);
         }
 
-        internal void AddAffordanceToLocation([JetBrains.Annotations.NotNull] Location location,
-                                              [JetBrains.Annotations.NotNull] Affordance aff,
-                                              [CanBeNull] TimeLimit timeLimit,
+        internal void AddAffordanceToLocation(Location location,
+                                              Affordance aff,
+                                              TimeLimit? timeLimit,
                                               int weight,
                                               int startMinusTime,
                                               int startPlusTime,
@@ -1543,14 +1545,14 @@ namespace Database.Tables.ModularHouseholds {
             AddAffordanceToLocation(hhl, aff, timeLimit, weight, startMinusTime, startPlusTime, endMinusTime, endPlusTime);
         }
 
-        internal void AddAffordanceToLocation([JetBrains.Annotations.NotNull] HHTLocation location,
-                                              [JetBrains.Annotations.NotNull] Affordance aff,
-                                              [CanBeNull] TimeLimit timeLimit,
-                                              int weight,
-                                              int startMinusTime,
-                                              int startPlusTime,
-                                              int endMinusTime,
-                                              int endPlusTime)
+        public void AddAffordanceToLocation(HHTLocation location,
+                                            Affordance aff,
+                                            TimeLimit? timeLimit,
+                                            double weight,
+                                            int startMinusTime,
+                                            int startPlusTime,
+                                            int endMinusTime,
+                                            int endPlusTime)
         {
             var hhl = _locations.First(loc => location.Location == loc.Location);
 
@@ -1651,7 +1653,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [JetBrains.Annotations.NotNull]
-        internal HHTLocation AddLocation([JetBrains.Annotations.NotNull] Location location)
+        public HHTLocation AddLocation([JetBrains.Annotations.NotNull] Location location)
         {
             foreach (var hhLocation in _locations) {
                 if (hhLocation.Location == location) {
@@ -1684,7 +1686,7 @@ namespace Database.Tables.ModularHouseholds {
             Autodevs.Remove(hhAutonomous);
         }
 
-        internal void DeleteHHTLocationFromDB([JetBrains.Annotations.NotNull] HHTLocation hhl)
+        public void DeleteHHTLocationFromDB([JetBrains.Annotations.NotNull] HHTLocation hhl)
         {
             if (hhl.ID != null) {
                 hhl.DeleteFromDB();

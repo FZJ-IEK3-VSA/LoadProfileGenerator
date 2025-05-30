@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
    <PropertyGroup>
-    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
-    <LangVersion>9.0</LangVersion>
+    <TargetFrameworks>net9.0;net9.0-windows</TargetFrameworks>
+    <LangVersion>12.0</LangVersion>
 <Nullable>disable</Nullable>
 <OutputType>Library</OutputType>
   </PropertyGroup>

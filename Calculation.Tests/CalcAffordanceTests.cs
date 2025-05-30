@@ -34,9 +34,11 @@ using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
+using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using FluentAssertions;
@@ -46,7 +48,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests {
+namespace Calculation.Tests
+{
     public class CalcAffordanceTests : UnitTestBaseClass
     {
 
@@ -100,7 +103,7 @@ namespace Calculation.Tests {
                 "",
                 Guid.NewGuid().ToStrGuid(),
                 cvr,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                new List<DeviceEnergyProfileTuple>(),
                 isBusy,
                 BodilyActivityLevel.Low,
                 calcRepo, hhkey);
@@ -110,7 +113,16 @@ namespace Calculation.Tests {
                 cdl
             };
             CalcDeviceDto cdd = new CalcDeviceDto("device",
+
+/* Unmerged change from project 'Calculation.Tests (net8.0)'
+Before:
                 "devcategoryguid".ToStrGuid(),
+                hhkey,
+After:
+"devcategoryguid".ToStrGuid(),
+                hhkey,
+*/
+StringExtensions.ToStrGuid("devcategoryguid"),
                 hhkey,
                 OefcDeviceType.Device,
                 "category",
@@ -122,37 +134,24 @@ namespace Calculation.Tests {
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, probability);
         }
 
-        private static void CheckForBusyness([JetBrains.Annotations.NotNull] CalcLocation loc,
+        private static void CheckForBusyness([JetBrains.Annotations.NotNull] CalcSite site,
                                              [JetBrains.Annotations.NotNull] CalcAffordance aff,
                                              [JetBrains.Annotations.NotNull] CalcDevice cd, [JetBrains.Annotations.NotNull] CalcLoadType lt )
         {
             Logger.Info("------------");
             TimeStep ts1 = new TimeStep(0,0,true);
             var person = new CalcPersonDto("person", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            Logger.Info("aff.isbusy 0: " + aff.IsBusy(ts1, loc, person, false));
+            Logger.Info("aff.isbusy 0: " + aff.IsBusy(ts1, site, person, false));
             var prevstate = BusynessType.NotBusy;
             for (var i = 0; i < 100; i++) {
                 TimeStep ts2 = new TimeStep(i, 0,true);
-                if (aff.IsBusy(ts2, loc, person, false) != prevstate) {
-                    prevstate = aff.IsBusy(ts2, loc, person, false);
+                if (aff.IsBusy(ts2, site, person, false) != prevstate) {
+                    prevstate = aff.IsBusy(ts2, site, person, false);
                     Logger.Info("aff.isbusy:" + i + ": " + prevstate);
                 }
             }
 
-            Logger.Info("aff.isbusy 100: " + aff.IsBusyArray[100]);
-
             var prevstate1 = false;
-            Logger.Info("aff.isbusyarray 0:   " + aff.IsBusyArray[0]);
-            for (var i = 0; i < 100; i++) {
-                if (aff.IsBusyArray[i] != prevstate1) {
-                    prevstate1 = aff.IsBusyArray[i];
-                    Logger.Info("aff.isbusyarray: " + i + ": " + prevstate);
-                }
-            }
-
-            Logger.Info("aff.isbusyarray 100: " + aff.IsBusyArray[100]);
-
-            prevstate1 = false;
             TimeStep ts3 = new TimeStep(0, 0,false);
             Logger.Info("cd.isbusyarray 0:   " + cd.GetIsBusyForTesting(ts3, lt));
             for (var i = 0; i < 100; i++) {
@@ -174,10 +173,11 @@ namespace Calculation.Tests {
             var calcParameters = CalcParameters.GetNew();
             const int stepcount = 150;
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 0);
+            var site = loc.CalcSite;
             var trueCount = 0;
             TimeStep ts1 = new TimeStep(0,0,true);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            var result = aff.IsBusy(ts1, loc, person);
+            var result = aff.IsBusy(ts1, site, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -187,9 +187,11 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][ts.InternalStep] = false;
                 }
                 TimeStep ts2 = new TimeStep(i, calcParameters);
-                aff.IsBusy(ts2, loc, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate( ts2, "blub", loc, out var _);
+                
+                aff.IsBusy(ts2, site, person);
+                aff.PlanActivation(ts2, person, site);
+                aff.StartActivation(ts2, person.Name);
+
                 if (cd.GetIsBusyForTesting(ts2, lt)) {
                     trueCount++;
                 }
@@ -205,10 +207,11 @@ namespace Calculation.Tests {
         {
             const int stepcount = 150;
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 1);
+            var site = loc.CalcSite;
             var trueCount = 0;
             TimeStep ts = new TimeStep(0,0,false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            var result = aff.IsBusy(ts, loc, person);
+            var result = aff.IsBusy(ts, site, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -219,9 +222,9 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][j] = false;
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
-                aff.IsBusy(ts3, loc, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate(ts3, "blub", loc, out var _);
+                aff.IsBusy(ts3, site, person);
+                aff.PlanActivation(ts3, person, site);
+                aff.StartActivation(ts3, person.Name);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
                     trueCount++;
                 }
@@ -236,12 +239,13 @@ namespace Calculation.Tests {
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest25Percent()
         {
-            const int stepcount = 150;
+            const int stepcount = 1000;
             SetupProbabilityTest(out var aff, out var lt, out CalcDevice cd, out var loc, stepcount, 0.25);
+            var site = loc.CalcSite;
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            var result = aff.IsBusy(ts, loc, person);
+            var result = aff.IsBusy(ts, site, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -251,19 +255,16 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][j] = false;
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
-                aff.IsBusy(ts3, loc, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate(ts3, "blub", loc, out var _);
+                aff.IsBusy(ts3, site, person);
+                aff.PlanActivation(ts3, person, site);
+                aff.StartActivation(ts3, person.Name);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
                     trueCount++;
                 }
             }
 
             Logger.Info("Truecount: " + trueCount);
-#pragma warning disable VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
-
             trueCount.Should().BeApproximately(resultcount/4,0.1);
-#pragma warning restore VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
         }
 
         [Fact]
@@ -272,10 +273,11 @@ namespace Calculation.Tests {
         {
             const int stepcount = 150;
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 0.5);
+            var site = loc.CalcSite;
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            var result = aff.IsBusy(ts, loc, person);
+            var result = aff.IsBusy(ts, site, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -285,9 +287,9 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][j] = false;
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
-                aff.IsBusy(ts3, loc, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate(ts3, "blub", loc, out var _);
+                aff.IsBusy(ts3, site, person);
+                aff.PlanActivation(ts3, person, site);
+                aff.StartActivation(ts3, person.Name);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
                     trueCount++;
                 }
@@ -305,10 +307,11 @@ namespace Calculation.Tests {
         {
             const int stepcount = 150;
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 0.75);
+            var site = loc.CalcSite;
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            var result = aff.IsBusy(ts, loc, person);
+            var result = aff.IsBusy(ts, site, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -318,9 +321,9 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][j] = false;
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
-                aff.IsBusy(ts3, loc, person);
-                //var variableOperator = new VariableOperator();
-                aff.Activate(ts3, "blub", loc, out var _);
+                aff.IsBusy(ts3, site, person);
+                aff.PlanActivation(ts3, person, site);
+                aff.StartActivation(ts3, person.Name);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
                     trueCount++;
                 }
@@ -350,7 +353,8 @@ namespace Calculation.Tests {
             //var variableOperator = new VariableOperator();
             var variables = new List<CalcAffordanceVariableOp>();
             var variableReqs = new List<VariableRequirement>();
-            var loc = new CalcLocation("loc", Guid.NewGuid().ToStrGuid());
+            var loc = new CalcLocation("site", Guid.NewGuid().ToStrGuid());
+            var site = loc.CalcSite;
             var variableGuid = Guid.NewGuid().ToStrGuid();
             CalcVariableRepository variableRepository = new CalcVariableRepository();
             HouseholdKey key = new HouseholdKey("hh1");
@@ -365,7 +369,7 @@ namespace Calculation.Tests {
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",  Guid.NewGuid().ToStrGuid(),
                 variableRepository,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
+                new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
             var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
@@ -381,16 +385,18 @@ namespace Calculation.Tests {
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            aff.IsBusy(ts, loc, person);
-            aff.Activate(ts, "blub", loc, out var _);
-             variableRepository.GetValueByGuid(variableGuid).Should().Be(1);
+            aff.IsBusy(ts, site, person);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
+            variableRepository.GetValueByGuid(variableGuid).Should().Be(1);
             for (var i = 0; i < 15; i++) {
                 TimeStep ts1 = new TimeStep(i, 0, false);
                 cd.SetIsBusyForTesting(ts1, false, lt);
             }
 
-            aff.IsBusy(ts, loc, person);
-            aff.Activate(ts, "blub", loc, out var _);
+            aff.IsBusy(ts, site, person);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
             variableRepository.GetValueByGuid(variableGuid).Should().Be(2);
         }
 
@@ -415,7 +421,8 @@ namespace Calculation.Tests {
             cp.ConvertToTimesteps();
             var variables = new List<CalcAffordanceVariableOp>();
             var variableReqs = new List<VariableRequirement>();
-            var loc = new CalcLocation("loc", Guid.NewGuid().ToStrGuid());
+            var loc = new CalcLocation("site", Guid.NewGuid().ToStrGuid());
+            var site = loc.CalcSite;
             CalcVariableRepository calcVariableRepository = new CalcVariableRepository();
             var variableGuid = Guid.NewGuid().ToStrGuid();
             HouseholdKey key = new HouseholdKey("hh1");
@@ -431,7 +438,7 @@ namespace Calculation.Tests {
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToStrGuid(),
                 calcVariableRepository,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo, key);
+                new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo, key);
             var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
@@ -446,10 +453,10 @@ namespace Calculation.Tests {
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            aff.IsBusy(ts, loc, person);
-            //var variableOperator = new VariableOperator();
-            aff.Activate(ts, "blub", loc, out var _);
-             calcVariableRepository.GetValueByGuid(variableGuid).Should().Be(1);
+            aff.IsBusy(ts, site, person);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
+            calcVariableRepository.GetValueByGuid(variableGuid).Should().Be(1);
         }
 
         [Fact]
@@ -472,7 +479,8 @@ namespace Calculation.Tests {
             cp.ConvertToTimesteps();
             var variables = new List<CalcAffordanceVariableOp>();
             var variableReqs = new List<VariableRequirement>();
-            var loc = new CalcLocation("loc", Guid.NewGuid().ToStrGuid());
+            var loc = new CalcLocation("site", Guid.NewGuid().ToStrGuid());
+            var site = loc.CalcSite;
             var variableGuid = Guid.NewGuid().ToStrGuid();
 
             variables.Add(new CalcAffordanceVariableOp("Variable1", 1, loc, VariableAction.Subtract,
@@ -489,7 +497,7 @@ namespace Calculation.Tests {
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToStrGuid(),
                 crv,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo,key);
+                new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo,key);
             var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
@@ -509,17 +517,18 @@ namespace Calculation.Tests {
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
             TimeStep ts = new TimeStep(0, 0, false);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            aff.IsBusy(ts, loc, person);
-            //var variableOperator = new VariableOperator();
-            aff.Activate(ts, "blub", loc, out var _);
-             crv.GetValueByGuid(variableGuid).Should().Be(-1);
+            aff.IsBusy(ts, site, person);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
+            crv.GetValueByGuid(variableGuid).Should().Be(-1);
             for (var i = 0; i < 15; i++) {
                 TimeStep ts1 = new TimeStep(i, 0, false);
                 cd.SetIsBusyForTesting(ts1, false, lt);
             }
 
-            aff.IsBusy(ts, loc, person);
-            aff.Activate(ts, "blub", loc, out var _);
+            aff.IsBusy(ts, site, person);
+            aff.PlanActivation(ts, person, site);
+            aff.StartActivation(ts, person.Name);
             crv.GetValueByGuid(variableGuid).Should().Be(-2);
         }
 
@@ -542,6 +551,7 @@ namespace Calculation.Tests {
             cp.AddNewTimepoint(new TimeSpan(0, 10, 0), 0);
             cp.ConvertToTimesteps();
             var loc = new CalcLocation(Utili.GetCurrentMethodAndClass(), Guid.NewGuid().ToStrGuid());
+            var site = loc.CalcSite;
             CalcVariableRepository crv = new CalcVariableRepository();
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
             Random rnd = new Random();
@@ -553,7 +563,7 @@ namespace Calculation.Tests {
                 false, 0, new ColorRGB(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
                 new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",
                 Guid.NewGuid().ToStrGuid(), crv,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo,key);
+                new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo,key);
             var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             //var variableOperator = new VariableOperator();
@@ -576,15 +586,16 @@ namespace Calculation.Tests {
 
             //bool result = aff.IsBusy(0, nr, r, loc);
             //(result).Should().BeFalse();
-            CheckForBusyness(loc, aff, cd, lt);
-            TimeStep ts = new TimeStep(0, 0, false);
-            aff.Activate(ts.AddSteps(10), "blub", loc, out var _);
-            CheckForBusyness( loc, aff, cd, lt);
             var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-            aff.IsBusy(ts.AddSteps(1), loc, person, false).Should().NotBe(BusynessType.NotBusy);
-            aff.IsBusy(ts.AddSteps(19), loc, person, false).Should().NotBe(BusynessType.NotBusy);
-            aff.IsBusy(ts, loc, person, false).Should().Be(BusynessType.NotBusy);
-            aff.IsBusy(ts.AddSteps(20), loc, person, false).Should().Be(BusynessType.NotBusy);
+            CheckForBusyness(site, aff, cd, lt);
+            TimeStep ts = new TimeStep(0, 0, false);
+            aff.PlanActivation(ts.AddSteps(10), person, site);
+            aff.StartActivation(ts.AddSteps(10), person.Name);
+            CheckForBusyness(site, aff, cd, lt);
+            aff.IsBusy(ts.AddSteps(1), site, person, false).Should().NotBe(BusynessType.NotBusy);
+            aff.IsBusy(ts.AddSteps(19), site, person, false).Should().NotBe(BusynessType.NotBusy);
+            aff.IsBusy(ts, site, person, false).Should().Be(BusynessType.NotBusy);
+            aff.IsBusy(ts.AddSteps(20), site, person, false).Should().Be(BusynessType.NotBusy);
         }
     }
 }

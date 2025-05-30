@@ -4,13 +4,14 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class DeviceActionGroup : DBBaseElement, IAssignableDevice, IComparable<DeviceActionGroup> {
         public const string TableName = "tblDeviceActionGroups";
         [JetBrains.Annotations.NotNull] private string _description;

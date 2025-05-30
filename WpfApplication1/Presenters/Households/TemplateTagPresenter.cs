@@ -30,7 +30,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
-using Common;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
@@ -39,7 +39,8 @@ using LoadProfileGenerator.Views.Households;
 
 #endregion
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class TemplateTagPresenter : PresenterBaseDBBase<TemplateTagView> {
         [NotNull] private readonly HouseholdTag _thisTag;
         [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIn;

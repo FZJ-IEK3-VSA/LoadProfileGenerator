@@ -38,11 +38,13 @@ using CalculationEngine.HouseElements;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using JetBrains.Annotations;
 using CalcDegreeHour = CalculationEngine.HouseElements.CalcDegreeHour;
 
-namespace CalculationController.CalcFactories {
+namespace CalculationController.CalcFactories
+{
     public class CalcHouseFactory {
         [JetBrains.Annotations.NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 

@@ -491,14 +491,14 @@ namespace Database.Tests
         [ItemNotNull]
         public ObservableCollection<TravelRouteSet> LoadTravelRouteSets([JetBrains.Annotations.NotNull][ItemNotNull]ObservableCollection<Location> locations,
             [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TransportationDeviceCategory> categories,[JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Site> sites,
-            ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets)
+            ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets, ObservableCollection<TimeLimit> timeLimits)
         {
             var travelRouteSets = new ObservableCollection<TravelRouteSet>();
 
             var travelRoutes = LoadTravelRoutes(categories, locations,
                 out var sites1);
             sites = sites1;
-            TravelRouteSet.LoadFromDatabase(travelRouteSets, ConnectionString, false, travelRoutes, affordanceTaggingSets);
+            TravelRouteSet.LoadFromDatabase(travelRouteSets, ConnectionString, false, travelRoutes, affordanceTaggingSets, timeLimits);
             return travelRouteSets;
         }
 
@@ -787,12 +787,13 @@ namespace Database.Tests
             [ItemNotNull][JetBrains.Annotations.NotNull] out ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
             [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,
             [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<ChargingStationSet> chargingStationSets,
-            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets)
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets,
+            ObservableCollection<TimeLimit> timeLimits)
         {
             transportationDeviceSets = LoadTransportationDeviceSets(
                 loadTypes,
                 out transportationDeviceCategories, out transportationDevices);
-            travelRouteSets = LoadTravelRouteSets(locations, transportationDeviceCategories, out var sites, affordanceTaggingSets);
+            travelRouteSets = LoadTravelRouteSets(locations, transportationDeviceCategories, out var sites, affordanceTaggingSets, timeLimits);
             chargingStationSets = LoadChargingStationSets(loadTypes,transportationDeviceCategories,sites);
         }
 

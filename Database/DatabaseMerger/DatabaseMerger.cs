@@ -34,6 +34,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Helpers;
 using Database.Tables;
 using Database.Tables.BasicHouseholds;
@@ -41,7 +42,8 @@ using Database.Tables.Houses;
 using Database.Tables.Validation;
 using JetBrains.Annotations;
 
-namespace Database.DatabaseMerger {
+namespace Database.DatabaseMerger
+{
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     public class DatabaseMerger {
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<ImportEntry> _itemsToImport = new ObservableCollection<ImportEntry>();

@@ -86,7 +86,6 @@ namespace CalculationController.CalcFactories
                 Logger.Get().StartCollectingAllMessages();
             }
 
-            CalcManager cm = null;
             Logger.Info("Starting the calculation of " + csps.CalcTarget.Name);
             ContainerBuilder builder;
             CalcParameters calcParameters;
@@ -117,19 +116,14 @@ namespace CalculationController.CalcFactories
                 csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Initializing");
             }
 
-            try {
+            CalcManager? cm = null;
+            try
+            {
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
                 var container = builder.Build();
                 using var scope = container.BeginLifetimeScope();
                 var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository, out var affordanceTaggingSets);
 
-                cm = new CalcManager(csps.ResultPath,
-                    //hh.Name,
-                    //householdPlans,
-                    //csps.LPGVersion,
-                    calcParameters.ActualRandomSeed, dls, variableRepository, calcRepo
-                    //scope.Resolve<SqlResultLoggingService>()
-                );
                 //_calcParameters.Logfile = cm.Logfile;
                 //_calcParameters.NormalDistributedRandom = normalDistributedRandom;
                 //_calcParameters.RandomGenerator = randomGenerator;
@@ -171,7 +165,8 @@ namespace CalculationController.CalcFactories
                 //this logger doesnt save json, but strings!
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
-                cm.SetCalcObject(ch);
+                cm = new CalcManager(ch, csps.ResultPath, calcParameters.ActualRandomSeed, dls, variableRepository, calcRepo);
+                ch.Init(dls, calcParameters.ActualRandomSeed);
                 CalcManager.ExitCalcFunction = false;
 
                 //LogSeed(calcParameters.ActualRandomSeed, lf.FileFactoryAndTracker, calcParameters);
@@ -408,12 +403,12 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<ChargingStationStateLogger>().As<IDataSaverBase>();
             builder.RegisterType<VariableEntryLogger>().As<IDataSaverBase>();
             builder.RegisterType<TransportationDeviceStatisticsLogger>().As<IDataSaverBase>();
+            builder.RegisterType<TransportationDeviceChoiceLogger>().As<IDataSaverBase>();
 
             builder.RegisterType<AffordanceEnergyUseLogger>().As<IDataSaverBase>();
             //builder.Register(x=> x.Resolve<CalcVariableDtoFactory>().GetRepository()).As<CalcVariableRepository>().SingleInstance();
             builder.Register(_ => MakeLightNeededArray(csps.GeographicLocation, csps.TemperatureProfile,
-                rnd,
-                new List<VacationTimeframe>(), hh.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
+                rnd, [], hh.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
         }
 
         private static void RegisterAllDtoVariables([JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository)

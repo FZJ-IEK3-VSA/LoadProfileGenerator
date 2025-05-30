@@ -29,7 +29,7 @@ namespace Common.CalcDto {
         [ItemNotNull]
         public List<CalcAffordanceVariableOpDto> VariableOps { get; }
 
-        public int Weight { get; }
+        public double Weight { get; }
         [NotNull]
         public string SourceTrait { get; }
         public StrGuid Guid { get; }
@@ -39,7 +39,7 @@ namespace Common.CalcDto {
                                     int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender,
                                     [NotNull] string affCategory,
                                     bool isInterruptable, bool isInterrupting,
-                                    [ItemNotNull][NotNull] List<CalcAffordanceVariableOpDto> variableOps, int weight, [NotNull] string sourceTrait,
+                                    [ItemNotNull][NotNull] List<CalcAffordanceVariableOpDto> variableOps, double weight, [NotNull] string sourceTrait,
                                     StrGuid guid)
         {
             Name = name;

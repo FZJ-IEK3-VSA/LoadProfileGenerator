@@ -27,15 +27,16 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Households;
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class SubAffordancePresenter : PresenterBaseDBBase<SubAffordanceView> {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _allActions = new ObservableCollection<string>();
         [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _executionTimes = new ObservableCollection<string>();

@@ -5,7 +5,7 @@ namespace ReleaseMaker {
     public class LinuxFileCopier:CopierBase {
         public static void CopySimEngineLinuxFiles([JetBrains.Annotations.NotNull] string src, [JetBrains.Annotations.NotNull] string dst)
         {
-            List<string> programFiles = new List<string>();
+            List<string> programFiles = [];
             var srcDi = new DirectoryInfo(src);
             Copy(programFiles, srcDi, src, dst, @"Autofac.dll");
             Copy(programFiles, srcDi, src, dst, @"Automation.dll");
@@ -259,6 +259,8 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"System.Formats.Tar.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Runtime.InteropServices.JavaScript.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Security.Cryptography.dll");
+            Copy(programFiles, srcDi, src, dst, @"libclrgcexp.so");
+            Copy(programFiles, srcDi, src, dst, @"System.IO.Pipelines.dll");
 
             CheckIfFilesAreCompletelyCopied(src, programFiles);
         }

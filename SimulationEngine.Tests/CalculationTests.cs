@@ -14,6 +14,7 @@ using CalcPostProcessor;
 using ChartCreator2;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
@@ -32,7 +33,8 @@ using Xunit.Abstractions;
 //using iTextSharp.text.pdf;
 
 
-namespace SimulationEngine.Tests {
+namespace SimulationEngine.Tests
+{
     public enum TestDuration {
         ThreeDays,
         OneMonth,
@@ -74,7 +76,7 @@ namespace SimulationEngine.Tests {
                 sim.TransportationDeviceSets[0].GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
-            var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
+            var hh = sim.ModularHouseholds.FindByGuid(StringExtensions.ToStrGuid(guid));
             if (hh == null) {
                 throw new LPGException("hh was null");
             }
@@ -129,7 +131,7 @@ namespace SimulationEngine.Tests {
                 sim.TransportationDeviceSets[0].GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
-            var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
+            var hh = sim.ModularHouseholds.FindByGuid(StringExtensions.ToStrGuid(guid));
             if (hh == null) {
                 throw new LPGException("No household found");
             }
@@ -151,7 +153,7 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
             hj.CalcSpec.EnableTransportation = false;
-            var ht = sim.HouseTypes.FindByGuid(guid.ToStrGuid());
+            var ht = sim.HouseTypes.FindByGuid(StringExtensions.ToStrGuid(guid));
             if (ht == null) {
                 throw new LPGException("Housetype not found");
             }

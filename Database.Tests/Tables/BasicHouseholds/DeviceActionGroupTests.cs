@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using FluentAssertions;

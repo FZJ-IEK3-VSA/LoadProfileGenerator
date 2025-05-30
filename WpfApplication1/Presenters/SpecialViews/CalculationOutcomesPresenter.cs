@@ -40,6 +40,7 @@ using Automation.ResultFiles;
 using CalculationController.Queue;
 using ChartCreator2.OxyCharts;
 using Common;
+using Common.Extensions;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
@@ -52,7 +53,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.SpecialViews;
 
-namespace LoadProfileGenerator.Presenters.SpecialViews {
+namespace LoadProfileGenerator.Presenters.SpecialViews
+{
     [SuppressMessage("ReSharper", "CatchAllClause")]
     public class CalculationOutcomesPresenter : PresenterBaseWithAppPresenter<CalculationOutcomesView> {
         //private static readonly List<CalculationResult> _result = new List<CalculationResult>();

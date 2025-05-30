@@ -29,11 +29,13 @@
 using System;
 using System.Threading;
 using Common;
+using Common.Extensions;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using LoadProfileGenerator.Views.BasicElements;
 
-namespace LoadProfileGenerator.Presenters.BasicElements {
+namespace LoadProfileGenerator.Presenters.BasicElements
+{
     public class DateBasedProfilePresenter : PresenterBaseDBBase<DateBasedProfileView> {
         [JetBrains.Annotations.NotNull] private readonly CSVImporter _csvImporter;
         [JetBrains.Annotations.NotNull] private readonly DateBasedProfile _dbp;

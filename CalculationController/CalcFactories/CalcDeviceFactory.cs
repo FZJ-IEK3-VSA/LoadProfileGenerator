@@ -32,13 +32,14 @@ using System.Linq;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
-using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace CalculationController.CalcFactories {
+namespace CalculationController.CalcFactories
+{
     public class CalcDeviceFactory {
         [NotNull]
         private readonly AvailabilityDtoRepository _availabilityDtoRepository;

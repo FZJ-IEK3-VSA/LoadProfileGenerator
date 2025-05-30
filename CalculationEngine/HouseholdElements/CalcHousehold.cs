@@ -30,11 +30,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.CitySimulation;
 using CalculationEngine.Helper;
 using CalculationEngine.Transportation;
 using Common;
@@ -71,8 +73,6 @@ namespace CalculationEngine.HouseholdElements {
 
         private DateTime _lastDisplay = DateTime.MinValue;
         private DateTime _startSimulation = DateTime.MinValue;
-
-
 
         private int _simulationSeed;
         [NotNull] private readonly string _description;
@@ -220,7 +220,7 @@ namespace CalculationEngine.HouseholdElements {
             {
                 sw.WriteLine(calcPerson.Name);
                 sw.WriteLine("\tDesires:");
-                foreach (var desire in calcPerson.PersonDesires.Desires)
+                foreach (var desire in calcPerson.CurrentDesires.Desires)
                 {
                     sw.WriteLine("\t\t" + desire.Value.Name);
                 }
@@ -323,8 +323,6 @@ namespace CalculationEngine.HouseholdElements {
 
         public List<CalcAutoDev>? AutoDevs => _autoDevs;
 
-        //public Dictionary<int, CalcProfile> AllProfiles => _allProfiles;
-
         public void Init(DayLightStatus daylightArray,
                          int simulationSeed)
         {
@@ -339,14 +337,9 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             _calcRepo.FileFactoryAndTracker.RegisterHousehold(_householdKey, Name, HouseholdKeyType.Household,_description,null,null);
-            //_lf.TransportationLogFile.SetTransportationHandler(TransportationHandler);
             if (_calcRepo.CalcParameters.IsSet(CalcOption.DesiresLogfile)) {
-                if (_calcRepo.Logfile.DesiresLogfile == null) {
-                    throw new LPGException("Desires logfile was null");
-                }
-
                 foreach (var p in _persons) {
-                    _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.PersonDesires.Desires.Values);
+                    _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.CurrentDesires.Desires.Values);
                     _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.SicknessDesires.Desires.Values);
                 }
             }
@@ -382,13 +375,8 @@ namespace CalculationEngine.HouseholdElements {
             _startSimulation = DateTime.Now;
         }
 
-        /*
-        public void WriteInformation()
-        {
-            throw new NotImplementedException();
-        }
-        */
-        public void RunOneStep(TimeStep timestep, DateTime now, bool runProcessing)
+        public IEnumerable<RemoteActivityInfo> RunOneStep(TimeStep timestep, DateTime now, bool runProcessing,
+            Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null)
         {
             if (_locations == null) {
                 throw new LPGException("_locations should not be null");
@@ -418,60 +406,42 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("_autoDevs should not be null");
             }
 
+            // get any relevant messages about finished activities of this household
+            var relevantFinishedActivities = finishedActivities?.GetValueOrDefault(HouseholdKey, []) ?? [];
+            Debug.Assert(relevantFinishedActivities.All(pair => _persons.Any(p => p.Name == pair.Key)), "Received invalid 'finished activity' messages.");
+
+            // simulate one step for each person and collect which persons started new remote activities
+            List<RemoteActivityInfo> newRemoteActivities = [];
             foreach (var p in _persons) {
-                p.NextStep(timestep, _locations, _daylightArray,
-                    _householdKey, _persons, _simulationSeed);
+                // notify the CalcPerson if their current remote activity is finished
+                var activityFinished = relevantFinishedActivities.GetValueOrDefault(p.Name);
+                bool remoteActivityStarted = p.NextStep(timestep, _locations, _daylightArray, _householdKey, _persons, activityFinished);
+                if (remoteActivityStarted)
+                {
+                    newRemoteActivities.Add(p.GetRemoteActivityInfo());
+                }
             }
 
-            /*    if ((timestep % RangeCleaningFrequency) == 0)
+            if (Logger.Threshold > Severity.Information && (timestep.InternalStep % 5000 == 0 || (DateTime.Now - _lastDisplay).TotalSeconds > 5))
             {
-                foreach (CalcDevice device in _devices)
-                    device.ClearExpiredRanges(timestep);
-                foreach (CalcAutoDev autoDev in _autoDevs)
-                    autoDev.ClearExpiredRanges(timestep);
-            }*/
-            if(Logger.Threshold > Severity.Information) {
-                if (timestep.InternalStep % 5000 == 0 || (DateTime.Now - _lastDisplay).TotalSeconds > 5) {
-                    var timeelapesed = DateTime.Now - _startSimulation;
-                    var speed = timestep.InternalStep / timeelapesed.TotalSeconds;
-                    string timeLeftStr = "";
-                    if (speed > 20) {
-                        int stepsLeft =_calcRepo.CalcParameters.InternalTimesteps - timestep.InternalStep;
-                        double timeLeftSeconds = stepsLeft / speed;
-                        if (timeLeftSeconds > 0) {
-                            TimeSpan timeLeft = TimeSpan.FromSeconds(timeLeftSeconds);
-                            timeLeftStr = ", estimated time left:" + timeLeft;
-                        }
-                    }
-
-                    Logger.Info("Simulating household " + Name + " Time:" + now.ToShortDateString() + " " +
-                                now.ToShortTimeString() + ", Timestep:" + timestep.InternalStep
-                                + ", speed: "
-                                + speed.ToString("F2", CultureInfo.InvariantCulture) + " steps/second, " + timeelapesed.ToString() + " elapsed" + timeLeftStr);
-
-                    _lastDisplay = DateTime.Now;
-                }
-                else {
-                    if (timestep.InternalStep % 50000 == 0 || (DateTime.Now - _lastDisplay).TotalSeconds > 30) {
-                        var timeelapesed = DateTime.Now - _startSimulation;
-                        var speed = timestep.InternalStep / timeelapesed.TotalSeconds;
-                        string timeLeftStr = "";
-                        if (speed > 20) {
-                            int stepsLeft = _calcRepo.CalcParameters.InternalTimesteps - timestep.InternalStep;
-                            double timeLeftSeconds = stepsLeft / speed;
-                            if (timeLeftSeconds > 0) {
-                                TimeSpan timeLeft = TimeSpan.FromSeconds(timeLeftSeconds);
-                                timeLeftStr = ", estimated time left:" + timeLeft;
-                            }
-                        }
-
-                        Logger.Warning("Simulating household " + Name + " Time:" + now.ToShortDateString() + " " + now.ToShortTimeString() +
-                                       ", Timestep:" + timestep.InternalStep + ", speed: " + speed.ToString("F2", CultureInfo.InvariantCulture) +
-                                       " steps/second, " + timeelapesed.ToString() + " elapsed" + timeLeftStr);
-
-                        _lastDisplay = DateTime.Now;
+                var timeelapesed = DateTime.Now - _startSimulation;
+                var speed = timestep.InternalStep / timeelapesed.TotalSeconds;
+                string timeLeftStr = "";
+                if (speed > 0)
+                {
+                    int stepsLeft = _calcRepo.CalcParameters.InternalTimesteps - timestep.InternalStep;
+                    double timeLeftSeconds = stepsLeft / speed;
+                    if (timeLeftSeconds > 0)
+                    {
+                        TimeSpan timeLeft = TimeSpan.FromSeconds(timeLeftSeconds);
+                        timeLeftStr = ", estimated time left:" + timeLeft;
                     }
                 }
+
+                Logger.Info($"Simulating household {Name} Time:{now.ToShortDateString()} {now.ToShortTimeString()}, Timestep:{timestep.InternalStep}, "
+                    + $"speed: {speed.ToString("F2", CultureInfo.InvariantCulture)} steps/second, {timeelapesed} elapsed{timeLeftStr}");
+
+                _lastDisplay = DateTime.Now;
             }
 
             foreach (var calcAutoDev in _autoDevs) {
@@ -516,6 +486,9 @@ namespace CalculationEngine.HouseholdElements {
             foreach (CalcPerson person in _persons) {
                 person.LogPersonStatus(timestep);
             }
+
+            // return newly started remote activities
+            return newRemoteActivities;
         }
 
         public void Dispose()

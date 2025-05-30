@@ -7,13 +7,15 @@ using System.Windows;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Views.SpecialViews;
 
-namespace LoadProfileGenerator.Presenters.BasicElements {
+namespace LoadProfileGenerator.Presenters.BasicElements
+{
     public class HouseholdPlanPresenter : PresenterBaseDBBase<HouseholdPlanView> {
         private static int _refreshCount;
 

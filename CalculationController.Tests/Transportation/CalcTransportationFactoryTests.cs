@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Autofac;
@@ -7,6 +8,7 @@ using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using CalculationController.DtoFactories;
 using CalculationController.Helpers;
+using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
@@ -319,12 +321,18 @@ namespace CalculationController.Tests.Transportation {
                             throw new LPGException("no transportation handler");
                         }
 
-                        var src = chh.TransportationHandler.CalcSites[0].Locations[0];
-                        var dst = chh.TransportationHandler.CalcSites[1].Locations[0];
+                        var daylight = new BitArray(parameters.InternalTimesteps);
+                        daylight.SetAll(true);
+                        var dls = new DayLightStatus(daylight);
+
+                        var src = chh.TransportationHandler.CalcSites[0].Locations.ElementAt(0);
+                        var dst = chh.TransportationHandler.CalcSites[1].Locations.ElementAt(0);
                         var ts = new TimeStep(1, parameters);
                         var person = new CalcPersonDto("personname", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-                        dst.Affordances[0].IsBusy(ts, src, person, false);
-                        dst.Affordances[0].Activate(ts, person.Name, src, out var personTimeProfile);
+                        var affordance = dst.Affordances[0];
+                        affordance.IsBusy(ts, src.CalcSite, person, false);
+                        var activities = affordance.PlanActivation(ts, person, src.CalcSite);
+                        activities.First().Start(ts, dls);
                         fft.Dispose();
                     }
 

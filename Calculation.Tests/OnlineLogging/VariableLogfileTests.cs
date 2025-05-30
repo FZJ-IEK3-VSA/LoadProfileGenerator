@@ -6,6 +6,7 @@ using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineLogging;
 using Common;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -16,7 +17,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.OnlineLogging {
+namespace Calculation.Tests.OnlineLogging
+{
     public class VariableLogfileTests : UnitTestBaseClass
     {
         public VariableLogfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

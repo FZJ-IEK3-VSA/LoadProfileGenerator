@@ -10,6 +10,7 @@ using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -21,7 +22,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.Transportation {
+namespace Calculation.Tests.Transportation
+{
     public class CalcSiteTests : UnitTestBaseClass
     {
         [Fact]
@@ -51,8 +53,8 @@ namespace Calculation.Tests.Transportation {
                         var iodap = new Mock<IOnlineDeviceActivationProcessor>();
                         using (CalcRepo calcRepo = new CalcRepo(odap: iodap.Object, lf: lf, rnd: r, calcParameters: calcParameters, onlineLoggingData: old))
                         {
-                            CalcTravelRoute firstRoute = new CalcTravelRoute("route1", 0, 100, Common.Enums.PermittedGender.All, null, null, null, 1.0, src, dst, th.VehicleDepot,
-    th.LocationUnlimitedDevices, hhkey, Guid.NewGuid().ToStrGuid(), calcRepo);
+                            CalcTravelRoute firstRoute = new CalcTravelRoute("route1", 0, 100, Common.Enums.PermittedGender.All, null, null, null, 1.0, null, src, dst, th.VehicleDepot,
+                                th.LocationUnlimitedDevices, th.DeviceOwnerships, hhkey, Guid.NewGuid().ToStrGuid(), calcRepo);
                             CalcTransportationDeviceCategory transcategory =
                                 new CalcTransportationDeviceCategory("car-category", true, Guid.NewGuid().ToStrGuid());
                             firstRoute.AddTravelRouteStep("step1", transcategory, 1, 3600, Guid.NewGuid().ToStrGuid());
@@ -60,11 +62,7 @@ namespace Calculation.Tests.Transportation {
                             //List<CalcTravelRoute> routes2 = src.GetViableTrafficRoutes(dst);
                             //Assert.That(routes2.Count,Is.EqualTo(0));
                             const double distanceToEnergyFactor = 1;
-                            List<CalcSite> calcSites = new List<CalcSite>
-            {
-                src,
-                dst
-            };
+                            List<CalcSite> calcSites = [src, dst];
                             CalcLoadType chargingLoadType = new CalcLoadType("chargingloadtype", "w", "kwh", 1, false, Guid.NewGuid().ToStrGuid());
                             var cdls = new List<CalcDeviceLoad>();
                             CalcDeviceLoad cdl = new CalcDeviceLoad("name", 1, chargingLoadType, 1, 1);
@@ -82,10 +80,10 @@ namespace Calculation.Tests.Transportation {
                             TimeStep ts = new TimeStep(1, 0, false);
                             var person = new CalcPersonDto("name", null, 30, PermittedGender.Female, null, null, null, -1, null, null);
                             var ownerships = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
-                            int? duration = firstRoute.GetDuration(ts, person, new List<CalcTransportationDevice>(), ownerships);
+                            int? duration = firstRoute.GetDuration(ts, person, new List<CalcTransportationDevice>());
                             Logger.Info("Duration: " + duration);
                             duration.Should().Be(60); // 3600 m bei 1 m/s
-                            int? duration2 = firstRoute.GetDuration(ts, person, new List<CalcTransportationDevice>(), ownerships);
+                            int? duration2 = firstRoute.GetDuration(ts, person, new List<CalcTransportationDevice>());
                             duration.Should().Be(duration2); // 3600 m bei 1 m/s*/
                         }
                     }

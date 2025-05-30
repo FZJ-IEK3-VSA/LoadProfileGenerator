@@ -32,7 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Automation.ResultFiles;
-using Common;
+using Common.Extensions;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
@@ -40,7 +40,8 @@ using LoadProfileGenerator.Views.SpecialViews;
 
 #endregion
 
-namespace LoadProfileGenerator.Presenters.SpecialViews {
+namespace LoadProfileGenerator.Presenters.SpecialViews
+{
 #pragma warning disable S3897 // Classes that provide "Equals(<T>)" or override "Equals(Object)" should implement "IEquatable<T>"
     public class AffordanceColorPresenter : PresenterBaseWithAppPresenter<AffordanceColorView> {
         [NotNull] [ItemNotNull]

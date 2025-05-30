@@ -34,6 +34,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Common;
+using Common.Extensions;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -42,7 +43,8 @@ using LoadProfileGenerator.Views.BasicElements;
 
 #endregion
 
-namespace LoadProfileGenerator.Presenters.BasicElements {
+namespace LoadProfileGenerator.Presenters.BasicElements
+{
     public class TimeProfilePresenter : PresenterBaseDBBase<TimeProfileView> {
         [JetBrains.Annotations.NotNull] private readonly CSVImporter _csvImporter;
         [JetBrains.Annotations.NotNull] private readonly TimeBasedProfile _tp;

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -18,7 +19,8 @@ using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Controls.Converters;
 
-namespace LoadProfileGenerator.Controls.Usercontrols {
+namespace LoadProfileGenerator.Controls.Usercontrols
+{
     /// <summary>
     ///     Interaktionslogik für DeviceSelectorControl.xaml
     /// </summary>

@@ -6,6 +6,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationController.Integrity;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.Houses;
@@ -15,7 +16,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables.ModularHouseholds {
+namespace Database.Tests.Tables.ModularHouseholds
+{
 
     public class HouseholdTemplateTests : UnitTestBaseClass
     {

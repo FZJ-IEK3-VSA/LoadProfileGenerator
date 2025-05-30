@@ -5,6 +5,7 @@ using CalculationController.DtoFactories;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -39,10 +40,10 @@ namespace Calculation.Tests.OnlineLogging
                     DateStampCreator dsc = new DateStampCreator(cp);
                     using OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, cp);
                     fft.HouseholdRegistry.RegisterHousehold(key, "hh key", HouseholdKeyType.Household, wd.InputDataLogger, "desc", null, null);
-                    CalcLoadTypeDto clt = new CalcLoadTypeDto("lt", "unitofpower", "unitofsum", 1, true, "guid".ToStrGuid());
+                    CalcLoadTypeDto clt = new CalcLoadTypeDto("lt", "unitofpower", "unitofsum", 1, true, StringExtensions.ToStrGuid("guid"));
                     TimeStep ts = new TimeStep(1, 1, true);
-                    CalcDeviceDto cdd = new CalcDeviceDto("devname", "".ToStrGuid(), key,
-                        OefcDeviceType.Device, "devcatname", "", Guid.NewGuid().ToStrGuid(), "locguid".ToStrGuid(), "locname", FlexibilityType.NoFlexibility, 0);
+                    CalcDeviceDto cdd = new CalcDeviceDto("devname", StringExtensions.ToStrGuid(""), key,
+                        OefcDeviceType.Device, "devcatname", "", Guid.NewGuid().ToStrGuid(), StringExtensions.ToStrGuid("locguid"), "locname", FlexibilityType.NoFlexibility, 0);
                     DeviceActivationEntry aeue = new DeviceActivationEntry("affname", clt, 1, "activatorname", 1, ts, cdd);
                     old.RegisterDeviceActivation(aeue);
                     old.FinalSaveToDatabase();

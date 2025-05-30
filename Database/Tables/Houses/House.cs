@@ -36,6 +36,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -45,7 +46,8 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.Houses {
+namespace Database.Tables.Houses
+{
     public class House : DBBaseElement, ICalcObject {
         internal const string TableName = "tblHouses";
 

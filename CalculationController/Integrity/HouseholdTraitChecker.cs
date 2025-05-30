@@ -362,7 +362,7 @@ namespace CalculationController.Integrity {
                             throw new LPGException("found brackets in the name of a trait: " + householdTrait.Name);
                         }
                         var mbr =
-                            MessageWindowHandler.Mw.ShowYesNoMessage(
+                            MessageWindowHandler.Mw?.ShowYesNoMessage(
                                 "Remove from the household trait name " + householdTrait.Name + " the substring \"" +
                                 brackets + "\"", "Delete?");
                         if (mbr == LPGMsgBoxResult.Yes) {

@@ -5,6 +5,7 @@ using System.IO;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
@@ -18,7 +19,8 @@ using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SimulationEngine.Tests.SimZukunftProcessor {
+namespace SimulationEngine.Tests.SimZukunftProcessor
+{
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class HouseGeneratorJobTests : UnitTestBaseClass {
         public HouseGeneratorJobTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

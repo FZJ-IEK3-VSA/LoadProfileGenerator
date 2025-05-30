@@ -44,6 +44,7 @@ namespace CalculationController.DtoFactories
             cp.DeviceProfileHeaderMode = csps.DeviceProfileHeaderMode;
             cp.IgnorePreviousActivitesWhenNeeded = csps.IgnorePreviousActivitiesWhenNeeded;
             cp.TransportationEnabled = csps.TransportationEnabled;
+            cp.CitySimulationEnabled = csps.CitySimulationEnabled;
             cp.FlexibilityEnabled = csps.FlexibilityEnabled;
             //if (cp.TransportationEnabled && csps.CalcTarget.CalcObjectType == CalcObjectType.House) {
             //    if (csps.ChargingStationSet != null) {

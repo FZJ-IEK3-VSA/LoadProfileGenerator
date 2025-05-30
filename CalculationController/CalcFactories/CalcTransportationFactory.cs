@@ -16,8 +16,11 @@ using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using JetBrains.Annotations;
+using Common.Extensions;
+using CalculationController.DtoFactories;
 
-namespace CalculationController.CalcFactories {
+namespace CalculationController.CalcFactories
+{
     public class CalcTransportationDtoFactory {
         [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDtoDictionary _loadTypeDict;
@@ -35,7 +38,8 @@ namespace CalculationController.CalcFactories {
                                            [JetBrains.Annotations.NotNull][ItemNotNull] out List<CalcSiteDto> sites,
                                            [JetBrains.Annotations.NotNull][ItemNotNull] out List<CalcTransportationDeviceDto> transportationDevices,
                                            [JetBrains.Annotations.NotNull][ItemNotNull] out List<CalcTravelRouteDto> routes,
-                                           [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocationDto> locations, [JetBrains.Annotations.NotNull] HouseholdKey key)
+                                           [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocationDto> locations, [JetBrains.Annotations.NotNull] HouseholdKey key,
+                                           AvailabilityFactory availabilityFactory)
         {
             if (transportationDeviceSet == null) {
                 throw new LPGException("Transportationdeviceset was null");
@@ -59,9 +63,7 @@ namespace CalculationController.CalcFactories {
             CheckReachabilityofLocations(mhh.CollectLocations(), sitesFromAllTravelRoutes, mhh.Name,
                 travelRouteSet.Name);
             //check if all sites are reachable from all other sites
-            CheckRouteCompleteness(travelRouteSet, householdSites);
-            // check if at least one route from each site to each other site is doable with the given transport
-            CheckRouteTransportationDeviceCompleteness(travelRouteSet, householdSites, transportationDeviceSet);
+            CheckRouteCompleteness(mhh, travelRouteSet, householdSites, transportationDeviceSet);
 
             var categoriesDict = MakeCalcTransportationDeviceCategoryDtos(sim);
 
@@ -74,7 +76,7 @@ namespace CalculationController.CalcFactories {
             //TODO: introduce load types
             transportationDevices = MakeTransportationDevices(selectedDevices, categoriesDict,key);
 
-            routes  = MakeTravelRoutes(travelRouteSet, householdSites,categoriesDict, sites,key);
+            routes  = MakeTravelRoutes(travelRouteSet, householdSites,categoriesDict, sites, key, availabilityFactory);
         }
 
         [JetBrains.Annotations.NotNull]
@@ -145,7 +147,7 @@ namespace CalculationController.CalcFactories {
         public static void CheckReachabilityofLocations([JetBrains.Annotations.NotNull][ItemNotNull] List<Location> locations, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites,
                                                         [JetBrains.Annotations.NotNull] string calcHouseholdName, [JetBrains.Annotations.NotNull] string travelRouteSetName)
         {
-            List<Location> siteLocations = sites.SelectMany(x => x.Locations.Select(y => y.Location)).ToList();
+            var siteLocations = sites.SelectMany(x => x.Locations.Select(y => y.Location)).ToHashSet();
 
             List<Location> missingLocations = new List<Location>();
             foreach (Location hhloc in locations) {
@@ -168,26 +170,119 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        public static void CheckRouteCompleteness([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites)
+        /// <summary>
+        /// Check if all necessary routes for every individual person are available. For that, this function identifies the relevant
+        /// sites for each person. This avoids checking for unnecessary routes from person A's workplace to person B's workplace, for example.
+        /// </summary>
+        /// <param name="mhh">the household for that the routes will be checked</param>
+        /// <param name="travelRouteSet">the travel route set providing the routes to check</param>
+        /// <param name="sites">the full list of sites of the specified household</param>
+        public static void CheckRouteCompleteness(ModularHousehold mhh, [JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites, TransportationDeviceSet transportationDeviceSet)
+        {
+            foreach (var person in mhh.Persons)
+            {
+                // determine all sites that this person visits
+                var relevantLocations = mhh.Traits.Where(t => t.DstPerson.Name == person.Name).SelectMany(t => t.HouseholdTrait.Locations).Select(t => t.Location).ToHashSet();
+                var relevantSites = sites.Where(s => s.Locations.Any(loc => relevantLocations.Contains(loc.Location))).ToList();
+
+                // check if there are travel routes between all of these sites
+                CheckIfSitesAreFullyConnected(travelRouteSet, relevantSites, transportationDeviceSet, person.Person);
+            }
+        }
+        
+        /// <summary>
+        /// Checks if there is a route from each of the specified sites to every other one.
+        /// If a transportation device set is specified, also checks wether the routes are available with
+        /// this set.
+        /// If a person is specified, also checks if the routes are available to this person.
+        /// </summary>
+        /// <param name="travelRouteSet">the travel route sets providing the routes</param>
+        /// <param name="sites">the sites to check</param>
+        /// <param name="transportationDeviceSet">the transportation device set</param>
+        /// <param name="person">the person, if the check is relevant for a single person only</param>
+        /// <exception cref="DataIntegrityException">if a route is missing</exception>
+        public static void CheckIfSitesAreFullyConnected([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites,
+            TransportationDeviceSet transportationDeviceSet = null, Person person = null)
         {
             //figure out if every site is connected to every other site
-            foreach (Site siteA in sites) {
-                foreach (Site siteB in sites) {
-                    if (siteB == siteA) {
+            foreach (Site siteA in sites)
+            {
+                foreach (Site siteB in sites)
+                {
+                    if (siteB == siteA)
+                    {
                         continue;
                     }
 
-                    var tr = travelRouteSet.TravelRoutes.FirstOrDefault(x =>
+                    var routeEntries = travelRouteSet.TravelRoutes.Where(x =>
                         x.TravelRoute.SiteA == siteA && x.TravelRoute.SiteB == siteB ||
                         x.TravelRoute.SiteA == siteB && x.TravelRoute.SiteB == siteA);
-                    if (tr == null) {
-                        throw new DataIntegrityException("There seems to be no route from " + siteA.PrettyName +
-                                                         " to " + siteB.PrettyName +
-                                                         " in the travel route set " + travelRouteSet.PrettyName +
-                                                         ". Every site needs to be connected to every other site, since the LPG has no routing functionality yet. Please fix.");
+                    if (!routeEntries.Any())
+                    {
+                        // no route found
+                        string personText = person is null ? "" : $" for person {person.PrettyName}";
+                        throw new DataIntegrityException($"There seems to be no route from {siteA.PrettyName} to {siteB.PrettyName} in the travel route set " +
+                            $"{travelRouteSet.PrettyName}, but this route is required{personText}, since the LPG has no routing functionality yet. Please fix.");
+                    }
+                    // at least one route is available
+                    if (person is not null)
+                    {
+                        // also check if at least one suitable route is available for the specified person
+                        routeEntries = routeEntries.Where(r => (r.PersonID == null || r.PersonID == person.IntID) && r.MinimumAge <= person.Age && r.MaximumAge >= person.Age);
+                        if (!routeEntries.Any())
+                        {
+                            throw new DataIntegrityException($"Person {person.PrettyName} needs a route from {siteA.PrettyName} to {siteB.PrettyName}, but none of the " +
+                                "existing routes is available to this person due to the restrictions in the travel route set.");
+                        }
+                    }
+
+                    if (transportationDeviceSet is not null)
+                    {
+                        // determine the available transportation device categories
+                        var devices = transportationDeviceSet.TransportationDeviceSetEntries.Select(x => x.TransportationDevice).ToList();
+                        var categories = devices.Select(x => x.TransportationDeviceCategory).Distinct().ToHashSet();
+                        
+                        // check if at least one of the routes is usable with the available transportation devices
+                        bool atLeastOneRouteIsOk = IsAtLeastOneRouteOk(routeEntries, categories);
+                        if (!atLeastOneRouteIsOk)
+                        {
+                            string personText = person is null ? "" : $" by person {person.PrettyName}";
+                            throw new DataIntegrityException($"There seems to be no route from {siteA.PrettyName} to {siteB.PrettyName} that is " +
+                                $"usable{personText} with the given transportation device set. Please fix.");
+                        }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks if at least one of the specified travel route set entries is usable with the available transportation devices
+        /// </summary>
+        /// <param name="travelRouteSetEntries">the available route entries</param>
+        /// <param name="categories">the available transportation device categories</param>
+        /// <returns>true if at least one of the route entries is usable; otherwise, false</returns>
+        private static bool IsAtLeastOneRouteOk([JetBrains.Annotations.NotNull] IEnumerable<TravelRouteSetEntry> travelRouteSetEntries,
+                                                [JetBrains.Annotations.NotNull][ItemNotNull] HashSet<TransportationDeviceCategory> categories)
+        {
+            bool atLeastOneRouteIsOk = false;
+            foreach (TravelRouteSetEntry routeSetEntry in travelRouteSetEntries)
+            {
+                bool allstepsareok = true;
+                foreach (TravelRouteStep step in routeSetEntry.TravelRoute.Steps)
+                {
+                    if (!categories.Contains(step.TransportationDeviceCategory))
+                    {
+                        allstepsareok = false;
+                    }
+                }
+
+                if (allstepsareok)
+                {
+                    atLeastOneRouteIsOk = true;
+                }
+            }
+
+            return atLeastOneRouteIsOk;
         }
 
         [JetBrains.Annotations.NotNull]
@@ -243,9 +338,10 @@ namespace CalculationController.CalcFactories {
         [ItemNotNull]
         private static List<CalcTravelRouteDto> MakeTravelRoutes([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> householdSites,
                                                                  [JetBrains.Annotations.NotNull] Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict,
-                                                                 [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcSiteDto> calcSites, [JetBrains.Annotations.NotNull] HouseholdKey key)
+                                                                 [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcSiteDto> calcSites, [JetBrains.Annotations.NotNull] HouseholdKey key,
+                                                                 AvailabilityFactory availabilityFactory)
         {
-            List<CalcTravelRouteDto> routes = new List<CalcTravelRouteDto>();
+            List<CalcTravelRouteDto> routes = [];
             //make travel routes
             var neededRoutes = travelRouteSet.TravelRoutes.Where(x =>
                 householdSites.Contains(x.TravelRoute.SiteA) && householdSites.Contains(x.TravelRoute.SiteB));
@@ -260,18 +356,19 @@ namespace CalculationController.CalcFactories {
                 }
                 CalcSiteDto siteA = calcSites.Single(x => x.ID == entry.TravelRoute.SiteA.IntID);
                 CalcSiteDto siteB = calcSites.Single(x => x.ID == entry.TravelRoute.SiteB.IntID);
-                CalcTravelRouteDto ctr = new CalcTravelRouteDto(entry.TravelRoute.Name, entry.MinimumAge, entry.MaximumAge, entry.Gender, travelRouteSet.AffordanceTaggingSet?.Name,
-                    entry.AffordanceTag?.Name, entry.PersonID, entry.Weight, entry.TravelRoute.IntID, key, Guid.NewGuid().ToStrGuid(), siteA.Name, siteA.Guid,siteB.Name,siteB.Guid);
+                var isAvailableArray = entry.TimeLimit is null ? null : availabilityFactory.CreateAvailabilityFromTimeLimit(entry.TimeLimit);
+                CalcTravelRouteDto ctr = new(entry.TravelRoute.Name, entry.MinimumAge, entry.MaximumAge, entry.Gender, travelRouteSet.AffordanceTaggingSet?.Name,
+                    entry.AffordanceTag?.Name, entry.PersonID, entry.Weight, isAvailableArray, entry.TravelRoute.IntID, key, Guid.NewGuid().ToStrGuid(), siteA.Name, siteA.Guid,siteB.Name,siteB.Guid);
                 foreach (TravelRouteStep step in entry.TravelRoute.Steps) {
                     CalcTransportationDeviceCategoryDto cat = categoriesDict[step.TransportationDeviceCategory];
                     ctr.AddTravelRouteStep(step.Name, step.IntID, cat, step.StepNumber, step.Distance,
-                        Guid.NewGuid().ToStrGuid());
+                        Guid.NewGuid().ToStrGuid(), step.DurationInS);
                 }
                 routes.Add(ctr);
             }
 
             foreach (var site in calcSites) {
-                CalcTravelRouteDto ctr = new CalcTravelRouteDto("Travel Route inside the site " + site.Name, -1, -1, Common.Enums.PermittedGender.All, null, null, null, 1.0,
+                CalcTravelRouteDto ctr = new CalcTravelRouteDto("Travel Route inside the site " + site.Name, -1, -1, Common.Enums.PermittedGender.All, null, null, null, 1.0, null,
                     -1,key, Guid.NewGuid().ToStrGuid(), site.Name, site.Guid,site.Name,site.Guid);
                 routes.Add(ctr);
             }
@@ -296,8 +393,8 @@ namespace CalculationController.CalcFactories {
             foreach (Location location in mhh.CollectLocations()) {
                 Site site = travelRouteSites.FirstOrDefault(x => x.Locations.Any(y => y.Location == location));
                 if (site == null) {
-                    throw new LPGException("Could not find a site for the location " + location.PrettyName +
-                                           " in the travel route set " + travelRouteSet.PrettyName);
+                    throw new LPGException($"No reachable site in the travel route set {travelRouteSet.PrettyName} contains the location {location.PrettyName}, which is required "
+                        + $"for the household {mhh.PrettyName}. Perhaps a route to the correct site is missing.");
                 }
 
                 if (!householdSites.Contains(site)) {
@@ -306,54 +403,6 @@ namespace CalculationController.CalcFactories {
             }
 
             return travelRouteSites;
-        }
-
-        private static bool IsAtLeastOneRouteOk([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet,
-                                                [JetBrains.Annotations.NotNull][ItemNotNull] List<TransportationDeviceCategory> categories, [JetBrains.Annotations.NotNull] Site siteA, [JetBrains.Annotations.NotNull] Site siteB)
-        {
-            var tr = travelRouteSet.TravelRoutes.Where(x =>
-                x.TravelRoute.SiteA == siteA && x.TravelRoute.SiteB == siteB ||
-                x.TravelRoute.SiteA == siteB && x.TravelRoute.SiteB == siteA).ToList();
-            bool atLeastOneRouteIsOk = false;
-            foreach (TravelRouteSetEntry routeSetEntry in tr) {
-                bool allstepsareok = true;
-                foreach (TravelRouteStep step in routeSetEntry.TravelRoute.Steps) {
-                    if (!categories.Contains(step.TransportationDeviceCategory)) {
-                        allstepsareok = false;
-                    }
-                }
-
-                if (allstepsareok) {
-                    atLeastOneRouteIsOk = true;
-                }
-            }
-
-            return atLeastOneRouteIsOk;
-        }
-
-        private static void CheckRouteTransportationDeviceCompleteness([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet,
-                                                                       [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> householdSites,
-                                                                       [JetBrains.Annotations.NotNull] TransportationDeviceSet transportationDeviceSet)
-        {
-            var devices = transportationDeviceSet.TransportationDeviceSetEntries.Select(x => x.TransportationDevice)
-                .ToList();
-            var categories = devices.Select(x => x.TransportationDeviceCategory).Distinct().ToList();
-            //figure out if every site is connected to every other site
-            foreach (Site siteA in householdSites) {
-                foreach (Site siteB in householdSites) {
-                    if (siteB == siteA) {
-                        continue;
-                    }
-
-                    bool atLeastOneRouteIsOk = IsAtLeastOneRouteOk(travelRouteSet, categories, siteA, siteB);
-
-                    if (!atLeastOneRouteIsOk) {
-                        throw new DataIntegrityException("There seems to be no route from " + siteA.PrettyName +
-                                                         " to " + siteB.PrettyName +
-                                                         " that is usable by the given transportation device set. Please fix.");
-                    }
-                }
-            }
         }
 
         [JetBrains.Annotations.NotNull]
@@ -376,14 +425,17 @@ namespace CalculationController.CalcFactories {
     public class CalcTransportationFactory {
         [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDictionary _loadTypeDict;
+        private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 
         private readonly CalcRepo _calcRepo;
 
         public CalcTransportationFactory( [JetBrains.Annotations.NotNull] CalcLoadTypeDictionary loadTypeDict,
-                                         CalcRepo calcRepo)
+                                         CalcRepo calcRepo,
+                                         AvailabilityDtoRepository availabilityDtoRepository)
         {
             _loadTypeDict = loadTypeDict;
             _calcRepo = calcRepo;
+            _availabilityDtoRepository = availabilityDtoRepository;
         }
 
         public void MakeTransportation([JetBrains.Annotations.NotNull] CalcHouseholdDto household,
@@ -433,22 +485,22 @@ namespace CalculationController.CalcFactories {
                 CalcSite siteA = sites.Single(x => x.Guid == travelRouteDto.SiteAGuid);
                 CalcSite siteB = sites.Single(x => x.Guid == travelRouteDto.SiteBGuid);
 
-                //if (siteA != null && siteB != null) {
-                    //if either site is null, the travel route is not usable for this household
-                    CalcTravelRoute travelRoute = new CalcTravelRoute(travelRouteDto.Name, travelRouteDto.MinimumAge, travelRouteDto.MaximumAge, travelRouteDto.Gender, travelRouteDto.AffordanceTaggingSetName,
-                        travelRouteDto.AffordanceTagName, travelRouteDto.PersonID, travelRouteDto.Weight, siteA, siteB, th.VehicleDepot, th.LocationUnlimitedDevices,  chh.HouseholdKey, travelRouteDto.Guid,_calcRepo);
-                    foreach (var step in travelRouteDto.Steps) {
-                        CalcTransportationDeviceCategory category = th.GetCategory(step.TransportationDeviceCategory);
-                        travelRoute.AddTravelRouteStep(step.Name,  category, step.StepNumber, step.DistanceInM,
-                            step.Guid);
-                    }
+                var isAvailableArray = _availabilityDtoRepository.GetByGuidOptional(travelRouteDto.IsAvailableArray?.Guid);
+                CalcTravelRoute travelRoute = new CalcTravelRoute(travelRouteDto.Name, travelRouteDto.MinimumAge,
+                    travelRouteDto.MaximumAge, travelRouteDto.Gender, travelRouteDto.AffordanceTaggingSetName,
+                    travelRouteDto.AffordanceTagName, travelRouteDto.PersonID, travelRouteDto.Weight, isAvailableArray, siteA, siteB,
+                    th.VehicleDepot, th.LocationUnlimitedDevices, th.DeviceOwnerships, chh.HouseholdKey,
+                    travelRouteDto.Guid, _calcRepo);
+                foreach (var step in travelRouteDto.Steps) {
+                    CalcTransportationDeviceCategory category = th.GetCategory(step.TransportationDeviceCategory);
+                    travelRoute.AddTravelRouteStep(step.Name,  category, step.StepNumber, step.DistanceInM,
+                        step.Guid, step.DurationInS);
+                }
                 if (siteA != siteB) {
                     th.TravelRoutes.Add(travelRoute);
                 }else {
                     th.SameSiteRoutes.Add(siteA,travelRoute);
                 }
-
-                //}
             }
         }
 
@@ -471,8 +523,7 @@ namespace CalculationController.CalcFactories {
                 //siteDictByGuid.Add(siteDto.Guid, calcSite);
                 foreach (var locGuid in siteDto.LocationGuid) {
                     CalcLocation calcLoc = locDict.GetCalcLocationByGuid(locGuid);
-                    calcLoc.CalcSite = calcSite;
-                    calcSite.Locations.Add(calcLoc);
+                    calcSite.AddLocation(calcLoc);
                 }
 
                 foreach (var chargingStation in siteDto.ChargingStations) {
@@ -485,6 +536,10 @@ namespace CalculationController.CalcFactories {
                         carLt, _calcRepo, isBusy);
                 }
             }
+
+            // check number of 'Home' sites
+            if (sites.Count(site => site.IsHome) != 1)
+                throw new LPGException("Exactly one site needs to be the 'Home' site of the household.");
             return sites;
         }
 
@@ -495,44 +550,56 @@ namespace CalculationController.CalcFactories {
                 throw new LPGException("no transportation handler");
             }
 
-            foreach (CalcLocation location in chh.Locations) {
-                foreach (var aff in location.PureAffordances) {
+            foreach (CalcLocation location in chh.Locations)
+            {
+                CheckIfLocationIsOnlyInOneSite(chh, location);
+
+                foreach (var aff in location.PureAffordances)
+                {
                     //replace with affordance decorator
-                    var sites = chh.TransportationHandler.CalcSites.Where(x => x.Locations.Contains(location)).ToList();
-                    if (sites.Count == 0)
-                    {
-                        throw new DataIntegrityException("No calc site has the location " + location.Name + ". To make the transportation work, every site needs one location.");
-                    }
-
-                    if (sites.Count > 1) {
-                        throw new DataIntegrityException("More than one calc site has the location " + location.Name);
-                    }
-
-                    AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
-                        aff, sites[0], chh.TransportationHandler, aff.Name,
-                        chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
+                    var abtd = AffordanceBaseTransportDecorator.CreateTransportDecorator(aff, chh.TransportationHandler,
+                        chh.HouseholdKey, StrGuid.New(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
+
+                    // reset the list of subaffordances of the affordance
+                    var subaffsCopy = new List<ICalcAffordanceBase>(aff.SubAffordances);
+                    aff.SubAffordances.Clear();
+                    // add all subaffordances again, but wrapped in transport decorators
+                    foreach (var subaff in subaffsCopy)
+                    {
+                        var decoratedSubAff = AffordanceBaseTransportDecorator.CreateTransportDecorator(subaff, chh.TransportationHandler,
+                            chh.HouseholdKey, StrGuid.New(), _calcRepo);
+                        aff.SubAffordances.Add(decoratedSubAff);
+                    }
                 }
 
+                // decorate the idle affordances
                 var persons = location.IdleAffs.Keys.ToList();
                 foreach (var person in persons) {
-                    var sites = chh.TransportationHandler.CalcSites.Where(x => x.Locations.Contains(location)).ToList();
-                    if (sites.Count == 0)
-                    {
-                        throw new DataIntegrityException("No calc site has the location " + location.Name + ". To make the transportation work, every site needs one location.");
-                    }
-
-                    if (sites.Count > 1)
-                    {
-                        throw new DataIntegrityException("More than one calc site has the location " + location.Name);
-                    }
-
                     var aff = location.IdleAffs[person];
-                    AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
-                        aff, sites[0], chh.TransportationHandler, aff.Name,
-                        chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
+                    var abtd = AffordanceBaseTransportDecorator.CreateTransportDecorator(aff, chh.TransportationHandler,
+                        chh.HouseholdKey, StrGuid.New(), _calcRepo);
                     location.IdleAffs[person] = abtd;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified location is only contained in exactly one site.
+        /// </summary>
+        /// <param name="chh">the CalcHousehold object</param>
+        /// <param name="location">the location to look up</param>
+        /// <exception cref="DataIntegrityException">if the location is contained in no sites, or in more than one site</exception>
+        private static void CheckIfLocationIsOnlyInOneSite(CalcHousehold chh, CalcLocation location)
+        {
+            var sites = chh.TransportationHandler.CalcSites.Where(x => x.Locations.Contains(location)).ToList();
+            if (sites.Count == 0)
+            {
+                throw new DataIntegrityException("No calc site has the location " + location.Name + ". To make the transportation work, every site needs one location.");
+            }
+            if (sites.Count > 1)
+            {
+                throw new DataIntegrityException("More than one calc site has the location " + location.Name);
             }
         }
 

@@ -17,12 +17,13 @@ namespace Database.Tables.Transportation {
         public readonly int _minimumAge;
         public readonly int _maximumAge;
         public readonly PermittedGender _gender;
-        public AffordanceTag _affordanceTag;
+        public AffordanceTag? _affordanceTag;
         public readonly int? _personID;
         public readonly double _weight;
+        public readonly TimeLimit? _timeLimit;
 
     public TravelRouteSetEntry([CanBeNull] int? pID, int travelRouteSetID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
-            [CanBeNull] TravelRoute travelRoute, int minimumAge, int maximumAge, PermittedGender gender, AffordanceTag affordanceTag, int? personID, double weight, [NotNull] StrGuid guid)
+            [CanBeNull] TravelRoute travelRoute, int minimumAge, int maximumAge, PermittedGender gender, AffordanceTag? affordanceTag, int? personID, double weight, TimeLimit? timeLimit, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Travel Route Step";
@@ -36,6 +37,7 @@ namespace Database.Tables.Transportation {
             _affordanceTag = affordanceTag;
             _personID = personID;
             _weight = weight;
+            _timeLimit = timeLimit;
         }
 
         [UsedImplicitly]
@@ -67,6 +69,8 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public double Weight => _weight;
 
+        public TimeLimit? TimeLimit => _timeLimit;
+
     [JetBrains.Annotations.NotNull]
         private static TravelRouteSetEntry AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingFields,
@@ -83,10 +87,11 @@ namespace Database.Tables.Transportation {
             var affordanceTag = aic.AffordanceTags?.FirstOrDefault(x => x.IntID == affordanceTagID);
             var personID = dr.GetNullableIntFromLong("PersonID", false, ignoreMissingFields);
             var weight = dr.GetDouble("Weight", false, 1.0, ignoreMissingFields);
-            //var name = dr.GetString("Name",false,"",ignoreMissingFields);
+            var timeLimitId = dr.GetIntFromLong("TimeLimitID", false, ignoreMissingFields, -1);
+            var timeLimit = aic.TimeLimits.FirstOrDefault(x => x.IntID == timeLimitId);
             const string name = "no name";
             var guid = GetGuid(dr, ignoreMissingFields);
-            var step = new TravelRouteSetEntry(id, setid, connectionString, name, route, minimumAge, maximumAge, gender, affordanceTag, personID, weight, guid);
+            var step = new TravelRouteSetEntry(id, setid, connectionString, name, route, minimumAge, maximumAge, gender, affordanceTag, personID, weight, timeLimit, guid);
             return step;
         }
 
@@ -121,7 +126,8 @@ namespace Database.Tables.Transportation {
             cmd.AddParameter("AffordanceTagID", _affordanceTag?.IntID ?? -1);
             cmd.AddParameter("PersonID", _personID ?? -1);
             cmd.AddParameter("Weight", _weight);
-    }
+            cmd.AddParameter("TimeLimitID", _timeLimit?.IntID ?? -1);
+        }
 
         public override string ToString() => Name;
 

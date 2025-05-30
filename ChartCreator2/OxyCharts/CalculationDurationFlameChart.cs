@@ -270,7 +270,7 @@ namespace ChartCreator2.OxyCharts {
                   bai.Color = p.Colors[coloridx];
                   ba.Items.Add(bai);
               }*/
-            //   plotModel1.Series.Add(ba);
+            //   plotModel1.Series.Add(ba); 
 
             var itemsByLevel = new Dictionary<int, IntervalBarSeries>();
             _textOffsets.Clear();
@@ -278,8 +278,11 @@ namespace ChartCreator2.OxyCharts {
             //        foreach (IntervalBarSeries series in itemsByLevel.Values) {
             //          plotModel1.Series.Add(series);
             //    }
-            string dstFileName = Path.Combine(outputDirectory,
-                DirectoryNames.CalculateTargetdirectory(TargetDirectory.Charts), "CalculationDurationFlameChart."+ source+".Png");
+
+            // create the charts subdirectory if it does not exist yet
+            var chartDirectory = Path.Combine(outputDirectory, DirectoryNames.CalculateTargetdirectory(TargetDirectory.Charts));
+            Directory.CreateDirectory(chartDirectory);
+            string dstFileName = Path.Combine(chartDirectory, $"CalculationDurationFlameChart.{source}.Png");
             OxyPlot.SkiaSharp.PngExporter.Export(plotModel1, dstFileName, 3200, 2000, 144);
             //Save(plotModel1, plotName, srcEntry.FullFileName + newFileNameSuffix, basisPath); // ".interval"
         }

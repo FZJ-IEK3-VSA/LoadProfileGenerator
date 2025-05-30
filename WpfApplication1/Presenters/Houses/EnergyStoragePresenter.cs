@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using Common;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
@@ -35,7 +35,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Houses;
 
-namespace LoadProfileGenerator.Presenters.Houses {
+namespace LoadProfileGenerator.Presenters.Houses
+{
     public class EnergyStoragePresenter : PresenterBaseDBBase<EnergyStorageView> {
         [NotNull] private readonly EnergyStorage _thisStorage;
 

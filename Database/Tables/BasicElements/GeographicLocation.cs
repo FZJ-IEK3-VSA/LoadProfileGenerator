@@ -33,12 +33,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class GeographicLocation : DBBaseElement {
         public const string TableName = "tblGeographicLocations";
 

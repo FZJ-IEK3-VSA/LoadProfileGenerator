@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
@@ -13,7 +14,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Templates {
+namespace Database.Tests.Templates
+{
 
     public class HouseholdTemplateExecutorTests : UnitTestBaseClass
     {

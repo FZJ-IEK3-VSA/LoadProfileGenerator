@@ -18,8 +18,10 @@ namespace Database.Tables.Transportation {
 
         private readonly int _stepNumber;
 
+        private readonly double _durationInS;
+
         public TravelRouteStep([CanBeNull]int? pID, int routeID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
-            [CanBeNull] TransportationDeviceCategory deviceCategory, double distance, int stepNumber, [NotNull] StrGuid guid, [CanBeNull] string stepKey) : base(name, TableName,
+            [CanBeNull] TransportationDeviceCategory deviceCategory, double distance, int stepNumber, [NotNull] StrGuid guid, [CanBeNull] string stepKey, double durationInS = -1) : base(name, TableName,
             connectionString, guid)
         {
             StepKey = stepKey;
@@ -29,9 +31,12 @@ namespace Database.Tables.Transportation {
             _distance = distance;
             _routeID = routeID;
             _stepNumber = stepNumber;
+            _durationInS = durationInS;
         }
 
-        [UsedImplicitly]
+        /// <summary>
+        /// Distance of this step in meters
+        /// </summary>
         public double Distance => _distance;
 
         [UsedImplicitly]
@@ -39,6 +44,8 @@ namespace Database.Tables.Transportation {
 
         [UsedImplicitly]
         public int StepNumber => _stepNumber;
+
+        public double DurationInS => _durationInS;
 
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
@@ -73,8 +80,9 @@ namespace Database.Tables.Transportation {
             var name = dr.GetString("Name",false,"(no name)",ignoreMissingFields);
             var stepKey = dr.GetString("StepKey", false, "", ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);
+            double durationInS = dr.GetDouble("DurationInS", false, -1, ignoreMissingFields);
             var step = new TravelRouteStep(id, routeid, connectionString, name, transportationDeviceCategory, distance,
-                stepNumber, guid, stepKey);
+                stepNumber, guid, stepKey, durationInS);
             return step;
         }
 
@@ -107,6 +115,7 @@ namespace Database.Tables.Transportation {
             if (StepKey != null) {
                 cmd.AddParameter("StepKey", StepKey);
             }
+            cmd.AddParameter("DurationInS", _durationInS);
         }
 
         public override string ToString() => Name;

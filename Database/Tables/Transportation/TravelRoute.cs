@@ -11,11 +11,13 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Transportation {
+namespace Database.Tables.Transportation
+{
     public class TravelRoute : DBBaseElement {
         public const string TableName = "tblTravelRoutes";
 
@@ -27,6 +29,10 @@ namespace Database.Tables.Transportation {
         [CanBeNull] private Site _siteB;
         [CanBeNull] private string _routeKey;
 
+        /// <summary>
+        /// Can be used to dynamically modify travel route distances via TransportationDistanceModifiers
+        /// in the Calcspec.
+        /// </summary>
         [CanBeNull]
         public string RouteKey {
             get => _routeKey;
@@ -36,6 +42,19 @@ namespace Database.Tables.Transportation {
         public override string PrettyName {
             get {
                     return Name + " (" + _steps.Count + " steps, " + _steps.Select(x => x.Distance).Sum() + " m)";
+            }
+        }
+        public override void SaveToDB(Connection con)
+        {
+            base.SaveToDB(con);
+            using (var tr = con.BeginTransaction())
+            {
+                foreach (var travelRouteStep in _steps)
+                {
+                    travelRouteStep.SaveToDB(con);
+                }
+
+                tr.Commit();
             }
         }
         public override void SaveToDB()
@@ -106,10 +125,10 @@ namespace Database.Tables.Transportation {
             OnPropertyChanged(nameof(PrettyName));
         }
 
-        public void AddStep([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, bool save = true)
+        public void AddStep([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, double durationInS = -1, bool save = true)
         {
             var step = new TravelRouteStep(null, IntID, ConnectionString,
-                name, category, distance, stepNumber, System.Guid.NewGuid().ToStrGuid(), stepKey);
+                name, category, distance, stepNumber, System.Guid.NewGuid().ToStrGuid(), stepKey, durationInS);
             _steps.Add(step);
             if (save) {
                 step.SaveToDB();

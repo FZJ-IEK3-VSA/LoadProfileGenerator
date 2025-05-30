@@ -20,7 +20,7 @@ namespace CalculationController.Integrity {
                 if (PerformCleanupChecks) {
                     var usedIns = person.CalculateUsedIns(sim);
                     if(usedIns.Count == 0) {
-                        throw new DataIntegrityException("The Person " + person.PrettyName + " is never used in any household. Please fix or delete.",person);
+                        throw new DataIntegrityException("The Person " + person.PrettyName + " is never used in any household or template. Please fix or delete.",person);
                     }
 
                     var namearr = person.Name.Split(' ');
@@ -51,20 +51,6 @@ namespace CalculationController.Integrity {
             if (errrorPersons.Count > 0) {
                 throw new DataIntegrityException("The gender in the opened tabs seems to be wrong.",
                     errrorPersons.Take(20).Cast<BasicElement>().ToList());
-            }
-            if (PerformCleanupChecks) {
-                var usedPersons = new List<Person>();
-                foreach (var household in sim.ModularHouseholds.Items) {
-                    foreach (var person in household.Persons) {
-                        usedPersons.Add(person.Person);
-                    }
-                }
-                foreach (var person in sim.Persons.Items) {
-                    if (!usedPersons.Contains(person)) {
-                        throw new DataIntegrityException(
-                            "The Person " + person.Name + " is not in any household. Please fix.", person);
-                    }
-                }
             }
         }
     }

@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 
 using Xunit;
 using Xunit.Abstractions;
+using Common.Extensions;
 
 
 namespace Common.Tests.SQLResultLogging.Loggers
@@ -25,7 +26,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
                 CalcLoadTypeDtoLogger cldtl = new CalcLoadTypeDtoLogger(wd.SqlResultLoggingService);
-                CalcLoadTypeDto cdls = new CalcLoadTypeDto("name", "unit", "unit", 5, true, "guid".ToStrGuid());
+                CalcLoadTypeDto cdls = new CalcLoadTypeDto("name", "unit", "unit", 5, true, StringExtensions.ToStrGuid("guid"));
                 List<CalcLoadTypeDto> cdlsList = new List<CalcLoadTypeDto>();
                 cdlsList.Add(cdls);
                 cldtl.Run(Constants.GeneralHouseholdKey, cdlsList);
@@ -54,8 +55,8 @@ namespace Common.Tests.SQLResultLogging.Loggers
             };
                 InputDataLogger idl = new InputDataLogger(savers.ToArray());
                 TimeStep ts = new TimeStep(1, 0, true);
-                ActionEntry ae1 = new ActionEntry("blub", key, ts, DateTime.Now, "123".ToStrGuid(), "name", false,
-                    "affname", "affguid".ToStrGuid(), 0, BodilyActivityLevel.Low);
+                ActionEntry ae1 = new ActionEntry("blub", key, ts, DateTime.Now, StringExtensions.ToStrGuid("123"), "name", false,
+                    "affname", StringExtensions.ToStrGuid("affguid"), 0, BodilyActivityLevel.Low, false);
                 List<IHouseholdKey> aes = new List<IHouseholdKey>
             {
                 ae1

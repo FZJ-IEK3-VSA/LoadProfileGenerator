@@ -34,11 +34,13 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class AffordanceTaggingSet : DBBaseElement {
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((AffordanceTaggingSet)toImport, dstSim);

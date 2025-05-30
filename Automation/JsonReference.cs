@@ -48,7 +48,7 @@ namespace Automation {
     public class JsonReference : IGuidObject, IEquatable<JsonReference>
     {
         [SuppressMessage("ReSharper", "ConstantConditionalAccessQualifier")]
-        public bool Equals(JsonReference other)
+        public bool Equals(JsonReference? other)
             => Name == other?.Name && Guid == other?.Guid;
 
         public static bool operator ==(JsonReference? point1, JsonReference? point2)
@@ -86,7 +86,7 @@ namespace Automation {
             return !point1.Equals(point2);
         }
 
-        public override bool Equals(object obj) => obj is JsonReference other && Equals(other);
+        public override bool Equals(object? obj) => obj is JsonReference other && Equals(other);
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode()

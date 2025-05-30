@@ -7,11 +7,13 @@ using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.ModularHouseholds {
+namespace Database.Tables.ModularHouseholds
+{
     public class HHTemplateEntry : DBBase, IComparable<HHTemplateEntry>, IJSonSubElement<HHTemplateEntry.JsonDto>
     {
 

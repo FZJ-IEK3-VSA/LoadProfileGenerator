@@ -10,6 +10,7 @@ using CalculationEngine.OnlineLogging;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -19,7 +20,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.Transportation {
+namespace Calculation.Tests.Transportation
+{
     public class CalcTransportationDeviceTests : UnitTestBaseClass {
         public CalcTransportationDeviceTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
@@ -72,7 +74,7 @@ namespace Calculation.Tests.Transportation {
             var srcSite = new CalcSite("srcsite", true, Guid.NewGuid().ToStrGuid(), key);
             var dstSite = new CalcSite("dstSite", true, Guid.NewGuid().ToStrGuid(), key);
             var isavailable = new BitArray(calcRepo.CalcParameters.InternalTimesteps);
-            var station = new CalcChargingStation(category, chargingCalcLoadType, 500, "stationname", "stationguid".ToStrGuid(),
+            var station = new CalcChargingStation(category, chargingCalcLoadType, 500, "stationname", StringExtensions.ToStrGuid("stationguid"),
                 key, chargingCalcLoadType, calcRepo,isavailable);
             dstSite.ChargingDevices.Add(station);
             var calcSites = new List<CalcSite> {

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Automation.ResultFiles;
 using CalculationController.Integrity;
 using Common;
+using Common.Extensions;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
@@ -15,7 +16,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Households;
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class HouseholdTemplatePresenter : PresenterBaseDBBase<HouseholdTemplateView> {
         public override int GetHashCode()
         {

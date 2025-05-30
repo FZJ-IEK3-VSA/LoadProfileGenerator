@@ -6,6 +6,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -16,7 +17,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables.BasicHouseholds {
+namespace Database.Tests.Tables.BasicHouseholds
+{
 
     public class AffordanceTests : UnitTestBaseClass
     {

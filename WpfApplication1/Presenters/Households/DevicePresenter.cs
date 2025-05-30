@@ -37,6 +37,7 @@ using System.Windows.Media;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -48,7 +49,8 @@ using LoadProfileGenerator.Views.Households;
 
 #endregion
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class DevicePresenter : PresenterBaseDBBase<DeviceView> {
         [JetBrains.Annotations.NotNull] private readonly RealDevice _realDevice;
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Common;
+using Common.Extensions;
 using Database;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
@@ -18,29 +19,35 @@ namespace CalculationController.Integrity
                 return;
             }
             foreach (var routeSet in sim.TravelRouteSets.Items) {
+                // determine the reference distance for the travel route set
                 var arr = routeSet.Name.Split(' ');
-                var kmstr = arr.FirstOrDefault(x => x.EndsWith("km"));
-                if (kmstr == null) {
-                    throw new DataIntegrityException("No distance declaration in the name of the route set " + routeSet.Name, routeSet);
+                const string km = "km";
+                var kmstr = arr.FirstOrDefault(x => x.EndsWith(km));
+                if (kmstr is null)
+                {
+                    // this travel route set has no distance declaration
+                    return;
                 }
-                //var kmstr2 = kmstr.Replace("km", "");
-                //bool success = int.TryParse(kmstr2, out int km);
-                //if(!success) {
-                    //continue;
-                //}
+                int routeSetDistance = int.Parse(kmstr.RemoveSuffix(km)) * 1000;
 
+
+                // check if each workplace route in the set fits to this distance (with a tolerance)
+                const double tolerance = 1000;
                 foreach (var route in routeSet.TravelRoutes) {
                     if (!route.TravelRoute.Name.ToLower().Contains("workplace")) {
                         continue;
                     }
 
-                    if (!route.TravelRoute.Name.Contains(" " +kmstr)) {
-                        // throw new DataIntegrityException("Workplace route " + route.TravelRoute.PrettyName + " in the route set " + routeSet.Name + " does not match the distance from the name which should be " + kmstr, routeSet  );
+                    double routeDistance = route.TravelRoute.CalculateTotalDistance();
+                    if (routeDistance < routeSetDistance - tolerance|| routeDistance > routeSetDistance + tolerance)
+                    {
+                        throw new DataIntegrityException($"Workplace route {route.TravelRoute.PrettyName} in the route set {routeSet.Name} has a distance of {routeDistance/1000}km. " +
+                            $"This does not match the distance specified for the travel route set, which should be {kmstr}", routeSet);
                     }
                 }
 
                 var sites = routeSet.TravelRoutes.Select(x => x.TravelRoute.SiteA).ToList();
-                var sitesB = routeSet.TravelRoutes.Select(x => x.TravelRoute.SiteA).ToList();
+                var sitesB = routeSet.TravelRoutes.Select(x => x.TravelRoute.SiteB).ToList();
                 sites.AddRange(sitesB);
                 sites = sites.Distinct().ToList();
                 var hh = sim.ModularHouseholds[0];
@@ -48,7 +55,7 @@ namespace CalculationController.Integrity
                 var locsAtSites = sitelocs.Select(x => x.Location).Distinct().ToList();
                 foreach (var loc in hh.CollectLocations()) {
                     if (!locsAtSites.Contains(loc)) {
-                        throw new DataIntegrityException("The location " + loc.PrettyName  + " in the household " + hh.PrettyName + "  at travel route set  " +  routeSet.Name + " is not covered by any site. Add a route with this site.", routeSet );
+                        throw new DataIntegrityException("The location " + loc.PrettyName  + " in the household " + hh.PrettyName + " at travel route set  " +  routeSet.Name + " is not covered by any site. Add a route with this site.", routeSet );
                     }
                 }
                 CheckRouteCompleteness(routeSet,sites);
@@ -114,23 +121,32 @@ namespace CalculationController.Integrity
                 }
             }
 
-            foreach (TravelRoute one in sim.TravelRoutes.Items) {
-                foreach (TravelRoute two in sim.TravelRoutes.Items) {
-                    if (one == two) {
-                        continue;
-                    }
+            // skip the following checks for the generated routes in a city simulation
+            if (!options.CitySimulationEnabled)
+            {
+                // check if travel route keys match for routes in the opposite direction
+                foreach (TravelRoute one in sim.TravelRoutes.Items)
+                {
+                    foreach (TravelRoute two in sim.TravelRoutes.Items)
+                    {
+                        if (one == two)
+                        {
+                            continue;
+                        }
 
-                    if (one.SiteA == two.SiteB && one.SiteB == two.SiteA) {
-                        if (one.RouteKey != two.RouteKey) {
-                            List<BasicElement> routes = new List<BasicElement>();
-                            routes.Add(one);
-                            routes.Add(two);
-                            throw new DataIntegrityException("The travel route keys on the matching routes " + one.PrettyName + " and " + two.PrettyName + " don't match. Please fix.", routes);
+                        if (one.SiteA == two.SiteB && one.SiteB == two.SiteA)
+                        {
+                            if (one.RouteKey != two.RouteKey)
+                            {
+                                List<BasicElement> routes = [one, two];
+                                throw new DataIntegrityException($"The travel route keys on the matching routes {one.PrettyName} and {two.PrettyName} don't match. Please fix.", routes);
 
+                            }
                         }
                     }
                 }
             }
+            
         }
     }
 }

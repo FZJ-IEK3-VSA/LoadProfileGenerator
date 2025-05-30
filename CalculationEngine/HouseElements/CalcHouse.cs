@@ -34,12 +34,14 @@ using System.Linq;
 using System.Text;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.CitySimulation;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using Common;
 using JetBrains.Annotations;
 
-namespace CalculationEngine.HouseElements {
+namespace CalculationEngine.HouseElements
+{
     public sealed class CalcHouse : ICalcAbleObject {
         private readonly CalcRepo _calcRepo;
 
@@ -67,6 +69,8 @@ namespace CalculationEngine.HouseElements {
             Name = name;
             HouseholdKey = houseKey;
         }
+
+        public IReadOnlyList<ICalcAbleObject> Households => _households ?? throw new LPGException("House contains no households");
 
         public List<CalcAutoDev> CollectAutoDevs()
         {
@@ -211,7 +215,8 @@ namespace CalculationEngine.HouseElements {
         public List<CalcEnergyStorage>? EnergyStorages => _energyStorages;
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void RunOneStep(TimeStep timestep, DateTime now, bool runProcessing)
+        public IEnumerable<RemoteActivityInfo> RunOneStep(TimeStep timestep, DateTime now, bool runProcessing,
+            Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null)
         {
             /*if (_allProfiles == null) {
                 throw new LPGException("all profiles was null");
@@ -237,8 +242,12 @@ namespace CalculationEngine.HouseElements {
                 throw new LPGException("_generators was null");
             }
 
+            // simulate all households for one step and collect new remote activities
+            IEnumerable<RemoteActivityInfo> allNewActivities = [];
             foreach (var household in _households) {
-                household.RunOneStep(timestep, now, false);
+                // set info if persons in household finished a remote activity
+                var newActivities = household.RunOneStep(timestep, now, false, finishedActivities);
+                allNewActivities = allNewActivities.Concat(newActivities);
             }
 
             if (_calcSpaceHeating != null) {
@@ -329,6 +338,9 @@ namespace CalculationEngine.HouseElements {
                     fileRow.SaveSum(_calcRepo.Odap.SumBinaryOutStreams[fileRow.LoadType]);
                 }
             }
+
+            // return the newly started remote activities
+            return allNewActivities;
         }
 
         // ReSharper disable once UnusedParameter.Local

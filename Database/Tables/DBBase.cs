@@ -40,6 +40,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -53,17 +54,6 @@ using JetBrains.Annotations;
 
 namespace Database.Tables
 {
-    public static class HashSetUtility {
-        [JetBrains.Annotations.NotNull]
-        public static HashSet<T> ToHashSet<T>([JetBrains.Annotations.NotNull] this IEnumerable<T> list)
-        {
-            HashSet<T> mySet = new HashSet<T>();
-            foreach (var item in list) {
-                mySet.Add(item);
-            }
-            return mySet;
-        }
-    }
     public abstract class DBBase : BasicElement, INotifyPropertyChanged
     {
         public void CheckIfAllPropertiesWereCovered<T>(List<string> checkedProperties, [JetBrains.Annotations.NotNull] T obj)

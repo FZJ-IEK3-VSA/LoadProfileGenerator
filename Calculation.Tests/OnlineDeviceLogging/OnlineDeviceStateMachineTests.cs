@@ -36,6 +36,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using FluentAssertions;
@@ -43,7 +44,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.OnlineDeviceLogging {
+namespace Calculation.Tests.OnlineDeviceLogging
+{
     public class OnlineDeviceStateMachineTests : UnitTestBaseClass
     {
         public OnlineDeviceStateMachineTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

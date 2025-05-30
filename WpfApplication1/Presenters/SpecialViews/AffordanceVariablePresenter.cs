@@ -31,14 +31,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Common;
+using Common.Extensions;
 using Database.Tables;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.SpecialViews;
 
-namespace LoadProfileGenerator.Presenters.SpecialViews {
+namespace LoadProfileGenerator.Presenters.SpecialViews
+{
 #pragma warning disable S3897 // Classes that provide "Equals(<T>)" or override "Equals(Object)" should implement "IEquatable<T>"
     public class AffordanceVariablePresenter : PresenterBaseWithAppPresenter<AffordanceVariableView> {
         [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;

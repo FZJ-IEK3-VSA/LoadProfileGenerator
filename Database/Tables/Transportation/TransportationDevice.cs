@@ -5,13 +5,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Transportation {
+namespace Database.Tables.Transportation
+{
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public enum SpeedUnit {
         Kmh,

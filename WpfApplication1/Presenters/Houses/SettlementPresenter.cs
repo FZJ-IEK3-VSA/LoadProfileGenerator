@@ -36,6 +36,7 @@ using System.Windows;
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -45,7 +46,8 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Houses;
 
-namespace LoadProfileGenerator.Presenters.Houses {
+namespace LoadProfileGenerator.Presenters.Houses
+{
     public class LoadTypeSelection {
         [NotNull] private readonly Action _refreshSettlement;
         private bool _enabled;

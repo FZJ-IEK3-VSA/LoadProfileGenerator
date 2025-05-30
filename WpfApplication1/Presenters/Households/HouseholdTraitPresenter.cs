@@ -35,6 +35,7 @@ using System.Windows;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -43,12 +44,13 @@ using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Households;
 
-namespace LoadProfileGenerator.Presenters.Households {
+namespace LoadProfileGenerator.Presenters.Households
+{
     public class HouseholdTraitPresenter : PresenterBaseDBBase<HouseholdTraitView> {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _classifications = new ObservableCollection<string>();
         [NotNull] private readonly HouseholdTrait _hht;
         [ItemNotNull] [NotNull] private readonly ObservableCollection<Affordance> _relevantAffordances = new ObservableCollection<Affordance>();
-        private int _affordanceWeight;
+        private double _affordanceWeight;
         [NotNull] private string _autoSelectedAddCategory;
         [CanBeNull] private string _currentAffordanceDesireString;
         private int _endMinusTime;
@@ -103,7 +105,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [UsedImplicitly]
-        public int AffordanceWeight {
+        public double AffordanceWeight {
             get => _affordanceWeight;
             set {
                 if (value == _affordanceWeight) {

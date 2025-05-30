@@ -31,115 +31,102 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Activities;
+using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 #endregion
 
-namespace CalculationEngine.HouseholdElements {
-    [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
-    public class CalcAffordance : CalcAffordanceBase {
-        [JetBrains.Annotations.NotNull] private readonly CalcProfile _personProfile;
+namespace CalculationEngine.HouseholdElements
+{
+    /// <summary>
+    /// Default implementation of an affordance. Device activations and durations are determined randomly and stored
+    /// per timestep for consistent results.
+    /// </summary>
+    public class CalcAffordance : CalcAffordanceWithTimeLimit
+    {
+        private readonly CalcProfile _personProfile;
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _probabilitiesForTimes = new();
+        /// <summary>
+        /// Stores all current activations of this affordance. Maps name of the activating person
+        /// to start time and end time of the person time (the time the person is busy with the affordance).
+        /// </summary>
+        private Dictionary<string, Tuple<TimeStep, TimeStep>> _currentActivations = [];
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _timeFactorsForTimes = new();
-
-        private readonly double _timeStandardDeviation;
-
-        [ItemNotNull] [JetBrains.Annotations.NotNull]
-        private readonly List<CalcAffordanceVariableOp> _variableOps;
-
-        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _variableRepository;
-
-        [ItemNotNull] [JetBrains.Annotations.NotNull]
-        private readonly List<VariableRequirement> _variableRequirements;
-
-        private TimeStep? _endTimeStep;
-        private TimeStep? _startTimeStep;
-
-        public CalcAffordance([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] CalcProfile personProfile,
-                              [JetBrains.Annotations.NotNull] CalcLocation loc, bool randomEffect, [JetBrains.Annotations.NotNull] [ItemNotNull]
-                              List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight,
-                              double timeStandardDeviation, ColorRGB affordanceColor, [JetBrains.Annotations.NotNull] string pAffCategory,
-                              bool isInterruptable, bool isInterrupting, [JetBrains.Annotations.NotNull] [ItemNotNull]
-                              List<CalcAffordanceVariableOp> variableOps, [JetBrains.Annotations.NotNull] [ItemNotNull]
-                              List<VariableRequirement> variableRequirements, ActionAfterInterruption actionAfterInterruption,
-                              [JetBrains.Annotations.NotNull] string timeLimitName, int weight, bool requireAllDesires,
-                              [JetBrains.Annotations.NotNull] string srcTrait, StrGuid guid,
-                              [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository, [JetBrains.Annotations.NotNull] [ItemNotNull]
-                              List<DeviceEnergyProfileTuple> energyprofiles, [ItemNotNull] [JetBrains.Annotations.NotNull]
-                              BitArray isBusy, BodilyActivityLevel bodilyActivityLevel, [JetBrains.Annotations.NotNull] CalcRepo calcRepo,
-                              HouseholdKey householdKey) : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, needsLight,
-            randomEffect, pAffCategory, isInterruptable, isInterrupting, actionAfterInterruption, weight, requireAllDesires,
-            CalcAffordanceType.Affordance, guid, isBusy, bodilyActivityLevel, calcRepo, householdKey)
+        public CalcAffordance(string pName, CalcProfile personProfile, CalcLocation loc, bool randomEffect,
+            List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight, double timeStandardDeviation,
+            ColorRGB affordanceColor, string pAffCategory, bool isInterruptable, bool isInterrupting, List<CalcAffordanceVariableOp> variableOps,
+            List<VariableRequirement> variableRequirements, ActionAfterInterruption actionAfterInterruption, string timeLimitName, double weight,
+            bool requireAllDesires, string srcTrait, StrGuid guid, CalcVariableRepository variableRepository,
+            List<DeviceEnergyProfileTuple> energyprofiles, BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
+            CalcRepo calcRepo, HouseholdKey householdKey)
+            : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, needsLight, randomEffect, pAffCategory, isInterruptable, isInterrupting, actionAfterInterruption, weight, requireAllDesires,
+                  CalcAffordanceType.Affordance, guid, isBusy, bodilyActivityLevel, calcRepo, householdKey, energyprofiles, affordanceColor, srcTrait, timeLimitName, variableRepository, variableOps, variableRequirements)
         {
-            _variableOps = variableOps;
-            _variableRequirements = variableRequirements;
-            _variableRepository = variableRepository;
-            Energyprofiles = energyprofiles;
-            SourceTrait = srcTrait;
-            if (personProfile == null) {
+            if (personProfile == null)
+            {
 #pragma warning disable IDE0016 // Use 'throw' expression
                 throw new DataIntegrityException("The affordance " + Name + " has no person profile!");
 #pragma warning restore IDE0016 // Use 'throw' expression
             }
-
-            _timeStandardDeviation = timeStandardDeviation;
-            SubAffordances = new List<CalcSubAffordance>();
             _personProfile = personProfile;
-            AffordanceColor = affordanceColor;
-            TimeLimitName = timeLimitName;
+            DurationCalculator = new(_personProfile.StepValues.Count, timeStandardDeviation, CalcRepo, Name);
         }
 
-        public override ColorRGB AffordanceColor { get; }
+        /// <summary>
+        /// Helper object for calculating affordance activation durations
+        /// </summary>
+        internal AffordanceDurationCalculator DurationCalculator { get; }
 
-        public override int DefaultPersonProfileLength => _personProfile.StepValues.Count;
-        public static bool DoubleCheckBusyArray { get; set; }
+        /// <summary>
+        /// A normal affordance always has a CalcSite object as Site
+        /// </summary>
+        public override CalcSite? Site => ParentLocation.CalcSite;
 
-        [JetBrains.Annotations.NotNull]
-        public override List<DeviceEnergyProfileTuple> Energyprofiles { get; }
-
-        public override string SourceTrait { get; }
-
-        // public int PersonProfileDuration => _personProfile.StepValues.Count;
-        public override List<CalcSubAffordance> SubAffordances { get; }
-
-        [JetBrains.Annotations.NotNull]
-        public override string TimeLimitName { get; }
-
-        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
+        /// <summary>
+        /// Creates all device profiles for one activation of the affordance
+        /// </summary>
+        /// <param name="startTime">start time step for the affordance activation</param>
+        /// <param name="activatorName">person who activates the affordance</param>
+        /// <returns>time step in which the last device profile ends</returns>
+        private TimeStep CreateDeviceProfilesForActivation(TimeStep startTime, string activatorName)
         {
             TimeStep timeLastDeviceEnds = startTime.GetAbsoluteStep(0);
             //flexibility
             var allDevices = Energyprofiles.Select(x => x.CalcDevice).Distinct().ToList();
-            foreach (var device in allDevices) {
+            foreach (var device in allDevices)
+            {
                 device.ActivationCount++;
             }
 
-            //Activation
-            foreach (var device in allDevices) {
+            // create time profiles and shiftable activations for each device
+            foreach (var device in allDevices)
+            {
+                bool flexibleDevice = CalcRepo.CalcParameters.FlexibilityEnabled && device.FlexibilityMode == FlexibilityType.ProfileShiftable;
                 TimeShiftableDeviceActivation tsactivation = new(device.DeviceDto, startTime, HouseholdKey);
+                // get all energy profiles that belong to this device
                 var profs = Energyprofiles.Where(x => x.CalcDevice == device).ToList();
-                foreach (var dpt in profs) {
-                    if (dpt.Probability > _probabilitiesForTimes[startTime.InternalStep]) {
-                        //_calcDevice.SetTimeprofile(tbp, startidx + TimeOffsetInSteps, loadType, timeFactor, affordancename,activatorName, _multiplier);
-                        CalcProfile adjustedProfile = dpt.TimeProfile.CompressExpandDoubleArray(_timeFactorsForTimes[startTime.InternalStep]);
+                foreach (var dpt in profs)
+                {
+                    if (dpt.Probability > DurationCalculator.GetProbability(startTime, activatorName))
+                    {
+                        CalcProfile adjustedProfile = dpt.TimeProfile.CompressExpandDoubleArray(DurationCalculator.GetTimeFactor(startTime, activatorName));
                         var endtime = dpt.CalcDevice.SetTimeprofile(adjustedProfile, startTime.AddSteps(dpt.TimeOffsetInSteps), dpt.LoadType, Name,
                             activatorName, dpt.Multiplier, false, out var finalValues);
-                        if (endtime > timeLastDeviceEnds) {
+                        if (endtime > timeLastDeviceEnds)
+                        {
                             timeLastDeviceEnds = endtime;
                         }
 
-                        if (CalcRepo.CalcParameters.FlexibilityEnabled && device.FlexibilityMode == FlexibilityType.ProfileShiftable) {
+                        if (flexibleDevice)
+                        {
                             var tsdp = new TimeShiftableDeviceProfile(
                                 dpt.LoadType.ConvertToDto(), dpt.TimeOffsetInSteps, finalValues.Values);
                             tsactivation.Profiles.Add(tsdp);
@@ -147,256 +134,157 @@ namespace CalculationEngine.HouseholdElements {
                     }
                 }
 
-                if (CalcRepo.CalcParameters.FlexibilityEnabled && device.FlexibilityMode == FlexibilityType.ProfileShiftable) {
+                if (flexibleDevice)
+                {
                     tsactivation.TotalDuration = (timeLastDeviceEnds.InternalStep - startTime.InternalStep);
                     CalcRepo.OnlineLoggingData.AddTimeShiftableEntry(tsactivation);
                 }
             }
-
-            var personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count,
-                _timeFactorsForTimes[startTime.InternalStep]);
-            _startTimeStep = startTime;
-            _endTimeStep = startTime.AddSteps(personsteps);
-            if (DoubleCheckBusyArray) {
-                for (var i = 0; i < personsteps && i + startTime.InternalStep < CalcRepo.CalcParameters.InternalTimesteps; i++) {
-                    if (IsBusyArray[i + startTime.InternalStep]) {
-                        throw new LPGException("Affordance was already busy");
-                    }
-                }
-            }
-
-            for (var i = 0; i < personsteps && i + startTime.InternalStep < CalcRepo.CalcParameters.InternalTimesteps; i++) {
-                IsBusyArray[i + startTime.InternalStep] = true;
-            }
-
-            if (_variableOps.Count > 0) {
-                foreach (var op in _variableOps) {
-                    // figure out end time
-                    TimeStep time;
-                    switch (op.ExecutionTime) {
-                        case VariableExecutionTime.Beginning:
-                            time = startTime;
-                            break;
-                        case VariableExecutionTime.EndOfPerson:
-                            time = _endTimeStep;
-                            break;
-                        case VariableExecutionTime.EndofDevices:
-                            time = timeLastDeviceEnds;
-                            break;
-                        default:
-                            throw new LPGException("Forgotten Variable Execution Time");
-                    }
-
-                    _variableRepository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation, op.VariableAction, time, op.VariableGuid);
-                    _variableRepository.Execute(startTime);
-                }
-            }
-
-            var tf = _timeFactorsForTimes[startTime.InternalStep];
-            _probabilitiesForTimes.Clear();
-            _timeFactorsForTimes.Clear();
-            personTimeProfile = _personProfile.CompressExpandDoubleArray(tf);
-            //return tf ;
+            return timeLastDeviceEnds;
         }
 
-        public void AddDeviceTuple([JetBrains.Annotations.NotNull] CalcDevice dev, [JetBrains.Annotations.NotNull] CalcProfile newprof,
-                                   [JetBrains.Annotations.NotNull] CalcLoadType lt, decimal timeoffset, TimeSpan internalstepsize, double multiplier,
-                                   double probability)
+        public override IEnumerable<StaticActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
+        {
+            var personEndTime = DurationCalculator.GetEnd(startTime, activator.Name);
+            // save start and end time of the person's activity
+            _currentActivations[activator.Name] = new(startTime, personEndTime);
+
+            // adapt the default person profile according to the time factor for this time step
+            double tf = DurationCalculator.GetTimeFactor(startTime, activator.Name);
+            var personTimeProfile = _personProfile.CompressExpandDoubleArray(tf);
+            var activation = new LocalActivity(activator.Name, personTimeProfile, this);
+            return [activation];
+        }
+
+        public override void StartActivation(TimeStep startTime, string activatorName)
+        {
+            TimeStep timeLastDeviceEnds = CreateDeviceProfilesForActivation(startTime, activatorName);
+
+            ExecuteVariableOperations(startTime, [VariableExecutionTime.Beginning], true);
+            ExecuteVariableOperations(timeLastDeviceEnds, [VariableExecutionTime.EndofDevices], false);
+
+            // clear probabilities and time factors
+            DurationCalculator.ClearForPerson(activatorName);
+        }
+
+        public override void FinishActivation(TimeStep endTime, string activatorName)
+        {
+            ExecuteVariableOperations(endTime, [VariableExecutionTime.EndOfPerson], true);
+        }
+
+        /// <summary>
+        /// Collect all subaffordances of this affordance that are currently available. This depends
+        /// on whether this affordance is currently active and whether the activation was long enough ago, but
+        /// not longer than the permitted buffer time frame.
+        /// </summary>
+        /// <param name="time">current timestep</param>
+        /// <param name="onlyInterrupting">whether only interrupting subaffordances should be collected</param>
+        /// <param name="srcSite">the current site of the person</param>
+        /// <returns>a list of available subaffordances</returns>
+        public override IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite)
+        {
+            if (!SubAffordances.Any())
+            {
+                return [];
+            }
+
+            // remove activations that are already over; use ToList to get a separate colletion to iterate for removing
+            var outDatedActivations = _currentActivations.Where(kvp => kvp.Value.Item2 < time).ToList();
+            foreach (var kvPair in outDatedActivations)
+            {
+                _currentActivations.Remove(kvPair.Key);
+            }
+            if (_currentActivations.Count == 0)
+            {
+                // the affordance is currently not active
+                return [];
+            }
+
+            // collect all available subaffordances
+            var availableSubAffs = new List<ICalcAffordanceBase>();
+            foreach (var subAffordance in SubAffordances)
+            {
+                if (!onlyInterrupting || subAffordance.IsInterrupting)
+                {
+                    if (IsSubaffordanceAvailable(time, srcSite, subAffordance.GetAsSubAffordance()))
+                    {
+                        availableSubAffs.Add(subAffordance);
+                    }
+                }
+            }
+            return availableSubAffs;
+        }
+
+        /// <summary>
+        /// Checks if there is a current activation of the affordance that offers the specified subaffordance.
+        /// </summary>
+        /// <param name="time">the timestep for which to check if the subaffordance is available</param>
+        /// <param name="srcSite">the site of the affordance</param>
+        /// <param name="subAffordance">the subaffordance to check</param>
+        /// <returns>whether the subaffordance is currently available</returns>
+        private bool IsSubaffordanceAvailable(TimeStep time, ICalcSite? srcSite, CalcSubAffordance subAffordance)
+        {
+            // check all current activations if one of them offers the subaffordance now
+            foreach (var kvPair in _currentActivations)
+            {
+                // start and end time for this activation
+                int personStartTime = kvPair.Value.Item1.InternalStep;
+                int personEndTime = kvPair.Value.Item2.InternalStep;
+
+                // the subaffordance can only be activated after the delay time, but before the buffer time is over
+                var isDelayTimePassed = personStartTime + subAffordance.Delaytimesteps < time.InternalStep;
+                var isBufferTimePassed = personStartTime + subAffordance.Delaytimesteps + SubAffordanceStartFrame <= time.InternalStep;
+                // check if the subaffordance could be activated right now
+                var person = new CalcPersonDto("name", null, -1, PermittedGender.All, null, null, null, -1, null, null);
+                var isSubAffordanceBusy = subAffordance.IsBusy(time, srcSite, person);
+                if (isDelayTimePassed && !isBufferTimePassed && isSubAffordanceBusy == BusynessType.NotBusy)
+                {
+                    var remainingActiveTime = personEndTime - time.InternalStep;
+                    subAffordance.SetDurations(remainingActiveTime);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if all devices are free for activating the affordance.
+        /// </summary>
+        /// <param name="personName">name of the person for whom to check devices</param>
+        /// <param name="time">the time step to check for activation</param>
+        /// <returns>true if all devices are free, else false</returns>
+        private bool AreDevicesOccupied(string personName, TimeStep time)
+        {
+            foreach (var dpt in Energyprofiles)
+            {
+                if (dpt.Probability > DurationCalculator.GetProbability(time, personName))
+                {
+                    if (dpt.CalcDevice.IsBusyDuringTimespan(time.AddSteps(dpt.TimeOffsetInSteps), dpt.TimeProfile.StepValues.Count,
+                        DurationCalculator.GetTimeFactor(time, personName), dpt.LoadType))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public override BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson, bool clearDictionaries = true)
+        {
+            if (AreDevicesOccupied(calcPerson.Name, time))
+            {
+                return BusynessType.Occupied;
+            }
+
+            return base.IsBusy(time, srcSite, calcPerson, clearDictionaries);
+        }
+
+        public void AddDeviceTuple(CalcDevice dev, CalcProfile newprof, CalcLoadType lt, decimal timeoffset, TimeSpan internalstepsize,
+            double multiplier, double probability)
         {
             //TODO: remove this, it is only used in unit testing
             var calctup = new DeviceEnergyProfileTuple(dev, newprof, lt, timeoffset, internalstepsize, multiplier, probability);
             Energyprofiles.Add(calctup);
         }
-
-        public override string? AreDeviceProfilesEmpty()
-        {
-            var areDeviceProfilesEmpty = Energyprofiles
-                .Where(deviceEnergyProfileTuple => deviceEnergyProfileTuple.TimeProfile.TimeSpanDataPoints.Count < 2)
-                .Select(deviceEnergyProfileTuple => deviceEnergyProfileTuple.TimeProfile.Name).FirstOrDefault();
-
-            return areDeviceProfilesEmpty;
-        }
-
-        public override bool AreThereDuplicateEnergyProfiles()
-        {
-            foreach (var tuple in Energyprofiles) {
-                foreach (var subtuple in Energyprofiles) {
-                    if (tuple != subtuple && tuple.CalcDevice == subtuple.CalcDevice && tuple.LoadType == subtuple.LoadType &&
-                        subtuple.TimeOffset == tuple.TimeOffset) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        //public override ICalcProfile CollectPersonProfile() => _personProfile;
-
-        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation)
-        {
-            if (SubAffordances.Count == 0) {
-                return new List<CalcSubAffordance>();
-            }
-
-            if (RemainingActiveTime(time) < 1) {
-                return new List<CalcSubAffordance>();
-            }
-
-            // es gibt subaffs und diese aff ist aktiv
-            var result = new List<CalcSubAffordance>();
-            foreach (var calcSubAffordance in SubAffordances) {
-                if (onlyInterrupting && calcSubAffordance.IsInterrupting || !onlyInterrupting) {
-                    var delaytimesteps = calcSubAffordance.Delaytimesteps;
-                    var hasbeenactivefor = HasBeenActiveFor(time);
-                    var person = new CalcPersonDto("name", null, -1, PermittedGender.All, null, null, null, -1, null, null);
-                    var issubaffbusy = calcSubAffordance.IsBusy(time, srcLocation, person);
-                    if (delaytimesteps < hasbeenactivefor && issubaffbusy == BusynessType.NotBusy) {
-                        calcSubAffordance.SetDurations(RemainingActiveTime(time));
-                        result.Add(calcSubAffordance);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
-        {
-            if (!_timeFactorsForTimes.ContainsKey(time.InternalStep)) {
-                if (clearDictionaries) {
-                    //        _timeFactorsForTimes.Clear();
-                }
-
-                _timeFactorsForTimes[time.InternalStep] = CalcRepo.NormalRandom.NextDouble(1, _timeStandardDeviation);
-                if (_timeFactorsForTimes[time.InternalStep] < 0) {
-                    throw new DataIntegrityException("The duration standard deviation on " + Name + " is too large: a negative value of " +
-                                                     _timeFactorsForTimes[time.InternalStep] + " came up. The standard deviation is " +
-                                                     _timeStandardDeviation);
-                }
-            }
-
-            if (!_probabilitiesForTimes.ContainsKey(time.InternalStep)) {
-                if (clearDictionaries) {
-                    //      _probabilitiesForTimes.Clear();
-                }
-
-                _probabilitiesForTimes[time.InternalStep] = CalcRepo.Rnd.NextDouble();
-            }
-
-            if (_variableRequirements.Count > 0) {
-                foreach (var requirement in _variableRequirements) {
-                    if (!requirement.IsMet()) {
-                        return BusynessType.VariableRequirementsNotMet; // return is busy right now and not available.
-                    }
-                }
-            }
-
-            if (time.InternalStep >= IsBusyArray.Length) {
-                return BusynessType.BeyondTimeLimit;
-            }
-
-            if (IsBusyArray[time.InternalStep]) {
-                return BusynessType.Occupied;
-            }
-
-            foreach (var dpt in Energyprofiles) {
-                if (dpt.Probability > _probabilitiesForTimes[time.InternalStep]) {
-                    if (dpt.CalcDevice.IsBusyDuringTimespan(time.AddSteps(dpt.TimeOffsetInSteps), dpt.TimeProfile.StepValues.Count,
-                        _timeFactorsForTimes[time.InternalStep], dpt.LoadType)) {
-                        return BusynessType.Occupied;
-                    }
-                }
-            }
-
-            return BusynessType.NotBusy;
-        }
-
-        public override string ToString() => "Affordance:" + Name;
-
-        private int HasBeenActiveFor([JetBrains.Annotations.NotNull] TimeStep currentTime)
-        {
-            if (currentTime < _startTimeStep) {
-                return -1;
-            }
-
-            if (currentTime > _endTimeStep) {
-                return -1;
-            }
-
-            if (_startTimeStep == null) {
-                throw new LPGException("Start time step was null");
-            }
-
-            var hasbeenactive = currentTime.InternalStep - _startTimeStep.InternalStep;
-            return hasbeenactive;
-        }
-
-        private int RemainingActiveTime([JetBrains.Annotations.NotNull] TimeStep currentTime)
-        {
-            if (currentTime == null) {
-                throw new ArgumentNullException(nameof(currentTime));
-            }
-
-            if (currentTime < _startTimeStep) {
-                return -1;
-            }
-
-            if (currentTime > _endTimeStep) {
-                return -1;
-            }
-
-            if (_endTimeStep == null) {
-                return -1;
-            }
-
-            var remainingTime = _endTimeStep.InternalStep - currentTime.InternalStep;
-            return remainingTime;
-        }
-
-        #region Nested type: DeviceEnergyProfileTuple
-
-        public class DeviceEnergyProfileTuple {
-            [JetBrains.Annotations.NotNull] private readonly CalcDevice _calcDevice;
-
-            private readonly double _multiplier;
-
-            public DeviceEnergyProfileTuple([JetBrains.Annotations.NotNull] CalcDevice pdev, [JetBrains.Annotations.NotNull] CalcProfile ep,
-                                            [JetBrains.Annotations.NotNull] CalcLoadType pLoadType, decimal timeOffset, TimeSpan stepsize,
-                                            double multiplier, double probability)
-            {
-                _calcDevice = pdev;
-                TimeProfile = ep;
-                LoadType = pLoadType;
-                TimeOffset = timeOffset;
-                _multiplier = multiplier;
-                var minutesperstep = (decimal)stepsize.TotalMinutes;
-                TimeOffsetInSteps = (int)(timeOffset / minutesperstep);
-                Probability = probability;
-            }
-
-            [JetBrains.Annotations.NotNull]
-            public CalcDevice CalcDevice => _calcDevice;
-
-            [JetBrains.Annotations.NotNull]
-            public CalcLoadType LoadType { get; }
-
-            public double Multiplier => _multiplier;
-
-            public double Probability { get; }
-
-            public decimal TimeOffset { get; }
-
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "InSteps")]
-            public int TimeOffsetInSteps { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public CalcProfile TimeProfile { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public override string ToString() => "Device:" + _calcDevice.Name + ", Profile " + TimeProfile.Name + ", Offset " + TimeOffset;
-        }
-
-        #endregion
     }
 }

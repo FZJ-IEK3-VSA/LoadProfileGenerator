@@ -34,13 +34,15 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Houses {
+namespace Database.Tables.Houses
+{
     public class HouseType : DBBaseElement {
         public const string TableName = "tblHouseTypes";
 

@@ -36,6 +36,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -44,7 +45,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests {
+namespace Calculation.Tests
+{
     public class CalcDeviceTests : CalcUnitTestBase {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]

@@ -40,6 +40,7 @@ using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -82,11 +83,11 @@ namespace Calculation.HouseholdElements.Tests
                         var hhkey = new HouseholdKey("HH1");
                         CalcAffordance aff1 = new CalcAffordance("aff1", cp, null, false, new List<CalcDesire>(), 10, 20, PermittedGender.All, true,
                             1, LPGColors.AliceBlue, null, false, false, null, null, ActionAfterInterruption.GoBackToOld, "", 900, false, "",
-                            Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
+                            Guid.NewGuid().ToStrGuid(), crv, new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
                             calcRepo, hhkey);
                         CalcAffordance aff2 = new CalcAffordance("aff2", cp, null, false, new List<CalcDesire>(), 10, 20, PermittedGender.All, true,
                             1, LPGColors.AliceBlue, null, false, false, null, null, ActionAfterInterruption.GoBackToOld, "", 100, false, "",
-                            Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
+                            Guid.NewGuid().ToStrGuid(), crv, new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
                             calcRepo, hhkey);
 
                         List<ICalcAffordanceBase> affs = new List<ICalcAffordanceBase> {
@@ -121,7 +122,8 @@ namespace Calculation.HouseholdElements.Tests
     }
 }
 
-namespace Calculation.Tests.HouseholdElements {
+namespace Calculation.Tests.HouseholdElements
+{
     public class CalcPersonTests : CalcUnitTestBase {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -162,7 +164,7 @@ namespace Calculation.Tests.HouseholdElements {
                 using CalcRepo calcRepo = new CalcRepo(lf:lf, odap: odap, calcParameters:calcParameters, rnd:rnd, normalRandom:nr, onlineLoggingData:old);
                 var cp = new CalcPerson(calcPerson,   cloc,  isSick, isOnVacation,calcRepo);
                     //20, PermittedGender.Male, lf, "HH1", cloc, "traittag","hhname0", calcParameters,isSick, Guid.NewGuid().ToStrGuid());
-                cp.PersonDesires.AddDesires(desire1);
+                cp.CurrentDesires.AddDesires(desire1);
                 cp.SicknessDesires.AddDesires(desire1);
                 var deviceLoads = new List<CalcDeviceLoad>
                 {
@@ -200,7 +202,7 @@ namespace Calculation.Tests.HouseholdElements {
                     "aff category", true, false,
                     new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                     ActionAfterInterruption.GoBackToOld,"blub",100,false,"",
-                    Guid.NewGuid().ToStrGuid(),crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                    Guid.NewGuid().ToStrGuid(),crv, new List<DeviceEnergyProfileTuple>(),
                     isBusy1, BodilyActivityLevel.Low,calcRepo, hhkey);
                 aff1.AddDeviceTuple(cdev1, cprof, lt, 0, calcParameters.InternalStepsize, 1, 1);
                 cloc.AddAffordance(aff1);
@@ -210,7 +212,7 @@ namespace Calculation.Tests.HouseholdElements {
         color, "aff category", false, false,
                     new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                     ActionAfterInterruption.GoBackToOld,"bla",100,false,"",
-                    Guid.NewGuid().ToStrGuid(),crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                    Guid.NewGuid().ToStrGuid(),crv, new List<DeviceEnergyProfileTuple>(),
                     isBusy2, BodilyActivityLevel.Low, calcRepo, hhkey);
                 aff2.AddDeviceTuple(cdev2, cprof, lt, 0, calcParameters.InternalStepsize, 1, 1);
                 cloc.AddAffordance(aff2);
@@ -221,7 +223,7 @@ namespace Calculation.Tests.HouseholdElements {
                 //var variableOperator = new VariableOperator();
                 TimeStep ts = new TimeStep(0, 0, true);
                 for (var i = 0; i < 100; i++) {
-                    cp.NextStep(ts, clocs, dls, hhkey, persons, 1);
+                    cp.NextStep(ts, clocs, dls, hhkey, persons);
                     ts = ts.AddSteps(1);
                 }
             }
@@ -263,7 +265,7 @@ namespace Calculation.Tests.HouseholdElements {
             using CalcRepo calcRepo = new CalcRepo(lf:lf, odap:odap, calcParameters:calcParameters, rnd: rnd, normalRandom: nr, onlineLoggingData:old);
             var cp = new CalcPerson(calcPerson, cloc,  isSick, isOnVacation, calcRepo);
             //"blub", 1, 1, r,20, PermittedGender.Male, lf, "HH1", cloc,"traittag","hhname0", calcParameters,isSick, Guid.NewGuid().ToStrGuid());
-            cp.PersonDesires.AddDesires(desire1);
+            cp.CurrentDesires.AddDesires(desire1);
             cp.SicknessDesires.AddDesires(desire1);
             var deviceLoads = new List<CalcDeviceLoad>
             {
@@ -305,14 +307,14 @@ namespace Calculation.Tests.HouseholdElements {
                 new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                 ActionAfterInterruption.GoBackToOld,"bla",100,false,"",
                 Guid.NewGuid().ToStrGuid(),crv
-                , new List<CalcAffordance.DeviceEnergyProfileTuple>(),isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
+                , new List<DeviceEnergyProfileTuple>(),isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
             aff1.AddDeviceTuple(cdev1, cprof, lt, 0, calcParameters.InternalStepsize, 1, 1);
             cloc.AddAffordance(aff1);
             var aff2 = new CalcAffordance("aff2", cprof, cloc, false, desires, 1, 100,
                 PermittedGender.All, false, 0, color, "aff category", false, false,
                 new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                 ActionAfterInterruption.GoBackToOld,"bla",100,false,"", Guid.NewGuid().ToStrGuid(),crv
-                , new List<CalcAffordance.DeviceEnergyProfileTuple>(),isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
+                , new List<DeviceEnergyProfileTuple>(),isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
             aff2.AddDeviceTuple(cdev2, cprof, lt, 0, calcParameters.InternalStepsize, 1, 1);
             cloc.AddAffordance(aff2);
             var clocs = new List<CalcLocation>
@@ -334,7 +336,7 @@ namespace Calculation.Tests.HouseholdElements {
             };
             for (var i = 0; i < 100; i++) {
                 TimeStep ts = new TimeStep(i,0,true);
-                cp.NextStep(ts, clocs, dls, hhkey, persons, 1);
+                cp.NextStep(ts, clocs, dls, hhkey, persons);
             }
 
             //wd.CleanUp();

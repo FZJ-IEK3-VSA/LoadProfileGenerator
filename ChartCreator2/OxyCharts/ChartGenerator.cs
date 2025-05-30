@@ -21,15 +21,32 @@ namespace ChartCreator2.OxyCharts {
 
 
     public static class ChartMaker {
-        public static void MakeFlameChart([NotNull] DirectoryInfo di, [NotNull] CalculationProfiler calculationProfiler)
+        public static void MakeFlameChart([NotNull] DirectoryInfo di, [NotNull] CalculationProfiler calculationProfiler) => MakeFlameChart(di, calculationProfiler, "");
+
+        public static void MakeFlameChart([NotNull] DirectoryInfo di, [NotNull] CalculationProfiler calculationProfiler, string source = "")
         {
-            string targetfile = Path.Combine(di.FullName, Constants.CalculationProfilerJson);
+            // create the directory if it does not exist yet
+            di.Create();
+            string filename;
+            if (string.IsNullOrEmpty(source))
+            {
+                // use the default filename and a default source
+                filename = Constants.CalculationProfilerJson;
+                source = "CommandlineCalc";
+            }
+            else
+            {
+                // include the source in the filename to be able to differentiate between different sources
+                filename = $"{source}.{Constants.CalculationProfilerJson}";
+            }
+
+            string targetfile = Path.Combine(di.FullName, filename);
             using StreamWriter sw = new StreamWriter(targetfile);
             calculationProfiler.WriteJson(sw);
             CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
             Thread t = new Thread(() => {
                 try {
-                    cdfc.Run(calculationProfiler, di.FullName, "CommandlineCalc");
+                    cdfc.Run(calculationProfiler, di.FullName, source);
                 }
                 catch (Exception ex) {
                     Logger.Exception(ex);

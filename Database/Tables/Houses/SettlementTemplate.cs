@@ -6,6 +6,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
@@ -13,7 +14,8 @@ using Database.Tables.Transportation;
 using Database.Templating;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Houses {
+namespace Database.Tables.Houses
+{
     public class SettlementTemplate : DBBaseElement {
         public const string TableName = "tblSettlementTemplates";
 

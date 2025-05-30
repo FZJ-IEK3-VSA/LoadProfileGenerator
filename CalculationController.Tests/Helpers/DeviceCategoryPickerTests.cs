@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using Automation;
 using CalculationController.Helpers;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database;
 using Database.Helpers;
