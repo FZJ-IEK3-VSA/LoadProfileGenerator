@@ -16,26 +16,34 @@ namespace CalculationController.Integrity {
                     }
                 }
 
-                bool anyTransport = false;
-                foreach (var household in house.Households) {
-                    if (household.ChargingStationSet != null || household.TravelRouteSet != null ||
-                        household.TransportationDeviceSet != null) {
-                        anyTransport = true;
-                        break;
+                if (options.CheckTransport)
+                {
+                    bool anyTransport = false;
+                    foreach (var household in house.Households)
+                    {
+                        if (household.ChargingStationSet != null || household.TravelRouteSet != null ||
+                            household.TransportationDeviceSet != null)
+                        {
+                            anyTransport = true;
+                            break;
+                        }
                     }
-                }
-                if (anyTransport) {
-                    foreach (var household in house.Households) {
-                        if (household.ChargingStationSet == null) {
-                            throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no charging station set.", house) ;
-                        }
-                        if (household.TravelRouteSet == null)
+                    if (anyTransport)
+                    {
+                        foreach (var household in house.Households)
                         {
-                            throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no travel route set.", house);
-                        }
-                        if (household.TransportationDeviceSet == null)
-                        {
-                            throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no transportation device set.", house);
+                            if (household.ChargingStationSet == null)
+                            {
+                                throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no charging station set.", house);
+                            }
+                            if (household.TravelRouteSet == null)
+                            {
+                                throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no travel route set.", house);
+                            }
+                            if (household.TransportationDeviceSet == null)
+                            {
+                                throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no transportation device set.", house);
+                            }
                         }
                     }
                 }
