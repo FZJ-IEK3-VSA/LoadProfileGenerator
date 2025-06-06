@@ -7,7 +7,6 @@ using CitySimulation.SimulationTargets;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
-using CalculationEngine.OnlineLogging;
 using System.Text.RegularExpressions;
 
 namespace CitySimulation.CityGeneration

@@ -56,6 +56,8 @@ namespace CitySimulation.Scenarios
             if (!File.Exists(personNumberFile))
                 throw new LPGException($"File with persons per house does not exist: {personNumberFile}");
             var personNumbers = AutomationUtili.ParseJsonFile<Dictionary<string, int>>(personNumberFile);
+            if (!TargetReferences.All(t => personNumbers.ContainsKey(t.Id)))
+                throw new LPGPBadParameterException($"Person number file does not contain all houses: {personNumberFile}");
 
             // order the houses descendingly by the number of persons
             var orderedTargets = TargetReferences.OrderByDescending(t => personNumbers[t.Id]);
