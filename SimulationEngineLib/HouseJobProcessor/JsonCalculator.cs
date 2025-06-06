@@ -48,7 +48,7 @@ namespace SimulationEngineLib.HouseJobProcessor
 
         /// <summary>
         /// Generates the CalcStartParameterSet out of the JsonCalcSpecification, checks parameters and fills missing parameters with defaults from the
-        /// CalcObject.
+        /// CalcObject. Missing values are also set in the passed JsonCalcSpecification object.
         /// </summary>
         /// <param name="sim">Simlator to read default values</param>
         /// <param name="calcSpec">The calculation specification to get parameters from</param>
@@ -193,6 +193,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="logFileName">name of the log file to write to</param>
         public static void InitLogger(DirectoryInfo resultDirectory, string logFileName = "Log.CommandlineCalculation.txt")
         {
+            resultDirectory.Create();
             Logger.SetLogFilePath(Path.Combine(resultDirectory.FullName, logFileName));
             Logger.LogToFile = true;
             Logger.Get().FlushExistingMessages();
@@ -311,18 +312,17 @@ namespace SimulationEngineLib.HouseJobProcessor
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             var calculationStartTime = DateTime.Now;
 
-            var resultDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
+            // create the CalcStartParameterSet containing all parameters for the calculation
+            var calcStartParameterSet = CreateCalcParametersFromCalcSpec(sim, jcs, calcObjectReference, _calculationProfiler);
+            calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
 
             // initialize logfile and log the calcspec
+            var resultDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
             InitLogger(resultDirectory);
             LogCalcSpec(jcs);
 
             // save settings to the database copy in the result directory
             SaveSettingsToDatabase(sim, jcs);
-
-            // create the CalcStartParameterSet containing all parameters for the calculation
-            var calcStartParameterSet = CreateCalcParametersFromCalcSpec(sim, jcs, calcObjectReference, _calculationProfiler);
-            calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
 
             // execute the simulation
             var cs = new CalcStarter(sim);
