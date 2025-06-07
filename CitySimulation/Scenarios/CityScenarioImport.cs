@@ -1,9 +1,9 @@
 ﻿using Automation;
 using Automation.ResultFiles;
-using Common;
-using Common.JSON;
 using CitySimulation.Scenarios;
 using CitySimulation.SimulationTargets;
+using Common;
+using Common.JSON;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
@@ -31,7 +31,7 @@ namespace CitySimulation.CityGeneration
             { "Sun", DayOfWeek.Sunday },
         };
 
-        public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath)
+        public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath, int numWorkers)
         {
             var inputDirectory = new DirectoryInfo(inputDirectoryPath);
             // read file calcspec.json; it is a HouseCreationAndCalculationJob object, but only calcspec
@@ -50,11 +50,12 @@ namespace CitySimulation.CityGeneration
                 Directory.CreateDirectory(resultDir);
                 Thread.Sleep(100);
             }
+            bool reuseDBs = CanUseExistingDatabases(resultDir, numWorkers);
 
             HouseGenerator houseGenerator = new();
 
             // check for existing files in the result directory
-            houseGenerator.CleanResultDirectoryBeforeSimulation(resultDir, false);
+            houseGenerator.CleanResultDirectoryBeforeSimulation(resultDir, false, reuseDBs);
 
             // copy DB file to result directory and open a connection to it
             var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
@@ -67,12 +68,24 @@ namespace CitySimulation.CityGeneration
             // save settings to the database copy in the result directory
             JsonCalculator.SaveSettingsToDatabase(sim, calcSpec);
 
-            // initialize an RNG to generate an individual seed for each simulation target
-            int seed = CalcParameters.GetActualRandomSeed(calcSpec.RandomSeed);
-            var random = new Random(seed);
+            Func<string, int> seedProvider;
+            if (reuseDBs)
+            {
+                // load the seed file and use the already defined seed for each house
+                string seedFile = Path.Combine(resultDir, Constants.HouseSeedMappingFile);
+                var seedsPerHouse = AutomationUtili.ParseJsonFile<Dictionary<string, int>>(seedFile);
+                seedProvider = id => seedsPerHouse[id];
+            }
+            else
+            {
+                // initialize an RNG to generate an individual seed for each simulation target
+                int seed = CalcParameters.GetActualRandomSeed(calcSpec.RandomSeed);
+                var random = new Random(seed);
+                seedProvider = _ => random.Next();
+            }
 
             // create house configs and POI configs from the files in the input directory
-            var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), random);
+            var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), seedProvider);
             var cityData = AutomationUtili.ParseJsonFile<CityData>(inputDirectory.CombineName("city.json"));
             var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key), entry.Value.LocationType));
 
@@ -168,14 +181,27 @@ namespace CitySimulation.CityGeneration
         /// each of them.
         /// </summary>
         /// <param name="directory">the subdirectory in the input directory containing the house configs</param>
+        /// <param name="seedProvider">a function to get the RNG seed for each house</param>
         /// <returns>all house configs from the directory</returns>
-        private static ICollection<ResidentialBuildingConfig> CollectHouseConfigs(string directory, Random random)
+        private static ICollection<ResidentialBuildingConfig> CollectHouseConfigs(string directory, Func<string, int> seedProvider)
         {
             var files = Directory.GetFiles(directory);
             // sort filenames to ensure that they are always in the same order
             Array.Sort(files);
             // return the result as a collection instead of an enumerable to avoid assigning different random values on each access
-            return [.. files.Select(f => new ResidentialBuildingConfig(Path.GetFileNameWithoutExtension(f), f, random.Next()))];
+            return [.. files.Select(f => CreateHouseConfig(f, seedProvider))];
+        }
+
+        /// <summary>
+        /// Create a single house config from a filepath, using a function to assign the RNG seed for this hosue.
+        /// </summary>
+        /// <param name="filepath">house config filepath</param>
+        /// <param name="seedProvider">function to get the RNG seed for the new house</param>
+        /// <returns>a new house config</returns>
+        private static ResidentialBuildingConfig CreateHouseConfig(string filepath, Func<string, int> seedProvider)
+        {
+            string id = Path.GetFileNameWithoutExtension(filepath);
+            return new ResidentialBuildingConfig(id, filepath, seedProvider(id));
         }
 
         /// <summary>
@@ -189,6 +215,35 @@ namespace CitySimulation.CityGeneration
             var seedDict = targets.ToDictionary(t => t.Id, t => t.Seed);
             var jsonString = JsonConvert.SerializeObject(seedDict, Formatting.Indented);
             File.WriteAllText(Path.Combine(resultDir, Constants.HouseSeedMappingFile), jsonString);
+        }
+
+        /// <summary>
+        /// Check whether there are existing database files from a previous city simulation that can be reused.
+        /// Does not check the file contents, only if a suitable number of files exists.
+        /// </summary>
+        /// <param name="resultDir">result directory of the simulation</param>
+        /// <param name="numWorkers">number of workers for the simulation</param>
+        /// <returns>true if database files exist and can be used, otherwhise false</returns>
+        /// <exception cref="LPGPBadParameterException">if files exist, but the number of workers does not match</exception>
+        private static bool CanUseExistingDatabases(string resultDir, int numWorkers)
+        {
+            var databaseDir = Path.Combine(resultDir, Constants.DataBaseDirectory);
+            var seedFile = Path.Combine(resultDir, Constants.HouseSeedMappingFile);
+            if (!Directory.Exists(databaseDir) || !File.Exists(seedFile))
+                return false; // no usable cached data exists, proceed as usual
+
+            // database directory and seed file exist already
+            var files = new DirectoryInfo(databaseDir).GetFiles("*.db3");
+            if (files.Length == 0)
+                return false; // database directory is empty, proceed without using existing files
+
+            if (files.Length != numWorkers)
+                throw new LPGPBadParameterException($"Starting a city simulation with {numWorkers} workers, but found {files.Length} existing database files. "
+                    + "The city simulation can only reuse existing databases when using the same number of workers. Please either start the simulation again with "
+                     + $"{numWorkers} or delete the existing database directory: {databaseDir}");
+
+            // reuse the existing databases to skip house generation from templates
+            return true;
         }
     }
 }

@@ -102,7 +102,7 @@ namespace CitySimulation
             if (rank == 0)
             {
                 // determine simulation targets
-                scenario = CityScenarioImport.ReadScenarioFromConfigDirectory(inputPath);
+                scenario = CityScenarioImport.ReadScenarioFromConfigDirectory(inputPath, numWorkers);
                 scenarioParts = scenario.GetScenarioParts(numWorkers);
                 int length = scenarioParts.Length;
                 if (length < numWorkers)
