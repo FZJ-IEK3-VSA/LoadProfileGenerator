@@ -48,7 +48,7 @@ namespace CitySimulation
             HouseGenerator houseGenerator = new();
 
             // create a DB copy for this worker and open a connection to it
-            var databaseDirectory = Path.Combine(baseResultDir, "Databases");
+            var databaseDirectory = Path.Combine(baseResultDir, Constants.DataBaseDirectory);
             sim = houseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, $"profilegenerator.worker_{rank}.db3");
 
             simulationTargets = new List<CitySimulationHouse>(scenarioPart.TargetReferences.Count);
@@ -58,7 +58,7 @@ namespace CitySimulation
             {
                 // create a separate subdirectory for each simulation target
                 string subdir = target.Id;
-                string resultDirectory = Path.Combine(baseResultDir, "Houses", subdir);
+                string resultDirectory = Path.Combine(baseResultDir, Constants.HousesDirectory, subdir);
                 Directory.CreateDirectory(resultDirectory);
 
                 // read house job file for this target

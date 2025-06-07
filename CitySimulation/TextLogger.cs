@@ -5,8 +5,7 @@ namespace CitySimulation
 {
     internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "", bool csvMode = false)
     {
-        public const string LOG_SUBDIR = "Logs";
-        private readonly string outputDirectory = Path.Combine(outputDirectory, LOG_SUBDIR, subdirectory);
+        private readonly string outputDirectory = Path.Combine(outputDirectory, Constants.CityLogDirectory, subdirectory);
         private readonly bool CsvMode = csvMode;
         private List<LogEntry> LogEntries = [];
 

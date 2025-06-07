@@ -78,6 +78,21 @@ namespace Common
         public const string CalculationProfilerJson = "CalculationProfiler.json";
 
         /// <summary>
+        /// Name of the directory containing all databases in a city simulation."
+        /// </summary>
+        public const string DataBaseDirectory = "Databases";
+
+        /// <summary>
+        /// Name of the directory containing the result directories for all houses.
+        /// </summary>
+        public const string HousesDirectory = "Houses";
+
+        /// <summary>
+        /// Name of the directory containing additional log files from the city simulation.
+        /// </summary>
+        public const string CityLogDirectory = "Logs";
+
+        /// <summary>
         /// Name of the file containing the random seed used for each house in a city simulation.
         /// </summary>
         public const string HouseSeedMappingFile = "HouseRNGSeeds.json";
