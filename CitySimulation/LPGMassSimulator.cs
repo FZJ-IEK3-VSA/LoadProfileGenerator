@@ -47,9 +47,22 @@ namespace CitySimulation
 
             HouseGenerator houseGenerator = new();
 
-            // create a DB copy for this worker and open a connection to it
+            // create a DB copy or load an existing one and open the DB connection
+            string dbFilename = $"profilegenerator.worker_{rank}.db3";
             var databaseDirectory = Path.Combine(baseResultDir, Constants.DataBaseDirectory);
-            sim = houseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, $"profilegenerator.worker_{rank}.db3");
+            var dbFilepath = Path.Combine(databaseDirectory, dbFilename);
+            bool reuseDB = File.Exists(dbFilepath);
+            if (reuseDB)
+            {
+                // load the existing database and reuse it
+                Logger.Info($"Reusing existing database file {dbFilename}");
+                sim = HouseGenerator.OpenDatabase(dbFilepath);
+            }
+            else
+            {
+                // create a database copy for this worker and open it
+                sim = houseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, dbFilename);
+            }
 
             simulationTargets = new List<CitySimulationHouse>(scenarioPart.TargetReferences.Count);
             var cmf = new CalcManagerFactory();
@@ -61,30 +74,19 @@ namespace CitySimulation
                 string resultDirectory = Path.Combine(baseResultDir, Constants.HousesDirectory, subdir);
                 Directory.CreateDirectory(resultDirectory);
 
-                // read house job file for this target
-                string houseJobStr = File.ReadAllText(target.ConfigFilePath).Trim(HouseGenerator.charsToTrim);
-                var hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr) ?? throw new LPGException("housejob was null");
-
-                // set the global Calcspec
-                hcj.CalcSpec = scenarioPart.CalcSpecification;
-
-                // copy information from the global city data object
-                if (hcj.City is null)
+                JsonReference calcObjectReference;
+                if (reuseDB)
                 {
-                    Logger.Info($"City object of house {target.Id} was null, using the global city data object with all POIs instead.");
-                    hcj.City = scenarioPart.CityData;
+                    var house = sim.Houses.FindFirstByName(target.Id) ?? throw new LPGPBadParameterException($"Trying to reuse existing database files, but house {target.Id} is missing. Please delete the database directory and start again.");
+                    calcObjectReference = house.GetJsonReference();
                 }
                 else
                 {
-                    // POIs are not copied, as each house already contains all relevant POIs for efficiency reasons
-                    hcj.City.TravelDefinition = scenarioPart.CityData.TravelDefinition;
+                    calcObjectReference = ReadAndGenerateHouse(scenarioPart, houseGenerator, target);
                 }
 
                 try
                 {
-                    // create the target house/household if necessary and get its JsonReference
-                    var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, new Random(target.Seed));
-
                     // create the CalcStartParameterSet containing all parameters for the calculation
                     var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
                     calcStartParameterSet.ResultPath = resultDirectory;
@@ -104,6 +106,48 @@ namespace CitySimulation
 
             // make the common CalcParameters accessible
             CalcParameters = simulationTargets[0].CalcManager.CalcRepo.CalcParameters;
+        }
+
+        /// <summary>
+        /// Reads a house config file and creates the respective house with its households. Uses the seed of the house config
+        /// for generating households from templates.
+        /// </summary>
+        /// <param name="scenarioPart">the scenario part for this worker</param>
+        /// <param name="houseGenerator">a house generator object to create the house</param>
+        /// <param name="target">the target config to process</param>
+        /// <returns>the JsonReference of the created house</returns>
+        /// <exception cref="LPGException">if the house job file was invalid</exception>
+        /// <exception cref="CitySimWrapperException">if there was an error during house generation</exception>
+        private JsonReference ReadAndGenerateHouse(ScenarioPart scenarioPart, HouseGenerator houseGenerator, ResidentialBuildingConfig target)
+        {
+            // read house job file for this target
+            string houseJobStr = File.ReadAllText(target.ConfigFilePath).Trim(HouseGenerator.charsToTrim);
+            var hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr) ?? throw new LPGPBadParameterException("housejob was null");
+
+            // set the global Calcspec
+            hcj.CalcSpec = scenarioPart.CalcSpecification;
+
+            // copy information from the global city data object
+            if (hcj.City is null)
+            {
+                Logger.Info($"City object of house {target.Id} was null, using the global city data object with all POIs instead.");
+                hcj.City = scenarioPart.CityData;
+            }
+            else
+            {
+                // POIs are not copied, as each house already contains all relevant POIs for efficiency reasons
+                hcj.City.TravelDefinition = scenarioPart.CityData.TravelDefinition;
+            }
+            try
+            {
+                // create the target house/household if necessary and get its JsonReference
+                var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, new Random(target.Seed));
+                return calcObjectReference;
+            }
+            catch (Exception ex)
+            {
+                throw new CitySimWrapperException(ex, rank, target.Id, "initialization (template generation)");
+            }
         }
 
         public void Init()

@@ -240,7 +240,7 @@ namespace CitySimulation.CityGeneration
             if (files.Length != numWorkers)
                 throw new LPGPBadParameterException($"Starting a city simulation with {numWorkers} workers, but found {files.Length} existing database files. "
                     + "The city simulation can only reuse existing databases when using the same number of workers. Please either start the simulation again with "
-                     + $"{numWorkers} or delete the existing database directory: {databaseDir}");
+                     + $"{numWorkers} workers or delete the existing database directory: {databaseDir}");
 
             // reuse the existing databases to skip house generation from templates
             return true;

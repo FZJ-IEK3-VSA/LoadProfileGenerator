@@ -280,6 +280,17 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
         /// <summary>
+        /// Opens a database and returns the corresponding Simulator object
+        /// </summary>
+        /// <param name="filepath">path of the database file</param>
+        /// <returns>Simulator object to work with the database</returns>
+        public static Simulator OpenDatabase(string filepath)
+        {
+            string dstConnectionString = "Data Source=" + filepath;
+            return new(dstConnectionString);
+        }
+
+        /// <summary>
         /// Copies the database to the result directory and opens it
         /// </summary>
         /// <param name="databasePath">path to the source database file</param>
@@ -294,16 +305,13 @@ namespace SimulationEngineLib.HouseJobProcessor
                 throw new LPGException("No db source path");
             if (!File.Exists(databasePath))
                 throw new LPGException("Could not find source database file: " + databasePath);
-            
+
             // create the target directory if it does not exist yet
             var targetDirectory = Directory.CreateDirectory(resultDirectory);
             resultDatabasePath = targetDirectory.CombineName(newfileName);
 
             File.Copy(databasePath, resultDatabasePath, true);
-            
-            string dstConnectionString = "Data Source=" + resultDatabasePath;
-            Simulator sim = new Simulator(dstConnectionString);
-            return sim;
+            return OpenDatabase(resultDatabasePath);
         }
 
         public void ProcessSingleHouseJob([NotNull] string houseJobFile)
