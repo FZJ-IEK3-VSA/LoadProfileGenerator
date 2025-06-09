@@ -87,9 +87,10 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="household">the ModularHousehold object</param>
         /// <param name="hj">the house job object</param>
         /// <param name="transportationDeviceSet">the transportation device set to use</param>
+        /// <param name="houseName">ID of the house</param>
         /// <returns> the new travel route set</returns>
         /// <exception cref="LPGPBadParameterException"></exception>
-        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj, TransportationDeviceSet transportationDeviceSet)
+        internal TravelRouteSet CreateTravelRouteSetFromPoiPreferences(HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj, TransportationDeviceSet transportationDeviceSet, string houseName)
         {
             if (householdData.PointOfInterestPreferences.IsNullOrEmpty())
                 throw new LPGPBadParameterException("Cannot create dynamic city routes without point of interest preferences for each person.");
@@ -110,7 +111,7 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             // create a new empty travel route set
             var travelRouteSet = sim.TravelRouteSets.CreateNewItem(sim.ConnectionString);
-            travelRouteSet.Name = $"Generated Travel Route Set for {householdData.Name}";
+            travelRouteSet.Name = $"Generated Travel Route Set for {houseName}.{householdData.Name}";
             travelRouteSet.Description = "This travel route set was generated using the point of interest preferences of all persons in this household.";
 
             foreach (var personPreference in householdData.PointOfInterestPreferences)
@@ -122,7 +123,8 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var relevantPOIs = LocationReplacements.Where(x => relevantLocations.Contains(x.Value.NewLocation)).Select(x => x.Key).ToHashSet();
                 relevantPOIs.Add(hj.House.Name);
 
-                AddRoutesForPerson(hj, travelRouteSet, relevantPOIs, hasCar, personName);
+                string hhId = $"{houseName}.{household.Name}";
+                AddRoutesForPerson(hj, travelRouteSet, relevantPOIs, hasCar, personName, hhId);
             }
             travelRouteSet.SaveToDB();
             return travelRouteSet;
@@ -201,7 +203,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
         private void AddRoutesForPerson(HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, HashSet<string> relevantPOIs,
-            bool hasCar, string personName = null)
+            bool hasCar, string personName = null, string hhId = null)
         {
             // use a single database connection to add all routes for a better performance
             using var con = new Database.Database.Connection(sim.ConnectionString);
@@ -209,7 +211,14 @@ namespace SimulationEngineLib.HouseJobProcessor
             using var tr = con.BeginTransaction();
 
             // determine the personId ID, if the routes are only for one person
-            int? personId = string.IsNullOrEmpty(personName) ? null : sim.Persons.FindFirstByNameNotNull(personName).IntID;
+            int? personId = null;
+            string personIdString = "";
+            if (!string.IsNullOrEmpty(personName))
+            {
+                personId = sim.Persons.FindFirstByNameNotNull(personName).IntID;
+                personIdString = string.IsNullOrEmpty(hhId) ? personName : $"{hhId}.{personName}";
+            }
+
             var houseId = hj.House.Name;
             // iterate through all routes in all RoutesForTimeSlot objects and identify the relevant ones
             foreach (var routesForOneTimeSlot in hj.City.TravelDefinition.TimeSlotRouteLists)
@@ -222,11 +231,11 @@ namespace SimulationEngineLib.HouseJobProcessor
                     var routeEndpoints = GetAllSiteCombinationsForRoute(relevantPOIs, routeData, hj.City.TravelDefinition.PoiClusterMapping);
                     foreach (var endpoints in routeEndpoints)
                     {
-                        CreateRoutesForOneOriginDestinatino(hj, travelRouteSet, hasCar, personName, personId, houseId, timeLimit, routeData, endpoints.Origin, endpoints.Destination, con);
+                        CreateRoutesForOneOriginDestination(hj, travelRouteSet, hasCar, personIdString, personId, houseId, timeLimit, routeData, endpoints.Origin, endpoints.Destination, con);
                         // if required, also create an identical route in the opposite direction
                         if (hj.City.TravelDefinition.MirrorRoutes)
                         {
-                            CreateRoutesForOneOriginDestinatino(hj, travelRouteSet, hasCar, personName, personId, houseId, timeLimit, routeData, endpoints.Destination, endpoints.Origin, con);
+                            CreateRoutesForOneOriginDestination(hj, travelRouteSet, hasCar, personIdString, personId, houseId, timeLimit, routeData, endpoints.Destination, endpoints.Origin, con);
                         }
                     }
                 }
@@ -248,7 +257,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="origin">actual starting point of the route</param>
         /// <param name="destination">actual destination point of the route</param>
         /// <param name="con">database connection to use for faster storage</param>
-        private void CreateRoutesForOneOriginDestinatino(HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, bool hasCar,
+        private void CreateRoutesForOneOriginDestination(HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, bool hasCar,
             string personName, int? personId, string houseId, TimeLimit timeLimit, RouteData routeData,
             string origin, string destination, Database.Database.Connection con)
         {

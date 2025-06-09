@@ -114,8 +114,9 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         /// <param name="household">the household whose traits should be replaced</param>
         /// <param name="travelPreferences">the POI preferences of all persons in the household</param>
+        /// <param name="houseName">ID of the house</param>
         /// <exception cref="LPGException">if travel preferences for a person are missing</exception>
-        internal void ReplaceTraitsInHousehold(ModularHousehold household, Dictionary<string, PersonPoiPreferences> travelPreferences)
+        internal void ReplaceTraitsInHousehold(ModularHousehold household, Dictionary<string, PersonPoiPreferences> travelPreferences, string houseName)
         {
             // create new adapted traits
             foreach (var person in household.Persons)
@@ -140,7 +141,8 @@ namespace SimulationEngineLib.HouseJobProcessor
                     // replace all traits that contain at least one of the locations to replace
                     if (originalTrait.Locations.Any(x => locationsToReplace.Contains(x.Location)))
                     {
-                        var newTrait = CreateReplacementTrait(originalTrait, locationsToReplace);
+                        string personId = $"{houseName}.{household.Name}.{person.Name}";
+                        var newTrait = CreateReplacementTrait(originalTrait, locationsToReplace, personId);
                         newTraits.Add(newTrait);
                         traitEntriesToDelete.Add(traitEntry);
                     }
@@ -166,12 +168,13 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         /// <param name="originalTrait">the original trait that will be replaced</param>
         /// <param name="locationsToReplace">a lookup object providing all weighted replacements for each location</param>
+        /// <param name="personId">unique ID of the person the new trait is for</param>
         /// <returns>a new trait that uses the new POI locations</returns>
-        private HouseholdTrait CreateReplacementTrait(HouseholdTrait originalTrait, ILookup<Location, WheightedPoiLocationReplacement> locationsToReplace)
+        private HouseholdTrait CreateReplacementTrait(HouseholdTrait originalTrait, ILookup<Location, WheightedPoiLocationReplacement> locationsToReplace, string personId)
         {
             // create the new trait
             var newTrait = originalTrait.MakeCopy(sim);
-            newTrait.Name = originalTrait.Name + " - adapted for CitySimulation";
+            newTrait.Name = $"{originalTrait.Name} for {personId}";
             newTrait.Description = $"Automatically generated as a copy of trait {originalTrait.Name}, but with new POI locations";
             // this trait should not be used when generating other households from templates
             newTrait.CanBeUsedForNewHouseholds = false;

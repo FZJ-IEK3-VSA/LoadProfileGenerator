@@ -49,8 +49,8 @@ namespace CitySimulation
             string dbFilename = $"profilegenerator.worker_{rank}.db3";
             var databaseDirectory = Path.Combine(baseResultDir, Constants.DataBaseDirectory);
             var dbFilepath = Path.Combine(databaseDirectory, dbFilename);
-            bool reuseDB = File.Exists(dbFilepath);
-            if (reuseDB)
+            // check if the database file already exists
+            if (File.Exists(dbFilepath))
             {
                 // load the existing database and reuse it
                 Logger.Info($"Reusing existing database file {dbFilename}");

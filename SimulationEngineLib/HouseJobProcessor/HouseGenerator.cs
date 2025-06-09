@@ -512,14 +512,14 @@ namespace SimulationEngineLib.HouseJobProcessor
                     // replace locations in all traits with new POI locations
                     if (householdData.PointOfInterestPreferences is null)
                         throw new LPGException($"No person travel preferences specified for household #{householdidx}");
-                    poiTraitReplacer.ReplaceTraitsInHousehold(hhs, householdData.PointOfInterestPreferences);
+                    poiTraitReplacer.ReplaceTraitsInHousehold(hhs, householdData.PointOfInterestPreferences, house.Name);
                 }
 
                 // get or create all transportation objects, if required
                 bool transportEnabled = hj.CalcSpec.EnableTransportation;
                 var chargingStationSet = sim.ChargingStationSets.FindWithException(householdData.ChargingStationSet, !transportEnabled);
                 var transportationDeviceSet = sim.TransportationDeviceSets.FindWithException(householdData.TransportationDeviceSet, !transportEnabled);
-                var travelRouteSet = transportEnabled ? DetermineTravelRouteSet(sim, householdData, hhs, hj, poiTraitReplacer?.LocationReplacements, transportationDeviceSet) : null;
+                var travelRouteSet = transportEnabled ? DetermineTravelRouteSet(sim, householdData, hhs, hj, house.Name, poiTraitReplacer?.LocationReplacements, transportationDeviceSet) : null;
 
                 // check if the distances in the travel route set should be modified
                 if (!householdData.TransportationDistanceModifiers.IsNullOrEmpty() && travelRouteSet is not null)
@@ -540,7 +540,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
 
-        private static TravelRouteSet DetermineTravelRouteSet(Simulator sim, HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj,
+        private static TravelRouteSet DetermineTravelRouteSet(Simulator sim, HouseholdData householdData, ModularHousehold household, HouseCreationAndCalculationJob hj, string houseName,
             IReadOnlyDictionary<string, PoiLocationReplacement>? locationReplacements = null, TransportationDeviceSet transportationDeviceSet = null)
         {
             // there are multiple ways how traveling behavior can be specified in the calcspe; check if only exactly one is used
@@ -564,7 +564,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             } else if (poiPreferencesGiven)
             {
                 var travelRouteSetBuilder = new TravelRouteSetBuilderCity(sim, locationReplacements);
-                travelrouteset = travelRouteSetBuilder.CreateTravelRouteSetFromPoiPreferences(householdData, household, hj, transportationDeviceSet);
+                travelrouteset = travelRouteSetBuilder.CreateTravelRouteSetFromPoiPreferences(householdData, household, hj, transportationDeviceSet, houseName);
             }
             else if (travelPreferencesGiven)
             {
