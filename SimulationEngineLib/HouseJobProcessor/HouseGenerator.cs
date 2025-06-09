@@ -241,7 +241,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="resultDirectory">the result directory to clean up</param>
         /// <param name="keepLogsAndDBFiles">if true, log files and .db3 files are not deleted</param>
         /// <param name="reuseCitySimFiles">if true, keeps the Databases directory and seeds file from the city simulation so they can be reused</param>
-        public void CleanResultDirectoryBeforeSimulation(string resultDirectory, bool keepLogsAndDBFiles = true, bool reuseCitySimFiles = false)
+        public static void CleanResultDirectoryBeforeSimulation(string resultDirectory, bool keepLogsAndDBFiles = true, bool reuseCitySimFiles = false)
         {
             var resultDir = new DirectoryInfo(resultDirectory);
             if (Directory.Exists(resultDir.FullName))
@@ -299,7 +299,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="newfileName">name of the new database file</param>
         /// <returns>database access object</returns>
         /// <exception cref="LPGException">if the source database path was invalid</exception>
-        public Simulator CopyAndOpenDatabase(string? databasePath, string resultDirectory, out string resultDatabasePath, string newfileName = "profilegenerator.copy.db3")
+        public static Simulator CopyAndOpenDatabase(string? databasePath, string resultDirectory, out string resultDatabasePath, string newfileName = "profilegenerator.copy.db3")
         {
             if (databasePath.IsNullOrEmpty())
                 throw new LPGException("No db source path");

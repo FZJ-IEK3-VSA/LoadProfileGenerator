@@ -52,13 +52,11 @@ namespace CitySimulation.CityGeneration
             }
             bool reuseDBs = CanUseExistingDatabases(resultDir, numWorkers);
 
-            HouseGenerator houseGenerator = new();
-
             // check for existing files in the result directory
-            houseGenerator.CleanResultDirectoryBeforeSimulation(resultDir, false, reuseDBs);
+            HouseGenerator.CleanResultDirectoryBeforeSimulation(resultDir, false, reuseDBs);
 
             // copy DB file to result directory and open a connection to it
-            var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
+            var sim = HouseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
             string fullDbPath = Path.GetFullPath(hcj.PathToDatabase!);
             Logger.Info("Using database file: " + fullDbPath);
 

@@ -45,8 +45,6 @@ namespace CitySimulation
             Logger.Get().StartCollectingAllMessages();
             JsonCalculator.LogCalcSpec(scenarioPart.CalcSpecification);
 
-            HouseGenerator houseGenerator = new();
-
             // create a DB copy or load an existing one and open the DB connection
             string dbFilename = $"profilegenerator.worker_{rank}.db3";
             var databaseDirectory = Path.Combine(baseResultDir, Constants.DataBaseDirectory);
@@ -61,64 +59,39 @@ namespace CitySimulation
             else
             {
                 // create a database copy for this worker and open it
-                sim = houseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, dbFilename);
+                sim = HouseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, dbFilename);
+                // generate all houses according to the config files
+                GenerateHouses();
             }
 
-            simulationTargets = new List<CitySimulationHouse>(scenarioPart.TargetReferences.Count);
-            var cmf = new CalcManagerFactory();
-
-            foreach (var target in scenarioPart.TargetReferences)
-            {
-                // create a separate subdirectory for each simulation target
-                string subdir = target.Id;
-                string resultDirectory = Path.Combine(baseResultDir, Constants.HousesDirectory, subdir);
-                Directory.CreateDirectory(resultDirectory);
-
-                JsonReference calcObjectReference;
-                if (reuseDB)
-                {
-                    var house = sim.Houses.FindFirstByName(target.Id) ?? throw new LPGPBadParameterException($"Trying to reuse existing database files, but house {target.Id} is missing. Please delete the database directory and start again.");
-                    calcObjectReference = house.GetJsonReference();
-                }
-                else
-                {
-                    calcObjectReference = ReadAndGenerateHouse(scenarioPart, houseGenerator, target);
-                }
-
-                try
-                {
-                    // create the CalcStartParameterSet containing all parameters for the calculation
-                    var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
-                    calcStartParameterSet.ResultPath = resultDirectory;
-
-                    // create a unique random seed for this target
-                    calcStartParameterSet.SelectedRandomSeed = target.Seed;
-
-                    // create a calcManager for each household
-                    var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
-                    simulationTargets.Add(new CitySimulationHouse(target.Id, calcManager, resultDirectory));
-                }
-                catch (Exception ex)
-                {
-                    throw new CitySimWrapperException(ex, rank, target.Id, "initialization");
-                }
-            }
+            simulationTargets = PrepareHousesForSimulation(baseResultDir, rank);
 
             // make the common CalcParameters accessible
             CalcParameters = simulationTargets[0].CalcManager.CalcRepo.CalcParameters;
         }
 
         /// <summary>
+        /// Generates all houses for this LPG simulator from the house config files.
+        /// </summary>
+        private void GenerateHouses()
+        {
+            HouseGenerator houseGenerator = new();
+            foreach (var target in scenarioPart.TargetReferences)
+            {
+                ReadAndGenerateHouse(target, houseGenerator);
+            }
+        }
+
+        /// <summary>
         /// Reads a house config file and creates the respective house with its households. Uses the seed of the house config
         /// for generating households from templates.
         /// </summary>
-        /// <param name="scenarioPart">the scenario part for this worker</param>
-        /// <param name="houseGenerator">a house generator object to create the house</param>
         /// <param name="target">the target config to process</param>
+        /// <param name="houseGenerator">a house generator object to create the house</param>
         /// <returns>the JsonReference of the created house</returns>
         /// <exception cref="LPGException">if the house job file was invalid</exception>
         /// <exception cref="CitySimWrapperException">if there was an error during house generation</exception>
-        private JsonReference ReadAndGenerateHouse(ScenarioPart scenarioPart, HouseGenerator houseGenerator, ResidentialBuildingConfig target)
+        private JsonReference ReadAndGenerateHouse(ResidentialBuildingConfig target, HouseGenerator houseGenerator)
         {
             // read house job file for this target
             string houseJobStr = File.ReadAllText(target.ConfigFilePath).Trim(HouseGenerator.charsToTrim);
@@ -148,6 +121,52 @@ namespace CitySimulation
             {
                 throw new CitySimWrapperException(ex, rank, target.Id, "initialization (template generation)");
             }
+        }
+
+        /// <summary>
+        /// Prepares the already generated houses for simulation by setting up the required LPG calculation objects,
+        /// and returns the house objects for simulation.
+        /// </summary>
+        /// <param name="baseResultDir">base result directory for the simulation</param>
+        /// <param name="rank">rank of the MPI worker</param>
+        /// <returns>list of house objects for simulation</returns>
+        /// <exception cref="LPGPBadParameterException">if a required house was missing in the database</exception>
+        /// <exception cref="CitySimWrapperException">if an error occurred during preparation of a house</exception>
+        private List<CitySimulationHouse> PrepareHousesForSimulation(string baseResultDir, int rank)
+        {
+            var simulationTargets = new List<CitySimulationHouse>(scenarioPart.TargetReferences.Count);
+            var cmf = new CalcManagerFactory();
+
+            foreach (var target in scenarioPart.TargetReferences)
+            {
+                // create a separate subdirectory for each simulation target
+                string subdir = target.Id;
+                string houseResultDir = Path.Combine(baseResultDir, Constants.HousesDirectory, subdir);
+                Directory.CreateDirectory(houseResultDir);
+
+                // get the JsonReference for the generated house
+                var house = sim.Houses.FindFirstByName(target.Id) ?? throw new LPGPBadParameterException($"House {target.Id} is missing. If reusing existing databases, please delete the database directory and start again.");
+                var calcObjectReference = house.GetJsonReference();
+
+                try
+                {
+                    // create the CalcStartParameterSet containing all parameters for the calculation
+                    var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
+                    calcStartParameterSet.ResultPath = houseResultDir;
+
+                    // create a unique random seed for this target
+                    calcStartParameterSet.SelectedRandomSeed = target.Seed;
+
+                    // create a calcManager for each household
+                    var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
+                    simulationTargets.Add(new CitySimulationHouse(target.Id, calcManager, houseResultDir));
+                }
+                catch (Exception ex)
+                {
+                    throw new CitySimWrapperException(ex, rank, target.Id, "initialization");
+                }
+            }
+            return simulationTargets;
         }
 
         public void Init()
