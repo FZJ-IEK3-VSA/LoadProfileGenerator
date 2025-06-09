@@ -1,7 +1,5 @@
 ﻿#nullable enable
 
-using System.Collections.Generic;
-using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Database;
@@ -10,6 +8,8 @@ using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
 using PowerArgs;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -77,21 +77,33 @@ namespace SimulationEngineLib.HouseJobProcessor
             {
                 var poiId = entry.Key;
                 var referenceLocation = sim.Locations.FindWithException(entry.Value.LocationType);
+
+                // check if the new location already exists
+                string newLocationName = $"{referenceLocation.Name} ({poiId})";
+                var location = sim.Locations.FindFirstByName(newLocationName);
+                Site site;
+                if (location is not null)
+                {
+                    // site and location were already created before
+                    site = sim.Sites.FindFirstByNameNotNull(poiId);
+                } else
+                {
+
+                    // create and add the new location
+                    location = sim.Locations.CreateNewItem(sim.ConnectionString);
+                    location.Name = newLocationName;
+                    location.SaveToDB();
+
+                    // create a new site that only contains the new location
+                    site = sim.Sites.CreateNewItem(sim.ConnectionString);
+                    site.Name = poiId;
+                    site.Description = "Generated site for a single point of interest";
+                    site.DeviceChangeAllowed = false;
+                    site.AddLocation(location);
+                    site.SaveToDB();
+                }
+                
                 var timelimit = sim.TimeLimits.FindWithException(entry.Value.TimeLimit, true);
-
-                // create and add the new location
-                var location = sim.Locations.CreateNewItem(sim.ConnectionString);
-                location.Name = $"{referenceLocation.Name} ({poiId})";
-                location.SaveToDB();
-
-                // create a new site that only contains the new location
-                var site = sim.Sites.CreateNewItem(sim.ConnectionString);
-                site.Name = poiId;
-                site.Description = "Generated site for a single point of interest";
-                site.DeviceChangeAllowed = false;
-                site.AddLocation(location);
-                site.SaveToDB();
-
                 locationReplacements[poiId] = new PoiLocationReplacement(entry.Key, referenceLocation, location, site, timelimit);
             }
             return locationReplacements;
