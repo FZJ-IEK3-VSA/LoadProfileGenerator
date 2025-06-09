@@ -629,7 +629,8 @@ namespace Database {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        private void LoadFromDB(bool ignoreMissingTables) {
+        private void LoadFromDB(bool ignoreMissingTables)
+        {
             DBBase.IsLoading = true;
             DBBase.TypesThatMadeGuids.Clear();
             DBBase.GuidCreationCount = 0;
@@ -638,24 +639,29 @@ namespace Database {
             var start = DateTime.Now;
             var startLoading = DateTime.Now;
             var list = GetLoadingActions(ignoreMissingTables);
-            foreach (var loadingAction in list) {
+            foreach (var loadingAction in list)
+            {
                 DataReader.TotalReads = 0;
                 var prevguidCreationCount = DBBase.GuidCreationCount;
                 loadingAction.Action.Invoke();
                 var afterGuidCreationcount = DBBase.GuidCreationCount;
                 int newGuids = afterGuidCreationcount - prevguidCreationCount;
                 var guidscreatedstring = "";
-                if(newGuids > 0) {
+                if (newGuids > 0)
+                {
                     guidscreatedstring = ", " + newGuids + " Guids created";
                 }
 
                 LogLoadingProgress(ref start, ref step,
-                    loadingAction.Name + " (" + DataReader.TotalReads + " database reads"+guidscreatedstring+") ");
-                if (loadingAction.CategoryDBBase != null) {
+                    loadingAction.Name + " (" + DataReader.TotalReads + " database reads" + guidscreatedstring + ") ");
+                if (loadingAction.CategoryDBBase != null)
+                {
                     loadingAction.CategoryDBBase.LoadingNumber = step;
                 }
-                else {
-                    if (loadingAction.Name != "Settings") {
+                else
+                {
+                    if (loadingAction.Name != "Settings")
+                    {
                         throw new LPGException("No loading number assigned to " + loadingAction.Name);
                     }
                 }
@@ -663,38 +669,58 @@ namespace Database {
             Logger.Info("Total Loading Time:" +
                         (DateTime.Now - startLoading).TotalSeconds.ToString("0.000", CultureInfo.CurrentCulture) +
                         " seconds");
-            if (!ignoreMissingTables) {
-                foreach (string typesThatMadeGuid in DBBase.TypesThatMadeGuids) {
+            if (!ignoreMissingTables)
+            {
+                foreach (string typesThatMadeGuid in DBBase.TypesThatMadeGuids)
+                {
                     Logger.Info("Made Guids in: " + typesThatMadeGuid);
                     if (typesThatMadeGuid.Contains("SingleSetting.LoadFromDatabase") ||
-                        typesThatMadeGuid.Contains("SingleOption.LoadFromDatabase")) {
+                        typesThatMadeGuid.Contains("SingleOption.LoadFromDatabase"))
+                    {
                         MyGeneralConfig.SaveEverything();
                     }
                 }
             }
 
-            foreach (var category in Categories) {
+            FixDuplicateNames(ignoreMissingTables);
+            DBBase.IsLoading = false;
+        }
+
+        /// <summary>
+        /// Checks for elements with the same name and assigns new names. The new names are
+        /// stored in the database file, but currently not updated in the loaded collections.
+        /// Therefore, to get the updated names, the database needs to be reopened.
+        /// </summary>
+        /// <param name="ignoreMissingTables">whether to ignore missing tables</param>
+        private void FixDuplicateNames(bool ignoreMissingTables)
+        {
+            foreach (var category in Categories)
+            {
                 var thisType = category.GetType();
                 if (thisType.Name.Contains("CategoryDBBase") || thisType.Name.Contains("CategoryDeviceCategory") ||
-                    thisType.Name.Contains("CategorySettlement") || thisType.Name.Contains("CategoryAffordance")) {
+                    thisType.Name.Contains("CategorySettlement") || thisType.Name.Contains("CategoryAffordance"))
+                {
                     dynamic d = category;
                     var saveToDB = !ignoreMissingTables;
                     d.CheckForDuplicateNames(saveToDB);
-                    if (!ignoreMissingTables && DBBase.GuidCreationCount > 0) {
+                    if (!ignoreMissingTables && DBBase.GuidCreationCount > 0)
+                    {
                         d.SaveEverything();
                     }
-                }else if (thisType.Name.Contains("CategoryOutcome")) {
+                }
+                else if (thisType.Name.Contains("CategoryOutcome"))
+                {
                     if (!ignoreMissingTables && DBBase.GuidCreationCount > 0)
                     {
                         dynamic d = category;
                         d.SaveEverything();
                     }
                 }
-                else {
+                else
+                {
                     Logger.Info(category?.ToString() ?? "No message");
                 }
             }
-            DBBase.IsLoading = false;
         }
 
         private static void LogLoadingProgress(ref DateTime lasttime, ref int step, [JetBrains.Annotations.NotNull] string description) {
