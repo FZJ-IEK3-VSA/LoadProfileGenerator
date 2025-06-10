@@ -59,9 +59,13 @@ namespace CitySimulation
             else
             {
                 // create a database copy for this worker and open it
+                Logger.Info($"No reusable database found. Creating a new one: {dbFilename}");
                 sim = HouseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, dbFilename);
                 // generate all houses according to the config files
                 GenerateHouses();
+
+                // TODO: reopening the database is necessary to ensure same results as when cached DBs are reused
+                sim = HouseGenerator.OpenDatabase(dbFilepath);
             }
 
             simulationTargets = PrepareHousesForSimulation(baseResultDir, rank);
