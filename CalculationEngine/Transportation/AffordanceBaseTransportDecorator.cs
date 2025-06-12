@@ -71,8 +71,14 @@ namespace CalculationEngine.Transportation
             }
 
             // get the travel route determined and stored in the last IsBusy call
-            if (!SelectedRoutes.TryGetValue(activator.Name, out var routeEntry) || routeEntry.PreviouslySelectedRoute is null)
-                throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
+            if (!SelectedRoutes.TryGetValue(activator.Name, out var routeEntry))
+                throw new LPGException("Trying to activate without first checking if the affordance is busy is a bug. Please report.");
+            if (routeEntry.PreviouslySelectedRoute is null)
+            {
+                // IsBusy was run and determined that no route was available, so the affordance is not available. Trying to activate it anyways
+                // should never happen and is a bug.
+                throw new LPGException("Trying to activate an affordance although no route was available.");
+            }
             CalcTravelRoute route = routeEntry.PreviouslySelectedRoute;
 
             // determine the arrival time at the target location
@@ -171,7 +177,8 @@ namespace CalculationEngine.Transportation
         public List<DeviceEnergyProfileTuple> Energyprofiles => SourceAffordance.Energyprofiles;
 
         /// <summary>
-        /// Class for storing a selected route. A selected route is only valid for the specified
+        /// Class for storing a selected route. A selected route is only valid for the specified starting timestep, and only
+        /// for a single person (the person it was selected for).
         /// </summary>
         /// <param name="validStartTimeForRoute">the timestep for which the route was selected</param>
         /// <param name="route">the selected route, or null if no route was found</param>

@@ -265,7 +265,8 @@ namespace CalculationController.Tests.Transportation {
                     using (var scope = container.BeginLifetimeScope()) {
                         var hhdtofac = scope.Resolve<CalcModularHouseholdDtoFactory>();
 
-                        var tds = sim.TransportationDeviceSets[0];
+                        // currently all predefined travel routes sets are for cars, so select a transportation device set with cars
+                        var tds = sim.TransportationDeviceSets.Items.First(set => !set.Name.ToLower().Contains("no car"));
                         tds.SaveToDB();
                         var trs = sim.TravelRouteSets[0];
                         trs.SaveToDB();
