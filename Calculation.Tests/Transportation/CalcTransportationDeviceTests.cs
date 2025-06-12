@@ -106,6 +106,8 @@ namespace Calculation.Tests.Transportation
                 ctd.Currentsite.Should().BeNull();
             }
 
+            ctd.FinishTravel(new TimeStep(10, 0, false), dstSite);
+
             //no charging
             ctd.AvailableRangeInMeters.Should().Be(10000 - 10 * 60 * 10); //10m/s = 600m/minute
             Logger.Info("currentSite:" + ctd.Currentsite?.Name);
