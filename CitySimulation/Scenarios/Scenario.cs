@@ -36,7 +36,7 @@ namespace CitySimulation.Scenarios
             // distribute the POIs evenly
             var poiSublists = PointsOfInterest.Split(numberOfParts);
 
-            var poiRegister = BuildPointOfInterestRegister(numberOfParts, poiSublists);
+            var poiRegister = BuildPointOfInterestRegister(poiSublists);
 
             // create the list of scenario part objects, each with its own share of households and POIs
             var parts = targetSublists.ZipLongest(poiSublists, [], []).Select(listPair => new ScenarioPart(listPair.Item1.ToList(), listPair.Item2.ToList(), DatabasePath, CalcSpecification, poiRegister, CityData));
@@ -76,7 +76,7 @@ namespace CitySimulation.Scenarios
             return targetSublists;
         }
 
-        private PointOfInterestRegister BuildPointOfInterestRegister(int numberOfWorkers, IEnumerable<IEnumerable<PointOfInterestConfig>> poiSublists)
+        private PointOfInterestRegister BuildPointOfInterestRegister(IEnumerable<IEnumerable<PointOfInterestConfig>> poiSublists)
         {
             Dictionary<string, int> poiMapping = [];
             int workerId = 0;

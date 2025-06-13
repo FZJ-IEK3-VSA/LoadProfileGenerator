@@ -24,7 +24,7 @@ namespace CitySimulation.Simulators
             this.calcSpec = calcSpec;
             var filename = $"Worker{WorkerId}.txt";
             logger = new(filename, calcSpec.OutputDirectory, "travel_events");
-            presenceLogger = new(filename, calcSpec.OutputDirectory, "traveling_persons", true);
+            presenceLogger = new(filename, calcSpec.OutputDirectory, "traveling_persons", true, "People traveling");
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)

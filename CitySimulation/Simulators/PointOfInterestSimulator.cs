@@ -25,7 +25,7 @@ namespace CitySimulation.Simulators
             this.calcSpec = calcSpec;
             var filename = $"{PoiId.Id}.txt";
             logger = new(filename, calcSpec.OutputDirectory, "poi_events");
-            presenceLogger = new(filename, calcSpec.OutputDirectory, "poi_presence", true);
+            presenceLogger = new(filename, calcSpec.OutputDirectory, "poi_presence", true, "People present");
         }
 
         public virtual IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)

@@ -3,19 +3,36 @@ using System.Text;
 
 namespace CitySimulation
 {
-    internal class TextLogger(string fileName, string outputDirectory, string subdirectory = "", bool csvMode = false)
+    internal class TextLogger
     {
-        private readonly string outputDirectory = Path.Combine(outputDirectory, Constants.CityLogDirectory, subdirectory);
-        private readonly bool CsvMode = csvMode;
-        private List<LogEntry> LogEntries = [];
+        private readonly bool csvMode;
+        private List<LogEntry> logEntries = [];
 
         private int lastWrittenEntry = 0;
         private string lastPrefix = "";
-        public string Filename { get; } = fileName;
+
+        public TextLogger(string fileName, string outputDirectory, string subdirectory = "", bool csvMode = false, string contentTitle = "Message")
+        {
+            var outputSubDirectory = Path.Combine(outputDirectory, Constants.CityLogDirectory, subdirectory);
+            Directory.CreateDirectory(outputSubDirectory);
+            this.csvMode = csvMode;
+            Filename = fileName;
+            Filepath = Path.Combine(outputSubDirectory, Filename);
+
+            if (this.csvMode)
+            {
+                // write a header line
+                var line = $"Index,Datetime,{contentTitle}{Environment.NewLine}";
+                File.AppendAllText(Filepath, line);
+            }
+        }
+
+        public string Filename { get; }
+        public string Filepath { get; }
 
         public void Log(TimeStep timestep, DateTime dateTime, string message)
         {
-            LogEntries.Add(new(timestep, dateTime, message));
+            logEntries.Add(new(timestep, dateTime, message));
             WriteToFile();
         }
 
@@ -24,14 +41,12 @@ namespace CitySimulation
         /// </summary>
         public void WriteToFile()
         {
-            Directory.CreateDirectory(outputDirectory);
-            var logfilePath = Path.Combine(outputDirectory, Filename);
             StringBuilder logMessage = new();
-            foreach (LogEntry entry in LogEntries.Skip(lastWrittenEntry))
+            foreach (LogEntry entry in logEntries.Skip(lastWrittenEntry))
             {
                 string dateString = entry.DateTime.ToString("O");
                 string linePrefix;
-                if (CsvMode)
+                if (csvMode)
                 {
                     // csv file mode: log comma-separated values without additional whitespace
                     linePrefix = $"{entry.Timestep.InternalStep},{dateString},";
@@ -47,10 +62,10 @@ namespace CitySimulation
                 lastPrefix = linePrefix;
             }
             // append new entries to the log file
-            File.AppendAllText(logfilePath, logMessage.ToString());
+            File.AppendAllText(Filepath, logMessage.ToString());
 
             // save which entries have been logged already
-            lastWrittenEntry = LogEntries.Count;
+            lastWrittenEntry = logEntries.Count;
         }
     }
 
