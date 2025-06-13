@@ -346,9 +346,12 @@ namespace Database.Tables.ModularHouseholds
         }
 
         /// <summary>
-        /// Specifies if this trait can be assigned to a new household
-        /// when generating it from a household template.
+        /// Specifies whether this trait can be assigned to new households
+        /// when generating from a template. This is required in the city simulation
+        /// import to avoid reusing specific traits that were created for one specific
+        /// household only.
         /// </summary>
+        [IgnoreForJsonSync]
         public bool CanBeUsedForNewHouseholds
         {
             get => _canBeUsedForNewHousehold;
@@ -1120,6 +1123,12 @@ namespace Database.Tables.ModularHouseholds
             return hh;
         }
 
+        /// <summary>
+        /// Synchronizes this trait object with the properties of the given JsonDto trait object. This is done to import
+        /// new or changed traits from JSON.
+        /// </summary>
+        /// <param name="json">the JSON trait definition to synchronize with</param>
+        /// <param name="sim"></param>
         public void ImportFromJsonObject([JetBrains.Annotations.NotNull] JsonDto json, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var checkedProperties = new List<string>();
