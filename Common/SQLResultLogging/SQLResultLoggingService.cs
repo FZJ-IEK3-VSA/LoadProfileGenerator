@@ -433,6 +433,7 @@ namespace Common.SQLResultLogging {
             if (fi.Directory?.Exists != true) {
                 throw new LPGException("Directory does not exist.");
             }
+            // create a new database file if necessary
             string connectionString = MakeconnectionString(fi.FullName);
             using (SQLiteConnection dbcon = new SQLiteConnection(connectionString)) {
                 dbcon.Open();
