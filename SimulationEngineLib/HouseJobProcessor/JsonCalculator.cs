@@ -76,11 +76,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             // check if all required parameters are set and valid, or else choose default values
             if (calcSpec.OutputDirectory == null)
             {
-                calcSpec.OutputDirectory = AutomationUtili.CleanFileName(calcObject.Name) + " - " + calcObject;
-                if (calcSpec.OutputDirectory.Length > 50)
-                {
-                    calcSpec.OutputDirectory = calcSpec.OutputDirectory.Substring(0, 50);
-                }
+                calcSpec.OutputDirectory = SelectDefaultResultDirectory(calcObject);
             }
 
             var energyIntensity = calcSpec.EnergyIntensityType;
@@ -157,6 +153,25 @@ namespace SimulationEngineLib.HouseJobProcessor
                 calcSpec.EnableFlexibility,
                 citySimulationEnabled: citySimulationEnabled
             );
+        }
+
+        /// <summary>
+        /// Choose a default result directory in case none was specified.
+        /// The directory is a subdirectory within the current working directory, with its name
+        /// based on the CalcObject.
+        /// </summary>
+        /// <param name="calcObject">the object to simulate</param>
+        /// <returns>the path for the result directory</returns>
+        private static string SelectDefaultResultDirectory(ICalcObject calcObject)
+        {
+            var resultPath = AutomationUtili.CleanFileName(calcObject.Name) + " - " + calcObject;
+            if (resultPath.Length > 50)
+            {
+                resultPath = resultPath[..50];
+            }
+            var resultDir = new DirectoryInfo(resultPath);
+            // The system might automatically adapt illegal paths, e.g., with a trailing dot. Make sure to save the actual path.
+            return resultDir.FullName;
         }
 
         /// <summary>
