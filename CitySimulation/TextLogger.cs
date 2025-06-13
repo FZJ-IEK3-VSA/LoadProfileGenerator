@@ -22,7 +22,7 @@ namespace CitySimulation
             if (this.csvMode)
             {
                 // write a header line
-                var line = $"Index,Datetime,{contentTitle}{Environment.NewLine}";
+                var line = $"Timestep,Datetime,{contentTitle}{Environment.NewLine}";
                 File.AppendAllText(Filepath, line);
             }
         }
