@@ -84,6 +84,7 @@ namespace CitySimulation
             {
                 ReadAndGenerateHouse(target, houseGenerator);
             }
+            Logger.Info("Finished generating all houses");
         }
 
         /// <summary>
