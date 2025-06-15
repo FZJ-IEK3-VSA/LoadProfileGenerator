@@ -61,6 +61,12 @@ namespace Common
         public const string TakingAVacationString = "taking a vacation";
 
         /// <summary>
+        /// Specifies how many times opening a DB file will be attempted before aborting,
+        /// if the database is locked or otherwise temporarily unavailable.
+        /// </summary>
+        public const int MaxDbOpenAttempts = 5;
+
+        /// <summary>
         /// The name of the site referring to the home of the simulated persons.
         /// </summary>
         public const string HomeSiteName = "Home";

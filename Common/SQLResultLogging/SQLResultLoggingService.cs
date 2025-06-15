@@ -9,6 +9,7 @@ using Automation.ResultFiles;
 using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace Common.SQLResultLogging {
     /*public interface ITypeDescriber {
@@ -317,19 +318,24 @@ namespace Common.SQLResultLogging {
             parameters = parameters.Substring(0, parameters.Length - 1);
             sql += fields + ") VALUES (" + parameters + ")";
             string dstFileName = GetFilenameForHouseholdKey(householdKey);
-            using (System.Data.SQLite.SQLiteConnection conn =
-                new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3;Synchronous=OFF;Journal Mode=WAL;")) {
-                conn.Open();
-                using (var transaction = conn.BeginTransaction()) {
+            using (SQLiteConnection conn =
+                new SQLiteConnection("Data Source=" + dstFileName + ";Version=3;Synchronous=OFF;Journal Mode=WAL;"))
+            {
+                AttemptToOpenDBConnection(conn);
+                using (var transaction = conn.BeginTransaction())
+                {
                     var command = conn.CreateCommand();
                     command.CommandText = sql;
-                    foreach (Dictionary<string, object> row in values) {
-                        if (row.Count != values[0].Count) {
+                    foreach (Dictionary<string, object> row in values)
+                    {
+                        if (row.Count != values[0].Count)
+                        {
                             throw new LPGException("Incorrect number of columns");
                         }
 
                         command.Parameters.Clear();
-                        foreach (KeyValuePair<string, object> pair in row) {
+                        foreach (KeyValuePair<string, object> pair in row)
+                        {
                             string parameter = "@" + pair.Key;
                             command.Parameters.AddWithValue(parameter, pair.Value);
                         }
@@ -339,9 +345,39 @@ namespace Common.SQLResultLogging {
 
                     transaction.Commit();
                 }
-
-                conn.Close();
             }
+        }
+
+        /// <summary>
+        /// Attempts to open a database. If that fails, retries a fixed number of times
+        /// before aborting.
+        /// </summary>
+        /// <param name="conn">the Database connection to open</param>
+        /// <exception cref="LPGException">if the maximum number of attempts failed</exception>
+        private static void AttemptToOpenDBConnection(SQLiteConnection conn)
+        {
+            bool successful = false;
+            int failures = 0;
+            while (!successful)
+            {
+                try
+                {
+                    conn.Open();
+                    successful = true;
+                }
+                catch (SQLiteException e)
+                {
+                    // opening the DB failed, e.g., because the "database is locked"
+                    failures++;
+                    if (failures > Constants.MaxDbOpenAttempts)
+                        throw new LPGException($"Could not open the database in {Constants.MaxDbOpenAttempts} attempts", e);
+
+                    // wait a bit before trying again
+                    Thread.Sleep(1000);
+                }
+            }
+            if (failures > 0)
+                Logger.Info($"Opening database succeeded on {failures+1}. attempt");
         }
 
         public void SaveResultEntry([JetBrains.Annotations.NotNull] SaveableEntry entry)
