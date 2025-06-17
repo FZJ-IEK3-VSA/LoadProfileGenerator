@@ -4,6 +4,8 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,11 +20,16 @@ namespace LoadProfileGenerator.Tests {
             {
                 var sim = new Simulator(db.ConnectionString);
                 var hhtc = new HouseholdTemplateCreator(sim);
-                while (sim.HouseholdTemplates.Items.Count > 0)
+                HashSet<string> templatesWithoutMatchingHH = ["CHR62 Couple both Working from Home"];
+
+                // delete all templates for which a matching modular household exists
+                var toDelete = sim.HouseholdTemplates.Items.Where(t => !templatesWithoutMatchingHH.Contains(t.Name)).ToList();
+                foreach (var template in toDelete)
                 {
-                    sim.HouseholdTemplates.DeleteItem(sim.HouseholdTemplates.Items[0]);
+                    sim.HouseholdTemplates.DeleteItem(template);
                 }
 
+                // run the HouseholdTemplateCreator to regenerate the templates
                 hhtc.Run(false, sim);
 
                 SimIntegrityChecker.Run(sim, CheckingOptions.Default());
