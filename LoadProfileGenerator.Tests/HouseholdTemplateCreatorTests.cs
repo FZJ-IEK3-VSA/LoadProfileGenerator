@@ -29,7 +29,7 @@ namespace LoadProfileGenerator.Tests {
                     sim.HouseholdTemplates.DeleteItem(template);
                 }
 
-                // run the HouseholdTemplateCreator to regenerate the templates
+                // run the HouseholdTemplateCreator to generate all templates
                 hhtc.Run(false, sim);
 
                 SimIntegrityChecker.Run(sim, CheckingOptions.Default());

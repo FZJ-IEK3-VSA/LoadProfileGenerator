@@ -45,7 +45,7 @@ namespace Common.SQLResultLogging {
                             ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE'" +
                                                              tableName + "'")) {
                     cmd.Connection = conn;
@@ -89,7 +89,7 @@ namespace Common.SQLResultLogging {
             string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand()) {
                     cmd.Connection = conn;
                     cmd.CommandText = sql;
@@ -122,7 +122,7 @@ namespace Common.SQLResultLogging {
             string constr = "Data Source=" + FilenameByHouseholdKey[dbKey].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand()) {
                     cmd.Connection = conn;
                     cmd.CommandText = sql;
@@ -164,7 +164,7 @@ namespace Common.SQLResultLogging {
             sql = sql.Substring(0, sql.Length - 1) + ");";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3;")
             ) {
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 var command = conn.CreateCommand();
                 command.CommandText = sql;
                 var result = command.ExecuteNonQuery();
@@ -194,7 +194,7 @@ namespace Common.SQLResultLogging {
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand())
                 {
                     cmd.Connection = conn;
@@ -242,7 +242,7 @@ namespace Common.SQLResultLogging {
             string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand()) {
                     cmd.Connection = conn;
                     /*
@@ -386,7 +386,7 @@ namespace Common.SQLResultLogging {
             string dstFileName = GetFilenameForHouseholdKey(entry.HouseholdKey);
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3")) {
                 //;Synchronous=OFF;Journal Mode=WAL;"
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 if (!IsTableCreated(entry)) {
                     MakeTableForListOfFields(entry.Fields, conn, entry.ResultTableDefinition.TableName);
                     Dictionary<string, object> fields = new Dictionary<string, object> {
@@ -472,7 +472,7 @@ namespace Common.SQLResultLogging {
             // create a new database file if necessary
             string connectionString = MakeconnectionString(fi.FullName);
             using (SQLiteConnection dbcon = new SQLiteConnection(connectionString)) {
-                dbcon.Open();
+                AttemptToOpenDBConnection(dbcon);
                 {
                     FieldDefinition fd1 = new FieldDefinition("TableName", "Text");
                     FieldDefinition fd2 = new FieldDefinition("Description", "Text");
@@ -557,7 +557,7 @@ namespace Common.SQLResultLogging {
             string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand()) {
                     cmd.Connection = conn;
 
@@ -611,7 +611,7 @@ namespace Common.SQLResultLogging {
             // open the SQLite database connection
             string dstFileName = GetFilenameForHouseholdKey(householdKey);
             using SQLiteConnection conn = new SQLiteConnection("Data Source=" + dstFileName + ";Version=3");
-            conn.Open();
+            AttemptToOpenDBConnection(conn);
 
             // prepare the sql command without the specific conditions
             string sqlBase = "DELETE FROM " + tableName + " WHERE ";
@@ -789,7 +789,7 @@ namespace Common.SQLResultLogging {
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand())
                 {
                     cmd.Connection = conn;
