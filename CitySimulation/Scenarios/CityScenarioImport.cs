@@ -4,9 +4,10 @@ using CitySimulation.Scenarios;
 using CitySimulation.SimulationTargets;
 using Common;
 using Common.JSON;
-using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace CitySimulation.CityGeneration
@@ -211,7 +212,8 @@ namespace CitySimulation.CityGeneration
         private static void CreateTargetSeedFile(string resultDir, IEnumerable<ResidentialBuildingConfig> targets)
         {
             var seedDict = targets.ToDictionary(t => t.Id, t => t.Seed);
-            var jsonString = JsonConvert.SerializeObject(seedDict, Formatting.Indented);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            var jsonString = JsonSerializer.Serialize(seedDict, options);
             File.WriteAllText(Path.Combine(resultDir, Constants.HouseSeedMappingFile), jsonString);
         }
 

@@ -1,18 +1,39 @@
-﻿using System;
+﻿using Automation.ResultFiles;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Automation.ResultFiles;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace Automation {
+namespace Automation
+{
     public static class AutomationUtili
     {
         /// <summary>
         /// Reads a JSON file and tries to parse the specified object from it.
+        /// Uses the Newtonsoft library.
+        /// </summary>
+        /// <typeparam name="T">the type of the object to parse</typeparam>
+        /// <param name="filename">the name of the file containing the JSON</param>
+        /// <returns>the parsed object</returns>
+        /// <exception cref="LPGException">if the parsed object is null</exception>
+        public static T ParseJsonFileNewtonsoft<T>(string filename)
+        {
+            // use a StreamReader to avoid loading large files as a single string
+            using var filereader = new StreamReader(filename);
+            using var jsonreader = new Newtonsoft.Json.JsonTextReader(filereader);
+            var serializer = new Newtonsoft.Json.JsonSerializer();
+            var parsedObject = serializer.Deserialize<T>(jsonreader);
+            return parsedObject ?? throw new LPGException($"Input file {filename} does not contain valid data.");
+        }
+
+        /// <summary>
+        /// Reads a JSON file and tries to parse the specified object from it.
+        /// Uses the System.Text.Json functions.
         /// </summary>
         /// <typeparam name="T">the type of the object to parse</typeparam>
         /// <param name="filename">the name of the file containing the JSON</param>
@@ -20,11 +41,17 @@ namespace Automation {
         /// <exception cref="LPGException">if the parsed object is null</exception>
         public static T ParseJsonFile<T>(string filename)
         {
-            // use a StreamReader to avoid loading large files as a single string
-            using var filereader = new StreamReader(filename);
-            using var jsonreader = new JsonTextReader(filereader);
-            var serializer = new JsonSerializer();
-            var parsedObject = serializer.Deserialize<T>(jsonreader);
+            using var filestream = new FileStream(filename, FileMode.Open);
+
+            var options = new JsonSerializerOptions
+            {
+                RespectNullableAnnotations = true
+            };
+
+            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            options.Converters.Add(new JsonReferenceConverter());
+
+            var parsedObject = JsonSerializer.Deserialize<T>(filestream, options);
             return parsedObject ?? throw new LPGException($"Input file {filename} does not contain valid data.");
         }
 
