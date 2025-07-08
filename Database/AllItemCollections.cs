@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Database.Tables;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
@@ -19,7 +23,7 @@ namespace Database
                                   [ItemNotNull][CanBeNull] ObservableCollection<Desire> desires = null,
                                   [ItemNotNull][CanBeNull] ObservableCollection<DeviceCategory> deviceCategories = null,
                                   [ItemNotNull][CanBeNull] ObservableCollection<DeviceSelection> deviceSelections = null,
-                                  [ItemNotNull] [CanBeNull] ObservableCollection<DeviceTag> deviceTags = null,
+                                  [ItemNotNull][CanBeNull] ObservableCollection<DeviceTag> deviceTags = null,
                                   [ItemNotNull][CanBeNull] ObservableCollection<TimeLimit> timeLimits = null,
                                   [ItemNotNull][CanBeNull] ObservableCollection<EnergyStorage> energyStorages = null,
                                   [ItemNotNull][CanBeNull] ObservableCollection<Generator> generators = null,
@@ -53,165 +57,214 @@ namespace Database
                                   [ItemNotNull][CanBeNull] ObservableCollection<ChargingStationSet> chargingStationSets = null,
                                       [ItemNotNull][CanBeNull] ObservableCollection<LivingPatternTag> livingPatternTags = null)
         {
-            AffordanceTags = affordanceTags;
-            Affordances = affordances;
-            ModularHouseholds = modularHouseholds;
-            DateBasedProfiles = dateBasedProfiles;
-            Desires = desires;
-            DeviceCategories = deviceCategories;
-            DeviceSelections = deviceSelections;
-            DeviceTags = deviceTags;
-            TimeLimits = timeLimits;
-            EnergyStorages = energyStorages;
-            Generators = generators;
-            GeographicLocations = geographicLocations;
-            Holidays = holidays;
-            HouseTypes = houseTypes;
-            Houses = houses;
-            HouseholdTraits = householdTraits;
-            LoadTypes = loadTypes;
-            Locations = locations;
-            Persons = persons;
-            RealDevices = realDevices;
-            SubAffordances = subAffordances;
-            TemperatureProfiles = temperatureProfiles;
-            TimeProfiles = timeProfiles;
-            TransformationDevices = transformationDevices;
-            AffordanceTaggingSets = affordanceTaggingSets;
-            DeviceActionGroups = deviceActionGroups;
-            DeviceActions = deviceActions;
-            TraitTags = traitTags;
-            Vacations = vacations;
-            HouseholdTemplates = householdTemplates;
-            Variables = variables;
-            HouseholdTags = householdTags;
-            Sites = sites;
-            TransportationDeviceCategories = transportationDeviceCategories;
-            TravelRoutes = travelRoutes;
-            TransportationDevices = transportationDevices;
-            TravelRouteSets = travelRouteSets;
-            TransportationDeviceSets = transportationDeviceSets;
-            ChargingStationSets = chargingStationSets;
-            LivingPatternTags = livingPatternTags;
+            AffordanceTags = CreateCollectionWithMap(affordanceTags);
+            Affordances = CreateCollectionWithMap(affordances);
+            ModularHouseholds = CreateCollectionWithMap(modularHouseholds);
+            DateBasedProfiles = CreateCollectionWithMap(dateBasedProfiles);
+            Desires = CreateCollectionWithMap(desires);
+            DeviceCategories = CreateCollectionWithMap(deviceCategories);
+            DeviceSelections = CreateCollectionWithMap(deviceSelections);
+            DeviceTags = CreateCollectionWithMap(deviceTags);
+            TimeLimits = CreateCollectionWithMap(timeLimits);
+            EnergyStorages = CreateCollectionWithMap(energyStorages);
+            Generators = CreateCollectionWithMap(generators);
+            GeographicLocations = CreateCollectionWithMap(geographicLocations);
+            Holidays = CreateCollectionWithMap(holidays);
+            HouseTypes = CreateCollectionWithMap(houseTypes);
+            Houses = CreateCollectionWithMap(houses);
+            HouseholdTraits = CreateCollectionWithMap(householdTraits);
+            LoadTypes = CreateCollectionWithMap(loadTypes);
+            Locations = CreateCollectionWithMap(locations);
+            Persons = CreateCollectionWithMap(persons);
+            RealDevices = CreateCollectionWithMap(realDevices);
+            SubAffordances = CreateCollectionWithMap(subAffordances);
+            TemperatureProfiles = CreateCollectionWithMap(temperatureProfiles);
+            TimeProfiles = CreateCollectionWithMap(timeProfiles);
+            TransformationDevices = CreateCollectionWithMap(transformationDevices);
+            AffordanceTaggingSets = CreateCollectionWithMap(affordanceTaggingSets);
+            DeviceActionGroups = CreateCollectionWithMap(deviceActionGroups);
+            DeviceActions = CreateCollectionWithMap(deviceActions);
+            TraitTags = CreateCollectionWithMap(traitTags);
+            Vacations = CreateCollectionWithMap(vacations);
+            HouseholdTemplates = CreateCollectionWithMap(householdTemplates);
+            Variables = CreateCollectionWithMap(variables);
+            HouseholdTags = CreateCollectionWithMap(householdTags);
+            Sites = CreateCollectionWithMap(sites);
+            TransportationDeviceCategories = CreateCollectionWithMap(transportationDeviceCategories);
+            TravelRoutes = CreateCollectionWithMap(travelRoutes);
+            TransportationDevices = CreateCollectionWithMap(transportationDevices);
+            TravelRouteSets = CreateCollectionWithMap(travelRouteSets);
+            TransportationDeviceSets = CreateCollectionWithMap(transportationDeviceSets);
+            ChargingStationSets = CreateCollectionWithMap(chargingStationSets);
+            LivingPatternTags = CreateCollectionWithMap(livingPatternTags);
         }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TravelRouteSet> TravelRouteSets { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<HouseholdTag> HouseholdTags { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Variable> Variables { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<AffordanceTag> AffordanceTags { get; set; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<ChargingStationSet> ChargingStationSets { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Affordance> Affordances { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<ModularHousehold> ModularHouseholds { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<DateBasedProfile> DateBasedProfiles { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Desire> Desires { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<DeviceCategory> DeviceCategories { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<DeviceSelection> DeviceSelections { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<DeviceTag> DeviceTags { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TimeLimit> TimeLimits { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<EnergyStorage> EnergyStorages { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Generator> Generators { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<GeographicLocation> GeographicLocations { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Holiday> Holidays { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<HouseType> HouseTypes { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<House> Houses { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<HouseholdTrait> HouseholdTraits { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<VLoadType> LoadTypes { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Location> Locations { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Person> Persons { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<RealDevice> RealDevices { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<SubAffordance> SubAffordances { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TemperatureProfile> TemperatureProfiles { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TimeBasedProfile> TimeProfiles { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TransformationDevice> TransformationDevices { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<AffordanceTaggingSet> AffordanceTaggingSets { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<DeviceActionGroup> DeviceActionGroups { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<DeviceAction> DeviceActions { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TraitTag> TraitTags { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Vacation> Vacations { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<HouseholdTemplate> HouseholdTemplates { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<Site> Sites { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories { get;  }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TravelRoute> TravelRoutes { get; }
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public ObservableCollection<TransportationDevice> TransportationDevices { get; }
 
-        public ObservableCollection<LivingPatternTag > LivingPatternTags { get; set; }
+        /// <summary>
+        /// Turns an ObservableColleciton into an ObservableCollectionWithMap, or if the input was null also returns null.
+        /// </summary>
+        /// <typeparam name="T">type parameter for the collection</typeparam>
+        /// <param name="items">the original collection to transform</param>
+        /// <returns>the collection as an ObservableCollectionWithMap</returns>
+        private static ObservableCollectionWithMap<T>? CreateCollectionWithMap<T>(ObservableCollection<T>? items) where T : DBBase => items is null ? null : new(items);
+
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TransportationDeviceSet> TransportationDeviceSets { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TravelRouteSet> TravelRouteSets { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<HouseholdTag> HouseholdTags { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Variable> Variables { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<AffordanceTag> AffordanceTags { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<ChargingStationSet> ChargingStationSets { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Affordance> Affordances { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<ModularHousehold> ModularHouseholds { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<DateBasedProfile> DateBasedProfiles { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Desire> Desires { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<DeviceCategory> DeviceCategories { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<DeviceSelection> DeviceSelections { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<DeviceTag> DeviceTags { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TimeLimit> TimeLimits { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<EnergyStorage> EnergyStorages { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Generator> Generators { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<GeographicLocation> GeographicLocations { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Holiday> Holidays { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<HouseType> HouseTypes { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<House> Houses { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<HouseholdTrait> HouseholdTraits { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<VLoadType> LoadTypes { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Location> Locations { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Person> Persons { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<RealDevice> RealDevices { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<SubAffordance> SubAffordances { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TemperatureProfile> TemperatureProfiles { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TimeBasedProfile> TimeProfiles { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TransformationDevice> TransformationDevices { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<AffordanceTaggingSet> AffordanceTaggingSets { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<DeviceActionGroup> DeviceActionGroups { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<DeviceAction> DeviceActions { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TraitTag> TraitTags { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Vacation> Vacations { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<HouseholdTemplate> HouseholdTemplates { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<Site> Sites { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TransportationDeviceCategory> TransportationDeviceCategories { get;  }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TravelRoute> TravelRoutes { get; }
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        public ObservableCollectionWithMap<TransportationDevice> TransportationDevices { get; }
+
+        public ObservableCollectionWithMap<LivingPatternTag > LivingPatternTags { get; }
+    }
+
+    /// <summary>
+    /// Behaves just like ObservableMapping, but offers an additional method that allows looking up items by their Id.
+    /// For this purpose, on the first call of this method a Dictionary containing all items and their IDs is built.
+    /// This has the advantage that it only needs to iterate all objects once, and subsequent calls can reuse the already
+    /// generated map, improving database loading performance.
+    /// The reason to implement this as a subclass of ObservableCollection was that it could be used as a drop-in replacement in
+    /// the AllItemCollections class without having to change any other classes.
+    /// </summary>
+    /// <typeparam name="T">type parameter for the collection</typeparam>
+    public class ObservableCollectionWithMap<T> : ObservableCollection<T> where T : DBBase
+    {
+        /// <summary>
+        /// Maps all items by their IDs. Is only instantiated when FindById is called.
+        /// </summary>
+        private readonly Lazy<Dictionary<int, T>> itemsById;
+
+        /// <summary>
+        /// Creates a new ObservableCollectionWithMap from the specified collection, using the copy constructor.
+        /// </summary>
+        /// <param name="items">a normal collection, which will be used to initialize this collection</param>
+        public ObservableCollectionWithMap(ObservableCollection<T> items) : base(items)
+        {
+            itemsById = new(BuildIdMap);
+        }
+
+        /// <summary>
+        /// Builds the ID map that maps each item ID to the corresponding object.
+        /// </summary>
+        /// <returns>a dictionary mapping item IDs to objects</returns>
+        private Dictionary<int, T> BuildIdMap() => this.ToDictionary(x => x.IntID, x => x);
+
+        /// <summary>
+        /// Returns the item with the specified ID, or null.
+        /// The first call is O(N), all subsequent calls are O(1).
+        /// </summary>
+        /// <param name="id">the ID of the requested item</param>
+        /// <returns>the requested item</returns>
+        public T? FindById(int id) => itemsById.Value.GetValueOrDefault(id);
     }
 }

@@ -156,11 +156,11 @@ namespace Database.Tables.Transportation
             bool ignoreMissingTables, [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes, ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets,
             ObservableCollection<TimeLimit> timeLimits)
         {
-            var aic = new AllItemCollections(timeLimits: timeLimits, affordanceTaggingSets: affordanceTaggingSets, travelRoutes: travelRoutes);
+            ObservableCollection<AffordanceTag> affordanceTags = [.. affordanceTaggingSets.SelectMany(set => set.Tags)];
+            var aic = new AllItemCollections(affordanceTags, timeLimits: timeLimits, affordanceTaggingSets: affordanceTaggingSets, travelRoutes: travelRoutes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             var ld = new ObservableCollection<TravelRouteSetEntry>();
             // Store all AffordanceTags in the AllItemCollections object so that the TravelRouteSetEntries can access them
-            aic.AffordanceTags = [.. affordanceTaggingSets.SelectMany(set => set.Tags)];
             TravelRouteSetEntry.LoadFromDatabase(ld, connectionString, ignoreMissingTables, aic);
             SetSubitems([.. result], [.. ld], IsCorrectTravelRouteSetParent, ignoreMissingTables);
         }
