@@ -79,7 +79,7 @@ namespace Database.Tables.Transportation
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
             var id = dr.GetIntFromLong("ID", false, ignoreMissingFields, -1);
             var affordanceTaggingSetID = dr.GetIntFromLong("AffordanceTaggingSetID", false, ignoreMissingFields, -1);
-            var affordanceTaggingSet = aic.AffordanceTaggingSets.FirstOrDefault(x => x.IntID == affordanceTaggingSetID);
+            var affordanceTaggingSet = aic.AffordanceTaggingSets.FindById(affordanceTaggingSetID);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new TravelRouteSet(name, id, connectionString, description, guid, affordanceTaggingSet);
         }
@@ -135,16 +135,12 @@ namespace Database.Tables.Transportation
             return loc;
         }
 
-        private static bool IsCorrectTravelRouteSetParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
-        {
-            var setEntry = (TravelRouteSetEntry) child;
-            if (parent.ID == setEntry.TravelRouteSetID) {
-                var travelRouteSet = (TravelRouteSet) parent;
-                travelRouteSet.TravelRoutes.Add(setEntry);
-                return true;
-            }
-            return false;
-        }
+        /// <summary>
+        /// Adds an entry to a travel route set. Used for loading from the database.
+        /// </summary>
+        /// <param name="set">the travel route set object</param>
+        /// <param name="entry">the travel route set entry object</param>
+        private static void AddEntryToTravelRouteSet(DBBase set, DBBase entry) => ((TravelRouteSet)set).TravelRoutes.Add((TravelRouteSetEntry)entry);
 
         protected override bool IsItemLoadedCorrectly(out string message)
         {
@@ -162,7 +158,7 @@ namespace Database.Tables.Transportation
             var ld = new ObservableCollection<TravelRouteSetEntry>();
             // Store all AffordanceTags in the AllItemCollections object so that the TravelRouteSetEntries can access them
             TravelRouteSetEntry.LoadFromDatabase(ld, connectionString, ignoreMissingTables, aic);
-            SetSubitems([.. result], [.. ld], IsCorrectTravelRouteSetParent, ignoreMissingTables);
+            SetSubitemsByParentId([.. result], [.. ld], entry=>((TravelRouteSetEntry)entry).TravelRouteSetID, AddEntryToTravelRouteSet, ignoreMissingTables);
         }
 
         public override void SaveToDB()

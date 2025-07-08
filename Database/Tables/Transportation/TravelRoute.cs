@@ -148,8 +148,8 @@ namespace Database.Tables.Transportation
             var siteAID = dr.GetIntFromLong("SiteAID");
             var siteBID = dr.GetIntFromLong("SiteBID");
             var routeKey = dr.GetString("RouteKey", false, "", ignoreMissingFields);
-            var siteA = aic.Sites.FirstOrDefault(x => x.ID == siteAID);
-            var siteB = aic.Sites.FirstOrDefault(x => x.ID == siteBID);
+            var siteA = aic.Sites.FindById(siteAID);
+            var siteB = aic.Sites.FindById(siteBID);
             var guid = GetGuid(dr, ignoreMissingFields);
             var locdev = new TravelRoute(id, connectionString, name,
                 description, siteA, siteB, guid,routeKey);
@@ -191,16 +191,12 @@ namespace Database.Tables.Transportation
             return route;
         }
 
-        private static bool IsCorrectTravelRouteParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
-        {
-            var hd = (TravelRouteStep) child;
-            if (parent.ID == hd.RouteID) {
-                var route = (TravelRoute) parent;
-                route._steps.Add(hd);
-                return true;
-            }
-            return false;
-        }
+        /// <summary>
+        /// Adds a route step to the specified travel route. Used for loading from the database.
+        /// </summary>
+        /// <param name="route">the travel route object</param>
+        /// <param name="step">the travel route step object</param>
+        private static void AddRouteStep(DBBase route, DBBase step) => ((TravelRoute)route).AddStep((TravelRouteStep)step);
 
         protected override bool IsItemLoadedCorrectly(out string message)
         {
@@ -226,8 +222,7 @@ namespace Database.Tables.Transportation
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
             var ld = new ObservableCollection<TravelRouteStep>();
             TravelRouteStep.LoadFromDatabase(ld, connectionString, transportationDeviceCategories, ignoreMissingTables);
-            SetSubitems(new List<DBBase>(result), new List<DBBase>(ld), IsCorrectTravelRouteParent,
-                ignoreMissingTables);
+            SetSubitemsByParentId([.. result], [.. ld], step => ((TravelRouteStep)step).RouteID, AddRouteStep, ignoreMissingTables);
             foreach (TravelRoute route in result) {
                 route.Steps.Sort();
             }
