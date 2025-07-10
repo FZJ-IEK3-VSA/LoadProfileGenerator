@@ -195,20 +195,23 @@ namespace Database {
             Categories.Add(new OtherCategory("Settings"));
             CalculationOutcomes = new CategoryOutcome();
             Categories.Add(CalculationOutcomes);
-                try {
+            try
+            {
                 if (!ignoreMissingTables)
                 {
                     DatabaseVersionChecker.CheckVersion(ConnectionString);
                 }
                 LoadFromDB(ignoreMissingTables);
+            }
+            catch (Exception e)
+            {
+                if (Config.IsInUnitTesting)
+                {
+                    Logger.Exception(e);
                 }
-                catch (Exception e) {
-                    if (Config.IsInUnitTesting) {
-                        Logger.Exception(e);
-                    }
 
-                    throw;
-                }
+                throw;
+            }
             Logger.Info("Loaded the Database");
             foreach (dynamic category in Categories) {
                 if (category.LoadingNumber == -1) {
