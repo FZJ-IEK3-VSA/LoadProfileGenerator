@@ -283,6 +283,19 @@ namespace Database.Tables
             }
         }
 
+        /// <summary>
+        /// Changes the name of the item without triggering any
+        /// OnPropertyChanged events or other custom behavior in
+        /// the Name property setter.
+        /// This can be required if changing many names at once
+        /// to avoid bad performance.
+        /// </summary>
+        /// <param name="name">the new name</param>
+        internal void SetNameWithoutEvents(string name)
+        {
+            base.Name = name;
+        }
+
         protected bool NeedsUpdate
         {
             get => _needsUpdate;

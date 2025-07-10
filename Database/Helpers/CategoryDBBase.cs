@@ -28,6 +28,13 @@
 
 #region
 
+using Automation;
+using Automation.ResultFiles;
+using Common;
+using Common.Extensions;
+using Database.Database;
+using Database.Tables;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,12 +42,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Automation;
-using Automation.ResultFiles;
-using Common;
-using Common.Extensions;
-using Database.Tables;
-using JetBrains.Annotations;
 
 #endregion
 
@@ -272,8 +273,90 @@ namespace Database.Helpers
         // public because of dynamic call
         public int CheckForDuplicateNames(bool saveToDB)
         {
-            var count = 0;
-            // fix names
+            // clean up the names first
+            CleanNames(saveToDB);
+            return FixDuplicateNames(saveToDB);
+        }
+
+        /// <summary>
+        /// Replaces duplicate names by appending a counter or adapting an existing counter.
+        /// The counter is an integer separated by a single space, and starts at 1 for the first
+        /// duplicate. Always continues at the highest found counter for a specific base name, so
+        /// gaps in the numbering can occur.
+        /// </summary>
+        /// <param name="saveToDB">if True, saves the changed names to the database</param>
+        /// <returns>the number of items whose names where changed</returns>
+        /// <exception cref="LPGException">if there was an error selecting the new name</exception>
+        private int FixDuplicateNames(bool saveToDB)
+        {
+            // determine the highest counter for all base names
+            var highestCounters = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (var item in Items)
+            {
+                string baseName = GetNameWithoutCounter(item.Name, out int counter);
+                if (highestCounters.TryGetValue(baseName, out int currentMax))
+                {
+                    highestCounters[baseName] = Math.Max(currentMax, counter);
+                }
+                else
+                {
+                    highestCounters[baseName] = counter;
+                }
+            }
+
+            if (highestCounters.Count == Items.Count)
+            {
+                // every item has a unique basename
+                return 0;
+            }
+
+
+            // use a single database connection to add all routes for a better performance
+            string connectionString = Items[0].ConnectionString;
+            using var con = new Connection(connectionString);
+            con.Open();
+            using var tr = con.BeginTransaction();
+
+            // replace duplicate names by appending a new counter
+            int changedNameCount = 0;
+            var usedNames = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+            //foreach (var item in Items)
+            for (int i = 0; i < Items.Count; i++)
+            {
+                var item = Items[i];
+                string originalName = item.Name;
+                if (usedNames.Add(originalName))
+                {
+                    // first occurrence of this name
+                    continue;
+                }
+
+                // duplicate name found
+                changedNameCount++;
+                string baseName = GetNameWithoutCounter(originalName, out int _);
+                int counter = ++highestCounters[baseName];
+                item.SetNameWithoutEvents($"{baseName} {counter}");
+                Logger.Info($"Changed name from '{originalName}' to '{item.Name}'");
+
+                if (saveToDB)
+                {
+                    item.SaveToDB(con);
+                }
+
+                if (!usedNames.Add(item.Name))
+                    throw new LPGException($"Bug in name duplicate fixing: produced another duplicate {item.Name}");
+            }
+
+            return changedNameCount;
+        }
+
+        /// <summary>
+        /// Cleans item names by removing unnecessary whitespaces.
+        /// </summary>
+        /// <param name="saveToDB">if true, saves the changed names to the database</param>
+        /// <exception cref="LPGException">if an item was null</exception>
+        private void CleanNames(bool saveToDB)
+        {
             var items = Items.ToList();
             foreach (var item in items)
             {
@@ -301,66 +384,29 @@ namespace Database.Helpers
                     }
                 }
             }
-            // fix duplicates
-
-            var repeat = true;
-            while (repeat)
-            {
-                var hs = new HashSet<string>();
-                T itemToChange = null;
-                foreach (var item in Items)
-                {
-                    if (hs.Contains(item.Name.ToUpperInvariant()))
-                    {
-                        itemToChange = item;
-                        break;
-                    }
-                    hs.Add(item.Name.ToUpperInvariant());
-                }
-                if (itemToChange != null)
-                {
-                    var oldname = itemToChange.Name;
-                    while (DeleteLastChar(oldname))
-                    {
-                        oldname = oldname.Substring(0, oldname.Length - 1);
-                    }
-                    var i = 1;
-                    while (i < 100 && IsNameTaken(oldname + " " + i))
-                    {
-                        i++;
-                    }
-
-                    itemToChange.Name = oldname + " " + i;
-                    Logger.Info("Changed a name from " + oldname + " to " + itemToChange.Name);
-                    count++;
-                    if (saveToDB)
-                    {
-                        itemToChange.SaveToDB();
-                    }
-                }
-                else
-                {
-                    repeat = false;
-                }
-            }
-            return count;
         }
 
-        public bool DeleteLastChar([JetBrains.Annotations.NotNull] string s)
+        /// <summary>
+        /// Splits an item name into basename and counter. For that, splits at
+        /// the last space and checks if everything behind that is an integer.
+        /// If so, the part before that is the basename. Otherwise, the name does
+        /// not have a counter, and the full name is returned.
+        /// </summary>
+        /// <param name="name">an item name</param>
+        /// <param name="counter">the counter from the name, or 0 if the name has no counter</param>
+        /// <returns>the basename without the counter</returns>
+        private string GetNameWithoutCounter(string name, out int counter)
         {
-            string last = s.Substring(s.Length - 1);
-            if (int.TryParse(last, out _))
+            int index = name.LastIndexOf(' ');
+            // check if the name ends with a space followed by an integer
+            if (index == -1 || !int.TryParse(name[index..], out counter))
             {
-                return true;
+                // the name does not end with a counter
+                counter = 0;
+                return name;
             }
-
-            if (last == " ")
-            {
-                return true;
-            }
-
-            return false;
-
+            // the name ends with a counter
+            return name[..index];
         }
 
         // used dynnamically in the simintegrity checker
