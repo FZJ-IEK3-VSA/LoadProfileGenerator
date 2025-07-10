@@ -250,7 +250,7 @@ namespace Database.Tables.BasicHouseholds
             var forceAllLoadTypesToBeSet = dr.GetBool("ForceAllLoadTypesToBeSet", false, true, ignoreMissingFields);
             var isStandbyDevice = dr.GetBool("IsStandbyDevice", false, false, ignoreMissingFields);
             var description = dr.GetString("Description", false, string.Empty, ignoreMissingFields);
-            var dc = aic.DeviceCategories.FirstOrDefault(category => category.ID == deviceCategoryID);
+            var dc = aic.DeviceCategories.FindById(deviceCategoryID);
             if (dc == null) {
                 dc = _noneCategory;
             }

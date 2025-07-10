@@ -50,7 +50,7 @@ namespace Database.Tables.ModularHouseholds {
 
             TraitTag traitTag = null;
             if (traitTagID != null) {
-                traitTag = aic.TraitTags.FirstOrDefault(x => x.ID == traitTagID);
+                traitTag = aic.TraitTags.FindById(traitTagID);
             }
             var name = "unknown";
             if (traitTag != null) {

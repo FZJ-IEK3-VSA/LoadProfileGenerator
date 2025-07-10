@@ -103,7 +103,7 @@ namespace Database.Tables.ModularHouseholds {
                 modularHouseholdID = dr.GetIntFromLong("CombinedHouseholdID", false, ignoreMissingFields, -1);
             }
             var personID = dr.GetIntFromLong("PersonID", false, ignoreMissingFields, -1);
-            var p = aic.Persons.FirstOrDefault(myPerson => myPerson.ID == personID);
+            var p = aic.Persons.FindById(personID);
             var name = "(no name)";
             if (p != null) {
                 name = p.PrettyName;
@@ -112,7 +112,7 @@ namespace Database.Tables.ModularHouseholds {
             //var traitTag = aic.TraitTags.FirstOrDefault(x => x.ID == traitTagID);
 
             var livingPatternTagID = dr.GetIntFromLong("LivingPatternTagID", false, ignoreMissingFields, -1);
-            var livingPatternTag = aic.LivingPatternTags.FirstOrDefault(x => x.ID == livingPatternTagID);
+            var livingPatternTag = aic.LivingPatternTags.FindById(livingPatternTagID);
             var guid = GetGuid(dr, ignoreMissingFields);
             var chht = new ModularHouseholdPerson(id, modularHouseholdID, name, connectionString, p,
                 livingPatternTag, guid);

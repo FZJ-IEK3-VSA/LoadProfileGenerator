@@ -39,7 +39,7 @@ namespace Database.Tables.ModularHouseholds {
             var hhtDesireID = dr.GetIntFromLong("ID");
             var parentTraitID = dr.GetIntFromLong("ParentTraitID");
             var thisTraitID = dr.GetIntFromLong("ThisTraitID");
-            var subhht = aic.HouseholdTraits.FirstOrDefault(mytrait => mytrait.ID == thisTraitID);
+            var subhht = aic.HouseholdTraits.FindById(thisTraitID);
             var name = "(no name)";
             if (subhht != null) {
                 name = subhht.Name;

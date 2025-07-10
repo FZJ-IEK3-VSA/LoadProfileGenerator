@@ -193,7 +193,7 @@ namespace Database.Tables.BasicHouseholds
             var name =dr.GetString("Name","(no name)");
             var guid = GetGuid(dr, ignoreMissingFields);
             var db = new DeviceCategory(name, parentID, connectionString, ignoreInRealDeviceViews,
-                aic.RealDevices,guid, id);
+                aic.RealDevices.Items,guid, id);
 
             return db;
         }

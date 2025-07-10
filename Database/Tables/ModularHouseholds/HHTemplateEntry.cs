@@ -181,7 +181,7 @@ namespace Database.Tables.ModularHouseholds
             var maxCount = dr.GetIntFromLong("TraitCountMax");
             var tagID = dr.GetNullableIntFromLong("TraitTagID", false, ignoreMissingFields);
             var isMandatory = dr.GetBool("IsMandatory", false, false, ignoreMissingFields);
-            var traitTag = aic.TraitTags.FirstOrDefault(mytrait => mytrait.ID == tagID);
+            var traitTag = aic.TraitTags.FindById(tagID);
             var name = "(no name)" + hhgID + minCount + maxCount + tagID;
             var guid = GetGuid(dr, ignoreMissingFields);
 

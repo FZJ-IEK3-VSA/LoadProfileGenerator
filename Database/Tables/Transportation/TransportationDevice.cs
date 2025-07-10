@@ -225,7 +225,7 @@ namespace Database.Tables.Transportation
             var speed = dr.GetDouble("Speed", false, 0, ignoreMissingFields);
             var speedUnit = (SpeedUnit) dr.GetIntFromLong("SpeedUnit", false, ignoreMissingFields);
             var tdc =
-                aic.TransportationDeviceCategories.FirstOrDefault(x => x.IntID == transportationDeviceCategoryID);
+                aic.TransportationDeviceCategories.FindById(transportationDeviceCategoryID);
 
             double totalRangeInMeters = dr.GetDouble("TotalRangeInMeters", false, 0, ignoreMissingFields);
             double chargingDistanceAmount = dr.GetDouble("ChargingDistanceAmount", false, 0, ignoreMissingFields);
@@ -233,7 +233,7 @@ namespace Database.Tables.Transportation
             double chargingPower = dr.GetDouble("ChargingPower", false, 0, ignoreMissingFields);
             var loadtypeID = dr.GetIntFromLong("ChargingLoadTypeID", false, ignoreMissingFields);
             var loadtype =
-                aic.LoadTypes.FirstOrDefault(x => x.IntID == loadtypeID);
+                aic.LoadTypes.FindById(loadtypeID);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new TransportationDevice(name, id, connectionString, description, speed, speedUnit, tdc,
                 totalRangeInMeters,chargingPower,

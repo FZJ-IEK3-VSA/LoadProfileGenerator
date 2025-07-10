@@ -76,7 +76,7 @@ namespace Database.Tables.Transportation {
             var transportationDeviceID = dr.GetIntFromLong("TravelDeviceID");
             var stepNumber = dr.GetIntFromLong("StepNumber");
             var distance = dr.GetDouble("Distance");
-            var transportationDeviceCategory = aic.TransportationDeviceCategories.FirstOrDefault(x => x.ID == transportationDeviceID);
+            var transportationDeviceCategory = aic.TransportationDeviceCategories.FindById(transportationDeviceID);
             var name = dr.GetString("Name",false,"(no name)",ignoreMissingFields);
             var stepKey = dr.GetString("StepKey", false, "", ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);

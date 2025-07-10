@@ -102,9 +102,9 @@ namespace Database.Tables.BasicElements
             //var calcObjectType = dr.GetIntFromLong("CalcObjectType", false, ignoreMissingFields);
             var affTaggingSetID = dr.GetIntFromLong("AffordanceTaggingSetID", false, ignoreMissingFields);
             //CalcObjectType cot = (CalcObjectType) calcObjectType;
-            ICalcObject calcObject = aic.ModularHouseholds.FirstOrDefault(ho => ho.ID == calcObjectID);
+            ICalcObject calcObject = aic.ModularHouseholds.FindById(calcObjectID);
             var afftagset =
-                aic.AffordanceTaggingSets.FirstOrDefault(affts => affts.ID == affTaggingSetID);
+                aic.AffordanceTaggingSets.FindById(affTaggingSetID);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new HouseholdPlan(name, afftagset, calcObject, description, connectionString,guid, id);
         }

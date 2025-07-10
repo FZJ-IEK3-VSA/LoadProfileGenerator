@@ -662,7 +662,7 @@ namespace Database.Tables.ModularHouseholds
             var newhhname = dr.GetString("NewHHName", false);
             var count = dr.GetIntFromLong("Count", false);
             var profileForVacations = dr.GetIntFromLong("ProfileForVacationsID", false, ignoreMissingFields, -1);
-            var dbp = aic.DateBasedProfiles.FirstOrDefault(x => x.IntID == profileForVacations);
+            var dbp = aic.DateBasedProfiles.FindById(profileForVacations);
             var templateVacationType = (TemplateVacationType)dr.GetIntFromLong("TemplateVacationType", false, ignoreMissingFields);
             var minNumberOfVacations = dr.GetIntFromLong("MinNumberOfVacations", false, ignoreMissingFields);
             var maxNumberOfVacations = dr.GetIntFromLong("MaxNumberOfVacations", false, ignoreMissingFields);

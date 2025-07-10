@@ -31,7 +31,7 @@ namespace Database.Tables.Houses {
             bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id =dr.GetIntFromLong("ID");
             var tagID = dr.GetIntFromLong("TagID", ignoreMissingField: ignoreMissingFields);
-            var tag = aic.HouseholdTags.FirstOrDefault(x => x.ID == tagID);
+            var tag = aic.HouseholdTags.FindById(tagID);
 
             var householdID = dr.GetIntFromLong("STHouseholdDistributionID");
             var name = "(no name)";

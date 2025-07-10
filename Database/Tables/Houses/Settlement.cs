@@ -1052,13 +1052,13 @@ namespace Database.Tables.Houses
             var temperatureProfileID = dr.GetNullableIntFromLong("TemperatureProfileID", false, ignoreMissingFields);
             TemperatureProfile tp = null;
             if (temperatureProfileID != null) {
-                tp = aic.TemperatureProfiles.FirstOrDefault(tp1 => tp1.ID == temperatureProfileID);
+                tp = aic.TemperatureProfiles.FindById(temperatureProfileID);
             }
 
             var geographicLocationID = dr.GetNullableIntFromLong("GeographicLocationID", false, ignoreMissingFields);
             GeographicLocation geoloc = null;
             if (geographicLocationID != null) {
-                geoloc = aic.GeographicLocations.FirstOrDefault(geo1 => geo1.ID == geographicLocationID);
+                geoloc = aic.GeographicLocations.FindById(geographicLocationID);
             }
 
             //var loadtypePrio = (LoadTypePriority)dr.GetIntFromLong("LoadTypePriority", false, ignoreMissingFields, (int)Automation.LoadTypePriority.RecommendedForHouses);

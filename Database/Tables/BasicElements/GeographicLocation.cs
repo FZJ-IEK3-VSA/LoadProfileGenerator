@@ -136,9 +136,9 @@ namespace Database.Tables.BasicElements
             if (lightTimeLimitID == -1 && ignoreMissingFields) {
                 lightTimeLimitID = dr.GetIntFromLong("LightDeviceTimeID", false, ignoreMissingFields, -1);
             }
-            var dt = aic.TimeLimits.FirstOrDefault(mydt => mydt.ID == lightTimeLimitID);
+            var dt = aic.TimeLimits.FindById(lightTimeLimitID);
             var solarRadiationProfileID = dr.GetIntFromLong("SolarRadiationProfileID", false, ignoreMissingFields, -1);
-            var solarRadiationProfile = aic.DateBasedProfiles.FirstOrDefault(profile => profile.ID == solarRadiationProfileID);
+            var solarRadiationProfile = aic.DateBasedProfiles.FindById(solarRadiationProfileID);
             var radiationThresholdForLight = dr.GetDouble("RadiationThresholdForLight", false, DefaultRadiationThreshold, ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new GeographicLocation(name, connectionString, dt, solarRadiationProfile, radiationThresholdForLight, guid, id);

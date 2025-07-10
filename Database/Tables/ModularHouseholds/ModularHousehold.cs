@@ -455,9 +455,9 @@ namespace Database.Tables.ModularHouseholds
             var creationType = (CreationType) dr.GetIntFromLong("CreationType", false, ignoreMissingFields);
             var deviceSelectionID = dr.GetIntFromLong("DeviceSelectionID", false, ignoreMissingFields, -1);
             var deviceSelection =
-                aic.DeviceSelections.FirstOrDefault(mySelection => mySelection.ID == deviceSelectionID);
+                aic.DeviceSelections.FindById(deviceSelectionID);
             var vacationID = dr.GetIntFromLong("VacationID", false, ignoreMissingFields, -1);
-            var vac = aic.Vacations.FirstOrDefault(x => x.ID == vacationID);
+            var vac = aic.Vacations.FindById(vacationID);
             var eit =
                 (EnergyIntensityType) dr.GetIntFromLong("EnergyIntensity", false, ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);

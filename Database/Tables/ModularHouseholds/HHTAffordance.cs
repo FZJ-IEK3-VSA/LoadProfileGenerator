@@ -108,7 +108,7 @@ namespace Database.Tables.ModularHouseholds {
             var weight = dr.GetIntFromLong("Weight",false,ignoreMissingFields,100);
             var locationID = dr.GetIntFromLong("LocationID");
             var timeLimitID = dr.GetIntFromLong("TimeLimitID",false,ignoreMissingFields);
-            var aff = aic.Affordances.FirstOrDefault(myaff => myaff.ID == affID);
+            var aff = aic.Affordances.FindById(affID);
 
             var startMinusMinutes = dr.GetIntFromLong("StartMinusMinutes", false, ignoreMissingFields);
             var startPlusMinutes = dr.GetIntFromLong("StartPlusMinutes", false, ignoreMissingFields);
@@ -117,7 +117,7 @@ namespace Database.Tables.ModularHouseholds {
             var endPlusMinutes = dr.GetIntFromLong("EndPlusMinutes", false, ignoreMissingFields);
 
             var hht =
-                aic.HouseholdTraits.FirstOrDefault(myhouseholdtrait => myhouseholdtrait.ID == householdTraitID);
+                aic.HouseholdTraits.FindById(householdTraitID);
             HHTLocation hhtloc = null;
             if (hht != null) {
                 hhtloc = hht.Locations.FirstOrDefault(myhhtl => myhhtl.Location.ID == locationID);
@@ -131,7 +131,7 @@ namespace Database.Tables.ModularHouseholds {
                 hhlName = hhtloc.Name;
             }
             var householdName = affname + " - " + hhlName;
-            TimeLimit timeLimit = aic.TimeLimits.FirstOrDefault(x => x.ID == timeLimitID);
+            TimeLimit timeLimit = aic.TimeLimits.FindById(timeLimitID);
             var guid = GetGuid(dr, ignoreMissingFields);
 
             var hhdl = new HHTAffordance(hhdevlocID, aff, hhtloc, householdTraitID, connectionString,

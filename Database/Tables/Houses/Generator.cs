@@ -110,11 +110,11 @@ namespace Database.Tables.Houses
             var scalingFactor = dr.GetDouble("ScalingFactor", false);
             VLoadType vlt = null;
             if (vloadtypeID != null) {
-                vlt = aic.LoadTypes.FirstOrDefault(vlt1 => vlt1.ID == vloadtypeID);
+                vlt = aic.LoadTypes.FindById(vloadtypeID);
             }
             DateBasedProfile dbp = null;
             if (dateBasedProfileID != null) {
-                dbp = aic.DateBasedProfiles.FirstOrDefault(dbp1 => dbp1.ID == dateBasedProfileID);
+                dbp = aic.DateBasedProfiles.FindById(dateBasedProfileID);
             }
             var guid = GetGuid(dr, ignoreMissingFields);
             return new Generator(name, description, vlt, scalingFactor, dbp, connectionString,guid, id);

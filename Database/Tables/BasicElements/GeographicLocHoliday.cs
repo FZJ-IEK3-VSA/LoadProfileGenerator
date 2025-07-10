@@ -71,7 +71,7 @@ namespace Database.Tables.BasicElements {
             var id = dr.GetIntFromLong("ID");
             var holidayID = dr.GetIntFromLong("HolidayID");
             var geographicLocationID = dr.GetIntFromLong("GeographicLocationID");
-            var holiday = aic.Holidays.FirstOrDefault(myhd => myhd.ID == holidayID);
+            var holiday = aic.Holidays.FindById(holidayID);
             var holidayName = string.Empty;
             if (holiday != null) {
                 holidayName = holiday.Name;

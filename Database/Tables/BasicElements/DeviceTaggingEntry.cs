@@ -98,8 +98,8 @@ namespace Database.Tables.BasicElements {
             var taggingSetID = dr.GetIntFromLong("TaggingSetID");
             var tagID = dr.GetIntFromLong("TagID");
             var deviceID = dr.GetIntFromLong("DeviceID");
-            var tag = aic.DeviceTags.FirstOrDefault(myTag => myTag.ID == tagID);
-            var device = aic.RealDevices.FirstOrDefault(myDev => myDev.ID == deviceID);
+            var tag = aic.DeviceTags.FindById(tagID);
+            var device = aic.RealDevices.FindById(deviceID);
             var name = GetName(tag, device);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new DeviceTaggingEntry(name, taggingSetID, tag, device, connectionString, holidayDateID,

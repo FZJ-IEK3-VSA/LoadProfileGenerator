@@ -290,12 +290,12 @@ namespace Database.Tables.Houses
             var heatingLoadTypeID = dr.GetNullableIntFromLong("HeatingLoadTypeID", false, ignoreMissingFields);
             VLoadType heatingLoadType = null;
             if (heatingLoadTypeID != null) {
-                heatingLoadType = aic.LoadTypes.FirstOrDefault(lt1 => lt1.ID == heatingLoadTypeID);
+                heatingLoadType = aic.LoadTypes.FindById(heatingLoadTypeID);
             }
             var coolingLoadTypeID = dr.GetNullableIntFromLong("CoolingLoadTypeID", false, ignoreMissingFields);
             VLoadType coolingLoadType = null;
             if (coolingLoadTypeID != null) {
-                coolingLoadType = aic.LoadTypes.FirstOrDefault(clt1 => clt1.ID == coolingLoadTypeID);
+                coolingLoadType = aic.LoadTypes.FindById(coolingLoadTypeID);
             }
 
             var adjustYearlyEnergyConsumption = dr.GetBool("AdjustYearlyEnergy", false, false, ignoreMissingFields);

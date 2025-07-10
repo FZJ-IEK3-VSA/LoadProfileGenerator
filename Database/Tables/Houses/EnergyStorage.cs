@@ -159,7 +159,7 @@ namespace Database.Tables.Houses
             var maximumWithdrawRate = dr.GetDouble("MaximumWithdrawRate");
             VLoadType vlt = null;
             if (vloadtypeID != null) {
-                vlt = aic.LoadTypes.FirstOrDefault(vlt1 => vlt1.ID == vloadtypeID);
+                vlt = aic.LoadTypes.FindById(vloadtypeID);
             }
             var guid = GetGuid(dr, ignoreMissingFields);
             return new EnergyStorage(name, description, vlt, storageCapacity, initialFill, minimumStorageRate,

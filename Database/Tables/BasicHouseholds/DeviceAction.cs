@@ -122,13 +122,13 @@ namespace Database.Tables.BasicHouseholds
             var deviceActionGroupID = dr.GetNullableIntFromLong("DeviceActionGroupID", false, ignoreMissingFields);
             DeviceActionGroup devActionGroup = null;
             if (deviceActionGroupID != null) {
-                devActionGroup = aic.DeviceActionGroups.FirstOrDefault(devid => devid.ID == deviceActionGroupID);
+                devActionGroup = aic.DeviceActionGroups.FindById(deviceActionGroupID);
             }
 
             var deviceID = dr.GetNullableIntFromLong("DeviceID", false, ignoreMissingFields);
             RealDevice realDevice = null;
             if (deviceID != null) {
-                realDevice = aic.RealDevices.FirstOrDefault(devid => devid.ID == deviceID);
+                realDevice = aic.RealDevices.FindById(deviceID);
             }
             var guid = GetGuid(dr, ignoreMissingFields);
             var aff = new DeviceAction(name, id, description, connectionString, devActionGroup, realDevice, guid);

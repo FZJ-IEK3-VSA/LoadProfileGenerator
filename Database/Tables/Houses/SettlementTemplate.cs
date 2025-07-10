@@ -277,9 +277,9 @@ namespace Database.Tables.Houses
             var desiredHHCount = dr.GetIntFromLong("DesiredHHCount");
             var newName = dr.GetString("NewName", false, string.Empty, ignoreMissingFields);
             var tempID = dr.GetIntFromLong("TemperatureProfileID", false, ignoreMissingFields);
-            var temperatureProfile = aic.TemperatureProfiles.FirstOrDefault(x => x.ID == tempID);
+            var temperatureProfile = aic.TemperatureProfiles.FindById(tempID);
             var geoID = dr.GetIntFromLong("GeographicLocationID", false, ignoreMissingFields);
-            var geloc = aic.GeographicLocations.FirstOrDefault(x => x.ID == geoID);
+            var geloc = aic.GeographicLocations.FindById(geoID);
             var guid = GetGuid(dr, ignoreMissingFields);
 
             return new SettlementTemplate(name, id, description, connectionString, desiredHHCount, newName,

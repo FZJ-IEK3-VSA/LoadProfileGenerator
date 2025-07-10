@@ -105,27 +105,30 @@ namespace Database
     }
 
     /// <summary>
-    /// Behaves just like ObservableMapping, but offers an additional method that allows looking up items by their Id.
+    /// A container for an ObservableCollection that offers an additional method for looking up items by their Id.
     /// For this purpose, on the first call of this method a Dictionary containing all items and their IDs is built.
     /// This has the advantage that it only needs to iterate all objects once, and subsequent calls can reuse the already
     /// generated map, improving database loading performance.
-    /// The reason to implement this as a subclass of ObservableCollection was that it could be used as a drop-in replacement in
-    /// the AllItemCollections class without having to change any other classes.
+    /// As some database loading methods require the refeference to the original ObservableCollection object, this is
+    /// available as well via the Items property.
     /// </summary>
     /// <typeparam name="T">type parameter for the collection</typeparam>
-    public class ObservableCollectionWithMap<T> : ObservableCollection<T> where T : DBBase
+    public class ObservableCollectionWithMap<T> where T : DBBase
     {
         /// <summary>
         /// Maps all items by their IDs. Is only instantiated when FindById is called.
         /// </summary>
         private readonly Lazy<Dictionary<int, T>> itemsById;
 
+        public ObservableCollection<T> Items { get; }
+
         /// <summary>
-        /// Creates a new ObservableCollectionWithMap from the specified collection, using the copy constructor.
+        /// Creates a new ObservableCollectionWithMap for the specified ObservableCollection.
         /// </summary>
-        /// <param name="items">a normal collection, which will be used to initialize this collection</param>
-        public ObservableCollectionWithMap(ObservableCollection<T> items) : base(items)
+        /// <param name="items">the ObservableCollection which will be stored in this object</param>
+        public ObservableCollectionWithMap(ObservableCollection<T> items)
         {
+            Items = items;
             itemsById = new(BuildIdMap);
         }
 
@@ -133,7 +136,7 @@ namespace Database
         /// Builds the ID map that maps each item ID to the corresponding object.
         /// </summary>
         /// <returns>a dictionary mapping item IDs to objects</returns>
-        private Dictionary<int, T> BuildIdMap() => this.ToDictionary(x => x.IntID, x => x);
+        private Dictionary<int, T> BuildIdMap() => Items.ToDictionary(x => x.IntID, x => x);
 
         /// <summary>
         /// Returns the item with the specified ID, or null.
@@ -141,6 +144,6 @@ namespace Database
         /// </summary>
         /// <param name="id">the ID of the requested item</param>
         /// <returns>the requested item</returns>
-        public T? FindById(int id) => itemsById.Value.GetValueOrDefault(id);
+        public T? FindById(int? id) => id.HasValue ? itemsById.Value.GetValueOrDefault(id.Value) : null;
     }
 }

@@ -423,7 +423,7 @@ namespace Database.Tables.BasicHouseholds
             TimeBasedProfile tp = null;
             if (dr["PersonProfileID"] != DBNull.Value) {
                 var personprofileID = dr.GetInt("PersonProfileID"); // time profile for the person
-                tp = aic.TimeProfiles.FirstOrDefault(tpl => tpl.ID == personprofileID);
+                tp = aic.TimeProfiles.FindById(personprofileID);
             }
 
             var minimumage = dr.GetInt("MinimumAge", true, 0);
@@ -449,7 +449,7 @@ namespace Database.Tables.BasicHouseholds
 
             TimeLimit timeLimit = null;
             if (timeLimitID != null) {
-                timeLimit = aic.TimeLimits.FirstOrDefault(x => x.ID == timeLimitID);
+                timeLimit = aic.TimeLimits.FindById(timeLimitID);
             }
 
             var isInterruptable = dr.GetBool("IsInterruptable", false, false, ignoreMissingFields);

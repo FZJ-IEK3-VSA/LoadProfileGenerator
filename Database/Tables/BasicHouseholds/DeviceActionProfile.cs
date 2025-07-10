@@ -82,8 +82,8 @@ namespace Database.Tables.BasicHouseholds {
             var timeprofileID = dr.GetIntFromLong("TimeprofileID");
             var timeOffset = (decimal) dr.GetDouble("TimeOffset");
             var vloadtypeID = dr.GetNullableIntFromLong("LoadTypeID", false, ignoreMissingFields);
-            var vlt = aic.LoadTypes.FirstOrDefault(lt => lt.ID == vloadtypeID);
-            var tp = aic.TimeProfiles.FirstOrDefault(tpt => tpt.ID == timeprofileID);
+            var vlt = aic.LoadTypes.FindById(vloadtypeID);
+            var tp = aic.TimeProfiles.FindById(timeprofileID);
             var multiplier = dr.GetDouble("Multiplier", false, 1, ignoreMissingFields);
             var deviceName = "(no name)";
             if (vlt != null) {

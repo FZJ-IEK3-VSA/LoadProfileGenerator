@@ -89,7 +89,7 @@ namespace Database.Tables.ModularHouseholds {
             var locationID = dr.GetIntFromLong("LocationID");
             var householdID = dr.GetNullableIntFromLong("HouseholdTraitID", false, ignoreMissingFields);
 
-            var loc = aic.Locations.FirstOrDefault(myloc => myloc.ID == locationID);
+            var loc = aic.Locations.FindById(locationID);
             var name = "(no name)";
             if (loc != null) {
                 name = loc.Name;

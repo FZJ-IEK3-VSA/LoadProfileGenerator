@@ -46,7 +46,7 @@ namespace Database.Tables.Houses {
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
             var traitID = dr.GetIntFromLong("TraitID", false);
             var maximum = dr.GetIntFromLong("Maximum", false);
-            var ht = aic.HouseholdTraits.FirstOrDefault(x => x.IntID == traitID);
+            var ht = aic.HouseholdTraits.FindById(traitID);
             var name = "unknown";
             if (ht != null) {
                 name = ht.Name;

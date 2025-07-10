@@ -109,28 +109,28 @@ namespace Database.Tables.BasicHouseholds {
                 (AssignableDeviceType) dr.GetInt("AssignableDeviceType", false, (int) AssignableDeviceType.Device,
                     true);
             var vloadtypeID = dr.GetNullableIntFromLong("VLoadTypeID", false, ignoreMissingFields);
-            var vlt = aic.LoadTypes.FirstOrDefault(lt => lt.ID == vloadtypeID);
+            var vlt = aic.LoadTypes.FindById(vloadtypeID);
             IAssignableDevice device;
             switch (adt) {
                 case AssignableDeviceType.DeviceCategory:
-                    device = aic.DeviceCategories.FirstOrDefault(dc => dc.ID == deviceID);
+                    device = aic.DeviceCategories.FindById(deviceID);
                     break;
                 case AssignableDeviceType.Device:
-                    device = aic.RealDevices.FirstOrDefault(rd => rd.ID == deviceID);
+                    device = aic.RealDevices.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceAction:
-                    device = aic.DeviceActions.FirstOrDefault(rd => rd.ID == deviceID);
+                    device = aic.DeviceActions.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceActionGroup:
-                    device = aic.DeviceActionGroups.FirstOrDefault(rd => rd.ID == deviceID);
+                    device = aic.DeviceActionGroups.FindById(deviceID);
                     break;
                 default: throw new LPGException("unknown device type");
             }
             TimeBasedProfile tp = null;
             if (timeprofileID != null) {
-                tp = aic.TimeProfiles.FirstOrDefault(tpt => tpt.ID == timeprofileID);
+                tp = aic.TimeProfiles.FindById(timeprofileID);
             }
-            var aff = aic.Affordances.FirstOrDefault(affordance => affordance.ID == affordanceID);
+            var aff = aic.Affordances.FindById(affordanceID);
             var deviceName = "(no device)";
             if (device != null) {
                 deviceName = device.Name;
@@ -141,8 +141,8 @@ namespace Database.Tables.BasicHouseholds {
             }
             var probability = dr.GetDouble("Probability", false, 1, ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);
-            var tup = new AffordanceDevice(device, tp, id, timeOffset, affid, aic.RealDevices,
-                aic.DeviceCategories, deviceName, vlt, connectionString, probability, guid)
+            var tup = new AffordanceDevice(device, tp, id, timeOffset, affid, aic.RealDevices.Items,
+                aic.DeviceCategories.Items, deviceName, vlt, connectionString, probability, guid)
             {
                 ParentAffordance = aff
             };

@@ -65,7 +65,7 @@ namespace Database.Tables.Houses {
 
             var houseID = dr.GetIntFromLong("HouseID");
 
-            var es = aic.EnergyStorages.FirstOrDefault(energyStorage => energyStorage.ID == energyStorageID);
+            var es = aic.EnergyStorages.FindById(energyStorageID);
             var name = "(no name)";
             if (es != null) {
                 name = es.Name;

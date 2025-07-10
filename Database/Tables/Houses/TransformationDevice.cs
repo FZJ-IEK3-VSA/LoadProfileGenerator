@@ -365,7 +365,7 @@ namespace Database.Tables.Houses
             var vloadtypeID = dr.GetNullableIntFromLong("VLoadtypeIDIn", false);
             VLoadType vlt = null;
             if (vloadtypeID != null) {
-                vlt = aic.LoadTypes.FirstOrDefault(vlt1 => vlt1.ID == vloadtypeID);
+                vlt = aic.LoadTypes.FindById(vloadtypeID);
             }
 
             var guid = GetGuid(dr, ignoreMissingFields);

@@ -502,7 +502,7 @@ namespace Database.Tables.BasicElements
                 minTemperature, maxTemperature, needsLight, needsDarkness, parentID, anyAllTimeLimitCondition,
                 dateRangeStart, dateRangeEnd, dateProfileID, maxDateProfileValue, minDateProfileValue, duringVacation,
                 duringNotVacation, duringVacationLongerThan, duringVacationShorterThan, vacationDurationLimit,
-                duringHoliday, aic.DateBasedProfiles, connectionString, randomizeTimeAmount, dateProfileMinVariation,
+                duringHoliday, aic.DateBasedProfiles.Items, connectionString, randomizeTimeAmount, dateProfileMinVariation,
                 dateProfileMaxVariation, guid);
             return pte;
         }

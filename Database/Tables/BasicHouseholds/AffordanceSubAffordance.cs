@@ -116,8 +116,8 @@ namespace Database.Tables.BasicHouseholds {
             var affordanceID = dr.GetInt("AffID", false, -1, ignoreMissingFields);
             var subAffID = dr.GetInt("SubAffID");
             var delaytime =  dr.GetDecimal("DelayTime");
-            var aff = aic.Affordances.FirstOrDefault(affordance => affordance.ID == affordanceID);
-            var subaff = aic.SubAffordances.FirstOrDefault(subAfford => subAfford.ID == subAffID);
+            var aff = aic.Affordances.FindById(affordanceID);
+            var subaff = aic.SubAffordances.FindById(subAffID);
             var name = "(no subaffordance)";
             var subaffname = "(no subaffordance)";
             if (subaff != null) {

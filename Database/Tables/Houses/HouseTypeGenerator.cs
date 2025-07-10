@@ -70,7 +70,7 @@ namespace Database.Tables.Houses {
             var id = dr.GetIntFromLong("ID");
             var generatorID = dr.GetIntFromLong("GeneratorID");
             var houseID = dr.GetIntFromLong("HouseID");
-            var mygen = aic.Generators.FirstOrDefault(gen => gen.ID == generatorID);
+            var mygen = aic.Generators.FindById(generatorID);
             var generatorName = string.Empty;
             if (mygen != null) {
                 generatorName = mygen.Name;
