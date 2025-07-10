@@ -223,19 +223,17 @@ namespace SimulationEngineLib.HouseJobProcessor
             // iterate through all routes in all RoutesForTimeSlot objects and identify the relevant ones
             foreach (var routesForOneTimeSlot in hj.City.TravelDefinition.TimeSlotRouteLists)
             {
-                // get the timelimit that applies for these routes
-                var timeLimit = TimeLimitMap[routesForOneTimeSlot.TimeSlot];
                 foreach (var routeData in routesForOneTimeSlot.Routes)
                 {
                     // get all combinations of origins and destinations that this route applies to
                     var routeEndpoints = GetAllSiteCombinationsForRoute(relevantPOIs, routeData, hj.City.TravelDefinition.PoiClusterMapping);
                     foreach (var endpoints in routeEndpoints)
                     {
-                        CreateRoutesForOneOriginDestination(hj, travelRouteSet, hasCar, personIdString, personId, houseId, timeLimit, routeData, endpoints.Origin, endpoints.Destination, con);
+                        CreateRoutesForOneOriginDestination(hj, travelRouteSet, hasCar, personIdString, personId, houseId, routesForOneTimeSlot.TimeSlot, routeData, endpoints.Origin, endpoints.Destination, con);
                         // if required, also create an identical route in the opposite direction
                         if (hj.City.TravelDefinition.MirrorRoutes)
                         {
-                            CreateRoutesForOneOriginDestination(hj, travelRouteSet, hasCar, personIdString, personId, houseId, timeLimit, routeData, endpoints.Destination, endpoints.Origin, con);
+                            CreateRoutesForOneOriginDestination(hj, travelRouteSet, hasCar, personIdString, personId, houseId, routesForOneTimeSlot.TimeSlot, routeData, endpoints.Destination, endpoints.Origin, con);
                         }
                     }
                 }
@@ -252,19 +250,22 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="personName">the name of the person the routes are for</param>
         /// <param name="personId">the ID of the person the routes are for</param>
         /// <param name="houseId">ID of the house the household belongs to</param>
-        /// <param name="timeLimit">timelimit that applies for the routes</param>
+        /// <param name="timeSlot">timeslot in which the routes are valid</param>
         /// <param name="routeData">the route definition; origin and destination might be cluster IDs</param>
         /// <param name="origin">actual starting point of the route</param>
         /// <param name="destination">actual destination point of the route</param>
         /// <param name="con">database connection to use for faster storage</param>
         private void CreateRoutesForOneOriginDestination(HouseCreationAndCalculationJob hj, TravelRouteSet travelRouteSet, bool hasCar,
-            string personName, int? personId, string houseId, TimeLimit timeLimit, RouteData routeData,
+            string personName, int? personId, string houseId, TimeSlot timeSlot, RouteData routeData,
             string origin, string destination, Database.Database.Connection con)
         {
             // select the correct weights for the household type
             var weights = hasCar ? routeData.prob_with_car_hh : routeData.prob_no_car_hh;
             var originSite = GetSiteFromPoi(origin, houseId);
             var destinationSite = GetSiteFromPoi(destination, houseId);
+
+            // get the timelimit that applies for these routes
+            var timeLimit = TimeLimitMap[timeSlot];
 
             foreach (var categoryDistancePair in routeData.mode_distances)
             {
@@ -283,7 +284,8 @@ namespace SimulationEngineLib.HouseJobProcessor
 
                 // create the new travel route
                 var personHint = string.IsNullOrEmpty(personName) ? "" : $" for {personName}";
-                string routeName = $"Route{personHint} from {originSite.Name} to {destinationSite.Name} via {deviceCategoryName} {distanceInKm:f1}km";
+                var timeSlotHint = timeLimit is null ? "" : $" during {timeSlot}";
+                string routeName = $"Route{personHint}{timeSlotHint} from {originSite.Name} to {destinationSite.Name} via {deviceCategoryName} {distanceInKm:f1}km";
                 const string description = "Generated from transport model data";
                 var route = new TravelRoute(null, sim.ConnectionString, routeName, description, originSite, destinationSite, StrGuid.New(), "Generated");
                 sim.TravelRoutes.Items.Add(route);
