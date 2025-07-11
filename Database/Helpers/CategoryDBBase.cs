@@ -346,6 +346,7 @@ namespace Database.Helpers
                 if (!usedNames.Add(item.Name))
                     throw new LPGException($"Bug in name duplicate fixing: produced another duplicate {item.Name}");
             }
+            tr.Commit();
 
             return changedNameCount;
         }
