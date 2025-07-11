@@ -320,10 +320,8 @@ namespace Database.Helpers
             // replace duplicate names by appending a new counter
             int changedNameCount = 0;
             var usedNames = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
-            //foreach (var item in Items)
-            for (int i = 0; i < Items.Count; i++)
+            foreach (var item in Items)
             {
-                var item = Items[i];
                 string originalName = item.Name;
                 if (usedNames.Add(originalName))
                 {
