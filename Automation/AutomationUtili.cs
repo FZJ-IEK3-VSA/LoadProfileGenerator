@@ -32,6 +32,27 @@ namespace Automation
         }
 
         /// <summary>
+        /// The global JSON serialization options for parsing house jobs and other objects.
+        /// </summary>
+        private static readonly JsonSerializerOptions jsonOptions = InitJsonOptions();
+
+        /// <summary>
+        /// Initializes the JSON serialization options.
+        /// </summary>
+        /// <returns>the JSON options</returns>
+        private static JsonSerializerOptions InitJsonOptions()
+        {
+            var options = new JsonSerializerOptions()
+            {
+                RespectNullableAnnotations = true,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+            };
+            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            options.Converters.Add(new JsonReferenceConverter());
+            return options;
+        }
+
+        /// <summary>
         /// Reads a JSON file and tries to parse the specified object from it.
         /// Uses the System.Text.Json functions.
         /// </summary>
@@ -42,16 +63,7 @@ namespace Automation
         public static T ParseJsonFile<T>(string filename)
         {
             using var filestream = new FileStream(filename, FileMode.Open);
-
-            var options = new JsonSerializerOptions
-            {
-                RespectNullableAnnotations = true
-            };
-
-            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-            options.Converters.Add(new JsonReferenceConverter());
-
-            var parsedObject = JsonSerializer.Deserialize<T>(filestream, options);
+            var parsedObject = JsonSerializer.Deserialize<T>(filestream, jsonOptions);
             return parsedObject ?? throw new LPGException($"Input file {filename} does not contain valid data.");
         }
 
