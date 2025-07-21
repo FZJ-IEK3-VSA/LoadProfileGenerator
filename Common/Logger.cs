@@ -293,6 +293,17 @@ namespace Common {
             ReportString(message, Severity.ImportantInfo);
         }
 
+        private static double LastRAMUsage = 0;
+
+        public static void LogRAMUsage(string context = "")
+        {
+            var ramInGiB = Process.GetCurrentProcess().WorkingSet64 / Math.Pow(1024, 3);
+            var contextStr = string.IsNullOrEmpty(context) ? "" : $" {context}";
+            var diff = ramInGiB - LastRAMUsage;
+            LastRAMUsage = ramInGiB;
+            Info($"RAM usage{contextStr}: {ramInGiB:f2} GiB  ({diff:+0.00;-0.00})");
+        }
+
         public static void Info([JetBrains.Annotations.NotNull] string message, bool preserveLinebreaks = false)
         {
             //if (message.Contains("ok")) {
