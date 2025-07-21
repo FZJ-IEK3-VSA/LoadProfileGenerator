@@ -7,11 +7,11 @@ using CalculationEngine.CitySimulation;
 using CalculationEngine.HouseElements;
 using ChartCreator2;
 using ChartCreator2.OxyCharts;
+using CitySimulation.Scenarios;
+using CitySimulation.SimulationTargets;
 using Common;
 using Common.JSON;
 using Database;
-using CitySimulation.Scenarios;
-using CitySimulation.SimulationTargets;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
@@ -33,6 +33,7 @@ namespace CitySimulation
 
         public LPGMassSimulator(int rank, ScenarioPart scenarioPart)
         {
+            Logger.LogRAMUsage("LPGMassSimulator-Start");
             this.rank = rank;
             this.scenarioPart = scenarioPart;
 
@@ -63,12 +64,14 @@ namespace CitySimulation
                 sim = HouseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, dbFilename);
                 // generate all houses according to the config files
                 GenerateHouses();
+                Logger.LogRAMUsage("LPGMassSimulator-Generated all houses");
 
                 // TODO: reopening the database is necessary to ensure same results as when cached DBs are reused
                 sim = HouseGenerator.OpenDatabase(dbFilepath);
             }
 
             simulationTargets = PrepareHousesForSimulation(baseResultDir, rank);
+            Logger.LogRAMUsage("LPGMassSimulator-Prepared all houses");
 
             // make the common CalcParameters accessible
             CalcParameters = simulationTargets[0].CalcManager.CalcRepo.CalcParameters;
@@ -98,6 +101,7 @@ namespace CitySimulation
         /// <exception cref="CitySimWrapperException">if there was an error during house generation</exception>
         private JsonReference ReadAndGenerateHouse(ResidentialBuildingConfig target, HouseGenerator houseGenerator)
         {
+            Logger.Info($"Generating house {target.Id} from templates");
             // read house job file for this target
             string houseJobStr = File.ReadAllText(target.ConfigFilePath).Trim(HouseGenerator.charsToTrim);
             var hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr) ?? throw new LPGPBadParameterException("housejob was null");
@@ -144,6 +148,7 @@ namespace CitySimulation
 
             foreach (var target in scenarioPart.TargetReferences)
             {
+                Logger.Info($"Preparing house {target.Id} for calculation");
                 // create a separate subdirectory for each simulation target
                 string subdir = target.Id;
                 string houseResultDir = Path.Combine(baseResultDir, Constants.HousesDirectory, subdir);
@@ -161,15 +166,20 @@ namespace CitySimulation
 
                     // create a unique random seed for this target
                     calcStartParameterSet.SelectedRandomSeed = target.Seed;
-
                     // create a calcManager for each household
                     var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
                     simulationTargets.Add(new CitySimulationHouse(target.Id, calcManager, houseResultDir));
+
                 }
                 catch (Exception ex)
                 {
                     throw new CitySimWrapperException(ex, rank, target.Id, "initialization");
                 }
+                Logger.LogRAMUsage($"LPGMassSimulator-Prepared house {target.Id}");
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                Logger.LogRAMUsage($"LPGMassSimulator-GC after preparing house");
             }
             return simulationTargets;
         }

@@ -66,6 +66,7 @@ namespace CalculationController.CalcFactories
                                       [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation, //List<CalcDeviceTaggingSet> taggingSets,
                                       EnergyIntensityType energyIntensity)
         {
+            Logger.LogRAMUsage($"Start MakeHouseDto");
             if (house.HouseType == null) {
                 throw new LPGException("Housetype was null");
             }
@@ -106,6 +107,7 @@ namespace CalculationController.CalcFactories
                     Logger.Info("\t" + trait.Name);
                 }
                 if (household.CalcObject.CalcObjectType == CalcObjectType.ModularHousehold) {
+                    Logger.LogRAMUsage($"Start MakeCalcModularHouseholdDto {household.Name}");
                     CalcHouseholdDto hhdto = _hhDtoFactory.MakeCalcModularHouseholdDto(sim,
                         (ModularHousehold)household.CalcObject,
                         temperatureProfile,
