@@ -102,7 +102,7 @@ namespace Calculation.Tests.OnlineDeviceActivation
             var nr = new NormalRandom(0, 1, rnd);
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(100);
-            var calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
                 wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
@@ -222,7 +222,7 @@ namespace Calculation.Tests.OnlineDeviceActivation
                 wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-                var calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
+                var calcParameters = CalcParameters.CreateDefaultParamsForTesting().EnableShowSettlingPeriod();
                 //calcParameters.Enable(CalcOption.ActionsLogfile);
                 calcParameters.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 calcParameters.Enable(CalcOption.DetailedDatFiles);
@@ -291,7 +291,7 @@ namespace Calculation.Tests.OnlineDeviceActivation
 
                 var startdate = new DateTime(2018, 1, 1);
                 var enddate = startdate.AddMinutes(1000);
-                var calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
+                var calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
 
                 var rnd = new Random(1);
                 var nr = new NormalRandom(0, 1, rnd);
@@ -432,7 +432,7 @@ namespace Calculation.Tests.OnlineDeviceActivation
         {
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(100);
-            var calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
             //CalculationProfiler calculationProfiler = new CalculationProfiler();
 
             var rnd = new Random(1);

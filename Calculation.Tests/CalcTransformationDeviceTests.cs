@@ -56,7 +56,7 @@ namespace Calculation.Tests
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProcessOneTimestepTestVariableFactor()
         {
-            var calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
@@ -114,7 +114,7 @@ namespace Calculation.Tests
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProcessOneTransformationDeviceTimestepTest()
         {
-            var calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             calcParameters.EnableShowSettlingPeriod();
             using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));

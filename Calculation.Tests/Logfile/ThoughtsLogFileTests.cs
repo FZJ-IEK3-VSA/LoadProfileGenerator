@@ -56,7 +56,7 @@ namespace Calculation.Tests.Logfile
             {
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod().SetSettlingDays(5);
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().EnableShowSettlingPeriod().SetSettlingDays(5);
                 using (FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger))
                 {
                     fft.RegisterGeneralHouse();

@@ -56,7 +56,7 @@ namespace Calculation.Tests.Logfile
             {
                 DateTime startdate = new DateTime(2018, 1, 1);
                 DateTime enddate = startdate.AddMinutes(1000);
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
                 calcParameters.Options.Add(CalcOption.LocationsEntries);
                 //FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory,"blub",wd.InputDataLogger);
                 //CalcLocation cl = new CalcLocation("blub", 1, Guid.NewGuid().ToStrGuid());
@@ -99,7 +99,7 @@ StringExtensions.ToStrGuid("locguid"));
                 wd.InputDataLogger.AddSaver(new LocationEntryLogger(wd.SqlResultLoggingService));
                 DateTime startdate = new DateTime(2018, 1, 1);
                 DateTime enddate = startdate.AddMinutes(1000);
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
                 calcParameters.Options.Add(CalcOption.LocationsEntries);
                 //FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hhname", wd.InputDataLogger);
                 //LocationsLogFile llf = new LocationsLogFile(true, fft, calcParameters);

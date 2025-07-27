@@ -56,7 +56,7 @@ namespace Calculation.Tests.Logfile
 
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod().SetSettlingDays(0);
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod().SetSettlingDays(0);
             wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
             using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "test1", wd.InputDataLogger))

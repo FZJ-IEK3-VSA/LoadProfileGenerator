@@ -55,7 +55,7 @@ namespace Calculation.Tests
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(10);
             CalcParameters calcParameters =
-                CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+                CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
 
             CalcLoadType clt = MakeCalcLoadType();
             CalcLocation cloc = new CalcLocation("blub", Guid.NewGuid().ToStrGuid());

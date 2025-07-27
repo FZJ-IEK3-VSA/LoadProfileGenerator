@@ -36,7 +36,7 @@ namespace Calculation.Tests.OnlineLogging
             {
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 var clt = new CalcLoadType("calcloadtype", "kwh", "kW", 0.001, true, Guid.NewGuid().ToStrGuid());
                 BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
                 BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);

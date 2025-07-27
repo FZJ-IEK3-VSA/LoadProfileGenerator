@@ -32,7 +32,7 @@ namespace CalculationController.Tests.Helpers
                     }
                 }
                 DayLightStatus dls = new DayLightStatus(ba);
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 DaylightTimesLogger dsl = new DaylightTimesLogger(sqrls, calcParameters);
                 dsl.Run(Constants.GeneralHouseholdKey, dls);
                 wd.CleanUp();

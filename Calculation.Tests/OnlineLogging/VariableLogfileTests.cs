@@ -34,7 +34,7 @@ namespace Calculation.Tests.OnlineLogging
                 wd.InputDataLogger.AddSaver(new VariableEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().EnableShowSettlingPeriod();
                 using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger))
                 {
                     HouseholdKey key = new HouseholdKey("hh1");

@@ -60,7 +60,7 @@ namespace Calculation.Tests.HouseholdElements
             wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
-            CalcParameters calculationParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
+            CalcParameters calculationParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
             var profile = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), new TimeSpan(0, 1, 0), ProfileType.Relative, "blub");
             profile.AddNewTimepoint(new TimeSpan(0), 0.01);
             profile.AddNewTimepoint(new TimeSpan(1, 0, 0), 0.01);

@@ -27,7 +27,7 @@ namespace CalculationController.Tests.InputLoggers
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
                 SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
-                var calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                var calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 CalcLoadTypeDtoDictionary cltd = new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>());
                 CalcDeviceTaggingSetFactory cdtsf = new CalcDeviceTaggingSetFactory(calcParameters, cltd);
                 using (DatabaseSetup ds = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

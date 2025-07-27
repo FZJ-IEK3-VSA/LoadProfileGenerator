@@ -53,7 +53,7 @@ namespace CalculationController.Tests.CalcFactories
         public void AddMoreDesiresTest()
         {
             Config.IsInUnitTesting = true;
-            CalcParameters parameters = CalcParametersFactory.MakeGoodDefaults();
+            CalcParameters parameters = CalcParameters.CreateDefaultParamsForTesting();
             HouseholdKey key = new HouseholdKey( "hh5");
             var persons = new List<ModularHouseholdPerson>();
             var p = new Person("blub", 1, 1, 1, 1,
@@ -70,7 +70,7 @@ namespace CalculationController.Tests.CalcFactories
             //CalcFactoryParameters.SetSkipChecking(true);
             //var cloc = new CalcLocation("cloc", 1, Guid.NewGuid().ToStrGuid());
             //var mock = new Mock<ILogFile>();
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             VacationDtoFactory vfac = new VacationDtoFactory(calcParameters,r);
             CalcPersonDtoFactory cpf = new CalcPersonDtoFactory(parameters, r,nr,vfac);
             var hhtDesires =

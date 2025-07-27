@@ -54,7 +54,7 @@ namespace Calculation.Tests.Transportation
             wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
             //_calcParameters.CSVCharacter = ";";_calcParameters.InitializeTimeSteps(new DateTime(2018,1,1),new DateTime(2018,1,31),new TimeSpan(0,1,0),3,true  );
-            var calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting();
 
             var category = new CalcTransportationDeviceCategory("category", true, Guid.NewGuid().ToStrGuid());
             var lt2 = new CalcLoadType("driving load", "km/h", "km", 10000, false, Guid.NewGuid().ToStrGuid());

@@ -34,7 +34,7 @@ namespace Calculation.Tests.Transportation
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 HouseholdKey key = new HouseholdKey("hh1");
                 using (var calcRepo = SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc, out var srcSite, out var dstSite, out var sourceAff, out var transportationHandler, out var abt, calcParameters, key))
                 {
@@ -70,7 +70,7 @@ namespace Calculation.Tests.Transportation
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 Config.IsInUnitTesting = true;
                 var rnd = new Random(1);
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 HouseholdKey key = new HouseholdKey("hh1");
                 using (var calcRepo = SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc, out var srcSite,
                     out var dstSite, out var sourceAff, out var transportationHandler, out var abt, calcParameters, key))
@@ -109,7 +109,7 @@ namespace Calculation.Tests.Transportation
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 Config.IsInUnitTesting = true;
                 var rnd = new Random(1);
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 HouseholdKey key = new HouseholdKey("hh1");
                 using (var calcRepo = SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc, out var srcSite, out var dstSite, out var sourceAff, out var transportationHandler, out var abt, calcParameters, key))
                 {

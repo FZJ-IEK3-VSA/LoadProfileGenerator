@@ -58,7 +58,7 @@ namespace Calculation.Tests.OnlineDeviceLogging
         {
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(200);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults()
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting()
                 .SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
             var values = new double[10];
             for (var i = 0; i < values.Length; i++) {

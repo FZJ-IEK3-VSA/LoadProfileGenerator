@@ -60,6 +60,10 @@ namespace Common.JSON {
             CheckSettings();
         }
 
+        /// <summary>
+        /// Create a set of reasonable default parameters for testing.
+        /// </summary>
+        /// <returns>CalcParameters for testing</returns>
         public static CalcParameters CreateDefaultParamsForTesting()
         {
             var cp = new CalcParameters(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31));

@@ -34,7 +34,7 @@ namespace Calculation.Tests.Transportation
             {
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService) );
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1).SetEndDate(2018, 2, 1).SetSettlingDays(0).EnableShowSettlingPeriod();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1).SetEndDate(2018, 2, 1).SetSettlingDays(0).EnableShowSettlingPeriod();
                 HouseholdKey hhkey = new HouseholdKey("hh0");
                 using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hhname0", wd.InputDataLogger))
                 {

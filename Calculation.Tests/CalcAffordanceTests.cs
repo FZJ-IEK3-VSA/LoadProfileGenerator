@@ -31,7 +31,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
-using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.Transportation;
@@ -65,7 +64,7 @@ namespace Calculation.Tests
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(stepcount);
             CalcParameters calcParameters =
-                CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+                CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
             calcParameters.FlexibilityEnabled = enableFlexibility;
             var timeStep = new TimeSpan(0, 1, 0);
             var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
@@ -344,7 +343,7 @@ StringExtensions.ToStrGuid("devcategoryguid"),
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(stepcount);
             CalcParameters calcParameters =
-                CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+                CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
             var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);
@@ -413,7 +412,7 @@ StringExtensions.ToStrGuid("devcategoryguid"),
             DateTime enddate = startdate.AddMinutes(stepcount);
             //_calcParameters.InitializeTimeSteps(startdate, enddate, new TimeSpan(0, 1, 0), 3, false);
             CalcParameters calcParameters =
-                CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+                CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
             var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);
@@ -471,7 +470,7 @@ StringExtensions.ToStrGuid("devcategoryguid"),
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(stepcount);
             CalcParameters calcParameters =
-                CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+                CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
             var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);
@@ -544,7 +543,7 @@ StringExtensions.ToStrGuid("devcategoryguid"),
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(stepcount);
             CalcParameters calcParameters =
-                CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+                CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
             var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);

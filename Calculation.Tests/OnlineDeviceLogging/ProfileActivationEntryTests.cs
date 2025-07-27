@@ -20,7 +20,7 @@ namespace Calculation.Tests.OnlineDeviceLogging
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProfileActivationEntryTest()
         {
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             ProfileActivationEntry entry = new ProfileActivationEntry("d1", "p1", "ps1", "lt",calcParameters);
             Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry> entries =
                 new Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry>

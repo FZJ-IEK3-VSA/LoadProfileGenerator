@@ -54,7 +54,7 @@ namespace CalculationController.Tests.Transportation {
             var ltdtoDict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, new TimeSpan(0, 1, 0),
                 LoadTypePriority.RecommendedForHouseholds);
             var ltdict = CalcLoadTypeFactory.MakeLoadTypes(ltdtoDict);
-            var parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+            var parameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             builder.Register(_ => parameters).As<CalcParameters>().SingleInstance();
             builder.Register(_ => new DateStampCreator(parameters)).As<DateStampCreator>().SingleInstance();
@@ -215,7 +215,7 @@ namespace CalculationController.Tests.Transportation {
                     var ltdict = CalcLoadTypeFactory.MakeLoadTypes(ltdtoDict);
                     //var picker = new DeviceCategoryPicker(r,null);
                     var nr = new NormalRandom(0, 0.1, r);
-                    var parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+                    var parameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                         .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
                     parameters.TransportationEnabled = true;
                     builder.Register(_ => parameters).As<CalcParameters>().SingleInstance();

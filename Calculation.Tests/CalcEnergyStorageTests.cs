@@ -60,7 +60,7 @@ namespace Calculation.Tests
                 wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 calcParameters.ShowSettlingPeriodTime = true;
                 using (OnlineLoggingData old = new OnlineLoggingData(new DateStampCreator(calcParameters), wd.InputDataLogger, calcParameters))
                 {

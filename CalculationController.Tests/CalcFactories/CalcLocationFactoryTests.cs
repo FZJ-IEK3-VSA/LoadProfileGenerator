@@ -70,7 +70,7 @@ namespace CalculationController.Tests.CalcFactories
             //var dict =new Dictionary<CalcLocation, List<IAssignableDevice>>();
             var deviceActions = new ObservableCollection<DeviceAction>();
             //var locdict = new Dictionary<Location, CalcLocation>();
-            CalcParameters cp = CalcParametersFactory.MakeGoodDefaults();
+            CalcParameters cp = CalcParameters.CreateDefaultParamsForTesting();
             //var mock = new Mock<IOnlineDeviceActivationProcessor>();
             //var iodap = mock.Object;
             var locationDtoDict = new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>());
@@ -105,7 +105,7 @@ namespace CalculationController.Tests.CalcFactories
         {
             var builder = new ContainerBuilder();
             var r = new Random(1);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             var locations = new List<Location>();
             var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToStrGuid());
@@ -163,7 +163,7 @@ namespace CalculationController.Tests.CalcFactories
         {
             var builder = new ContainerBuilder();
             var r = new Random(1);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             var picker = new DeviceCategoryPicker(r, null);
             builder.Register(_ => picker).As<DeviceCategoryPicker>().SingleInstance();
@@ -225,7 +225,7 @@ namespace CalculationController.Tests.CalcFactories
             using WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var builder = new ContainerBuilder();
             var r = new Random(1);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             //CalcFactoryParameters.SetSkipChecking(true);
             //var nr = new NormalRandom(0, 1, r);

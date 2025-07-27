@@ -65,7 +65,7 @@ namespace Calculation.HouseholdElements.Tests
         public void PickRandomAffordanceFromEquallyAttractiveOnesTest()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 calcParameters.AffordanceRepetitionCount = 0;
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
@@ -131,7 +131,7 @@ namespace Calculation.Tests.HouseholdElements
             using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
             calcParameters.AffordanceRepetitionCount = 0;
             //var r = new Random(1);
             //var nr = new NormalRandom(0, 1, r);
@@ -236,7 +236,7 @@ namespace Calculation.Tests.HouseholdElements
             using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod().DisableShowSettlingPeriod().SetAffordanceRepetitionCount(1);
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod().DisableShowSettlingPeriod().SetAffordanceRepetitionCount(1);
             //var r = new Random(1);
             //var nr = new NormalRandom(0, 1, r);
             var desire1 = new CalcDesire("desire1", 1, 0.5m, 4, 1, 1, 60, -1, null,"","");

@@ -96,7 +96,7 @@ namespace Calculation.Tests.HouseholdElements
             // only a single one should be matched.
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(100);
-            var calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
 
             //_calcParameters.InitializeTimeSteps(startdate, enddate, new TimeSpan(0, 1, 0), 3, false);
 
