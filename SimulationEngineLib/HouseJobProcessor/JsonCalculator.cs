@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
-using CalculationEngine;
 using Common;
 using Common.Enums;
+using Common.JSON;
 using Database;
-using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PowerArgs;
 
 namespace SimulationEngineLib.HouseJobProcessor
@@ -47,17 +43,41 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
         /// <summary>
-        /// Generates the CalcStartParameterSet out of the JsonCalcSpecification, checks parameters and fills missing parameters with defaults from the
+        /// Generates the CalcStartParameterSet from the JsonCalcSpecification, checks parameters and fills missing parameters with defaults from the
         /// CalcObject. Missing values are also set in the passed JsonCalcSpecification object.
         /// </summary>
         /// <param name="sim">Simlator to read default values</param>
-        /// <param name="calcSpec">The calculation specification to get parameters from</param>
+        /// <param name="calcSpec">the calculation specification to get parameters from</param>
         /// <param name="calcObjectReference">JsonReference of the object to simulate</param>
         /// <param name="profiler">optional profiler object to use in the calculation</param>
-        /// <returns>The CalcStartParameterSet containing all specified parameters, and default values for anything not specified</returns>
-        public static CalcStartParameterSet CreateCalcParametersFromCalcSpec(Simulator sim, JsonCalcSpecification calcSpec, JsonReference calcObjectReference, 
-            CalculationProfiler profiler = null, bool citySimulationEnabled = false)
+        /// <param name="citySimulationEnabled">whether city simulation is enabled or not</param>
+        /// <param name="preserveLogfile">if true, keeps any logfile of a previous simulation in the same output directory</param>
+        /// <returns>the CalcStartParameterSet containing all specified parameters, and default values for anything not specified</returns>
+        public static CalcStartParameterSet CreateCalcParametersFromJsonCalcSpec(Simulator sim, JsonCalcSpecification calcSpec, JsonReference calcObjectReference,
+            CalculationProfiler? profiler = null, bool citySimulationEnabled = false, bool preserveLogfile=false)
         {
+            CalcParameters parameters = CreateCalcParameters(sim, calcSpec, citySimulationEnabled);
+            CalcObjectParameters calcObjectParams = CreateCalcObjectParams(sim, calcSpec, calcObjectReference);
+
+            CalculationHelpers helpers = new(profiler);
+
+            // Combine all settings in a CalcStartParameterSet object.
+            return new CalcStartParameterSet(calcObjectParams, parameters, helpers, calcSpec.RandomSeed, null, preserveLogfile);
+        }
+
+        /// <summary>
+        /// Generates the CalcObjectParameters for a specific CalcObject from the JsonCalcSpecification.
+        /// </summary>
+        /// <param name="sim">Simlator to read default values</param>
+        /// <param name="calcSpec">the calculation specification to get parameters from</param>
+        /// <param name="calcObjectReference">JsonReference of the CalcObject to simulate</param>
+        /// <param name="outputDirectory">can be used to overwrite the output directory from the calcspec</param>
+        /// <returns>the CalcObjectParameters for the CalcObject </returns>
+        /// <exception cref="LPGException">if the CalcObject was null</exception>
+        public static CalcObjectParameters CreateCalcObjectParams(Simulator sim, JsonCalcSpecification calcSpec, JsonReference calcObjectReference, string outputDirectory = "")
+        {
+            var deviceSelection = sim.DeviceSelections.FindWithException(calcSpec.DeviceSelection, true);
+
             // get the CalcObject from the JsonReference
             if (calcObjectReference == null)
             {
@@ -65,18 +85,13 @@ namespace SimulationEngineLib.HouseJobProcessor
             }
             var calcObject = GetCalcObject(sim, calcObjectReference);
 
-            // check if start and end date are set
-            var startDate = calcSpec.StartDate ?? throw new LPGPBadParameterException("No StartDate specified.");
-            var endDate = calcSpec.EndDate ?? throw new LPGPBadParameterException("No EndDate specified.");
-
-            // parse time resolution parameters
-            var internalResolution = ParseTimeResolution(calcSpec.InternalTimeResolution);
-            var externalResolution = ParseTimeResolution(calcSpec.ExternalTimeResolution, internalResolution);
-
             // check if all required parameters are set and valid, or else choose default values
-            if (calcSpec.OutputDirectory == null)
+            if (outputDirectory.IsNullOrEmpty())
             {
-                calcSpec.OutputDirectory = SelectDefaultResultDirectory(calcObject);
+                calcSpec.OutputDirectory ??= SelectDefaultResultDirectory(calcObject);
+            } else
+            {
+                calcSpec.OutputDirectory = outputDirectory;
             }
 
             var energyIntensity = calcSpec.EnergyIntensityType;
@@ -91,13 +106,6 @@ namespace SimulationEngineLib.HouseJobProcessor
                     LoadTypePriority.RecommendedForHouseholds : LoadTypePriority.RecommendedForHouses;
             }
 
-            // join the manually selected CalcOptions with the ones from the DefaultForOutputFiles setting
-            var defaultCalcOptions = OutputFileDefaultHelper.GetOptionsForDefault(calcSpec.DefaultForOutputFiles);
-            var mergedCalcOptions = calcSpec.CalcOptions.Union(defaultCalcOptions).ToList();
-
-            // create a new profiler if none is passed
-            profiler ??= new CalculationProfiler();
-
             // look up objects matching the specified JsonReferences
             // if no reference is provided, first fall back to the setting in the CalcObject, then to the general default object
             var temperatureProfile = sim.TemperatureProfiles.FindWithException(calcSpec.TemperatureProfile, true);
@@ -107,46 +115,46 @@ namespace SimulationEngineLib.HouseJobProcessor
             var geographicLocation = sim.GeographicLocations.FindWithException(calcSpec.GeographicLocation, true);
             geographicLocation ??= calcObject.DefaultGeographicLocation;
             geographicLocation ??= sim.GeographicLocations.GetDefault();
+            return new(calcObject, calcSpec.OutputDirectory, temperatureProfile, geographicLocation, energyIntensity, calcSpec.LoadTypePriority, deviceSelection);
+        }
 
-            var deviceSelection = sim.DeviceSelections.FindWithException(calcSpec.DeviceSelection, true);
+        /// <summary>
+        /// Generates the CalcParameters from the JsonCalcSpecification.
+        /// </summary>
+        /// <param name="sim">Simlator to read default values</param>
+        /// <param name="calcSpec">the calculation specification to get parameters from</param>
+        /// <param name="citySimulationEnabled">whether city simulation is enabled or not</param>
+        /// <returns>the generated CalcParameters</returns>
+        /// <exception cref="LPGPBadParameterException">if start or end date are missing</exception>
+        public static CalcParameters CreateCalcParameters(Simulator sim, JsonCalcSpecification calcSpec, bool citySimulationEnabled = false)
+        {
+            // check if start and end date are set
+            var startDate = calcSpec.StartDate ?? throw new LPGPBadParameterException("No StartDate specified.");
+            var endDate = calcSpec.EndDate ?? throw new LPGPBadParameterException("No EndDate specified.");
 
-            // fixed default values
-            ILPGDispatcher lpgDispatcher = null;
+            // parse time resolution parameters
+            var internalResolution = ParseTimeResolution(calcSpec.InternalTimeResolution);
+            var externalResolution = ParseTimeResolution(calcSpec.ExternalTimeResolution, internalResolution);
 
-            // Combine all settings in a CalcStartParameterSet object.
-            // Note: settings taken from the Simulator are not part of the JsonCalcSpecification.
-            return new CalcStartParameterSet(
-                (_, _, _) => true,
-                (_, _, _) => true,
-                _ => true,
-                lpgDispatcher,
-                geographicLocation,
-                temperatureProfile,
-                calcObject,
-                energyIntensity,
-                () => true,
-                false,
-                deviceSelection,
-                calcSpec.LoadTypePriority,
-                transportationDeviceSet: null,
-                travelRouteSet: null,
+            // join the manually selected CalcOptions with the ones from the DefaultForOutputFiles setting
+            var defaultCalcOptions = OutputFileDefaultHelper.GetOptionsForDefault(calcSpec.DefaultForOutputFiles);
+            var mergedCalcOptions = calcSpec.CalcOptions.Union(defaultCalcOptions).ToList();
+
+            // combine settings from the JsonCalcSpecification and the Simulator
+            return new(
                 mergedCalcOptions,
                 startDate,
                 endDate,
                 internalResolution,
                 sim.MyGeneralConfig.CSVCharacter,
-                calcSpec.RandomSeed,
                 externalResolution,
                 sim.MyGeneralConfig.WriteExcelColumnBool,
                 sim.MyGeneralConfig.ShowSettlingPeriodBool,
                 SettlingDays,
                 sim.MyGeneralConfig.RepetitionCount,
-                calculationProfiler: profiler,
-                chargingStationSet: null,
                 calcSpec.LoadtypesForPostprocessing,
                 sim.MyGeneralConfig.DeviceProfileHeaderMode,
                 calcSpec.IgnorePreviousActivitiesWhenNeeded,
-                calcSpec.OutputDirectory,
                 calcSpec.EnableTransportation,
                 calcSpec.EnableIdlemode,
                 sim.MyGeneralConfig.DecimalSeperator,
@@ -328,8 +336,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             var calculationStartTime = DateTime.Now;
 
             // create the CalcStartParameterSet containing all parameters for the calculation
-            var calcStartParameterSet = CreateCalcParametersFromCalcSpec(sim, jcs, calcObjectReference, _calculationProfiler);
-            calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
+            var calcStartParameterSet = CreateCalcParametersFromJsonCalcSpec(sim, jcs, calcObjectReference, _calculationProfiler, preserveLogfile: true);
 
             // initialize logfile and log the calcspec
             var resultDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));

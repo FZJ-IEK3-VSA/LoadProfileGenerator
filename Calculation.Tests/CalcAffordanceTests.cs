@@ -170,7 +170,7 @@ StringExtensions.ToStrGuid("devcategoryguid"),
         public void CalcAffordanceActivateTest0Percent()
         {
             Logger.Info("hi");
-            var calcParameters = CalcParameters.GetNew();
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             const int stepcount = 150;
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 0);
             var site = loc.CalcSite;

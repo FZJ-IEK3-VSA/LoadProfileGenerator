@@ -68,7 +68,7 @@ namespace Calculation.HouseholdElements.Tests
                         throw new LPGException("CalcObject was null");
                     }
 
-                    cm.CalcObject.Init(dls, 1);
+                    cm.CalcObject.Init(dls);
                     CalcManager.ExitCalcFunction = true;
                     cm.CalcObject.DumpHouseholdContentsToText();
                     cm.Dispose();

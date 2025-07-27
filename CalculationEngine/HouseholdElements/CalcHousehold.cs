@@ -73,8 +73,6 @@ namespace CalculationEngine.HouseholdElements {
 
         private DateTime _lastDisplay = DateTime.MinValue;
         private DateTime _startSimulation = DateTime.MinValue;
-
-        private int _simulationSeed;
         [NotNull] private readonly string _description;
         private readonly CalcRepo _calcRepo;
 
@@ -323,10 +321,8 @@ namespace CalculationEngine.HouseholdElements {
 
         public List<CalcAutoDev>? AutoDevs => _autoDevs;
 
-        public void Init(DayLightStatus daylightArray,
-                         int simulationSeed)
+        public void Init(DayLightStatus daylightArray)
         {
-            _simulationSeed = simulationSeed;
             _daylightArray = daylightArray;
             if (_calcRepo.Logfile == null) {
                 throw new LPGException("logfile was null");

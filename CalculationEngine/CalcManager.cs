@@ -45,7 +45,7 @@ using JetBrains.Annotations; //using Common.SQLResultLogging;
 
 namespace CalculationEngine
 {
-    public sealed class CalcManager(ICalcAbleObject calcObject, [NotNull] string resultPath, int randomSeed,
+    public sealed class CalcManager(ICalcAbleObject calcObject, [NotNull] string resultPath,
         [NotNull] DayLightStatus lightNeededArray, [NotNull] CalcVariableRepository variableRepository,
         CalcRepo calcRepo) : IDisposable
     {
@@ -58,8 +58,6 @@ namespace CalculationEngine
 
         //[JetBrains.Annotations.NotNull] private readonly string _name;
 
-
-        private readonly int _randomSeed = randomSeed;
 
         [NotNull] private readonly string _resultPath = resultPath;
 

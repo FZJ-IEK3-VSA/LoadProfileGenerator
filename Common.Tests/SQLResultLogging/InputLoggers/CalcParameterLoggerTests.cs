@@ -16,7 +16,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcParameterLoggerTest()
         {
-            CalcParameters cp = CalcParameters.GetNew();
+            CalcParameters cp = CalcParameters.CreateDefaultParamsForTesting();
             cp.SetStartDate(2017, 1, 1);
             cp.SetEndDate(2018, 1, 1);
             cp.Enable(CalcOption.ActivationsPerHour);

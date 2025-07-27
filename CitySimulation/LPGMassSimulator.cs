@@ -2,6 +2,7 @@
 using Automation.ResultFiles;
 using CalcPostProcessor;
 using CalculationController.CalcFactories;
+using CalculationController.Queue;
 using CalculationEngine;
 using CalculationEngine.CitySimulation;
 using CalculationEngine.HouseElements;
@@ -69,12 +70,13 @@ namespace CitySimulation
                 // TODO: reopening the database is necessary to ensure same results as when cached DBs are reused
                 sim = HouseGenerator.OpenDatabase(dbFilepath);
             }
+            Logger.LogRAMUsage("LPGMassSimulator-Reopened database");
+            
+            // create common CalcParameters object for the simulation of all houses
+            CalcParameters = JsonCalculator.CreateCalcParameters(sim, scenarioPart.CalcSpecification, true);
 
             simulationTargets = PrepareHousesForSimulation(baseResultDir, rank);
             Logger.LogRAMUsage("LPGMassSimulator-Prepared all houses");
-
-            // make the common CalcParameters accessible
-            CalcParameters = simulationTargets[0].CalcManager.CalcRepo.CalcParameters;
         }
 
         /// <summary>
@@ -161,15 +163,12 @@ namespace CitySimulation
                 try
                 {
                     // create the CalcStartParameterSet containing all parameters for the calculation
-                    var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectReference, citySimulationEnabled: true);
-                    calcStartParameterSet.ResultPath = houseResultDir;
+                    var objectsForCalc = JsonCalculator.CreateCalcObjectParams(sim, scenarioPart.CalcSpecification, calcObjectReference, houseResultDir);
+                    var calcStartParameterSet = new CalcStartParameterSet(objectsForCalc, CalcParameters, new(), target.Seed);
 
-                    // create a unique random seed for this target
-                    calcStartParameterSet.SelectedRandomSeed = target.Seed;
                     // create a calcManager for each household
                     var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
                     simulationTargets.Add(new CitySimulationHouse(target.Id, calcManager, houseResultDir));
-
                 }
                 catch (Exception ex)
                 {

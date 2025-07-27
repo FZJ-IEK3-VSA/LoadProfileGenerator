@@ -186,8 +186,7 @@ namespace CalculationEngine.HouseElements
 
         public HouseholdKey HouseholdKey { get; }
 
-        public void Init(DayLightStatus daylightArray,
-                         int simulationSeed)
+        public void Init(DayLightStatus daylightArray)
         {
             //_allProfiles = new Dictionary<int, CalcProfile>();
             //var subhouseholdNumber = 1;
@@ -196,8 +195,7 @@ namespace CalculationEngine.HouseElements
             }
 
             foreach (var chh in _households) {
-                chh.Init(daylightArray, //"HH" + subhouseholdNumber,
-                    simulationSeed);
+                chh.Init(daylightArray);
                 /*var profiles = chh.CollectAllProfiles();
                 foreach (var keyValuePair in profiles) {
                     if (!_allProfiles.ContainsKey(keyValuePair.Key)) {

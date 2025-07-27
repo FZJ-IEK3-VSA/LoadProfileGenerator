@@ -59,7 +59,7 @@ namespace CalculationEngine
         void DumpHouseholdContentsToText();
         void FinishCalculation();
 
-        void Init( [NotNull] DayLightStatus daylightArray, int simulationSeed);
+        void Init([NotNull] DayLightStatus daylightArray);
 
         IEnumerable<RemoteActivityInfo> RunOneStep(TimeStep timestep, DateTime now, bool runProcessing,
             Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null);

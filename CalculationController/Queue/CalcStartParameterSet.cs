@@ -26,31 +26,131 @@
 
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using Autofac;
 using Automation;
 using Automation.ResultFiles;
+using CalcPostProcessor;
+using ChartCreator2;
 using Common;
+using Common.Enums;
 using Common.JSON;
 using Database;
 using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
-namespace CalculationController.Queue {
-    public interface ILPGDispatcher {
-        //(System.Windows.Threading.DispatcherPriority priority, Delegate method, object arg)
+namespace CalculationController.Queue
+{
+    public interface ILPGDispatcher
+    {
         void BeginInvoke(Delegate method, object arg);
 
         bool IsCorrectThread();
     }
 
+    /// <summary>
+    /// Contains all parameters and objects that are required for the simulation,
+    /// some of which depend on the specific house/household to simulate.
+    /// </summary>
+    public class CalcStartParameterSet
+    {
+        /// <summary>
+        /// The CalcObject and all parameters depending on it.
+        /// </summary>
+        public CalcObjectParameters CalcObjectParams { get; }
 
-    public class CalcStartParameterSet {
-        public DateTime CalculationStartTime { get; set; }
-        //public const string TableName = "CalcStartParameterSet";
+        /// <summary>
+        /// The common simulation parameters shared with other CalcObjects.
+        /// </summary>
+        public CalcParameters CalcParams { get; }
+
+        /// <summary>
+        /// Objects and callbacks for handling various tasks during the simulation.
+        /// </summary>
+        public CalculationHelpers Helpers { get; }
+
+        /// <summary>
+        /// Optional transportation objects. Only used by the GUI if a single household is simulated with
+        /// transportation. Houses store dedicated transport objects for each contained household instead.
+        /// </summary>
+        public TransportObjects? Transport { get; }
+
+        /// <summary>
+        /// The seed for initializing the Random object for the simulation. Already contains the final
+        /// seed to use. If, e.g., -1 was specified in the input, this returns a randomly chosen seed.
+        /// </summary>
+        public int RandomSeed { get; }
+
+        public bool ResumeSettlement { get; }
+
+        /// <summary>
+        /// If true, keeps any log files from previous simulations while clearing the output directory.
+        /// </summary>
+        public bool PreserveLogfileWhileClearingFolder { get; }
+
+        /// <summary>
+        /// The version of the LoadProfileGenerator
+        /// </summary>
+        public string LPGVersion { get; } = Utili.GetCurrentAssemblyVersion();
+
+        public CalcStartParameterSet(CalcObjectParameters objectsForCalc, CalcParameters parameters, CalculationHelpers helpers, int? userSelectedRandomSeed,
+            TransportObjects? transport = null, bool resumeSettlement = false, bool preserveLogfile = false)
+        {
+            CalcObjectParams = objectsForCalc;
+            CalcParams = parameters;
+            Helpers = helpers;
+            Transport = transport;
+            RandomSeed = CalcParameters.GetActualRandomSeed(userSelectedRandomSeed, false);
+            ResumeSettlement = resumeSettlement;
+            PreserveLogfileWhileClearingFolder = preserveLogfile;
+
+            if (TransportationEnabled && CalcTarget.CalcObjectType == CalcObjectType.ModularHousehold && Transport is null)
+            {
+                // when directly simulating a modular household without a house, transport parameters must be provided here
+                throw new LPGException("Simulating a household with transportation enabled, but no transportation parameters were provided.");
+            }
+
+            EnableRequiredCalcOptions();
+        }
+
+        /// <summary>
+        ///     starter for real calcs
+        /// </summary>
+        public CalcStartParameterSet(
+            Func<bool, string, ObservableCollection<ResultFileEntry>?, bool> reportFinishFuncForHouseAndSettlement,
+            Func<bool, string, string, bool>? reportFinishFuncForHousehold,
+            Func<object, bool>? openTabFunc, ILPGDispatcher? dispatcher,
+            GeographicLocation geographicLocation,
+            TemperatureProfile temperatureProfile,
+            ICalcObject calcTarget,
+            EnergyIntensityType energyIntensity, [NotNull] Func<bool>? reportCancelFunc, bool resumeSettlement,
+            DeviceSelection? deviceSelection, LoadTypePriority loadTypePriority,
+            TransportationDeviceSet? transportationDeviceSet, TravelRouteSet? travelRouteSet,
+            [NotNull] List<CalcOption> calcOptions,
+            DateTime officialSimulationStartTime,
+            DateTime officialSimulationEndTime,
+            TimeSpan internalTimeResolution,
+            [NotNull] string csvCharacter,
+            int selectedRandomSeed,
+            TimeSpan externalTimeResolution, bool writeExcelColumn, bool showSettlingPeriod, int settlingDays,
+            int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, [CanBeNull] ChargingStationSet? chargingStationSet,
+            List<string>? loadTypesToProcess,
+            DeviceProfileHeaderMode deviceProfileHeaderMode,
+            bool ignorePreviousActivitiesWhenNeeded,
+            string resultPath, bool transportationEnabled, bool enableIdlemode, string decimalSeperator,
+            bool flexibilityEnabled, bool citySimulationEnabled = false)
+            : this(
+                 new CalcObjectParameters(calcTarget, resultPath, temperatureProfile, geographicLocation, energyIntensity, loadTypePriority, deviceSelection),
+                 new CalcParameters(calcOptions, officialSimulationStartTime, officialSimulationEndTime, internalTimeResolution, csvCharacter, externalTimeResolution,
+                    writeExcelColumn, showSettlingPeriod, settlingDays, affordanceRepetitionCount, loadTypesToProcess, deviceProfileHeaderMode, ignorePreviousActivitiesWhenNeeded,
+                    transportationEnabled, enableIdlemode, decimalSeperator, flexibilityEnabled, citySimulationEnabled),
+                 new CalculationHelpers(calculationProfiler, dispatcher, reportFinishFuncForHouseAndSettlement, reportFinishFuncForHousehold, openTabFunc, reportCancelFunc), selectedRandomSeed,
+                 new TransportObjects(travelRouteSet, transportationDeviceSet, chargingStationSet), resumeSettlement)
+        { }
 
         /// <summary>
         ///     starter for unit tests
@@ -63,8 +163,8 @@ namespace CalculationController.Queue {
             bool resumeSettlement,
             [CanBeNull] DeviceSelection deviceSelection,
             LoadTypePriority loadTypePriority,
-            [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet,
-            [CanBeNull] TravelRouteSet travelRouteSet, [NotNull] List<CalcOption> calcOptions,
+            TransportationDeviceSet? transportationDeviceSet, ChargingStationSet? chargingStationSet,
+            TravelRouteSet? travelRouteSet, [NotNull] List<CalcOption> calcOptions,
             DateTime officialSimulationStartTime,
             DateTime officialSimulationEndTime,
             TimeSpan internalTimeResolution,
@@ -73,190 +173,107 @@ namespace CalculationController.Queue {
             TimeSpan externalTimeResolution, bool writeExcelColumn, bool showSettlingPeriod, int settlingDays,
             int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath, bool transportationEnabled,
             bool enableIdlemode, [NotNull] string decimalSeperator, bool flexibilityEnabled)
-        {
-            OfficialSimulationStartTime = officialSimulationStartTime;
-            OfficialSimulationEndTime = officialSimulationEndTime;
-            InternalTimeResolution = internalTimeResolution;
-            CsvCharacter = csvCharacter;
-            SelectedRandomSeed = selectedRandomSeed;
-            ExternalTimeResolution = externalTimeResolution;
-            WriteExcelColumn = writeExcelColumn;
-            ShowSettlingPeriod = showSettlingPeriod;
-            SettlingDays = settlingDays;
-            AffordanceRepetitionCount = affordanceRepetitionCount;
-            CalculationProfiler = calculationProfiler;
-            GeographicLocation = geographicLocation;
-            TemperatureProfile = temperatureProfile;
-            CalcTarget = calcTarget;
-            EnergyIntensity = energyIntensity;
-            ResumeSettlement = resumeSettlement;
-            LPGVersion = Utili.GetCurrentAssemblyVersion();
-            DeviceSelection = deviceSelection;
-            LoadTypePriority = loadTypePriority;
-            TransportationDeviceSet = transportationDeviceSet;
-            TravelRouteSet = travelRouteSet;
-            CalcOptions = calcOptions;
-            ChargingStationSet = chargingStationSet;
-            DeviceProfileHeaderMode = DeviceProfileHeaderMode.Standard;
-            ResultPath = resultPath;
-            CalculationStartTime = DateTime.Now;
-            TransportationEnabled = transportationEnabled;
-            EnableIdlemode = enableIdlemode;
-            DecimalSeperator = decimalSeperator;
-            FlexibilityEnabled = flexibilityEnabled;
-        }
+            : this(null, null, null, null, geographicLocation, temperatureProfile, calcTarget, energyIntensity, null, resumeSettlement, deviceSelection, loadTypePriority, transportationDeviceSet, travelRouteSet, calcOptions, officialSimulationStartTime,
+                officialSimulationEndTime, internalTimeResolution, csvCharacter, selectedRandomSeed, externalTimeResolution, writeExcelColumn, showSettlingPeriod, settlingDays, affordanceRepetitionCount, calculationProfiler, chargingStationSet,
+                [], DeviceProfileHeaderMode.Standard, false, resultPath, transportationEnabled, enableIdlemode, decimalSeperator, flexibilityEnabled)
+        { }
 
         /// <summary>
-        ///     starter for real calcs
+        /// Enables CalcOptions that are required by the selected options, using dependencies of the Postprocessor and the ChartProcessor.
         /// </summary>
-        public CalcStartParameterSet(
-            [NotNull] Func<bool, string, ObservableCollection<ResultFileEntry>, bool>
-                reportFinishFuncForHouseAndSettlement,
-            [NotNull] Func<bool, string, string, bool> reportFinishFuncForHousehold,
-            [NotNull] Func<object, bool> openTabFunc, [CanBeNull] ILPGDispatcher dispatcher,
-            [NotNull] GeographicLocation geographicLocation,
-            [NotNull] TemperatureProfile temperatureProfile,
-            [NotNull] ICalcObject calcTarget,
-            EnergyIntensityType energyIntensity, [NotNull] Func<bool> reportCancelFunc, bool resumeSettlement,
-            [CanBeNull] DeviceSelection deviceSelection, LoadTypePriority loadTypePriority,
-            [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] TravelRouteSet travelRouteSet,
-            [NotNull] List<CalcOption> calcOptions,
-            DateTime officialSimulationStartTime,
-            DateTime officialSimulationEndTime,
-            TimeSpan internalTimeResolution,
-            [NotNull] string csvCharacter,
-            int selectedRandomSeed,
-            TimeSpan externalTimeResolution, bool writeExcelColumn, bool showSettlingPeriod, int settlingDays,
-            int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, [CanBeNull] ChargingStationSet chargingStationSet,
-            [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
-            DeviceProfileHeaderMode deviceProfileHeaderMode,
-            bool ignorePreviousActivitiesWhenNeeded,
-            string resultPath, bool transportationEnabled, bool enableIdlemode, string decimalSeperator,
-            bool flexibilityEnabled, bool citySimulationEnabled = false)
+        private void EnableRequiredCalcOptions()
         {
-            IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
-            ResultPath = resultPath;
-            LoadTypesToProcess = loadTypesToProcess;
-            ExternalTimeResolution = externalTimeResolution;
-            WriteExcelColumn = writeExcelColumn;
-            ShowSettlingPeriod = showSettlingPeriod;
-            SettlingDays = settlingDays;
-            AffordanceRepetitionCount = affordanceRepetitionCount;
-            CalculationProfiler = calculationProfiler;
-            SelectedRandomSeed = selectedRandomSeed;
-            OfficialSimulationStartTime = officialSimulationStartTime;
-            OfficialSimulationEndTime = officialSimulationEndTime;
-            InternalTimeResolution = internalTimeResolution;
-            CsvCharacter = csvCharacter;
-            ReportFinishFuncForHouseAndSettlement = reportFinishFuncForHouseAndSettlement;
-            ReportFinishFuncForHousehold = reportFinishFuncForHousehold;
-            OpenTabFunc = openTabFunc;
-            Dispatcher = dispatcher;
-            GeographicLocation = geographicLocation;
-            TemperatureProfile = temperatureProfile;
-            CalcTarget = calcTarget;
-            EnergyIntensity = energyIntensity;
-            ReportCancelFunc = reportCancelFunc;
-            ResumeSettlement = resumeSettlement;
-            LPGVersion = Utili.GetCurrentAssemblyVersion();
-            DeviceSelection = deviceSelection;
-            LoadTypePriority = loadTypePriority;
-            TransportationDeviceSet = transportationDeviceSet;
-            TravelRouteSet = travelRouteSet;
-            CalcOptions = calcOptions;
-            ChargingStationSet = chargingStationSet;
-            DeviceProfileHeaderMode = deviceProfileHeaderMode;
-            CalculationStartTime = DateTime.Now;
-            TransportationEnabled = transportationEnabled;
-            EnableIdlemode = enableIdlemode;
-            DecimalSeperator = decimalSeperator;
-            FlexibilityEnabled = flexibilityEnabled;
-            CitySimulationEnabled = citySimulationEnabled;
+            var fftd = new FileFactoryAndTrackerDummy();
+
+            // check CalcOption dependencies from the ChartProcessor
+            ChartProcessorManager.ChartingFunctionDependencySetter(ResultPath, CalculationProfiler, fftd, CalcOptions, false);
+
+            // check CalcOption dependencies from the Postprocessor
+            var container = PostProcessingManager.RegisterEverything(ResultPath, CalculationProfiler, fftd);
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var odm = scope.Resolve<OptionDependencyManager>();
+                odm.EnableRequiredOptions(CalcOptions);
+            }
         }
 
-        public string ResultPath { get; set; }
 
-        [NotNull]
-        public CalculationProfiler CalculationProfiler { get; }
-        public int AffordanceRepetitionCount { get; }
-
-        [NotNull]
-        public List<CalcOption> CalcOptions { get; }
-
-        [NotNull]
-        public ICalcObject CalcTarget { get; }
-
-        [NotNull]
-        public string CsvCharacter { get; }
-
-        [NotNull]
-        public string DecimalSeperator { get; }
-
-        [CanBeNull]
-        public DeviceSelection DeviceSelection { get; }
-
-        [CanBeNull]
-        public ILPGDispatcher Dispatcher { get; }
-
-        public EnergyIntensityType EnergyIntensity { get; }
-        public TimeSpan ExternalTimeResolution { get; }
-
-        [NotNull]
-        public GeographicLocation GeographicLocation { get; }
-
-        public TimeSpan InternalTimeResolution { get; }
-        public LoadTypePriority LoadTypePriority { get; }
-
-        [NotNull]
-        public string LPGVersion { get; }
-
-        public DateTime OfficialSimulationEndTime { get; }
-        public DateTime OfficialSimulationStartTime { get; }
-
-        [CanBeNull]
-        public Func<object, bool> OpenTabFunc { get; }
-
-        [CanBeNull]
-        public Func<bool> ReportCancelFunc { get; }
-
-        [CanBeNull]
-        public Func< bool, string, ObservableCollection<ResultFileEntry>, bool>
-            ReportFinishFuncForHouseAndSettlement { get; }
-
-        [CanBeNull]
-        public Func< bool, string, string, bool> ReportFinishFuncForHousehold { get; }
-
-        public bool ResumeSettlement { get; }
-        public int SelectedRandomSeed { get; set; }
-
-
-        public int SettlingDays { get; }
-        public bool ShowSettlingPeriod { get; }
-
-        [NotNull]
-        public TemperatureProfile TemperatureProfile { get; }
-
-        [CanBeNull]
-        public TransportationDeviceSet TransportationDeviceSet { get; }
-
-        [CanBeNull]
-        public TravelRouteSet TravelRouteSet { get; }
-
-        public bool WriteExcelColumn { get; }
-        [CanBeNull]
-        public ChargingStationSet ChargingStationSet { get; set; }
-
-        public bool PreserveLogfileWhileClearingFolder { get; set; }
-        [CanBeNull]
-        [ItemNotNull]
-        public List<string> LoadTypesToProcess { get; set; }
-        public DeviceProfileHeaderMode DeviceProfileHeaderMode { get;  }
-        public bool IgnorePreviousActivitiesWhenNeeded { get; set; }
-        public bool TransportationEnabled { get; set; }
-        public bool CitySimulationEnabled { get; set; } = false;
-        public bool EnableIdlemode { get; }
-
-        public JsonCalcSpecification CalcSpec { get; set; }
-        public bool FlexibilityEnabled { get; set; }
+        // properties to directly access parameters, for compatibility with existing code
+        public string ResultPath => CalcObjectParams.OutputDirectory;
+        public CalculationProfiler? CalculationProfiler => Helpers.CalculationProfiler;
+        public int AffordanceRepetitionCount => CalcParams.AffordanceRepetitionCount;
+        public HashSet<CalcOption> CalcOptions => CalcParams.Options;
+        public ICalcObject CalcTarget => CalcObjectParams.CalcObject;
+        public string CsvCharacter => CalcParams.CSVCharacter;
+        public string DecimalSeperator => CalcParams.DecimalSeperator;
+        public DeviceSelection? DeviceSelection => CalcObjectParams.DeviceSelection;
+        public ILPGDispatcher? Dispatcher => Helpers.Dispatcher;
+        public EnergyIntensityType EnergyIntensity => CalcObjectParams.EnergyIntensity;
+        public TimeSpan ExternalTimeResolution => CalcParams.ExternalStepsize;
+        public GeographicLocation GeographicLocation => CalcObjectParams.GeographicLocation;
+        public TimeSpan InternalTimeResolution => CalcParams.InternalStepsize;
+        public LoadTypePriority LoadTypePriority => CalcParams.LoadTypePriority;
+        // remark: CalcParameters adds one day to the passed end date, so this is one day later than the input end date
+        public DateTime OfficialSimulationEndTime => CalcParams.OfficialEndTime;
+        public DateTime OfficialSimulationStartTime => CalcParams.OfficialStartTime;
+        public Func<object, bool>? OpenTabFunc => Helpers.OpenTabFunc;
+        public Func<bool>? ReportCancelFunc => Helpers.ReportCancelFunc;
+        public Func<bool, string, ObservableCollection<ResultFileEntry>, bool>? ReportFinishFuncForHouseAndSettlement
+            => Helpers.ReportFinishFuncForHouseAndSettlement;
+        public Func<bool, string, string, bool>? ReportFinishFuncForHousehold => Helpers.ReportFinishFuncForHousehold;
+        public int SettlingDays => CalcParams.NumberOfSettlingDays;
+        public bool ShowSettlingPeriod => CalcParams.ShowSettlingPeriodTime;
+        public TemperatureProfile TemperatureProfile => CalcObjectParams.TemperatureProfile;
+        public TransportationDeviceSet? TransportationDeviceSet => Transport?.TransportationDeviceSet;
+        public TravelRouteSet? TravelRouteSet => Transport?.TravelRouteSet;
+        public ChargingStationSet? ChargingStationSet => Transport?.ChargingStationSet;
+        public bool WriteExcelColumn => CalcParams.WriteExcelColumn;
+        public List<string> LoadTypesToProcess => CalcParams.LoadtypesToPostprocess;
+        public DeviceProfileHeaderMode DeviceProfileHeaderMode => CalcParams.DeviceProfileHeaderMode;
+        public bool IgnorePreviousActivitiesWhenNeeded => CalcParams.IgnorePreviousActivitesWhenNeeded;
+        public bool TransportationEnabled => CalcParams.TransportationEnabled;
+        public bool CitySimulationEnabled => CalcParams.CitySimulationEnabled;
+        public bool EnableIdlemode => CalcParams.EnableIdlemode;
+        public bool FlexibilityEnabled => CalcParams.FlexibilityEnabled;
     }
+
+
+    /// <summary>
+    /// Helper objects and functions for calculation.
+    /// </summary>
+    public record CalculationHelpers
+    {
+        public CalculationHelpers(CalculationProfiler? calculationProfiler = null, ILPGDispatcher? dispatcher = null,
+        Func<bool, string, ObservableCollection<ResultFileEntry>, bool>? reportFinishFuncForHouseAndSettlement = null,
+        Func<bool, string, string, bool>? reportFinishFuncForHousehold = null, Func<object, bool>? openTabFunc = null,
+        Func<bool>? reportCancelFunc = null)
+        {
+            CalculationProfiler = calculationProfiler ?? new();
+            Dispatcher = dispatcher;
+            ReportFinishFuncForHouseAndSettlement = reportFinishFuncForHouseAndSettlement ?? ((_, _, _) => true);
+            ReportFinishFuncForHousehold = reportFinishFuncForHousehold ?? ((_, _, _) => true);
+            OpenTabFunc = openTabFunc ?? (_ => true);
+            ReportCancelFunc = reportCancelFunc ?? (() => true);
+        }
+
+        public CalculationProfiler CalculationProfiler { get; }
+        public ILPGDispatcher? Dispatcher { get; }
+        public Func<bool, string, ObservableCollection<ResultFileEntry>, bool> ReportFinishFuncForHouseAndSettlement { get; }
+        public Func<bool, string, string, bool> ReportFinishFuncForHousehold { get; }
+        public Func<object, bool> OpenTabFunc { get; }
+        public Func<bool> ReportCancelFunc { get; }
+    }
+
+    /// <summary>
+    /// Set of parameters for calculation that depend on the CalcObject. Includes the main Calcobject (house or household) and
+    /// all objects that can depend on the calcobject and might therefore differ.
+    /// In a mass simulation, each house has its own CalcObjectParameters.
+    /// </summary>
+    public record CalcObjectParameters(ICalcObject CalcObject, string OutputDirectory, TemperatureProfile TemperatureProfile,
+        GeographicLocation GeographicLocation, EnergyIntensityType EnergyIntensity, LoadTypePriority LoadTypePriority, DeviceSelection? DeviceSelection = null);
+
+    /// <summary>
+    /// Objects for transport simulation. If transportation is enabled, all of them must be set.
+    /// </summary>
+    public record TransportObjects(TravelRouteSet TravelRouteSet, TransportationDeviceSet TransportationDeviceSet, ChargingStationSet ChargingStationSet);
 }

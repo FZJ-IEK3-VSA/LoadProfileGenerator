@@ -105,12 +105,9 @@ namespace CalculationController.CalcFactories
 
                 var ds = GetDeviceSelection(csps, csps.CalcTarget, chh);
 
-                var cpf = new CalcParametersFactory();
-                calcParameters = cpf.MakeCalculationParametersFromConfig(csps, forceRandom);
-
                 var sqlFileName = Path.Combine(csps.ResultPath, "Results.sqlite");
                 builder = new ContainerBuilder();
-                RegisterEverything(sim, csps.ResultPath, csps, csps.CalcTarget, builder, sqlFileName, calcParameters, ds);
+                RegisterEverything(sim, csps.ResultPath, csps, csps.CalcTarget, builder, sqlFileName, csps.CalcParams, ds);
             }
             finally {
                 csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Initializing");
@@ -165,8 +162,8 @@ namespace CalculationController.CalcFactories
                 //this logger doesnt save json, but strings!
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
-                cm = new CalcManager(ch, csps.ResultPath, calcParameters.ActualRandomSeed, dls, variableRepository, calcRepo);
-                ch.Init(dls, calcParameters.ActualRandomSeed);
+                cm = new CalcManager(ch, csps.ResultPath, dls, variableRepository, calcRepo);
+                ch.Init(dls);
                 CalcManager.ExitCalcFunction = false;
 
                 //LogSeed(calcParameters.ActualRandomSeed, lf.FileFactoryAndTracker, calcParameters);
@@ -316,7 +313,7 @@ namespace CalculationController.CalcFactories
             builder.Register(_ => new SqlResultLoggingService(sqlFileName)).As<SqlResultLoggingService>()
                 .SingleInstance();
             builder.Register(_ => calcParameters).As<CalcParameters>().SingleInstance();
-            Random rnd = new Random(calcParameters.ActualRandomSeed);
+            Random rnd = new Random(csps.RandomSeed);
             builder.Register(_ => rnd).As<Random>().SingleInstance();
             builder.Register(_ => csps.CalculationProfiler).As<CalculationProfiler>().SingleInstance();
             builder.Register(_ => new NormalRandom(0, 0.1, rnd)).As<NormalRandom>().SingleInstance();
