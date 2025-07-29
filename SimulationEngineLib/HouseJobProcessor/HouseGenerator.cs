@@ -720,7 +720,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 throw new LPGException("Too many house types found for " + housetypecode + ". Try adding a couple of more letters to make it unique. It searches by start of the name.");
             }
             HouseType newHouseType = (HouseType)HouseType.ImportFromItem(potentialHts[0], sim);
-            newHouseType.Name = newHouseType.Name + "(" + hd.Name + ")";
+            newHouseType.Name = $"Copy of {newHouseType.Name} ({hd.Name})";
             if (hd.TargetHeatDemand != null)
             {
                 newHouseType.HeatingYearlyTotal = hd.TargetHeatDemand.Value;
