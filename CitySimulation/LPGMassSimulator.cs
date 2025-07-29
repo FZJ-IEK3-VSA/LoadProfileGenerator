@@ -13,6 +13,7 @@ using CitySimulation.SimulationTargets;
 using Common;
 using Common.JSON;
 using Database;
+using MPI;
 using Newtonsoft.Json;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
@@ -25,6 +26,7 @@ namespace CitySimulation
     /// </summary>
     internal class LPGMassSimulator
     {
+        private readonly Intracommunicator comm;
         private readonly int rank;
         private readonly Simulator sim;
         private readonly ScenarioPart scenarioPart;
@@ -32,9 +34,10 @@ namespace CitySimulation
 
         public CalcParameters CalcParameters;
 
-        public LPGMassSimulator(int rank, ScenarioPart scenarioPart)
+        public LPGMassSimulator(Intracommunicator comm, int rank, ScenarioPart scenarioPart)
         {
             Logger.LogRAMUsage("LPGMassSimulator-Start");
+            this.comm = comm;
             this.rank = rank;
             this.scenarioPart = scenarioPart;
 
@@ -67,8 +70,11 @@ namespace CitySimulation
                 GenerateHouses();
                 Logger.LogRAMUsage("LPGMassSimulator-Generated all houses");
 
-                // TODO: reopening the database is necessary to ensure same results as when cached DBs are reused
+                // reopening the database is necessary to ensure same results as when cached DBs are reused
                 sim = HouseGenerator.OpenDatabase(dbFilepath);
+
+                // wait for other workers here to make sure that all houses are generated properly and can be reused, in case an error occurs later on
+                comm.Barrier();
             }
             Logger.LogRAMUsage("LPGMassSimulator-Reopened database");
             

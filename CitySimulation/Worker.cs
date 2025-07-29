@@ -121,7 +121,7 @@ namespace CitySimulation
             logger.SetLogFilePath(logFile);
             logger.Info($"Worker {rank} on {workerName} is responsible for {scenarioPart.TargetReferences.Count} houses and {scenarioPart.PointsOfInterest.Count} POIs.");
 
-            lpgSimulator = new(rank, scenarioPart);
+            lpgSimulator = new(comm, rank, scenarioPart);
             calcParameters = lpgSimulator.CalcParameters;
             int totalPersons = lpgSimulator.TotalNumberOfPersons();
             int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
