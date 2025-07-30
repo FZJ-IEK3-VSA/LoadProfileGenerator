@@ -69,7 +69,7 @@ namespace CalculationController.Queue {
                         sim.MyGeneralConfig.EndDateDateTime.ToShortDateString());
             CalcManager calcManager = null;
             try {
-                var cmf = new CalcManagerFactory();
+                var cmf = new CalcManagerFactory(sim, csps.CalcParams);
                 calcManager = cmf.GetCalcManager(sim, csps,  forceRandom);
                     //, forceRandom,
                     //temperatureProfile,  geographicLocation, calcEntry.EnergyIntensity,

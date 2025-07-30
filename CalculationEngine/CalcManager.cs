@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using Autofac;
 using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor;
@@ -45,10 +46,11 @@ using JetBrains.Annotations; //using Common.SQLResultLogging;
 
 namespace CalculationEngine
 {
-    public sealed class CalcManager(ICalcAbleObject calcObject, [NotNull] string resultPath,
+    public sealed class CalcManager(ILifetimeScope scope, ICalcAbleObject calcObject, [NotNull] string resultPath,
         [NotNull] DayLightStatus lightNeededArray, [NotNull] CalcVariableRepository variableRepository,
         CalcRepo calcRepo) : IDisposable
     {
+        private readonly ILifetimeScope objectScope = scope;
         private static bool _exitCalcFunction;
 
         [NotNull] private readonly DayLightStatus _lightNeededArray = lightNeededArray;
@@ -92,7 +94,7 @@ namespace CalculationEngine
         public void Dispose()
         {
             CalcObject.Dispose();
-            CalcRepo.Dispose();
+            objectScope.Dispose();
         }
 
         /// <summary>

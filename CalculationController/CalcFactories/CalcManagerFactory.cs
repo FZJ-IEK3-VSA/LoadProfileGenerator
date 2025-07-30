@@ -60,19 +60,20 @@ using Common.SQLResultLogging.Loggers;
 
 namespace CalculationController.CalcFactories
 {
-    public class SimulationObjectSet(Simulator sim)
-    {
-        public Simulator Sim { get; } = sim;
-        public CalcParameters CalcParams { get; }
-
-        public CalcLoadTypeDtoDictionary? LoadTypeDict { get; set; }
-        public List<CalcAffordanceTaggingSetDto> AffordanceTaggingSets { get; set; }
-    }
-
     public class CalcManagerFactory
     {
         public static bool DoIntegrityRun { get; set; } = true;
-        public SimulationObjectSet SimulationObjects { get; set; }
+
+        private readonly ILifetimeScope sharedObjectsScope;
+        private readonly Simulator sim;
+        private readonly CalcParameters calcParameters;
+
+        public CalcManagerFactory(Simulator simulator, CalcParameters parameters)
+        {
+            sim = simulator;
+            calcParameters = parameters;
+            sharedObjectsScope = RegisterSharedObjects();
+        }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
@@ -91,17 +92,8 @@ namespace CalculationController.CalcFactories
                 throw new LPGException("Simulation was null");
             }
 
-            // check if the common objects were created already
-            if (SimulationObjects is null)
-            {
-                // initialize the common objects which are the same for all CalcManagers
-                SimulationObjects = new(sim);
-                CreateCommonObjects(sim, csps.CalcParams);
-            }
-            else if (SimulationObjects.Sim != sim)
-            {
-                throw new LPGException("Reusing a CalcManagerFactory with different Simulators is not permitted.");
-            }
+            if (csps.CalcParams != calcParameters)
+                throw new LPGException("Invalid CalcParameters: a CalcManagerFactory can only used with the same set of CalcParameters");
 
             if (csps.CalcOptions.Contains(CalcOption.LogAllMessages))
             {
@@ -109,9 +101,8 @@ namespace CalculationController.CalcFactories
             }
 
             Logger.Info("Starting the calculation of " + csps.CalcTarget.Name);
-            ContainerBuilder builder;
             try {
-                csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Initializing");
+                csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Integrity Check");
                 if (DoIntegrityRun) {
                     SimIntegrityChecker.Run(sim, CheckingOptions.FromStartParameters(csps));
                 }
@@ -121,25 +112,22 @@ namespace CalculationController.CalcFactories
                     throw new DataIntegrityException(
                         "You are trying to calculate a house with only the load types for a household. This would mess up the warm water calculations. Please fix the load type selection.");
                 }
-
-                var chh = csps.CalcTarget as ModularHousehold;
-
-                var ds = GetDeviceSelection(csps, csps.CalcTarget, chh);
-
-                var sqlFileName = Path.Combine(csps.ResultPath, "Results.sqlite");
-                builder = new ContainerBuilder();
-                RegisterEverything(sim, csps.ResultPath, csps, csps.CalcTarget, builder, sqlFileName, csps.CalcParams, ds);
             }
             finally {
-                csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Initializing");
+                csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Integrity Check");
             }
+
+            var chh = csps.CalcTarget as ModularHousehold;
+            var ds = GetDeviceSelection(csps, csps.CalcTarget, chh);
+            var sqlFileName = Path.Combine(csps.ResultPath, "Results.sqlite");
+
+            // create a new scope for this CalcManager as a child of the common scope, inheriting all its registered objects
+            ILifetimeScope scope = sharedObjectsScope.BeginLifetimeScope(builder => RegisterEverything(csps.ResultPath, csps, csps.CalcTarget, builder, sqlFileName, ds));
 
             CalcManager? cm = null;
             try
             {
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
-                var container = builder.Build();
-                using var scope = container.BeginLifetimeScope();
                 var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository);
 
                 //_calcParameters.Logfile = cm.Logfile;
@@ -152,8 +140,9 @@ namespace CalculationController.CalcFactories
                 ICalcAbleObject ch;
                 CalcVariableDtoFactory cvrdto = scope.Resolve<CalcVariableDtoFactory>();
                 CalcDeviceTaggingSets devicetaggingSets = scope.Resolve<CalcDeviceTaggingSets>();
+                var affordanceTaggingSets = scope.Resolve<List<CalcAffordanceTaggingSetDto>>();
                 if (csps.CalcTarget.GetType() == typeof(House)) {
-                    ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, SimulationObjects.AffordanceTaggingSets, out cot, calcRepo);
+                    ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, affordanceTaggingSets, out cot, calcRepo);
                     CalcHouse chd = (CalcHouse)ch;
                     if (chd.EnergyStorages != null) {
                         foreach (var calcEnergyStorage in chd.EnergyStorages) {
@@ -165,7 +154,7 @@ namespace CalculationController.CalcFactories
 
                 }
                 else if (csps.CalcTarget.GetType() == typeof(ModularHousehold)) {
-                    ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, SimulationObjects.AffordanceTaggingSets, calcRepo);
+                    ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, affordanceTaggingSets, calcRepo);
                 }
                 else {
                     throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
@@ -183,7 +172,7 @@ namespace CalculationController.CalcFactories
                 //this logger doesnt save json, but strings!
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
-                cm = new CalcManager(ch, csps.ResultPath, dls, variableRepository, calcRepo);
+                cm = new CalcManager(scope, ch, csps.ResultPath, dls, variableRepository, calcRepo);
                 ch.Init(dls);
                 CalcManager.ExitCalcFunction = false;
 
@@ -216,9 +205,9 @@ namespace CalculationController.CalcFactories
 
             dtoltdict = scope.Resolve<CalcLoadTypeDtoDictionary>();
 
-            var affordanceTaggingSetFactory = scope.Resolve<AffordanceTaggingSetFactory>();
+            var affordanceTaggingSets = scope.Resolve<List<CalcAffordanceTaggingSetDto>>();
             if (calcRepo.CalcParameters.Options.Contains(CalcOption.AffordanceTaggingSets)) {
-                inputDataLogger.Save(SimulationObjects.AffordanceTaggingSets);
+                inputDataLogger.Save(affordanceTaggingSets);
             }
 
             calcRepo.FileFactoryAndTracker.RegisterGeneralHouse();
@@ -326,25 +315,32 @@ namespace CalculationController.CalcFactories
         }
 
         /// <summary>
-        /// Create common objects that are the same for all CalcManagers. This relies on all GetCalcManager calls
-        /// using the same Simulator and CalcParameters.
+        /// Register common objects that are shared among all CalcManagers.
         /// </summary>
-        /// <param name="sim">the Simulator</param>
-        /// <param name="calcParameters">general calculation parameters that are the same for all CalcObjects</param>
-        private void CreateCommonObjects(Simulator sim, CalcParameters calcParameters)
+        /// <returns>scope for resolving the objects</returns>
+        private ILifetimeScope RegisterSharedObjects()
         {
-            SimulationObjects.LoadTypeDict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, calcParameters.InternalStepsize,
-                        calcParameters.LoadTypePriority);
-            var affordanceTaggingSetFactory = new AffordanceTaggingSetFactory(SimulationObjects.LoadTypeDict);
-            SimulationObjects.AffordanceTaggingSets = affordanceTaggingSetFactory.GetAffordanceTaggingSets(sim);
+            ContainerBuilder builder = new();
+
+            builder.Register(_ => calcParameters).As<CalcParameters>().SingleInstance();
+            builder.Register(_ => CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, calcParameters.InternalStepsize,
+                        calcParameters.LoadTypePriority)).As<CalcLoadTypeDtoDictionary>().SingleInstance();
+            builder.RegisterType<AffordanceTaggingSetFactory>().As<AffordanceTaggingSetFactory>();
+            builder.Register(x => x.Resolve<AffordanceTaggingSetFactory>().GetAffordanceTaggingSets(sim)).As<List<CalcAffordanceTaggingSetDto>>().SingleInstance();
+            builder.Register(x => CalcLoadTypeFactory.MakeLoadTypes(x.Resolve<CalcLoadTypeDtoDictionary>()))
+                .As<CalcLoadTypeDictionary>().SingleInstance();
+            builder.RegisterType<AvailabilityDtoRepository>().As<AvailabilityDtoRepository>().SingleInstance();
+            builder.RegisterType<CalcVariableDtoFactory>().As<CalcVariableDtoFactory>().SingleInstance();
+            builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
+            builder.RegisterType<CalcTransportationDtoFactory>().As<CalcTransportationDtoFactory>();
+
+            var container = builder.Build();
+            return container.BeginLifetimeScope();
         }
 
-        private void RegisterEverything([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] string resultpath, [JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] ICalcObject hh,
-                                          [JetBrains.Annotations.NotNull] ContainerBuilder builder, [JetBrains.Annotations.NotNull] string sqlFileName, [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
-                                          [CanBeNull] DeviceSelection ds)
+        private void RegisterEverything(string resultpath, CalcStartParameterSet csps, ICalcObject hh, ContainerBuilder builder, string sqlFileName, DeviceSelection? ds)
         {
             builder.Register(_ => new SqlResultLoggingService(sqlFileName)).As<SqlResultLoggingService>().SingleInstance();
-            builder.Register(_ => calcParameters).As<CalcParameters>().SingleInstance();
             Random rnd = new Random(csps.RandomSeed);
             builder.Register(_ => rnd).As<Random>().SingleInstance();
             builder.Register(_ => csps.CalculationProfiler).As<CalculationProfiler>().SingleInstance();
@@ -352,9 +348,6 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<OnlineDeviceActivationProcessor>().As<IOnlineDeviceActivationProcessor>().SingleInstance();
             builder.RegisterType<CalcHouseFactory>().As<CalcHouseFactory>().SingleInstance();
             builder.RegisterType<CalcManager>().As<CalcManager>().SingleInstance();
-            builder.Register(_ => SimulationObjects.LoadTypeDict).As<CalcLoadTypeDtoDictionary>().SingleInstance();
-            builder.Register(x => CalcLoadTypeFactory.MakeLoadTypes(x.Resolve<CalcLoadTypeDtoDictionary>()))
-                .As<CalcLoadTypeDictionary>().SingleInstance();
             builder.Register(x => {
                 CalcDeviceTaggingSetFactory ctsf =
                     new CalcDeviceTaggingSetFactory(x.Resolve<CalcParameters>(), x.Resolve<CalcLoadTypeDtoDictionary>());
@@ -362,7 +355,6 @@ namespace CalculationController.CalcFactories
             }).As<CalcDeviceTaggingSets>().SingleInstance();
             builder.Register(_ => new DeviceCategoryPicker(rnd, ds)).As<IDeviceCategoryPicker>().SingleInstance();
             builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
-            builder.RegisterType<CalcHouseFactory>().As<CalcHouseFactory>().SingleInstance();
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
             builder.RegisterType<CalcPersonFactory>().As<CalcPersonFactory>().SingleInstance();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
@@ -370,28 +362,22 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<CalcAffordanceFactory>().As<CalcAffordanceFactory>().SingleInstance();
             builder.RegisterType<CalcTransportationFactory>().As<CalcTransportationFactory>().SingleInstance();
 
-            builder.RegisterType<CalcVariableDtoFactory>().As<CalcVariableDtoFactory>().SingleInstance();
-
             builder.RegisterType<VacationDtoFactory>().As<VacationDtoFactory>().SingleInstance();
             builder.RegisterType<CalcVariableRepository>().As<CalcVariableRepository>().SingleInstance();
             builder.RegisterType<TemperatureDataLogger>().As<TemperatureDataLogger>().SingleInstance();
             builder.Register(x => new FileFactoryAndTracker(resultpath, hh.Name, x.Resolve<IInputDataLogger>()))
                 .As<FileFactoryAndTracker>().SingleInstance();
             builder.Register(_ => new SqlResultLoggingService(resultpath)).As<SqlResultLoggingService>().SingleInstance();
-            builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(),
                     c.Resolve<CalcParameters>()))
                 .As<OnlineLoggingData>().As<IOnlineLoggingData>().SingleInstance();
             builder.Register(x => new LogFile(calcParameters, x.Resolve<FileFactoryAndTracker>())).As<ILogFile>().SingleInstance();
-            builder.RegisterType<AffordanceTaggingSetFactory>().As<AffordanceTaggingSetFactory>();
             builder.RegisterType<CalcPersonDtoFactory>().As<CalcPersonDtoFactory>();
             builder.RegisterType<CalcDeviceDtoFactory>().As<CalcDeviceDtoFactory>();
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
             builder.RegisterType<CalcAffordanceDtoFactory>().As<CalcAffordanceDtoFactory>();
             builder.RegisterType<CalcHouseDtoFactory>().As<CalcHouseDtoFactory>();
             builder.RegisterType<CalcModularHouseholdDtoFactory>().As<CalcModularHouseholdDtoFactory>();
-            builder.RegisterType<AvailabilityDtoRepository>().As<AvailabilityDtoRepository>().SingleInstance();
-            builder.RegisterType<CalcTransportationDtoFactory>().As<CalcTransportationDtoFactory>();
             //data save loggers + input data loggers
             builder.RegisterType<InputDataLogger>().As<IInputDataLogger>().SingleInstance();
             builder.RegisterType<CalcParameterLogger>().As<IDataSaverBase>();

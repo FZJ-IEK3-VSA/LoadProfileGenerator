@@ -152,7 +152,7 @@ namespace CitySimulation
         private List<CitySimulationHouse> PrepareHousesForSimulation(string baseResultDir, int rank)
         {
             var simulationTargets = new List<CitySimulationHouse>(scenarioPart.TargetReferences.Count);
-            var cmf = new CalcManagerFactory();
+            var cmf = new CalcManagerFactory(sim, CalcParameters);
 
             foreach (var target in scenarioPart.TargetReferences)
             {
