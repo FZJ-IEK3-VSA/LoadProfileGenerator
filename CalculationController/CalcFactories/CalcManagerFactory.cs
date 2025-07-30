@@ -118,10 +118,9 @@ namespace CalculationController.CalcFactories
 
             var chh = csps.CalcTarget as ModularHousehold;
             var ds = GetDeviceSelection(csps, csps.CalcTarget, chh);
-            var sqlFileName = Path.Combine(csps.ResultPath, "Results.sqlite");
 
             // create a new scope for this CalcManager as a child of the common scope, inheriting all its registered objects
-            ILifetimeScope scope = SharedObjectsScope.BeginLifetimeScope(builder => RegisterEverything(csps, builder, sqlFileName, ds));
+            ILifetimeScope scope = SharedObjectsScope.BeginLifetimeScope(builder => RegisterEverything(csps, builder, ds));
 
             CalcManager? cm = null;
             try
@@ -320,62 +319,62 @@ namespace CalculationController.CalcFactories
         {
             ContainerBuilder builder = new();
 
-            builder.Register(_ => calcParameters).As<CalcParameters>().SingleInstance();
-            builder.Register(_ => CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, calcParameters.InternalStepsize,
-                        calcParameters.LoadTypePriority)).As<CalcLoadTypeDtoDictionary>().SingleInstance();
-            builder.RegisterType<AffordanceTaggingSetFactory>().As<AffordanceTaggingSetFactory>();
-            builder.Register(x => x.Resolve<AffordanceTaggingSetFactory>().GetAffordanceTaggingSets(sim)).As<List<CalcAffordanceTaggingSetDto>>().SingleInstance();
-            builder.Register(x => CalcLoadTypeFactory.MakeLoadTypes(x.Resolve<CalcLoadTypeDtoDictionary>()))
-                .As<CalcLoadTypeDictionary>().SingleInstance();
-            builder.RegisterType<AvailabilityDtoRepository>().As<AvailabilityDtoRepository>().SingleInstance();
-            builder.RegisterType<CalcVariableDtoFactory>().As<CalcVariableDtoFactory>().SingleInstance();
-            builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
-            builder.RegisterType<CalcTransportationDtoFactory>().As<CalcTransportationDtoFactory>();
+            builder.RegisterInstance(calcParameters);
+            builder.RegisterInstance(CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, calcParameters.InternalStepsize,
+                        calcParameters.LoadTypePriority));
+            builder.RegisterType<AffordanceTaggingSetFactory>().SingleInstance();
+            builder.Register(x => x.Resolve<AffordanceTaggingSetFactory>().GetAffordanceTaggingSets(sim)).SingleInstance();
+            builder.Register(x => CalcLoadTypeFactory.MakeLoadTypes(x.Resolve<CalcLoadTypeDtoDictionary>())).SingleInstance();
+            builder.RegisterType<AvailabilityDtoRepository>().SingleInstance();
+            builder.RegisterType<CalcVariableDtoFactory>().SingleInstance();
+            builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).SingleInstance();
+            builder.RegisterType<CalcTransportationDtoFactory>();
 
             var container = builder.Build();
             return container;
         }
 
-        private void RegisterEverything(CalcStartParameterSet csps, ContainerBuilder builder, string sqlFileName, DeviceSelection? ds)
+        /// <summary>
+        /// Register the objects that are required only for the CalcManager that is
+        /// being created at the moment.
+        /// </summary>
+        /// <param name="csps">full set of calculation parameters</param>
+        /// <param name="builder">container builder to register objects</param>
+        /// <param name="ds">device selection for this simulation target</param>
+        private void RegisterEverything(CalcStartParameterSet csps, ContainerBuilder builder, DeviceSelection? ds)
         {
-            builder.Register(_ => new SqlResultLoggingService(sqlFileName)).As<SqlResultLoggingService>().SingleInstance();
-            Random rnd = new Random(csps.RandomSeed);
-            builder.Register(_ => rnd).As<Random>().SingleInstance();
-            builder.Register(_ => csps.CalculationProfiler).As<CalculationProfiler>().SingleInstance();
-            builder.Register(_ => new NormalRandom(0, 0.1, rnd)).As<NormalRandom>().SingleInstance();
+            Random rnd = new(csps.RandomSeed);
+            builder.RegisterInstance(rnd);
+            builder.RegisterInstance(csps.CalculationProfiler);
+            builder.RegisterInstance(new NormalRandom(0, 0.1, rnd));
             builder.RegisterType<OnlineDeviceActivationProcessor>().As<IOnlineDeviceActivationProcessor>().SingleInstance();
-            builder.RegisterType<CalcHouseFactory>().As<CalcHouseFactory>().SingleInstance();
-            builder.RegisterType<CalcManager>().As<CalcManager>().SingleInstance();
-            builder.Register(x => {
-                CalcDeviceTaggingSetFactory ctsf =
-                    new CalcDeviceTaggingSetFactory(x.Resolve<CalcParameters>(), x.Resolve<CalcLoadTypeDtoDictionary>());
-                return ctsf.GetDeviceTaggingSets(sim, csps.CalcTarget.CalculatePersonCount());
-            }).As<CalcDeviceTaggingSets>().SingleInstance();
-            builder.Register(_ => new DeviceCategoryPicker(rnd, ds)).As<IDeviceCategoryPicker>().SingleInstance();
-            builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
-            builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
-            builder.RegisterType<CalcPersonFactory>().As<CalcPersonFactory>().SingleInstance();
-            builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
-            builder.RegisterType<CalcRepo>().As<CalcRepo>().SingleInstance();
-            builder.RegisterType<CalcAffordanceFactory>().As<CalcAffordanceFactory>().SingleInstance();
-            builder.RegisterType<CalcTransportationFactory>().As<CalcTransportationFactory>().SingleInstance();
+            builder.RegisterType<CalcHouseFactory>().SingleInstance();
+            builder.RegisterType<CalcManager>().SingleInstance();
+            builder.RegisterType<CalcDeviceTaggingSetFactory>().SingleInstance();
+            builder.Register(x => x.Resolve<CalcDeviceTaggingSetFactory>().GetDeviceTaggingSets(sim, csps.CalcTarget.CalculatePersonCount())).SingleInstance();
+            builder.RegisterInstance<IDeviceCategoryPicker>(new DeviceCategoryPicker(rnd, ds));
+            builder.RegisterType<CalcModularHouseholdFactory>().SingleInstance();
+            builder.RegisterType<CalcLocationFactory>().SingleInstance();
+            builder.RegisterType<CalcPersonFactory>().SingleInstance();
+            builder.RegisterType<CalcDeviceFactory>().SingleInstance();
+            builder.RegisterType<CalcRepo>().SingleInstance();
+            builder.RegisterType<CalcAffordanceFactory>().SingleInstance();
+            builder.RegisterType<CalcTransportationFactory>().SingleInstance();
 
-            builder.RegisterType<VacationDtoFactory>().As<VacationDtoFactory>().SingleInstance();
-            builder.RegisterType<CalcVariableRepository>().As<CalcVariableRepository>().SingleInstance();
-            builder.RegisterType<TemperatureDataLogger>().As<TemperatureDataLogger>().SingleInstance();
+            builder.RegisterType<VacationDtoFactory>().SingleInstance();
+            builder.RegisterType<CalcVariableRepository>().SingleInstance();
+            builder.RegisterType<TemperatureDataLogger>().SingleInstance();
             builder.Register(x => new FileFactoryAndTracker(csps.ResultPath, csps.CalcTarget.Name, x.Resolve<IInputDataLogger>()))
                 .As<FileFactoryAndTracker>().SingleInstance();
-            builder.Register(_ => new SqlResultLoggingService(csps.ResultPath)).As<SqlResultLoggingService>().SingleInstance();
-            builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(),
-                    c.Resolve<CalcParameters>()))
-                .As<OnlineLoggingData>().As<IOnlineLoggingData>().SingleInstance();
+            builder.Register(_ => new SqlResultLoggingService(csps.ResultPath)).SingleInstance();
+            builder.RegisterType<OnlineLoggingData>().As<IOnlineLoggingData>().SingleInstance();
             builder.Register(x => new LogFile(calcParameters, x.Resolve<FileFactoryAndTracker>())).As<ILogFile>().SingleInstance();
-            builder.RegisterType<CalcPersonDtoFactory>().As<CalcPersonDtoFactory>();
-            builder.RegisterType<CalcDeviceDtoFactory>().As<CalcDeviceDtoFactory>();
-            builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
-            builder.RegisterType<CalcAffordanceDtoFactory>().As<CalcAffordanceDtoFactory>();
-            builder.RegisterType<CalcHouseDtoFactory>().As<CalcHouseDtoFactory>();
-            builder.RegisterType<CalcModularHouseholdDtoFactory>().As<CalcModularHouseholdDtoFactory>();
+            builder.RegisterType<CalcPersonDtoFactory>();
+            builder.RegisterType<CalcDeviceDtoFactory>();
+            builder.RegisterType<CalcLocationDtoFactory>();
+            builder.RegisterType<CalcAffordanceDtoFactory>();
+            builder.RegisterType<CalcHouseDtoFactory>();
+            builder.RegisterType<CalcModularHouseholdDtoFactory>();
             //data save loggers + input data loggers
             builder.RegisterType<InputDataLogger>().As<IInputDataLogger>().SingleInstance();
             builder.RegisterType<CalcParameterLogger>().As<IDataSaverBase>();
@@ -414,11 +413,10 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<VariableEntryLogger>().As<IDataSaverBase>();
             builder.RegisterType<TransportationDeviceStatisticsLogger>().As<IDataSaverBase>();
             builder.RegisterType<TransportationDeviceChoiceLogger>().As<IDataSaverBase>();
-
             builder.RegisterType<AffordanceEnergyUseLogger>().As<IDataSaverBase>();
             //builder.Register(x=> x.Resolve<CalcVariableDtoFactory>().GetRepository()).As<CalcVariableRepository>().SingleInstance();
             builder.Register(_ => MakeLightNeededArray(csps.GeographicLocation, csps.TemperatureProfile,
-                rnd, [], csps.CalcTarget.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
+                rnd, [], csps.CalcTarget.Name, calcParameters)).SingleInstance();
         }
 
         private static void RegisterAllDtoVariables([JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository)
