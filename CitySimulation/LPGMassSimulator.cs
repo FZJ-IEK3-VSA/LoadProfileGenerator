@@ -173,7 +173,7 @@ namespace CitySimulation
                     var calcStartParameterSet = new CalcStartParameterSet(objectsForCalc, CalcParameters, new(), target.Seed);
 
                     // create a calcManager for each household
-                    var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
+                    var calcManager = cmf.GetCalcManager(calcStartParameterSet);
                     simulationTargets.Add(new CitySimulationHouse(target.Id, calcManager, houseResultDir));
                 }
                 catch (Exception ex)

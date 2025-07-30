@@ -53,8 +53,8 @@ namespace CalcPostProcessorTests {
                         calculationProfiler,
                         wd.WorkingDirectory, false, false, ".",
                         false);
-                    var cmf = new CalcManagerFactory();
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
+                    var cm = cmf.GetCalcManager(csps);
                     cm.Run(null);
 
                     var mq = new Mock<ICalculationProfiler>();

@@ -58,7 +58,6 @@ namespace CalculationController.Tests
                     Logger.Info("Temperature:" + sim.MyGeneralConfig.SelectedTemperatureProfile);
                     Logger.Info("Geographic:" + sim.MyGeneralConfig.GeographicLocation);
                     sim.Should().NotBeNull();
-                    var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
@@ -66,7 +65,8 @@ namespace CalculationController.Tests
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2018, 1, 1), new DateTime(2018, 1, 2), new TimeSpan(0, 1, 0),
                         ";", 5, new TimeSpan(0, 10, 0), false, false, 3, 3, calculationProfiler,
                         wd1.WorkingDirectory, false, false, ".", false);
-                    var cm = cmf.GetCalcManager(sim,  csps, false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
+                    var cm = cmf.GetCalcManager(csps);
 
                     static bool ReportCancelFunc1()
                     {
@@ -131,7 +131,6 @@ namespace CalculationController.Tests
                     Logger.Info("Temperature:" + sim.MyGeneralConfig.SelectedTemperatureProfile);
                     Logger.Info("Geographic:" + sim.MyGeneralConfig.GeographicLocation);
                     sim.Should().NotBeNull();
-                    var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     List<CalcOption> options = new List<CalcOption>(); // sim.MyGeneralConfig.AllEnabledOptions();
                     options.Add(CalcOption.DeviceProfilesHouse);
@@ -147,7 +146,8 @@ namespace CalculationController.Tests
                         false, null, LoadTypePriority.All, null, null, null, options,
                         new DateTime(2013, 1, 1), new DateTime(2013, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 10, 0), false, false, 3, 3, calculationProfiler,
                         wd1.WorkingDirectory, false, false, decimalSep, false);
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
+                    var cm = cmf.GetCalcManager(csps);
                     cm.Run(ReportCancelFunc);
                     Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
                     var pathdp = Path.Combine(wd1.WorkingDirectory,

@@ -64,7 +64,6 @@ namespace CalculationController.CalcFactories
     {
         public static bool DoIntegrityRun { get; set; } = true;
 
-        private readonly ILifetimeScope sharedObjectsScope;
         private readonly Simulator sim;
         private readonly CalcParameters calcParameters;
 
@@ -72,21 +71,21 @@ namespace CalculationController.CalcFactories
         {
             sim = simulator;
             calcParameters = parameters;
-            sharedObjectsScope = RegisterSharedObjects();
+            SharedObjectsScope = RegisterSharedObjects();
         }
+
+        /// <summary>
+        /// Scope that contains the shared objects that are used by all CalcManagers.
+        /// Calling Dispose() on this also disposes all contained objects and should only
+        /// be done once all CalcManagers created by this factory are disposed.
+        /// </summary>
+        public ILifetimeScope SharedObjectsScope { get; }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "ThrowingSystemException")]
         [JetBrains.Annotations.NotNull]
-        public CalcManager GetCalcManager([JetBrains.Annotations.NotNull] Simulator sim,
-                [JetBrains.Annotations.NotNull] CalcStartParameterSet csps,  bool forceRandom)
-            //, ICalcObject hh,
-            //bool forceRandom, TemperatureProfile temperatureProfile,
-            //GeographicLocation geographicLocation, EnergyIntensityType energyIntensity,
-            //string fileVersion, LoadTypePriority loadTypePriority, [CanBeNull] DeviceSelection deviceSelection,
-            //TransportationDeviceSet transportationDeviceSet, TravelRouteSet travelRouteSet,
-            //)
+        public CalcManager GetCalcManager([JetBrains.Annotations.NotNull] CalcStartParameterSet csps)
         {
             if (sim == null) {
                 throw new LPGException("Simulation was null");
@@ -122,13 +121,13 @@ namespace CalculationController.CalcFactories
             var sqlFileName = Path.Combine(csps.ResultPath, "Results.sqlite");
 
             // create a new scope for this CalcManager as a child of the common scope, inheriting all its registered objects
-            ILifetimeScope scope = sharedObjectsScope.BeginLifetimeScope(builder => RegisterEverything(csps.ResultPath, csps, csps.CalcTarget, builder, sqlFileName, ds));
+            ILifetimeScope scope = SharedObjectsScope.BeginLifetimeScope(builder => RegisterEverything(csps, builder, sqlFileName, ds));
 
             CalcManager? cm = null;
             try
             {
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
-                var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository);
+                var calcRepo = PrepareCalculation(csps, scope, out var dtoltdict, out var dls, out var variableRepository);
 
                 //_calcParameters.Logfile = cm.Logfile;
                 //_calcParameters.NormalDistributedRandom = normalDistributedRandom;
@@ -190,8 +189,7 @@ namespace CalculationController.CalcFactories
         }
 
         [JetBrains.Annotations.NotNull]
-        private CalcRepo PrepareCalculation([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] CalcStartParameterSet csps,
-                                                   [JetBrains.Annotations.NotNull] ILifetimeScope scope,
+        private CalcRepo PrepareCalculation([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] ILifetimeScope scope,
                                                    [JetBrains.Annotations.NotNull] out CalcLoadTypeDtoDictionary dtoltdict,
                                                    [JetBrains.Annotations.NotNull] out DayLightStatus dls,
                                                    [JetBrains.Annotations.NotNull] out CalcVariableRepository variableRepository
@@ -335,10 +333,10 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<CalcTransportationDtoFactory>().As<CalcTransportationDtoFactory>();
 
             var container = builder.Build();
-            return container.BeginLifetimeScope();
+            return container;
         }
 
-        private void RegisterEverything(string resultpath, CalcStartParameterSet csps, ICalcObject hh, ContainerBuilder builder, string sqlFileName, DeviceSelection? ds)
+        private void RegisterEverything(CalcStartParameterSet csps, ContainerBuilder builder, string sqlFileName, DeviceSelection? ds)
         {
             builder.Register(_ => new SqlResultLoggingService(sqlFileName)).As<SqlResultLoggingService>().SingleInstance();
             Random rnd = new Random(csps.RandomSeed);
@@ -351,7 +349,7 @@ namespace CalculationController.CalcFactories
             builder.Register(x => {
                 CalcDeviceTaggingSetFactory ctsf =
                     new CalcDeviceTaggingSetFactory(x.Resolve<CalcParameters>(), x.Resolve<CalcLoadTypeDtoDictionary>());
-                return ctsf.GetDeviceTaggingSets(sim, hh.CalculatePersonCount());
+                return ctsf.GetDeviceTaggingSets(sim, csps.CalcTarget.CalculatePersonCount());
             }).As<CalcDeviceTaggingSets>().SingleInstance();
             builder.Register(_ => new DeviceCategoryPicker(rnd, ds)).As<IDeviceCategoryPicker>().SingleInstance();
             builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
@@ -365,9 +363,9 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<VacationDtoFactory>().As<VacationDtoFactory>().SingleInstance();
             builder.RegisterType<CalcVariableRepository>().As<CalcVariableRepository>().SingleInstance();
             builder.RegisterType<TemperatureDataLogger>().As<TemperatureDataLogger>().SingleInstance();
-            builder.Register(x => new FileFactoryAndTracker(resultpath, hh.Name, x.Resolve<IInputDataLogger>()))
+            builder.Register(x => new FileFactoryAndTracker(csps.ResultPath, csps.CalcTarget.Name, x.Resolve<IInputDataLogger>()))
                 .As<FileFactoryAndTracker>().SingleInstance();
-            builder.Register(_ => new SqlResultLoggingService(resultpath)).As<SqlResultLoggingService>().SingleInstance();
+            builder.Register(_ => new SqlResultLoggingService(csps.ResultPath)).As<SqlResultLoggingService>().SingleInstance();
             builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(),
                     c.Resolve<CalcParameters>()))
                 .As<OnlineLoggingData>().As<IOnlineLoggingData>().SingleInstance();
@@ -420,7 +418,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<AffordanceEnergyUseLogger>().As<IDataSaverBase>();
             //builder.Register(x=> x.Resolve<CalcVariableDtoFactory>().GetRepository()).As<CalcVariableRepository>().SingleInstance();
             builder.Register(_ => MakeLightNeededArray(csps.GeographicLocation, csps.TemperatureProfile,
-                rnd, [], hh.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
+                rnd, [], csps.CalcTarget.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
         }
 
         private static void RegisterAllDtoVariables([JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository)

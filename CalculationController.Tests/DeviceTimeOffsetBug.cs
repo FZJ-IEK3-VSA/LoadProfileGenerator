@@ -127,7 +127,6 @@ namespace CalculationController.Tests {
 
                     sim.Should().NotBeNull();
 
-                    var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;
                     var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
                     if (geoloc == null)
@@ -149,7 +148,8 @@ namespace CalculationController.Tests {
                         false, false, 3, 3, calculationProfiler,
                         wd1.WorkingDirectory, false,
                         false, ".", false);
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
+                    var cm = cmf.GetCalcManager(csps);
 
                     static bool ReportCancelFunc()
                     {

@@ -70,7 +70,7 @@ namespace CalculationController.Queue {
             CalcManager calcManager = null;
             try {
                 var cmf = new CalcManagerFactory(sim, csps.CalcParams);
-                calcManager = cmf.GetCalcManager(sim, csps,  forceRandom);
+                calcManager = cmf.GetCalcManager(csps);
                     //, forceRandom,
                     //temperatureProfile,  geographicLocation, calcEntry.EnergyIntensity,
                     //fileVersion, loadTypePriority, deviceSelection, transportationDeviceSet, travelRouteSet);

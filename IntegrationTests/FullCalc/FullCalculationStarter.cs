@@ -42,7 +42,6 @@ namespace IntegrationTests.FullCalc
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
                     sim.Should().NotBeNull();
 
-                    var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;
                     var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
                     if (geoloc == null)
@@ -58,7 +57,8 @@ namespace IntegrationTests.FullCalc
                         new DateTime(2015, 1, 1), new DateTime(2015, 1, 31), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
                         path, false,
                         false, ".", false);
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
+                    var cm = cmf.GetCalcManager(csps);
 
                     static bool ReportCancelFunc()
                     {
