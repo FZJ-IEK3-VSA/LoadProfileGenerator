@@ -18,7 +18,7 @@ namespace Common.JSON {
         public List<DeviceTaggingSetInformation> TaggingSets { get; set; } = new List<DeviceTaggingSetInformation>();
 
         [NotNull]
-        public static DeviceTaggingSetList Read([NotNull] SqlResultLoggingService srls)
+        public static DeviceTaggingSetList Read([NotNull] IResultLoggingService srls)
         {
             DeviceTaggingSetLogger dtsl = new DeviceTaggingSetLogger(srls);
             var list = dtsl.Load();

@@ -228,7 +228,7 @@ namespace SimulationEngine.Tests
             peakWorkingSet.Should().BeLessThan(memoryCap);
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            var srls = new SqlResultLoggingService(wd);
+            var srls = ResultLoggingFactory.CreateResultLoggingService(wd);
             var rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
             var foundOptions = new List<CalcOption>();
@@ -467,7 +467,7 @@ namespace SimulationEngine.Tests
             static void CheckResults(string path)
             {
 
-                var srls = new SqlResultLoggingService(path);
+                var srls = ResultLoggingFactory.CreateResultLoggingService(path);
                 var keyLogger = new HouseholdKeyLogger(srls);
                 var keys = keyLogger.Load();
                 var hhkey = keys.Single(x => x.KeyType == HouseholdKeyType.Household).HHKey;
@@ -658,7 +658,7 @@ namespace SimulationEngine.Tests
 
         private static void CheckForResultfile(string wd)
         {
-            var srls = new SqlResultLoggingService(wd);
+            var srls = ResultLoggingFactory.CreateResultLoggingService(wd);
             var rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
             var foundcar = false;

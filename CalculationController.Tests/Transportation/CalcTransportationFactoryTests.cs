@@ -64,7 +64,7 @@ namespace CalculationController.Tests.Transportation {
             builder.Register(_ => new FileFactoryAndTracker(wd.WorkingDirectory, mhh.Name, wd.InputDataLogger))
                 .As<FileFactoryAndTracker>()
                 .SingleInstance();
-            builder.Register(_ => new SqlResultLoggingService(wd.WorkingDirectory)).As<SqlResultLoggingService>()
+            builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory)).As<IResultLoggingService>()
                 .SingleInstance();
             builder.Register(_ => wd.InputDataLogger).As<IInputDataLogger>().SingleInstance();
 
@@ -225,7 +225,7 @@ namespace CalculationController.Tests.Transportation {
                     builder.Register(_ => new NormalRandom(0, 1, r)).As<NormalRandom>().SingleInstance();
                     builder.Register(_ => new FileFactoryAndTracker(path, mhh.Name, inputlogger))
                         .As<FileFactoryAndTracker>().SingleInstance();
-                    builder.Register(_ => new SqlResultLoggingService(path)).As<SqlResultLoggingService>()
+                    builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(path)).As<IResultLoggingService>()
                         .SingleInstance();
                     builder.Register(_ => inputlogger).As<IInputDataLogger>().As<InputDataLogger>().SingleInstance();
 

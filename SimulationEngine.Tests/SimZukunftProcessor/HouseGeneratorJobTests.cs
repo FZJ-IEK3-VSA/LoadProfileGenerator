@@ -374,7 +374,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                             }
                         };
                         StartHouseJob(houseJob, wd, htcode);
-                        SqlResultLoggingService srls = new SqlResultLoggingService(houseJob.CalcSpec.OutputDirectory);
+                        IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(houseJob.CalcSpec.OutputDirectory);
                         HouseholdKeyLogger hhkslogger = new HouseholdKeyLogger(srls);
                         var hhks = hhkslogger.Load();
                         TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(srls);

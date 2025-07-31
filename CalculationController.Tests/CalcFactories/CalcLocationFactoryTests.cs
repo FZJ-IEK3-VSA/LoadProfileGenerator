@@ -265,7 +265,7 @@ namespace CalculationController.Tests.CalcFactories
             string path = wd.WorkingDirectory;
             builder.Register(_ => new FileFactoryAndTracker(path, "HH1", idl)).As<FileFactoryAndTracker>()
                 .SingleInstance();
-            builder.Register(_ => new SqlResultLoggingService(path)).As<SqlResultLoggingService>().SingleInstance();
+            builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(path)).As<IResultLoggingService>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(x => new OnlineLoggingData(x.Resolve<DateStampCreator>(), x.Resolve<IInputDataLogger>(), x.Resolve<CalcParameters>()))

@@ -9,9 +9,9 @@ namespace Common.SQLResultLogging.InputLoggers {
     using Newtonsoft.Json;
 
     public class ColumnEntryLogger : DataSaverBase {
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly IResultLoggingService _srls;
 
-        public ColumnEntryLogger([NotNull] SqlResultLoggingService srls) :
+        public ColumnEntryLogger([NotNull] IResultLoggingService srls) :
             base(typeof(List<ColumnEntry>), new ResultTableDefinition("ColumnEntry",ResultTableID.BinaryTempFileColumnDescriptions, "Description of the binary columns in the temporary result files", CalcOption.BasicOverview), srls) => _srls = srls;
 
         [ItemNotNull]

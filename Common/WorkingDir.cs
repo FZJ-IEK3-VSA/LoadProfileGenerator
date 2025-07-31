@@ -33,7 +33,7 @@ namespace Common {
 
         public void InitializeDataLogging()
         {
-            SqlResultLoggingService  = new SqlResultLoggingService(_lastDirectory);
+            SqlResultLoggingService  = ResultLoggingFactory.CreateResultLoggingService(_lastDirectory);
             List<IDataSaverBase> loggers = new List<IDataSaverBase>
             {
                 new CalcAutoDevDtoLogger(SqlResultLoggingService),
@@ -45,7 +45,7 @@ namespace Common {
         [JetBrains.Annotations.NotNull]
         public InputDataLogger InputDataLogger { get; private set; }
         [JetBrains.Annotations.NotNull]
-        public SqlResultLoggingService SqlResultLoggingService { get; private  set; }
+        public IResultLoggingService SqlResultLoggingService { get; private  set; }
 
         [JetBrains.Annotations.NotNull]
         public string WorkingDirectory => _lastDirectory;

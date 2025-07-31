@@ -10,7 +10,7 @@ namespace Common.SQLResultLogging.Loggers
     {
         private const string TableName = "TransportationDeviceChoices";
 
-        public TransportationDeviceChoiceLogger(SqlResultLoggingService srls) :
+        public TransportationDeviceChoiceLogger(IResultLoggingService srls) :
             base(typeof(TransportationDeviceChoice), new ResultTableDefinition(TableName, ResultTableID.TransportationDeviceChoices, "Transportation Device Choices", CalcOption.TransportationDeviceChoices), srls)
         {
         }

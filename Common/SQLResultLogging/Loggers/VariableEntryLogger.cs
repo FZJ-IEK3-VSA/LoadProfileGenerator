@@ -41,7 +41,7 @@ namespace Common.SQLResultLogging.Loggers {
     }
     public class VariableEntryLogger : DataSaverBase {
         private const string TableName = "VariableValues";
-        public VariableEntryLogger([NotNull] SqlResultLoggingService srls) :
+        public VariableEntryLogger([NotNull] IResultLoggingService srls) :
             base(typeof(CalcVariableEntry), new ResultTableDefinition(TableName,ResultTableID.VariableValues, "Variable Values", CalcOption.VariableLogFile), srls)
         {
         }

@@ -59,7 +59,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         {
             ResultPath = resultPath;
             _householdname = householdname;
-            SqlResultLoggingService srls = new SqlResultLoggingService(resultPath);
+            IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(resultPath);
             ResultFileEntryLogger rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
             _resultFiles = new ObservableCollection<ResultFileEntry>(rfes);

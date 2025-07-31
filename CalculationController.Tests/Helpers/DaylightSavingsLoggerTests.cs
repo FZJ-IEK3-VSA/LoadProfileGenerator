@@ -21,7 +21,7 @@ namespace CalculationController.Tests.Helpers
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                SqlResultLoggingService sqrls = new SqlResultLoggingService(wd.WorkingDirectory);
+                IResultLoggingService sqrls = ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory);
 
                 BitArray ba = new BitArray(365 * 24 * 60);
                 for (int i = 0; i < ba.Length; i++)

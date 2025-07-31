@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.Loggers {
     public class TransportationEventLogger : DataSaverBase {
         private const string TableName = "TransportationEvents";
 
-        public TransportationEventLogger([NotNull] SqlResultLoggingService srls) :
+        public TransportationEventLogger([NotNull] IResultLoggingService srls) :
             base(typeof(TransportationEventEntry),  new ResultTableDefinition(TableName,ResultTableID.TransportationEvents, "Transportation Events", CalcOption.TransportationStatistics), srls)
         {
         }

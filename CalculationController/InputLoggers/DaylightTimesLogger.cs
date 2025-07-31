@@ -38,13 +38,13 @@ namespace CalculationController.InputLoggers
     public class DaylightTimesLogger:DataSaverBase
     {
         [NotNull]
-        private readonly SqlResultLoggingService _srls;
+        private readonly IResultLoggingService _srls;
         [NotNull]
         private readonly CalcParameters _calcParameters;
         [NotNull]
         private readonly DateStampCreator _dsc;
 
-        public DaylightTimesLogger([NotNull] SqlResultLoggingService srls, [NotNull] CalcParameters calcParameters):base(typeof(DayLightStatus),
+        public DaylightTimesLogger([NotNull] IResultLoggingService srls, [NotNull] CalcParameters calcParameters):base(typeof(DayLightStatus),
            new ResultTableDefinition("DaylightTimes",ResultTableID.DaylightTimes,  "Time of daylight each day", CalcOption.DaylightTimesList),srls)
         {
             _srls = srls;

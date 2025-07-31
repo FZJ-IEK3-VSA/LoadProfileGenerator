@@ -11,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
 {
     public class CalcDeviceArchiveDtoLogger : DataSaverBase
     {
-        public CalcDeviceArchiveDtoLogger([NotNull] SqlResultLoggingService srls)
+        public CalcDeviceArchiveDtoLogger([NotNull] IResultLoggingService srls)
             : base(typeof(CalcDeviceArchiveDto), new ResultTableDefinition("ArchiveOfAllDeviceDtos", ResultTableID.DeviceArchive, "Json Specification of all Devices, including charging stations", CalcOption.DeviceActivations), srls)
         {
         }
@@ -65,7 +65,7 @@ namespace Common.SQLResultLogging.InputLoggers
     }
     public class CalcDeviceDtoLogger : DataSaverBase
     {
-        public CalcDeviceDtoLogger([NotNull] SqlResultLoggingService srls)
+        public CalcDeviceDtoLogger([NotNull] IResultLoggingService srls)
             : base(typeof(CalcDeviceDto),  new ResultTableDefinition("DevicesDefinitions",ResultTableID.DeviceDefinitions,"Json Specification of the Devices", CalcOption.HouseholdContents), srls)
         {
         }

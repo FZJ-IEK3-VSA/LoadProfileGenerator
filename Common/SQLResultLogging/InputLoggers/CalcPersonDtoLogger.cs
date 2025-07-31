@@ -11,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
 {
     public class CalcPersonDtoLogger : DataSaverBase
     {
-        public CalcPersonDtoLogger([NotNull] SqlResultLoggingService srls)
+        public CalcPersonDtoLogger([NotNull] IResultLoggingService srls)
             : base(typeof(CalcPersonDto), new ResultTableDefinition("PersonDefinitions",ResultTableID.PersonDefinitions, "Json Specification of the Persons", CalcOption.HouseholdContents), srls)
         {
         }

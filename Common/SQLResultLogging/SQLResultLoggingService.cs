@@ -25,7 +25,7 @@ namespace Common.SQLResultLogging
     }*/
 
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
-    public class SqlResultLoggingService
+    public class SqlResultLoggingService : IResultLoggingService
     {
         [JetBrains.Annotations.NotNull] private readonly string _basePath;
 
@@ -779,72 +779,6 @@ namespace Common.SQLResultLogging
             }
         }
 
-        public class DatabaseEntry
-        {
-            public DatabaseEntry([JetBrains.Annotations.NotNull] string filename, [JetBrains.Annotations.NotNull] HouseholdKey key)
-            {
-                Filename = filename;
-                Key = key;
-            }
-
-            [JetBrains.Annotations.NotNull]
-            public string Filename { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public HouseholdKey Key { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public override string ToString() => Filename;
-        }
-
-        public class DatabaseList
-        {
-            public DatabaseList([JetBrains.Annotations.NotNull] string householdKey, [CanBeNull] long? id, [JetBrains.Annotations.NotNull] string filename)
-            {
-                HouseholdKey = householdKey;
-                ID = id;
-                Filename = filename;
-            }
-
-            [JetBrains.Annotations.NotNull]
-            public string Filename { get; set; }
-
-            [JetBrains.Annotations.NotNull]
-            public string HouseholdKey { get; set; }
-
-            [UsedImplicitly]
-            [CanBeNull]
-            public long? ID { get; set; }
-        }
-
-        public class FieldDefinition
-        {
-            public FieldDefinition([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string type)
-            {
-                Name = name;
-                Type = type;
-            }
-
-            [JetBrains.Annotations.NotNull]
-            public string Name { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public string Type { get; }
-        }
-
-        public class FileEntry
-        {
-            public FileEntry([JetBrains.Annotations.NotNull] string filename) => Filename = filename;
-
-            public bool DescriptionTableWritten { get; set; }
-
-            [JetBrains.Annotations.NotNull]
-            public string Filename { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public override string ToString() => Filename;
-        }
-
         public bool CheckifTableExits(string tableName)
         {
             string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';";
@@ -904,7 +838,7 @@ namespace Common.SQLResultLogging
 
         [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<SqlResultLoggingService.FieldDefinition> Fields { get; } = new List<SqlResultLoggingService.FieldDefinition>();
+        public List<FieldDefinition> Fields { get; } = new List<FieldDefinition>();
 
         [JetBrains.Annotations.NotNull]
         public HouseholdKey HouseholdKey { get; }
@@ -918,7 +852,7 @@ namespace Common.SQLResultLogging
 
         public void AddField([JetBrains.Annotations.NotNull] string name, SqliteDataType datatype)
         {
-            Fields.Add(new SqlResultLoggingService.FieldDefinition(name, datatype.ToString()));
+            Fields.Add(new FieldDefinition(name, datatype.ToString()));
         }
 
         public void AddField([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] Type datatype)
@@ -942,7 +876,7 @@ namespace Common.SQLResultLogging
                     throw new LPGException("Unknown data type:" + datatype.Name);
             }
 
-            Fields.Add(new SqlResultLoggingService.FieldDefinition(name, sqlDataType));
+            Fields.Add(new FieldDefinition(name, sqlDataType));
         }
 
         public void AddRow([JetBrains.Annotations.NotNull] Dictionary<string, object> row)

@@ -22,7 +22,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
             cp.Enable(CalcOption.ActivationsPerHour);
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
+                IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory);
                 CalcParameterLogger cpl = new CalcParameterLogger(srls);
                 cpl.Run(Constants.GeneralHouseholdKey, cp);
 

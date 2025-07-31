@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class ResultFileEntryLogger : DataSaverBase {
         private bool _isTableCreated;
         private const string TableName = "ResultFileEntries";
-        public ResultFileEntryLogger([NotNull] SqlResultLoggingService srls): base(typeof(ResultFileEntry),
+        public ResultFileEntryLogger([NotNull] IResultLoggingService srls): base(typeof(ResultFileEntry),
             new ResultTableDefinition(TableName,ResultTableID.ResultFileEntries, "Result files",CalcOption.BasicOverview),srls)
         {
             _isTableCreated = srls.CheckifTableExits(TableName);

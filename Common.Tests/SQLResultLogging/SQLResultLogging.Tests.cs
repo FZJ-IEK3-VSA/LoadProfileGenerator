@@ -30,9 +30,9 @@ namespace Common.Tests.SQLResultLogging
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
                 wd.ClearDirectory();
-                var srl = new SqlResultLoggingService(wd.WorkingDirectory);
-                SqlResultLoggingService.FieldDefinition fd = new SqlResultLoggingService.FieldDefinition("name", "text");
-                List<SqlResultLoggingService.FieldDefinition> fields = new List<SqlResultLoggingService.FieldDefinition>
+                var srl = ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory);
+                FieldDefinition fd = new FieldDefinition("name", "text");
+                List<FieldDefinition> fields = new List<FieldDefinition>
             {
                 fd
             };
@@ -48,9 +48,9 @@ namespace Common.Tests.SQLResultLogging
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
                 wd.ClearDirectory();
-                var srl = new SqlResultLoggingService(wd.WorkingDirectory);
-                SqlResultLoggingService.FieldDefinition fd = new SqlResultLoggingService.FieldDefinition("name", "text");
-                List<SqlResultLoggingService.FieldDefinition> fields = new List<SqlResultLoggingService.FieldDefinition>
+                var srl = ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory);
+                FieldDefinition fd = new FieldDefinition("name", "text");
+                List<FieldDefinition> fields = new List<FieldDefinition>
             {
                 fd
             };
@@ -72,9 +72,9 @@ namespace Common.Tests.SQLResultLogging
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
                 wd.ClearDirectory();
-                var srl = new SqlResultLoggingService(wd.WorkingDirectory);
-                SqlResultLoggingService.FieldDefinition fd = new SqlResultLoggingService.FieldDefinition("name", "text");
-                List<SqlResultLoggingService.FieldDefinition> fields = new List<SqlResultLoggingService.FieldDefinition>
+                var srl = ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory);
+                FieldDefinition fd = new FieldDefinition("name", "text");
+                List<FieldDefinition> fields = new List<FieldDefinition>
             {
                 fd
             };
@@ -96,7 +96,7 @@ namespace Common.Tests.SQLResultLogging
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
                 wd.ClearDirectory();
-                var srl = new SqlResultLoggingService(wd.WorkingDirectory);
+                var srl = ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory);
                 var hhkey = new HouseholdKey("hh0");
                 ResultTableDefinition rtd = new ResultTableDefinition("tbl1", ResultTableID.AffordanceDefinitions, "tabledesc", CalcOption.BasicOverview);
                 SaveableEntry se = new SaveableEntry(hhkey, rtd);

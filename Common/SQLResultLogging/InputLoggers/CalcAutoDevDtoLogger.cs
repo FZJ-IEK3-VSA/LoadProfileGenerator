@@ -11,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
 {
     public class CalcAutoDevDtoLogger : DataSaverBase
     {
-        public CalcAutoDevDtoLogger([NotNull] SqlResultLoggingService srls)
+        public CalcAutoDevDtoLogger([NotNull] IResultLoggingService srls)
             : base(typeof(CalcAutoDevDto),  new ResultTableDefinition("AutonomousDeviceDefinitions",ResultTableID.AutonomousDeviceDefinitions, "Json Specification of the autonomous Devices", CalcOption.HouseholdContents), srls)
         {
         }

@@ -328,7 +328,7 @@ namespace CalculationEngine
             ContinueRunning = false;
         }
 
-        public void InitializeFileLogging([CanBeNull] SqlResultLoggingService srls)
+        public void InitializeFileLogging([CanBeNull] IResultLoggingService srls)
         {
             if (CalcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages))
             {

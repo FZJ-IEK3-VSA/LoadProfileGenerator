@@ -11,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class TransportationStateEntryLogger : DataSaverBase {
         private const string Tablename = "TransportationDeviceStates";
 
-        public TransportationStateEntryLogger([NotNull] SqlResultLoggingService srls)
+        public TransportationStateEntryLogger([NotNull] IResultLoggingService srls)
             : base(typeof(TransportationDeviceStateEntry), new ResultTableDefinition(Tablename,ResultTableID.TransportationDeviceStates, "All Transportation Device States", CalcOption.TransportationStatistics), srls)
         {
         }

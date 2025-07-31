@@ -12,9 +12,9 @@ namespace Common.SQLResultLogging.Loggers {
     using SQLResultLogging;
     public class TotalsPerLoadtypeEntryLogger : DataSaverBase
     {
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly IResultLoggingService _srls;
         private const string TableName = "TotalsPerLoadtype";
-        public TotalsPerLoadtypeEntryLogger([NotNull] SqlResultLoggingService srls) :
+        public TotalsPerLoadtypeEntryLogger([NotNull] IResultLoggingService srls) :
             base(typeof(TotalsPerLoadtypeEntry), new ResultTableDefinition(TableName, ResultTableID.TotalsPerLoadtype, "Total Per Loadtype Entries", CalcOption.TotalsPerLoadtype), srls)
         {
             _srls = srls;
@@ -108,9 +108,9 @@ namespace Common.SQLResultLogging.Loggers {
     }
     public class TotalsPerDeviceLogger : DataSaverBase
     {
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly IResultLoggingService _srls;
         private const string TableName = "TotalsPerDevice";
-        public TotalsPerDeviceLogger([NotNull] SqlResultLoggingService srls) :
+        public TotalsPerDeviceLogger([NotNull] IResultLoggingService srls) :
             base(typeof(TotalsPerDeviceEntry), new ResultTableDefinition(
                 TableName, ResultTableID.TotalsPerDevice, "Total Per Device Entries", CalcOption.TotalsPerDevice), srls)
         {
@@ -152,9 +152,9 @@ namespace Common.SQLResultLogging.Loggers {
     }
     public class PersonAffordanceInformationLogger : DataSaverBase
     {
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly IResultLoggingService _srls;
         private const string TableName = "AffordanceTimeUse";
-        public PersonAffordanceInformationLogger([NotNull] SqlResultLoggingService srls) :
+        public PersonAffordanceInformationLogger([NotNull] IResultLoggingService srls) :
             base(typeof(PersonAffordanceInformation), new ResultTableDefinition(TableName, ResultTableID.PersonAffordanceInformation, "Time Use Per Affordance Entries", CalcOption.ActivationFrequencies), srls)
         {
             _srls = srls;

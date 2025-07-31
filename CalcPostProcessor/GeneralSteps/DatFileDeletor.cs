@@ -19,10 +19,10 @@ namespace CalcPostProcessor.GeneralSteps
     public class DatFileDeletor : GeneralStepBase
     {
         [JetBrains.Annotations.NotNull]
-        private readonly SqlResultLoggingService _srls;
+        private readonly IResultLoggingService _srls;
 
         public DatFileDeletor([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-                                    [JetBrains.Annotations.NotNull] SqlResultLoggingService srls)
+                                    [JetBrains.Annotations.NotNull] IResultLoggingService srls)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.DeleteDatFiles), calculationProfiler, "Delete .dat files", 0)
         {
             _srls = srls;

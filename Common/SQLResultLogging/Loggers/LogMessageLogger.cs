@@ -40,7 +40,7 @@ namespace Common.SQLResultLogging.Loggers {
             Errors
         }
 
-        public LogMessageLogger([CanBeNull] SqlResultLoggingService srls, ErrorMessageType errorMessageType) :
+        public LogMessageLogger([CanBeNull] IResultLoggingService srls, ErrorMessageType errorMessageType) :
             base(typeof(PersonStatus), new ResultTableDefinition(errorMessageType== ErrorMessageType.All? NormalTableName:ErrorTableName, ResultTableID.LogMessages,
                 "All Log Messages from the calculation", CalcOption.LogAllMessages), srls)
         {

@@ -60,7 +60,7 @@ namespace ChartCreator2.OxyCharts {
         public static void MakeChartsAndPDF([NotNull] CalculationProfiler calculationProfiler, string resultPath)
         {
             try {
-                SqlResultLoggingService srls = new SqlResultLoggingService(resultPath);
+                IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(resultPath);
                 CalcParameterLogger cpl = new CalcParameterLogger(srls);
                 InputDataLogger idl = new InputDataLogger(Array.Empty<IDataSaverBase>());
                 var calcParameters = cpl.Load();
@@ -137,7 +137,7 @@ namespace ChartCreator2.OxyCharts {
         [NotNull] private readonly FileFactoryAndTracker _fft;
 
         [NotNull] private readonly ChartCreationParameters _chartCreationParameters;
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly IResultLoggingService _srls;
 
         public ChartGeneratorManager([NotNull] ICalculationProfiler calculationProfiler, [NotNull] FileFactoryAndTracker fft,
                                      [NotNull] ChartCreationParameters chartCreationParameters)
@@ -145,7 +145,7 @@ namespace ChartCreator2.OxyCharts {
             _calculationProfiler = calculationProfiler;
             _fft = fft;
             _chartCreationParameters = chartCreationParameters;
-            _srls = new SqlResultLoggingService(_chartCreationParameters.BaseDirectory.FullName);
+            _srls = ResultLoggingFactory.CreateResultLoggingService(_chartCreationParameters.BaseDirectory.FullName);
         }
 
         public void Run([NotNull] string resultPath)
@@ -154,11 +154,11 @@ namespace ChartCreator2.OxyCharts {
             try {
                 CalcDataRepository cdr = new CalcDataRepository(_srls);
                 var builder = new ContainerBuilder();
-                builder.Register(_ => new SqlResultLoggingService(resultPath)).As<SqlResultLoggingService>().SingleInstance();
+                builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(resultPath)).As<IResultLoggingService>().SingleInstance();
                 //builder.Register(c =>_logFile).As<ILogFile>().SingleInstance();
                 builder.Register(_ => _calculationProfiler).As<ICalculationProfiler>().SingleInstance();
                 builder.Register(_ => _fft).As<FileFactoryAndTracker>().SingleInstance();
-                builder.Register(_ => _srls).As<SqlResultLoggingService>().SingleInstance();
+                builder.Register(_ => _srls).As<IResultLoggingService>().SingleInstance();
                 builder.Register(_ => _chartCreationParameters).As<ChartCreationParameters>().SingleInstance();
                 builder.Register(_ => cdr.CalcParameters).As<CalcParameters>().SingleInstance();
                 builder.RegisterType<ChartGenerator>().As<ChartGenerator>().SingleInstance();
@@ -243,12 +243,12 @@ namespace ChartCreator2.OxyCharts {
         [NotNull] private readonly FileFactoryAndTracker _fft;
         [ItemNotNull] [NotNull] private readonly IChartMakerStep[] _chartMakerSteps;
         [ItemNotNull] [NotNull] private readonly ISqlChartMakerStep[] _sqlChartMakerSteps;
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly IResultLoggingService _srls;
         [NotNull] private readonly CalcDataRepository _repository;
 
         public ChartGenerator([NotNull] ICalculationProfiler calculationProfiler, [NotNull] ChartCreationParameters generalParameters,
                               [NotNull] FileFactoryAndTracker fft, [ItemNotNull] [NotNull] IChartMakerStep[] chartMakerSteps,
-                              [ItemNotNull] [NotNull] ISqlChartMakerStep[] sqlChartMakerSteps, [NotNull] SqlResultLoggingService srls,
+                              [ItemNotNull] [NotNull] ISqlChartMakerStep[] sqlChartMakerSteps, [NotNull] IResultLoggingService srls,
                               [NotNull] CalcDataRepository repository)
         {
             GeneralParameters = generalParameters;

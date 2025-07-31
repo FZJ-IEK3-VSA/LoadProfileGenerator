@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.Loggers {
     public class DeviceActivationEntryLogger : DataSaverBase {
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly IResultLoggingService _srls;
         private const string Tablename = "DeviceActivationEntries";
 
-        public DeviceActivationEntryLogger([NotNull] SqlResultLoggingService srls) :
+        public DeviceActivationEntryLogger([NotNull] IResultLoggingService srls) :
             base(typeof(DeviceActivationEntry),  new ResultTableDefinition(Tablename,ResultTableID.DeviceActivationEntries, "Device Activation Entries",CalcOption.DeviceActivations), srls) => _srls = srls;
 
         [ItemNotNull]

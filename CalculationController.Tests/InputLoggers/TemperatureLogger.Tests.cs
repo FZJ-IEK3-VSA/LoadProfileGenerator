@@ -18,8 +18,8 @@ namespace CalculationController.Tests.InputLoggers {
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            SqlResultLoggingService srls =
-                new SqlResultLoggingService(Path.Combine(wd.WorkingDirectory));
+            IResultLoggingService srls =
+                ResultLoggingFactory.CreateResultLoggingService(Path.Combine(wd.WorkingDirectory));
             var calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             calcParameters.Enable(CalcOption.TemperatureFile);
             using (DatabaseSetup ds = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

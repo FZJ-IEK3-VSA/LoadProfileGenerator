@@ -366,7 +366,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<TemperatureDataLogger>().SingleInstance();
             builder.Register(x => new FileFactoryAndTracker(csps.ResultPath, csps.CalcTarget.Name, x.Resolve<IInputDataLogger>()))
                 .As<FileFactoryAndTracker>().SingleInstance();
-            builder.Register(_ => new SqlResultLoggingService(csps.ResultPath)).SingleInstance();
+            builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(csps.ResultPath)).SingleInstance();
             builder.RegisterType<OnlineLoggingData>().As<IOnlineLoggingData>().SingleInstance();
             builder.Register(x => new LogFile(calcParameters, x.Resolve<FileFactoryAndTracker>())).As<ILogFile>().SingleInstance();
             builder.RegisterType<CalcPersonDtoFactory>();

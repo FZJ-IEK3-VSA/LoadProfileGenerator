@@ -12,7 +12,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class CalcSiteDtoLogger : DataSaverBase {
         private const string Tablename = "SiteDefinitions";
 
-        public CalcSiteDtoLogger([NotNull] SqlResultLoggingService srls)
+        public CalcSiteDtoLogger([NotNull] IResultLoggingService srls)
             : base(typeof(CalcSiteDto), new ResultTableDefinition(Tablename,ResultTableID.SiteDefinitions,
                 "Json Specification of the Sites",CalcOption.TransportationStatistics ), srls)
         {

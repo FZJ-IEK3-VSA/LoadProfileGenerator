@@ -71,7 +71,7 @@ namespace Calculation.HouseholdElements.Tests
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger)) {
                     fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc", null, null);
-                    //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
+                    //SqlResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory);
                     //DateStampCreator dsc = new DateStampCreator(calcParameters);
                     Random rnd = new Random();
                     //OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters);
@@ -145,7 +145,7 @@ namespace Calculation.Tests.HouseholdElements
             wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
             using var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub",wd.InputDataLogger);
             fft.RegisterHousehold(Constants.GeneralHouseholdKey,"general",HouseholdKeyType.General,"Desc",null,null);
-            //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
+            //SqlResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory);
             DateStampCreator dsc = new DateStampCreator(calcParameters);
             var hhkey = new HouseholdKey("hh1");
             using OnlineLoggingData old = new OnlineLoggingData(dsc,wd.InputDataLogger,calcParameters);

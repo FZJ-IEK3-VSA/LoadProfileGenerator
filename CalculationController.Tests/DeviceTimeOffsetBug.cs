@@ -28,7 +28,7 @@ using Xunit.Abstractions;
 
 namespace CalculationController.Tests {
     public class DeviceTimeOffsetBug : UnitTestBaseClass {
-        private static void CheckForOverdoneOffsets([NotNull] string path, [NotNull] SqlResultLoggingService srls) {
+        private static void CheckForOverdoneOffsets([NotNull] string path, [NotNull] IResultLoggingService srls) {
             //var actionsName = Path.Combine(path, "Reports", "ActionsEachStep.HH1.csv");
             var wwDeviceProfiles = Path.Combine(path, "Results", "DeviceProfiles.Warm Water.csv");
             HouseholdKeyLogger hkl = new HouseholdKeyLogger(srls);

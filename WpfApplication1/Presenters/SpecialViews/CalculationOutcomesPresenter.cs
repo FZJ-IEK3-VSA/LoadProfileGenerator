@@ -698,7 +698,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews
                 Guid.NewGuid().ToStrGuid());
             calculationOutcome.SaveToDB();
 
-            SqlResultLoggingService srls = new SqlResultLoggingService(operatingPath);
+            IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(operatingPath);
             //ResultFileEntryLogger rfel = new ResultFileEntryLogger(srls);
             var keyLogger = new HouseholdKeyLogger(srls);
             var keys = keyLogger.Load();

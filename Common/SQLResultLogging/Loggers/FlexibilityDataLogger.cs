@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.Loggers {
     public class FlexibilityDataLogger : DataSaverBase
     {
         private const string TableName = "FlexibilityData";
-        public FlexibilityDataLogger([NotNull] SqlResultLoggingService srls) :
+        public FlexibilityDataLogger([NotNull] IResultLoggingService srls) :
             base(typeof(TimeShiftableDeviceActivation), new ResultTableDefinition(TableName, ResultTableID.FlexibilityInformation,
                 "Flexibility Data", CalcOption.FlexibilityEvents), srls)
         {
