@@ -125,8 +125,7 @@ namespace CalculationController.Queue {
                 }
             }
             try {
-                var cqr = new CalcQueueRunner();
-                cqr.Start(csps,  _sim);
+                CalcQueueRunner.Start(_sim, csps);
             }
             catch (DataIntegrityException e)
             {

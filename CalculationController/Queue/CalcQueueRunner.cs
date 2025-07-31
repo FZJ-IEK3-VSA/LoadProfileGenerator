@@ -61,7 +61,7 @@ namespace CalculationController.Queue {
           //  TransportationDeviceSet transportationDeviceSet, TravelRouteSet travelRouteSet
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static bool RunOneCalcEntry([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] Simulator sim, bool forceRandom)
+        private static bool RunOneCalcEntry([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             CalcManager.StartRunning();
             Logger.Info("Running the simulation for " + csps.CalcTarget.Name + " from " +
@@ -142,13 +142,12 @@ namespace CalculationController.Queue {
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-        private static void SaveRun(bool forceRandom,
-                                    [JetBrains.Annotations.NotNull] Simulator sim,
+        public static void Start([JetBrains.Annotations.NotNull] Simulator sim,
                                     [JetBrains.Annotations.NotNull] CalcStartParameterSet csps)
         {
             bool allgood = true;
 #pragma warning disable 162
-                bool success =  RunOneCalcEntry(csps,sim, forceRandom);
+                bool success =  RunOneCalcEntry(csps, sim);
                 if (!success) {
                     allgood = false;
                 }
@@ -180,15 +179,5 @@ namespace CalculationController.Queue {
                 .SafeExecuteWithWait(
                     () => reportFinishFuncForHousehold(true,csps.CalcTarget.Name, csps.ResultPath));
         }
-        [SuppressMessage("ReSharper", "ReplaceWithSingleAssignment.False")]
-        [SuppressMessage("ReSharper", "ConvertIfToOrExpression")]
-        public void Start([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] Simulator sim) {
-                var forceRandom = false;
-                if (csps.CalcTarget.GetType() == typeof(Settlement)) {
-                    forceRandom = true;
-                }
-                SaveRun(forceRandom,  sim,csps);
-        }
-
     }
 }
