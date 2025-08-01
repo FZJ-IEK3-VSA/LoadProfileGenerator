@@ -67,6 +67,19 @@ namespace Automation
             return parsedObject ?? throw new LPGException($"Input file {filename} does not contain valid data.");
         }
 
+        /// <summary>
+        /// Parses a JSON string and returns the contained data.
+        /// </summary>
+        /// <typeparam name="T">the type of the object to parse</typeparam>
+        /// <param name="json">the JSON string to parse</param>
+        /// <returns>the parsed object</returns>
+        /// <exception cref="LPGException">if the parsed object is null</exception>
+        public static T ParseJsonString<T>(string json)
+        {
+            var parsedObject = JsonSerializer.Deserialize<T>(json, jsonOptions);
+            return parsedObject ?? throw new LPGException($"Input json string does not contain valid data.");
+        }
+
         [JetBrains.Annotations.NotNull]
         public static List<CalcOption> GetOptionList([JetBrains.Annotations.NotNull] params CalcOption[] list)
         {
