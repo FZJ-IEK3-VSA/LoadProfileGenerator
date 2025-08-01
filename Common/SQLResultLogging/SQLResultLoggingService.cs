@@ -45,7 +45,7 @@ namespace Common.SQLResultLogging
 
             string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename +
                             ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 AttemptToOpenDBConnection(conn);
@@ -92,10 +92,10 @@ namespace Common.SQLResultLogging
         public List<DatabaseEntry> LoadDatabases()
         {
             List<DatabaseEntry> td = new List<DatabaseEntry>();
-            const string sql = "SELECT * FROM DatabaseList";
+            const string sql = $"SELECT * FROM {Constants.DatabaseListTableName}";
 
             string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 AttemptToOpenDBConnection(conn);
@@ -113,8 +113,6 @@ namespace Common.SQLResultLogging
                         td.Add(fe);
                     }
                 }
-
-                conn.Close();
             }
 
             return td;
@@ -129,10 +127,10 @@ namespace Common.SQLResultLogging
             {
                 return td;
             }
-            const string sql = "SELECT * FROM TableDescription";
+            const string sql = $"SELECT * FROM {Constants.TableDescriptionTableName}";
 
             string constr = "Data Source=" + FilenameByHouseholdKey[dbKey].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 AttemptToOpenDBConnection(conn);
@@ -151,8 +149,6 @@ namespace Common.SQLResultLogging
                         td.Add(fe);
                     }
                 }
-
-                conn.Close();
             }
 
             return td;
@@ -179,7 +175,7 @@ namespace Common.SQLResultLogging
             }
 
             sql = sql.Substring(0, sql.Length - 1) + ");";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3;")
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=" + dstFileName + ";Version=3;")
             )
             {
                 AttemptToOpenDBConnection(conn);
@@ -190,8 +186,6 @@ namespace Common.SQLResultLogging
                 {
                     throw new LPGException("Creating the table " + tableName + " failed.");
                 }
-
-                conn.Close();
             }
         }
         [ItemNotNull]
@@ -203,14 +197,14 @@ namespace Common.SQLResultLogging
                 LoadFileNameDict();
             }
 
-            string sql = "SELECT json FROM " + rtd.TableName;
+            string sql = $"SELECT {Constants.JsonColumnName} FROM " + rtd.TableName;
             if (!FilenameByHouseholdKey.ContainsKey(key))
             {
                 throw new LPGException("Missing sql file for household key " + key);
             }
 
             string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 AttemptToOpenDBConnection(conn);
@@ -240,7 +234,6 @@ namespace Common.SQLResultLogging
 
                         yield return re;
                     }
-                    conn.Close();
                 }
             }
         }
@@ -256,14 +249,14 @@ namespace Common.SQLResultLogging
                 LoadFileNameDict();
             }
 
-            string sql = "SELECT json FROM " + rtd.TableName;
+            string sql = $"SELECT {Constants.JsonColumnName} FROM " + rtd.TableName;
             if (!FilenameByHouseholdKey.ContainsKey(key))
             {
                 throw new LPGException("Missing sql file for household key " + key);
             }
 
             string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 AttemptToOpenDBConnection(conn);
@@ -289,35 +282,47 @@ namespace Common.SQLResultLogging
                         resultsObjects.Add(re);
                     }
 
-                    switch (expectedResult)
-                    {
-                        case ExpectedResultCount.One:
-                            if (resultsObjects.Count != 1)
-                            {
-                                throw new DataIntegrityException("Not exactly one result");
-                            }
-
-                            break;
-                        case ExpectedResultCount.Many:
-                            if (resultsObjects.Count < 2)
-                            {
-                                throw new DataIntegrityException("Not many results");
-                            }
-
-                            break;
-                        case ExpectedResultCount.OneOrMore:
-                            if (resultsObjects.Count < 1)
-                            {
-                                throw new DataIntegrityException("Not one or more results");
-                            }
-
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(expectedResult), expectedResult, null);
-                    }
-                    conn.Close();
+                    CheckResultCount(expectedResult, resultsObjects.Count);
                     return resultsObjects;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the expected number of results was found, throwing an
+        /// exception if not.
+        /// </summary>
+        /// <param name="expectedResult">the expected number of results</param>
+        /// <param name="resultsObjectCount">the number of results found</param>
+        /// <exception cref="DataIntegrityException">if the encountered number does not match the expectation</exception>
+        /// <exception cref="ArgumentOutOfRangeException">if an enum value was missing</exception>
+        public static void CheckResultCount(ExpectedResultCount expectedResult, int resultsObjectCount)
+        {
+            switch (expectedResult)
+            {
+                case ExpectedResultCount.One:
+                    if (resultsObjectCount != 1)
+                    {
+                        throw new DataIntegrityException("Not exactly one result");
+                    }
+
+                    break;
+                case ExpectedResultCount.Many:
+                    if (resultsObjectCount < 2)
+                    {
+                        throw new DataIntegrityException("Not many results");
+                    }
+
+                    break;
+                case ExpectedResultCount.OneOrMore:
+                    if (resultsObjectCount < 1)
+                    {
+                        throw new DataIntegrityException("Not one or more results");
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(expectedResult), expectedResult, null);
             }
         }
 
@@ -410,7 +415,7 @@ namespace Common.SQLResultLogging
         {
             entry.IntegrityCheck();
             string dstFileName = GetFilenameForHouseholdKey(entry.HouseholdKey);
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3"))
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source=" + dstFileName + ";Version=3"))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;"
                 AttemptToOpenDBConnection(conn);
@@ -423,10 +428,8 @@ namespace Common.SQLResultLogging
                         {"ResultTableID", entry.ResultTableDefinition.ResultTableID},
                         {"EnablingOption", entry.ResultTableDefinition.EnablingOption}
                     };
-                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>> {
-                        fields
-                    };
-                    SaveDictionaryToDatabase(rows, "TableDescription", conn);
+                    List<Dictionary<string, object>> rows = [fields];
+                    SaveDictionaryToDatabase(rows, Constants.TableDescriptionTableName, conn);
                     if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey))
                     {
                         _createdTablesPerHousehold.Add(entry.HouseholdKey, new List<string>());
@@ -436,7 +439,6 @@ namespace Common.SQLResultLogging
                 }
 
                 SaveDictionaryToDatabase(entry.RowEntries, entry.ResultTableDefinition.TableName, conn);
-                conn.Close();
             }
         }
         /*
@@ -477,17 +479,17 @@ namespace Common.SQLResultLogging
         [JetBrains.Annotations.NotNull]
         private string GetFilenameForHouseholdKey([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
-            if (FilenameByHouseholdKey.ContainsKey(key))
+            if (FilenameByHouseholdKey.TryGetValue(key, out FileEntry? value))
             {
-                return FilenameByHouseholdKey[key].Filename;
+                // database file already exists
+                return value.Filename;
             }
 
             bool isMainDatabase = key == Constants.GeneralHouseholdKey;
 
             string newName = Path.Combine(_basePath, "Results." + key + ".sqlite");
-            FilenameByHouseholdKey.Add(key, new FileEntry(newName));
+            FilenameByHouseholdKey.Add(key, new FileEntry(newName, true));
             FileInfo fi = new FileInfo(newName);
-            FilenameByHouseholdKey[key].DescriptionTableWritten = true;
             if (fi.Exists && fi.Length > 1000)
             {
                 return newName;
@@ -533,16 +535,11 @@ namespace Common.SQLResultLogging
                             fd2
                         };
                         //fields.Add(fd3);
-                        MakeTableForListOfFields(fields, dbcon, nameof(DatabaseList));
+                        MakeTableForListOfFields(fields, dbcon, Constants.DatabaseListTableName);
                     }
                 }
-
-                dbcon.Close();
             }
-            ResultFileEntry rfe = new ResultFileEntry("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key, null
-                , CalcOption.BasicOverview);
-            ResultFileEntryLogger rfel = new ResultFileEntryLogger(this);
-            rfel.Run(key, rfe);
+            AddResultFileEntry(this, key, fi);
 
             /* DatabaseList dbl = new DatabaseList(key.Key, null, newName)
              {
@@ -552,6 +549,19 @@ namespace Common.SQLResultLogging
             var row = RowBuilder.Start("HouseholdKey", key.Key).Add("Filename", newName).ToDictionary();
             SaveDictionaryToDatabaseNewConnection(row, "DatabaseList", Constants.GeneralHouseholdKey);
             return newName;
+        }
+
+        /// <summary>
+        /// Adds an entry for a new database file with the ResultFileEntryLogger.
+        /// </summary>
+        /// <param name="service">the result logging service to use for the ResultFileEntryLogger</param>
+        /// <param name="key">the household key of the file</param>
+        /// <param name="fi">the FileInfo object of the file</param>
+        public static void AddResultFileEntry(IResultLoggingService service, HouseholdKey key, FileInfo fi)
+        {
+            ResultFileEntry rfe = new("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key, null, CalcOption.BasicOverview);
+            ResultFileEntryLogger rfel = new(service);
+            rfel.Run(key, rfe);
         }
 
         /*
@@ -593,7 +603,7 @@ namespace Common.SQLResultLogging
                 throw new LPGException("Missing file: " + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename);
             }
             string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 AttemptToOpenDBConnection(conn);
@@ -608,18 +618,10 @@ namespace Common.SQLResultLogging
                         string keyStr = reader["HouseholdKey"].ToString() ?? "";
                         HouseholdKey key = new HouseholdKey(keyStr);
                         string filename = reader["Filename"].ToString() ?? "";
-                        FileEntry fe = new FileEntry(filename)
-                        {
-                            DescriptionTableWritten = true
-                        };
-                        if (!FilenameByHouseholdKey.ContainsKey(key))
-                        {
-                            FilenameByHouseholdKey.Add(key, fe);
-                        }
+                        FileEntry fe = new FileEntry(filename, true);
+                        FilenameByHouseholdKey.TryAdd(key, fe);
                     }
                 }
-
-                conn.Close();
             }
 
             _isFileNameDictLoaded = true;
@@ -633,7 +635,7 @@ namespace Common.SQLResultLogging
         /// <param name="householdKey">The HouseholdKey matching the entry</param>
         public void DeleteEntry(Dictionary<string, object> entry, [JetBrains.Annotations.NotNull] string tableName, HouseholdKey householdKey)
         {
-            DeleteEntries(new List<Dictionary<string, object>> { entry }, tableName, householdKey);
+            DeleteEntries([entry], tableName, householdKey);
         }
 
         /// <summary>
@@ -681,7 +683,6 @@ namespace Common.SQLResultLogging
                 }
                 transaction.Commit();
             }
-            conn.Close();
         }
 
         [JetBrains.Annotations.NotNull]
@@ -690,7 +691,7 @@ namespace Common.SQLResultLogging
 
         private static void MakeTableForListOfFields([JetBrains.Annotations.NotNull] [ItemNotNull]
                                                      List<FieldDefinition> fields,
-                                                     [JetBrains.Annotations.NotNull] System.Data.SQLite.SQLiteConnection conn,
+                                                     [JetBrains.Annotations.NotNull] SQLiteConnection conn,
                                                      [JetBrains.Annotations.NotNull] string tableName)
         {
             if (fields.Count == 0)
@@ -723,7 +724,7 @@ namespace Common.SQLResultLogging
 
         private static void SaveDictionaryToDatabase([JetBrains.Annotations.NotNull][ItemNotNull] List<Dictionary<string, object>> values,
                                                      [JetBrains.Annotations.NotNull] string tableName,
-                                                     [JetBrains.Annotations.NotNull] System.Data.SQLite.SQLiteConnection conn)
+                                                     [JetBrains.Annotations.NotNull] SQLiteConnection conn)
         {
             if (values.Count == 0)
             {
@@ -778,7 +779,7 @@ namespace Common.SQLResultLogging
 
             string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
             int lines = 0;
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 AttemptToOpenDBConnection(conn);
@@ -793,7 +794,6 @@ namespace Common.SQLResultLogging
                         lines++;
                     }
                 }
-                conn.Close();
             }
             if (lines > 0)
             {
@@ -846,30 +846,6 @@ namespace Common.SQLResultLogging
         public void AddField([JetBrains.Annotations.NotNull] string name, SqliteDataType datatype)
         {
             Fields.Add(new FieldDefinition(name, datatype.ToString()));
-        }
-
-        public void AddField([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] Type datatype)
-        {
-            string sqlDataType;
-            switch (datatype.Name)
-            {
-                case "String":
-                    sqlDataType = "TEXT";
-                    break;
-                case "Int32":
-                    sqlDataType = "INTEGER";
-                    break;
-                case "Boolean":
-                    sqlDataType = "BIT";
-                    break;
-                case "DateTime":
-                    sqlDataType = "DateTime";
-                    break;
-                default:
-                    throw new LPGException("Unknown data type:" + datatype.Name);
-            }
-
-            Fields.Add(new FieldDefinition(name, sqlDataType));
         }
 
         public void AddRow([JetBrains.Annotations.NotNull] Dictionary<string, object> row)
