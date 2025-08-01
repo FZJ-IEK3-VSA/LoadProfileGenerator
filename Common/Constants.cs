@@ -80,6 +80,8 @@ namespace Common
         public const string UnknownTag = "Unknown Tag";
 
         public const string TableDescriptionTableName = "TableDescription";
+        public const string DatabaseListTableName = "DatabaseList";
+        public const string JsonColumnName = "json";
 
         public const string CalculationProfilerJson = "CalculationProfiler.json";
 
