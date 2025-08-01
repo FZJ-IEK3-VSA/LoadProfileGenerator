@@ -8,12 +8,5 @@ namespace Common.SQLResultLogging
 
     public record FieldDefinition(string Name, string Type);
 
-    public class FileEntry(string filename)
-    {
-        public bool DescriptionTableWritten { get; set; }
-
-        public string Filename { get; } = filename;
-
-        public override string ToString() => Filename;
-    }
+    public record FileEntry(string Filename, bool DescriptionTableWritten);
 }
