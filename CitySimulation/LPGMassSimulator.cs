@@ -81,6 +81,13 @@ namespace CitySimulation
             // create common CalcParameters object for the simulation of all houses
             CalcParameters = JsonCalculator.CreateCalcParameters(sim, scenarioPart.CalcSpecification, true);
 
+            if (CalcParameters.IsSet(CalcOption.LogAllMessages) || CalcParameters.IsSet(CalcOption.LogErrorMessages))
+            {
+                // info: enabling this would require a general result database for the whole city simulation in which global results
+                //       such as log messages can be stored
+                Logger.Warning("The CalcOptions LogAllMessages and LogErrorMessages are currently not supported in CitySimulation.");
+            }
+
             simulationTargets = PrepareHousesForSimulation(baseResultDir, rank);
             Logger.LogRAMUsage("LPGMassSimulator-Prepared all houses");
         }
@@ -245,11 +252,6 @@ namespace CitySimulation
                     // create the calculation profiler flame chart if requested
                     if (calcRepo.CalcParameters.IsSet(CalcOption.CalculationFlameChart))
                         ChartMaker.MakeFlameChart(new DirectoryInfo(target.ResultDirectory), calcRepo.CalculationProfiler);
-                }
-
-                if (calcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || calcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages))
-                {
-                    target.CalcManager.InitializeFileLogging(calcRepo.Srls);
                 }
             }
         }
