@@ -27,16 +27,14 @@ namespace Common.SQLResultLogging
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class SqlResultLoggingService : IResultLoggingService
     {
-        [JetBrains.Annotations.NotNull] private readonly string _basePath;
+        private readonly string _basePath;
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<HouseholdKey, List<string>> _createdTablesPerHousehold = new Dictionary<HouseholdKey, List<string>>();
+        private readonly Dictionary<HouseholdKey, List<string>> _createdTablesPerHousehold = [];
 
-        [JetBrains.Annotations.NotNull]
-        private readonly Dictionary<HouseholdKey, FileEntry> _filenameByHouseholdKey =
-            new Dictionary<HouseholdKey, FileEntry>();
+        private readonly Dictionary<HouseholdKey, FileEntry> _filenameByHouseholdKey = [];
 
         private bool _isFileNameDictLoaded;
-        //static readonly List<SqlResultLoggingService> loggingServices = new List<SqlResultLoggingService>();
+
         public bool DoesTableExist(HouseholdKey key, [JetBrains.Annotations.NotNull] string tableName)
         {
             if (!File.Exists(FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename))
@@ -326,12 +324,7 @@ namespace Common.SQLResultLogging
         public void SaveDictionaryToDatabaseNewConnection([JetBrains.Annotations.NotNull] Dictionary<string, object> values,
                                                           [JetBrains.Annotations.NotNull] string tableName,
                                                           [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
-        {
-            List<Dictionary<string, object>> valuesList = new List<Dictionary<string, object>> {
-                values
-            };
-            SaveDictionaryToDatabaseNewConnection(valuesList, tableName, householdKey);
-        }
+            => SaveDictionaryToDatabaseNewConnection([values], tableName, householdKey);
 
         public void SaveDictionaryToDatabaseNewConnection([ItemNotNull] [JetBrains.Annotations.NotNull]
                                                           List<Dictionary<string, object>> values,
