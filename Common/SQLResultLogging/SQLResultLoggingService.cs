@@ -557,9 +557,9 @@ namespace Common.SQLResultLogging
         /// <param name="service">the result logging service to use for the ResultFileEntryLogger</param>
         /// <param name="key">the household key of the file</param>
         /// <param name="fi">the FileInfo object of the file</param>
-        public static void AddResultFileEntry(IResultLoggingService service, HouseholdKey key, FileInfo fi)
+        public static void AddResultFileEntry(IResultLoggingService service, HouseholdKey key, FileInfo fi, string? fileIndex = null)
         {
-            ResultFileEntry rfe = new("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key, null, CalcOption.BasicOverview);
+            ResultFileEntry rfe = new("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key, fileIndex, CalcOption.BasicOverview);
             ResultFileEntryLogger rfel = new(service);
             rfel.Run(key, rfe);
         }
