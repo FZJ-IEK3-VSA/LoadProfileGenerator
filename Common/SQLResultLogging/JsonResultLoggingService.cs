@@ -34,33 +34,42 @@ namespace Common.SQLResultLogging
             // file does not exist yet, create and initialize it
             FileInfo fileInfo = new(filepath);
             var directory = fileInfo.Directory;
-            if (!directory.Exists)
-            {
-                // create the directory for the specified HouseholdKey first
-                AddDirForHouseholdKey(key, directory.FullName);
-            }
+            bool dirExistedAlready = directory.Exists;
+            directory.Create();
 
             // init the file by writing the JSON array start
             File.WriteAllText(filepath, "[]");
+            
+            // the file needs to be created before registering a new directory to avoid recursion with duplicate file creation
+            if (!dirExistedAlready)
+            {
+                // register the directory for the specified HouseholdKey in the list of databases
+                AddDBListEntryForDirectory(key, directory.FullName);
+            }
 
-            SqlResultLoggingService.AddResultFileEntry(this, key, fileInfo);
+            SqlResultLoggingService.AddResultFileEntry(this, key, fileInfo, tableName);
             return filepath;
         }
         
-        private void AddDirForHouseholdKey(HouseholdKey key, string directoryPath)
+        private void AddDBListEntryForDirectory(HouseholdKey key, string directoryPath)
         {
-            Directory.CreateDirectory(directoryPath);
-
             // save the path to the new database directory in the General database
             var row = new Dictionary<string, object>
             {
                 ["HouseholdKey"] = key.Key,
                 ["Filename"] = directoryPath
             };
-            SaveDictionaryToDatabaseNewConnection(row, Constants.DatabaseListTableName, Constants.GeneralHouseholdKey);
+            SaveToFile([new DatabaseEntry(directoryPath, key)], Constants.DatabaseListTableName, Constants.GeneralHouseholdKey);
         }
-        
-        private void AddItemToJsonFile<T>(string filepath, T data)
+
+        private static string CreateJsonEntries<T>(IEnumerable<T> data)
+        {
+            //var jsonString = JsonSerializer.Serialize(data);
+            var jsonStrings = data.Select(data => "\n" + JsonConvert.SerializeObject(data));
+            return string.Join(',', jsonStrings);
+        }
+
+        private static void AddToJsonFile<T>(string filepath, IEnumerable<T> data)
         {
             using var stream = new FileStream(filepath, FileMode.OpenOrCreate);
 
@@ -73,20 +82,20 @@ namespace Common.SQLResultLogging
             stream.Seek(-2, SeekOrigin.End);
             bool firstValue = (char)stream.ReadByte() == '[';
 
-            //var jsonString = JsonSerializer.Serialize(data);
-            var jsonString = JsonConvert.SerializeObject(data);
-            var jsonEntry = (firstValue ? "" : ",") + $"\n{jsonString}]";
+            var jsonString = CreateJsonEntries(data);
+            var jsonEntry = (firstValue ? "" : ",") + $"{jsonString}]";
 
-            // apppend the new entry, overwriting the previous closing bracket
+            // apppend the new entries, overwriting the previous closing bracket
             using var writer = new StreamWriter(stream);
             writer.Write(jsonEntry);
         }
-        
+
         private IEnumerable<T> LoadItemsFromFile<T>(HouseholdKey key, string tableName)
         {
             string filepath = GetFilePath(key, tableName);
-            //return AutomationUtili.ParseJsonFile<IEnumerable<T>>(filepath);
             string jsonString = File.ReadAllText(filepath);
+
+            //return AutomationUtili.ParseJsonFile<IEnumerable<T>>(filepath);
             return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
         }
 
@@ -94,6 +103,7 @@ namespace Common.SQLResultLogging
         {
             // load all items
             var items = LoadItemsFromFile<Dictionary<string, object>>(key, rtd.TableName);
+            // deserialize the JSON strings contained in the Json column
             //return items.Select(item => ParseJsonColumn<T>(item[Constants.JsonColumnName]));
             return items.Select(item => JsonConvert.DeserializeObject<T>((string)item[Constants.JsonColumnName]));
         }
@@ -105,6 +115,12 @@ namespace Common.SQLResultLogging
             return results;
         }
 
+        ///// <summary>
+        ///// Parse the JSON column of of a data entry with System.Text.Json.
+        ///// </summary>
+        ///// <typeparam name="T">type of the object to parse</typeparam>
+        ///// <param name="content">JsonElement (parsed from JSON without a target type)</param>
+        ///// <returns>the parsed object</returns>
         //private static T ParseJsonColumn<T>(object content)
         //{
         //    JsonElement element = (JsonElement)content;
@@ -112,22 +128,14 @@ namespace Common.SQLResultLogging
         //    return AutomationUtili.ParseJsonString<T>(jsonString);
         //}
 
-        public void SaveDictionaryToDatabaseNewConnection(List<Dictionary<string, object>> values, string tableName, HouseholdKey householdKey)
+        public void SaveToFile<T>(IEnumerable<T> values, string tableName, HouseholdKey householdKey)
         {
             // create the file if it does not exist yet
             string filepath = InitJsonFile(householdKey, tableName);
 
-            // adds the data to the file
-            foreach (var dict in values)
-            {
-                AddItemToJsonFile(filepath, dict);
-            }
-
-            // TODO: close file if this was the final save
+            // add the data to the file
+            AddToJsonFile(filepath, values);
         }
-
-        public void SaveDictionaryToDatabaseNewConnection(Dictionary<string, object> values, string tableName, HouseholdKey householdKey)
-            => SaveDictionaryToDatabaseNewConnection([values], tableName, householdKey);
 
         public void SaveResultEntry(SaveableEntry entry)
         {
@@ -135,10 +143,16 @@ namespace Common.SQLResultLogging
             {
                 // add the new table to the list of tables
                 string filepath = InitJsonFile(entry.HouseholdKey, Constants.TableDescriptionTableName);
-                AddItemToJsonFile(filepath, entry.ResultTableDefinition);
+                AddToJsonFile(filepath, [entry.ResultTableDefinition]);
             }
-            SaveDictionaryToDatabaseNewConnection(entry.RowEntries, entry.ResultTableDefinition.TableName, entry.HouseholdKey);
+            SaveToFile(entry.RowEntries, entry.ResultTableDefinition.TableName, entry.HouseholdKey);
         }
+
+        public void SaveDictionaryToDatabaseNewConnection(List<Dictionary<string, object>> values, string tableName, HouseholdKey householdKey)
+            => SaveToFile(values, tableName, householdKey);
+
+        public void SaveDictionaryToDatabaseNewConnection(Dictionary<string, object> values, string tableName, HouseholdKey householdKey)
+            => SaveDictionaryToDatabaseNewConnection([values], tableName, householdKey);
 
         public bool CheckifTableExits(string tableName) => CheckifTableExits(tableName, Constants.GeneralHouseholdKey);
 
