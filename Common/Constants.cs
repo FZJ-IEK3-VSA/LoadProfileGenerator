@@ -81,7 +81,7 @@ namespace Common
 
         public const string TableDescriptionTableName = "TableDescription";
         public const string DatabaseListTableName = "DatabaseList";
-        public const string JsonColumnName = "json";
+        public const string JsonColumnName = "Json";
 
         public const string CalculationProfilerJson = "CalculationProfiler.json";
 
