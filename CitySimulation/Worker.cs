@@ -96,6 +96,7 @@ namespace CitySimulation
             // general settings
             // avoid MPI processes cluttering the console
             Config.OutputToConsole = false;
+            Config.ResultLogger = Common.SQLResultLogging.ResultLoggerType.JSON;
 
             // create scenario
             ScenarioPart[]? scenarioParts = null;

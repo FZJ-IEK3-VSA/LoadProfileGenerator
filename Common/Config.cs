@@ -32,6 +32,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Automation.ResultFiles;
+using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 #endregion
@@ -78,6 +79,7 @@ namespace Common {
         public static bool CatchErrors { get; set; }
         public static bool OutputToConsole { get; set; }
         public static string LPGVersion { get; set; }
+        public static ResultLoggerType ResultLogger { get; set; } = ResultLoggerType.SQL;
 
         public static void InitConfig([JetBrains.Annotations.NotNull] string startpath) {
             if (_config != null) {

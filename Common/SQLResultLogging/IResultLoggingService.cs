@@ -1,4 +1,5 @@
 ﻿using Automation.ResultFiles;
+using System;
 using System.Collections.Generic;
 
 namespace Common.SQLResultLogging
@@ -24,8 +25,21 @@ namespace Common.SQLResultLogging
     {
         public static IResultLoggingService CreateResultLoggingService(string basePath)
         {
-            //return new JsonResultLoggingService(basePath);
-            return new SqlResultLoggingService(basePath);
+            return Config.ResultLogger switch
+            {
+                ResultLoggerType.SQL => new SqlResultLoggingService(basePath),
+                ResultLoggerType.JSON => new JsonResultLoggingService(basePath),
+                _ => throw new NotImplementedException($"Missing case for result logger type {Config.ResultLogger}"),
+            };
         }
+    }
+
+    /// <summary>
+    /// Defines the types of possible ResultLoggingServices.
+    /// </summary>
+    public enum ResultLoggerType
+    {
+        SQL,
+        JSON
     }
 }
