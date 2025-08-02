@@ -7,8 +7,7 @@ namespace Common.SQLResultLogging
     public interface IResultLoggingService
     {
         bool CheckifTableExits(string tableName);
-        void DeleteEntries(List<Dictionary<string, object>> entries, string tableName, HouseholdKey householdKey);
-        void DeleteEntry(Dictionary<string, object> entry, string tableName, HouseholdKey householdKey);
+        void DeleteEntries(IEnumerable<Dictionary<string, object>> entries, string tableName, HouseholdKey householdKey);
         List<DatabaseEntry> LoadDatabases();
         List<ResultTableDefinition> LoadTables(HouseholdKey dbKey);
         List<T> ReadFromJson<T>(ResultTableDefinition rtd, HouseholdKey key, ExpectedResultCount expectedResult);

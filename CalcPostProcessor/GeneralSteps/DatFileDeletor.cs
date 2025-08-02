@@ -53,8 +53,8 @@ namespace CalcPostProcessor.GeneralSteps
                 {
                     File.Delete(datFile.FullFileName);
                     // remove file entry from the result file list in the database
-                    rfel.DeleteEntry(datFile);
                 }
+                rfel.DeleteEntries(datFileEntries);
             }
         }
 

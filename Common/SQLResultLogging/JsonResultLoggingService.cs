@@ -38,7 +38,7 @@ namespace Common.SQLResultLogging
             directory.Create();
 
             // init the file by writing the JSON array start
-            File.WriteAllText(filepath, "[]");
+            CreateEmptyDataFile(filepath);
             
             // the file needs to be created before registering a new directory to avoid recursion with duplicate file creation
             if (!dirExistedAlready)
@@ -50,7 +50,12 @@ namespace Common.SQLResultLogging
             SqlResultLoggingService.AddResultFileEntry(this, key, fileInfo, tableName);
             return filepath;
         }
-        
+
+        private static void CreateEmptyDataFile(string filepath)
+        {
+            File.WriteAllText(filepath, "[]");
+        }
+
         private void AddDBListEntryForDirectory(HouseholdKey key, string directoryPath)
         {
             // save the path to the new database directory in the General database
@@ -65,7 +70,7 @@ namespace Common.SQLResultLogging
         private static string CreateJsonEntries<T>(IEnumerable<T> data)
         {
             //var jsonString = JsonSerializer.Serialize(data);
-            var jsonStrings = data.Select(data => "\n" + JsonConvert.SerializeObject(data));
+            var jsonStrings = data.Select(d => "\n" + JsonConvert.SerializeObject(d));
             return string.Join(',', jsonStrings);
         }
 
@@ -171,14 +176,26 @@ namespace Common.SQLResultLogging
             return [.. LoadItemsFromFile<ResultTableDefinition>(dbKey, Constants.TableDescriptionTableName)];
         }
 
-        public void DeleteEntries(List<Dictionary<string, object>> entries, string tableName, HouseholdKey householdKey)
+
+        public void DeleteEntries(IEnumerable<Dictionary<string, object>> toDelete, string tableName, HouseholdKey householdKey)
         {
-            // TODO: difficult with JSON, need to iterate; only needed for DAT-files, maybe avoid this in general?
-            //       Alternative: clear file and save content without deleted entries anew
-            //throw new NotImplementedException();
+            // load all entries from the file to delete items from
+            var items = LoadItemsFromFile<Dictionary<string, object>>(householdKey, tableName);
+            // build a dict mapping JSON strings to deserialized items
+            var itemDict = items.ToDictionary(JsonConvert.SerializeObject);
+            // serialize the entries to delete for comparison
+            var jsonStringsToDelete = toDelete.Select(JsonConvert.SerializeObject).ToHashSet();
+
+            // get all entries whose JSON strings are not in the set of entries to delete
+            var keptItems = itemDict.Where(kvp => !jsonStringsToDelete.Contains(kvp.Key)).Select(kvp => kvp.Value);
+
+            // clear the file but keep it to avoid duplicat result file entries
+            var filepath = GetFilePath(householdKey, tableName);
+            CreateEmptyDataFile(filepath);
+
+            // save the remaining entries
+            SaveToFile(keptItems, tableName, householdKey);
         }
-        public void DeleteEntry(Dictionary<string, object> entry, string tableName, HouseholdKey householdKey)
-            => DeleteEntries([entry], tableName, householdKey);
 
         public void MakeTableForListOfFields(List<FieldDefinition> fields, HouseholdKey key, string tableName) => InitJsonFile(key, tableName);
     }

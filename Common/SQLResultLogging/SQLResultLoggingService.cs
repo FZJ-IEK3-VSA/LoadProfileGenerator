@@ -628,26 +628,15 @@ namespace Common.SQLResultLogging
         }
 
         /// <summary>
-        /// Deletes an entry from a database table
-        /// </summary>
-        /// <param name="entry">A dictionary containing field values of the entry to delete.</param>
-        /// <param name="tableName">The name of the table to delete from</param>
-        /// <param name="householdKey">The HouseholdKey matching the entry</param>
-        public void DeleteEntry(Dictionary<string, object> entry, [JetBrains.Annotations.NotNull] string tableName, HouseholdKey householdKey)
-        {
-            DeleteEntries([entry], tableName, householdKey);
-        }
-
-        /// <summary>
         /// Deletes a list of entries from a database table
         /// </summary>
         /// <param name="entries">A list of dictionaries, one for each entry to delete. Each dictionary contains field values of the entry to delete.</param>
         /// <param name="tableName">The name of the table to delete entries from</param>
         /// <param name="householdKey">The HouseholdKey matching the entries</param>
-        public void DeleteEntries([JetBrains.Annotations.NotNull][ItemNotNull] List<Dictionary<string, object>> entries,
+        public void DeleteEntries([JetBrains.Annotations.NotNull][ItemNotNull] IEnumerable<Dictionary<string, object>> entries,
                                    [JetBrains.Annotations.NotNull] string tableName, HouseholdKey householdKey)
         {
-            if (entries.Count == 0)
+            if (entries.Count() == 0)
             {
                 // nothing to do
                 return;

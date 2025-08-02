@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
@@ -6,56 +7,37 @@ using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.InputLoggers
 {
-    public class ResultFileEntryLogger : DataSaverBase {
-        private bool _isTableCreated;
+    public class ResultFileEntryLogger : DataSaverBase
+    {
         private const string TableName = "ResultFileEntries";
-        public ResultFileEntryLogger([NotNull] IResultLoggingService srls): base(typeof(ResultFileEntry),
-            new ResultTableDefinition(TableName,ResultTableID.ResultFileEntries, "Result files",CalcOption.BasicOverview),srls)
-        {
-            _isTableCreated = srls.CheckifTableExits(TableName);
-
-            //_isTableCreated = isTableCreated;
-        }
+        public ResultFileEntryLogger([NotNull] IResultLoggingService srls) : base(typeof(ResultFileEntry),
+            new ResultTableDefinition(TableName, ResultTableID.ResultFileEntries, "Result files", CalcOption.BasicOverview), srls)
+        { }
 
         public override void Run(HouseholdKey key, object o)
         {
+            if (Srls == null)
+                throw new LPGException("Data Logger was null.");
+
             var hh = (ResultFileEntry)o;
-            if (!_isTableCreated) {
-                SaveableEntry se = GetStandardSaveableEntry(key);
-                    se.AddRow(RowBuilder.Start("Name", Constants.GeneralHouseholdKey)
-                        .Add("Json", JsonConvert.SerializeObject(hh, Formatting.Indented)).ToDictionary());
-                    if (Srls == null)
-                    {
-                        throw new LPGException("Data Logger was null.");
-                    }
-                Srls.SaveResultEntry(se);
-                _isTableCreated = true;
-            }
-            else {
-                var row = RowBuilder.Start("Name", Constants.GeneralHouseholdKey)
-                    .Add("Json", JsonConvert.SerializeObject(hh, Formatting.Indented)).ToDictionary();
-                if (Srls == null)
-                {
-                    throw new LPGException("Data Logger was null.");
-                }
-                Srls.SaveDictionaryToDatabaseNewConnection(row, TableName, Constants.GeneralHouseholdKey);
-            }
+            var row = BuildRow(hh);
+            Srls.SaveDictionaryToDatabaseNewConnection(row, TableName, Constants.GeneralHouseholdKey);
+        }
+
+        private static Dictionary<string, object> BuildRow(ResultFileEntry hh)
+        {
+            return RowBuilder.Start("Name", Constants.GeneralHouseholdKey).Add("Json", JsonConvert.SerializeObject(hh, Formatting.Indented)).ToDictionary();
         }
 
         /// <summary>
-        /// Deletes an entry from the result file list in the database
+        /// Deletes entries from the result file list in the database
         /// </summary>
-        /// <param name="rfe">The entry to delete</param>
-        public void DeleteEntry(ResultFileEntry rfe)
+        /// <param name="rfes">The entries to delete</param>
+        public void DeleteEntries(IEnumerable<ResultFileEntry> rfes)
         {
-            if (!_isTableCreated)
-            {
-                throw new LPGException("Tried to delete entries from a table that did not exist: " + TableName);
-            }
-            // create a row as the one already in the database that should be deleted
-            var row = RowBuilder.Start("Name", Constants.GeneralHouseholdKey)
-                .Add("Json", JsonConvert.SerializeObject(rfe, Formatting.Indented)).ToDictionary();
-            Srls.DeleteEntry(row, TableName, Constants.GeneralHouseholdKey);
+            // create rows as the ones already in the database that should be deleted
+            var rows = rfes.Select(rfe => BuildRow(rfe));
+            Srls.DeleteEntries(rows, TableName, Constants.GeneralHouseholdKey);
         }
 
         [ItemNotNull]
