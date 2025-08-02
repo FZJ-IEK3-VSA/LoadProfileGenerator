@@ -27,7 +27,10 @@ namespace Common.JSON {
     /// </summary>
     public class CalcParameters
     {
-        [JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
+        private CalcParameters() { }
+
+        [Newtonsoft.Json.JsonConstructor]
         private CalcParameters(DateTime startDate, DateTime endDate)
         {
             OfficialStartTime = startDate;
