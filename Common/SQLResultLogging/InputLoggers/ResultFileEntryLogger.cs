@@ -21,7 +21,10 @@ namespace Common.SQLResultLogging.InputLoggers
 
             var hh = (ResultFileEntry)o;
             var row = BuildRow(hh);
-            Srls.SaveDictionaryToDatabaseNewConnection(row, TableName, Constants.GeneralHouseholdKey);
+
+            SaveableEntry se = GetStandardSaveableEntry(key);
+            se.AddRow(row);
+            Srls.SaveResultEntry(se);
         }
 
         private static Dictionary<string, object> BuildRow(ResultFileEntry hh)

@@ -419,62 +419,49 @@ namespace Common.SQLResultLogging
             {
                 //;Synchronous=OFF;Journal Mode=WAL;"
                 AttemptToOpenDBConnection(conn);
-                if (!IsTableCreated(entry))
+                if (!CheckIfTableExists(entry.ResultTableDefinition.TableName, entry.HouseholdKey))
                 {
-                    MakeTableForListOfFields(entry.Fields, conn, entry.ResultTableDefinition.TableName);
-                    Dictionary<string, object> fields = new Dictionary<string, object> {
-                        {"TableName", entry.ResultTableDefinition.TableName},
-                        {"Description", entry.ResultTableDefinition.Description},
-                        {"ResultTableID", entry.ResultTableDefinition.ResultTableID},
-                        {"EnablingOption", entry.ResultTableDefinition.EnablingOption}
-                    };
-                    List<Dictionary<string, object>> rows = [fields];
-                    SaveDictionaryToDatabase(rows, Constants.TableDescriptionTableName, conn);
-                    if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey))
-                    {
-                        _createdTablesPerHousehold.Add(entry.HouseholdKey, new List<string>());
-                    }
-
-                    _createdTablesPerHousehold[entry.HouseholdKey].Add(entry.ResultTableDefinition.TableName);
+                    CreateNewTable(entry, conn);
                 }
 
                 SaveDictionaryToDatabase(entry.RowEntries, entry.ResultTableDefinition.TableName, conn);
             }
         }
+
         /*
-        public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List<T> items) where T : ITypeDescriber
-        {
-            Dictionary<HouseholdKey, List<T>> itemsByKey = new Dictionary<HouseholdKey, List<T>>();
-            foreach (T item in items) {
-                HouseholdKey key = item.HouseholdKey;
-                if (!itemsByKey.ContainsKey(key)) {
-                    itemsByKey.Add(key, new List<T>());
-                }
+public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List<T> items) where T : ITypeDescriber
+{
+   Dictionary<HouseholdKey, List<T>> itemsByKey = new Dictionary<HouseholdKey, List<T>>();
+   foreach (T item in items) {
+       HouseholdKey key = item.HouseholdKey;
+       if (!itemsByKey.ContainsKey(key)) {
+           itemsByKey.Add(key, new List<T>());
+       }
 
-                itemsByKey[key].Add(item);
-            }
+       itemsByKey[key].Add(item);
+   }
 
-            foreach (KeyValuePair<HouseholdKey, List<T>> pair in itemsByKey) {
-                var filteredItems = items.Where(x => x.HouseholdKey == pair.Key).ToList();
-                SaveableEntry se = new SaveableEntry(pair.Key, typeof(T).Name, filteredItems[0].GetTypeDescription());
-                var properties = typeof(T).GetProperties();
-                var fprops = properties.Where(x => !IgnoreThisField(x.Name)).ToList();
-                foreach (var prop in fprops) {
-                    se.AddField(prop.Name, prop.PropertyType);
-                }
+   foreach (KeyValuePair<HouseholdKey, List<T>> pair in itemsByKey) {
+       var filteredItems = items.Where(x => x.HouseholdKey == pair.Key).ToList();
+       SaveableEntry se = new SaveableEntry(pair.Key, typeof(T).Name, filteredItems[0].GetTypeDescription());
+       var properties = typeof(T).GetProperties();
+       var fprops = properties.Where(x => !IgnoreThisField(x.Name)).ToList();
+       foreach (var prop in fprops) {
+           se.AddField(prop.Name, prop.PropertyType);
+       }
 
-                foreach (T item in filteredItems) {
-                    RowBuilder rb = new RowBuilder();
-                    foreach (var prop in fprops) {
-                        rb.Add(prop.Name, prop.GetValue(item));
-                    }
+       foreach (T item in filteredItems) {
+           RowBuilder rb = new RowBuilder();
+           foreach (var prop in fprops) {
+               rb.Add(prop.Name, prop.GetValue(item));
+           }
 
-                    se.AddRow(rb.ToDictionary());
-                }
+           se.AddRow(rb.ToDictionary());
+       }
 
-                SaveResultEntry(se);
-            }
-        }*/
+       SaveResultEntry(se);
+   }
+}*/
 
         [JetBrains.Annotations.NotNull]
         private string GetFilenameForHouseholdKey([JetBrains.Annotations.NotNull] HouseholdKey key)
@@ -562,37 +549,6 @@ namespace Common.SQLResultLogging
             ResultFileEntry rfe = new("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key, fileIndex, CalcOption.BasicOverview);
             ResultFileEntryLogger rfel = new(service);
             rfel.Run(key, rfe);
-        }
-
-        /*
-        private bool IgnoreThisField([JetBrains.Annotations.NotNull] string fieldname)
-        {
-            if (fieldname == "HouseholdKey") {
-                return true;
-            }
-
-            return false;
-        }*/
-
-        /// <summary>
-        /// Returns whether a matching table for the entry exists
-        /// </summary>
-        /// <param name="entry">The entry for which the table is intended</param>
-        /// <returns>True if a matching table exists, else false</returns>
-        private bool IsTableCreated([JetBrains.Annotations.NotNull] SaveableEntry entry)
-        {
-            if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey))
-            {
-                return false;
-            }
-
-            var tables = _createdTablesPerHousehold[entry.HouseholdKey];
-            if (!tables.Contains(entry.ResultTableDefinition.TableName))
-            {
-                return false;
-            }
-
-            return true;
         }
 
         private void LoadFileNameDict()
@@ -708,6 +664,25 @@ namespace Common.SQLResultLogging
             }
         }
 
+        private void CreateNewTable(SaveableEntry entry, SQLiteConnection conn)
+        {
+            MakeTableForListOfFields(entry.Fields, conn, entry.ResultTableDefinition.TableName);
+            Dictionary<string, object> fields = new Dictionary<string, object> {
+                        {"TableName", entry.ResultTableDefinition.TableName},
+                        {"Description", entry.ResultTableDefinition.Description},
+                        {"ResultTableID", entry.ResultTableDefinition.ResultTableID},
+                        {"EnablingOption", entry.ResultTableDefinition.EnablingOption}
+                    };
+            List<Dictionary<string, object>> rows = [fields];
+            SaveDictionaryToDatabase(rows, Constants.TableDescriptionTableName, conn);
+            if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey))
+            {
+                _createdTablesPerHousehold.Add(entry.HouseholdKey, new List<string>());
+            }
+
+            _createdTablesPerHousehold[entry.HouseholdKey].Add(entry.ResultTableDefinition.TableName);
+        }
+
         //[JetBrains.Annotations.NotNull]
         //public string ReturnMainSqlPath() => _filenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename;
 
@@ -762,11 +737,11 @@ namespace Common.SQLResultLogging
             }
         }
 
-        public bool CheckifTableExits(string tableName)
+        public bool CheckIfTableExists(string tableName, HouseholdKey key)
         {
             string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';";
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
+            string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
             int lines = 0;
             using (SQLiteConnection conn = new SQLiteConnection(constr))
             {

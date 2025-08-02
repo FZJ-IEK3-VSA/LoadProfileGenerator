@@ -6,7 +6,6 @@ namespace Common.SQLResultLogging
 {
     public interface IResultLoggingService
     {
-        bool CheckifTableExits(string tableName);
         void DeleteEntries(IEnumerable<Dictionary<string, object>> entries, string tableName, HouseholdKey householdKey);
         List<DatabaseEntry> LoadDatabases();
         List<ResultTableDefinition> LoadTables(HouseholdKey dbKey);

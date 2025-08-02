@@ -144,7 +144,7 @@ namespace Common.SQLResultLogging
 
         public void SaveResultEntry(SaveableEntry entry)
         {
-            if (!CheckifTableExits(entry.ResultTableDefinition.TableName, entry.HouseholdKey))
+            if (!CheckifTableExists(entry.ResultTableDefinition.TableName, entry.HouseholdKey))
             {
                 // add the new table to the list of tables
                 string filepath = InitJsonFile(entry.HouseholdKey, Constants.TableDescriptionTableName);
@@ -159,9 +159,7 @@ namespace Common.SQLResultLogging
         public void SaveDictionaryToDatabaseNewConnection(Dictionary<string, object> values, string tableName, HouseholdKey householdKey)
             => SaveDictionaryToDatabaseNewConnection([values], tableName, householdKey);
 
-        public bool CheckifTableExits(string tableName) => CheckifTableExits(tableName, Constants.GeneralHouseholdKey);
-
-        public bool CheckifTableExits(string tableName, HouseholdKey key)
+        public bool CheckifTableExists(string tableName, HouseholdKey key)
         {
             return File.Exists(GetFilePath(key, tableName));
         }
