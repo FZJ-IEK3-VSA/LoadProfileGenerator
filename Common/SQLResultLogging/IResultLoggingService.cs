@@ -1,30 +1,30 @@
 ﻿using Automation.ResultFiles;
-using JetBrains.Annotations;
 using System.Collections.Generic;
 
 namespace Common.SQLResultLogging
 {
     public interface IResultLoggingService
     {
-        Dictionary<HouseholdKey, FileEntry> FilenameByHouseholdKey { get; }
-
         bool CheckifTableExits(string tableName);
-        void DeleteEntries([ItemNotNull, NotNull] List<Dictionary<string, object>> entries, [NotNull] string tableName, HouseholdKey householdKey);
-        void DeleteEntry(Dictionary<string, object> entry, [NotNull] string tableName, HouseholdKey householdKey);
+        void DeleteEntries(List<Dictionary<string, object>> entries, string tableName, HouseholdKey householdKey);
+        void DeleteEntry(Dictionary<string, object> entry, string tableName, HouseholdKey householdKey);
         List<DatabaseEntry> LoadDatabases();
-        List<ResultTableDefinition> LoadTables([NotNull] HouseholdKey dbKey);
-        void MakeTableForListOfFields([ItemNotNull, NotNull] List<FieldDefinition> fields, [NotNull] HouseholdKey householdKey, [NotNull] string tableName);
-        List<T> ReadFromJson<T>([NotNull] ResultTableDefinition rtd, [NotNull] HouseholdKey key, ExpectedResultCount expectedResult);
-        IEnumerable<T> ReadFromJsonAsEnumerable<T>([NotNull] ResultTableDefinition rtd, [NotNull] HouseholdKey key);
-        void SaveDictionaryToDatabaseNewConnection([NotNull] Dictionary<string, object> values, [NotNull] string tableName, [NotNull] HouseholdKey householdKey);
-        void SaveDictionaryToDatabaseNewConnection([ItemNotNull, NotNull] List<Dictionary<string, object>> values, [NotNull] string tableName, [NotNull] HouseholdKey householdKey);
-        void SaveResultEntry([NotNull] SaveableEntry entry);
+        List<ResultTableDefinition> LoadTables(HouseholdKey dbKey);
+        List<T> ReadFromJson<T>(ResultTableDefinition rtd, HouseholdKey key, ExpectedResultCount expectedResult);
+        IEnumerable<T> ReadFromJsonAsEnumerable<T>(ResultTableDefinition rtd, HouseholdKey key);
+        void SaveDictionaryToDatabaseNewConnection(Dictionary<string, object> values, string tableName, HouseholdKey householdKey);
+        void SaveDictionaryToDatabaseNewConnection(List<Dictionary<string, object>> values, string tableName, HouseholdKey householdKey);
+        void SaveResultEntry(SaveableEntry entry);
+
+        Dictionary<HouseholdKey, FileEntry> FilenameByHouseholdKey { get; } // TODO: only for testing
+        void MakeTableForListOfFields(List<FieldDefinition> fields, HouseholdKey householdKey, string tableName); // TODO: only for testing
     }
 
     public static class ResultLoggingFactory
     {
         public static IResultLoggingService CreateResultLoggingService(string basePath)
         {
+            //return new JsonResultLoggingService(basePath);
             return new SqlResultLoggingService(basePath);
         }
     }
