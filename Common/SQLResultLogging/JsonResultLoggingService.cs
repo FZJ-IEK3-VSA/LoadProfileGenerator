@@ -69,20 +69,34 @@ namespace Common.SQLResultLogging
         }
 
         /// <summary>
-        /// Serializes the passed items to JSON and combines them with newlines and commas in
-        /// a stringbuilder. This stringbuilder should be directly passed to the filestream
-        /// instead of converting to a string to avoid exceeding the maximum string length.
+        /// Limit for the string builder size before it is written to file
+        /// to avoid exceeding the maximum string length.
         /// </summary>
-        /// <typeparam name="T">item type</typeparam>
-        /// <param name="data">the data to serialize</param>
-        /// <returns>a stringbuilder with all serialized items concatenated</returns>
-        private static StringBuilder CreateJsonEntries<T>(IEnumerable<T> data)
+        private const int StringBufferLimit = 100_000_000;
+
+        private static void WriteEntriesToFile<T>(Stream stream, IEnumerable<T> data, bool addInitialComma)
         {
-            //var jsonString = JsonSerializer.Serialize(data);
-            var jsonStrings = data.Select(d => "\n" + JsonConvert.SerializeObject(d));
-            StringBuilder sb = new();
-            sb.AppendJoin(',', jsonStrings);
-            return sb;
+            using var writer = new StreamWriter(stream);
+            var builder = new StringBuilder();
+            if (addInitialComma)
+                builder.Append(',');
+
+            foreach (var item in data)
+            {
+                // serialize one item at a time
+                string jsonString = "\n" + JsonConvert.SerializeObject(item);
+                if (builder.Length + jsonString.Length > StringBufferLimit)
+                {
+                    // adding the new item to the buffer would exceed the limit, so write the buffer to file before
+                    writer.Write(builder);
+                    builder.Clear();
+                }
+                builder.Append(jsonString);
+            }
+
+            // add the final closing bracket and write the remaining buffer to file
+            builder.Append(']');
+            writer.Write(builder);
         }
 
         private static void AddToJsonFile<T>(string filepath, IEnumerable<T> data)
@@ -98,15 +112,7 @@ namespace Common.SQLResultLogging
             stream.Seek(-2, SeekOrigin.End);
             bool firstValue = (char)stream.ReadByte() == '[';
 
-            // serialize the items and concatenate them to valid JSON
-            var stringBuilder = CreateJsonEntries(data);
-            if (firstValue)
-                stringBuilder.Insert(0, ",");
-            stringBuilder.Append(']');
-
-            // apppend the new entries, overwriting the previous closing bracket
-            using var writer = new StreamWriter(stream);
-            writer.Write(stringBuilder);
+            WriteEntriesToFile(stream, data, !firstValue);
         }
 
         private IEnumerable<T> LoadItemsFromFile<T>(HouseholdKey key, string tableName)
