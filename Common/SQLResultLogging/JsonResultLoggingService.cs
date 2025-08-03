@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 //using System.Text.Json;
 
 namespace Common.SQLResultLogging
@@ -21,7 +22,7 @@ namespace Common.SQLResultLogging
         private string GetDirectory(HouseholdKey key) => Path.Combine(basePath, $"Results.{key}");
 
         private string GetFilePath(HouseholdKey key, string tableName) => Path.Combine(GetDirectory(key), tableName + ".json");
-        
+
         private string InitJsonFile(HouseholdKey key, string tableName)
         {
             string filepath = GetFilePath(key, tableName);
@@ -39,7 +40,7 @@ namespace Common.SQLResultLogging
 
             // init the file by writing the JSON array start
             CreateEmptyDataFile(filepath);
-            
+
             // the file needs to be created before registering a new directory to avoid recursion with duplicate file creation
             if (!dirExistedAlready)
             {
@@ -67,11 +68,21 @@ namespace Common.SQLResultLogging
             SaveToFile([new DatabaseEntry(directoryPath, key)], Constants.DatabaseListTableName, Constants.GeneralHouseholdKey);
         }
 
-        private static string CreateJsonEntries<T>(IEnumerable<T> data)
+        /// <summary>
+        /// Serializes the passed items to JSON and combines them with newlines and commas in
+        /// a stringbuilder. This stringbuilder should be directly passed to the filestream
+        /// instead of converting to a string to avoid exceeding the maximum string length.
+        /// </summary>
+        /// <typeparam name="T">item type</typeparam>
+        /// <param name="data">the data to serialize</param>
+        /// <returns>a stringbuilder with all serialized items concatenated</returns>
+        private static StringBuilder CreateJsonEntries<T>(IEnumerable<T> data)
         {
             //var jsonString = JsonSerializer.Serialize(data);
             var jsonStrings = data.Select(d => "\n" + JsonConvert.SerializeObject(d));
-            return string.Join(',', jsonStrings);
+            StringBuilder sb = new();
+            sb.AppendJoin(',', jsonStrings);
+            return sb;
         }
 
         private static void AddToJsonFile<T>(string filepath, IEnumerable<T> data)
@@ -83,16 +94,19 @@ namespace Common.SQLResultLogging
             if ((char)stream.ReadByte() != ']')
                 throw new LPGException($"Unexpected JSON format in result file {filepath}");
 
-            // check the character before that to determine whether a comma is needed
+            // check the character before that to determine whether a comma at the start is needed
             stream.Seek(-2, SeekOrigin.End);
             bool firstValue = (char)stream.ReadByte() == '[';
 
-            var jsonString = CreateJsonEntries(data);
-            var jsonEntry = (firstValue ? "" : ",") + $"{jsonString}]";
+            // serialize the items and concatenate them to valid JSON
+            var stringBuilder = CreateJsonEntries(data);
+            if (firstValue)
+                stringBuilder.Insert(0, ",");
+            stringBuilder.Append(']');
 
             // apppend the new entries, overwriting the previous closing bracket
             using var writer = new StreamWriter(stream);
-            writer.Write(jsonEntry);
+            writer.Write(stringBuilder);
         }
 
         private IEnumerable<T> LoadItemsFromFile<T>(HouseholdKey key, string tableName)
