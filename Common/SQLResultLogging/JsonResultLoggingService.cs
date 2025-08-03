@@ -84,7 +84,7 @@ namespace Common.SQLResultLogging
             foreach (var item in data)
             {
                 // serialize one item at a time
-                string jsonString = "\n" + JsonConvert.SerializeObject(item);
+                string jsonString = "\n" + JsonConvert.SerializeObject(item) + ",";
                 if (builder.Length + jsonString.Length > StringBufferLimit)
                 {
                     // adding the new item to the buffer would exceed the limit, so write the buffer to file before
@@ -93,6 +93,9 @@ namespace Common.SQLResultLogging
                 }
                 builder.Append(jsonString);
             }
+
+            // remove the trailing comma
+            builder.Length--;
 
             // add the final closing bracket and write the remaining buffer to file
             builder.Append(']');
