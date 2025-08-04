@@ -1,10 +1,10 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-//using System.Text.Json;
 
 namespace Common.SQLResultLogging
 {
@@ -124,7 +124,7 @@ namespace Common.SQLResultLogging
             string jsonString = File.ReadAllText(filepath);
 
             //return AutomationUtili.ParseJsonFile<IEnumerable<T>>(filepath);
-            return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
+            return AutomationUtili.ParseJsonFileNewtonsoft<IEnumerable<T>>(filepath);
         }
 
         public IEnumerable<T> ReadFromJsonAsEnumerable<T>(ResultTableDefinition rtd, HouseholdKey key)
