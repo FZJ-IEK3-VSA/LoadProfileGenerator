@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using Autofac;
 using Automation;
@@ -326,7 +325,6 @@ namespace CalculationController.CalcFactories
             builder.Register(x => x.Resolve<AffordanceTaggingSetFactory>().GetAffordanceTaggingSets(sim)).SingleInstance();
             builder.Register(x => CalcLoadTypeFactory.MakeLoadTypes(x.Resolve<CalcLoadTypeDtoDictionary>())).SingleInstance();
             builder.RegisterType<AvailabilityDtoRepository>().SingleInstance();
-            builder.RegisterType<CalcVariableDtoFactory>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).SingleInstance();
             builder.RegisterType<CalcTransportationDtoFactory>();
 
@@ -343,6 +341,9 @@ namespace CalculationController.CalcFactories
         /// <param name="ds">device selection for this simulation target</param>
         private void RegisterEverything(CalcStartParameterSet csps, ContainerBuilder builder, DeviceSelection? ds)
         {
+            // CalcVariableDtoFactory stores all CalcVariableDto objects created with it and therefore must be rebuilt for every house
+            builder.RegisterType<CalcVariableDtoFactory>().SingleInstance();
+
             Random rnd = new(csps.RandomSeed);
             builder.RegisterInstance(rnd);
             builder.RegisterInstance(csps.CalculationProfiler);
