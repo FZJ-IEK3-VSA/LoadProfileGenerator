@@ -548,7 +548,7 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
         {
             ResultFileEntry rfe = new("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key, fileIndex, CalcOption.BasicOverview);
             ResultFileEntryLogger rfel = new(service);
-            rfel.Run(key, rfe);
+            rfel.Run(Constants.GeneralHouseholdKey, rfe);
         }
 
         private void LoadFileNameDict()
