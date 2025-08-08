@@ -400,7 +400,13 @@ namespace Common {
                 }
                 else if (OutputHelper != null)
                 {
-                    OutputHelper.WriteLine(message);
+                    try
+                    {
+                        OutputHelper.WriteLine(message);
+                    } catch (InvalidOperationException)
+                    {
+                        // sometimes writing to the OutputHelper causes problem if running multiple tests at once
+                    }
                 }
                 // don't log the message here if there is no OutputHelper and LogToConsole is false
             }
