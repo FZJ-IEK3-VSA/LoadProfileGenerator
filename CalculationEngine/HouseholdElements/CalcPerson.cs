@@ -549,10 +549,7 @@ namespace CalculationEngine.HouseholdElements
             }
 
             // create an action entry for this activation
-            _calcRepo.OnlineLoggingData.AddActionEntry(timestep, Guid,
-                Name, _isCurrentlySick, activity.Name,
-                affordance.Guid, _calcPerson.HouseholdKey,
-                affordance.AffCategory, affordance.BodilyActivityLevel, activity.IsTravel);
+            AddActivityActionEntry(timestep, activity);
 
             LogThought(timestep, activity.GetStartThought());
 
@@ -568,6 +565,20 @@ namespace CalculationEngine.HouseholdElements
             // log wether light was switched on
             string message = activity.LightingSwitchedOn ? "Turning on the light for " : "No light needed for ";
             LogThought(timestep, message + affordance.ParentLocation.Name);
+        }
+
+        /// <summary>
+        /// Adds an action entry for this person for the specified timestep and activity.
+        /// </summary>
+        /// <param name="timestep">the timestep for the action entry; usually the starting time of the activity</param>
+        /// <param name="activity">the activity to create an action entry for</param>
+        private void AddActivityActionEntry(TimeStep timestep, IActivity activity)
+        {
+            var affordance = activity.Affordance;
+            _calcRepo.OnlineLoggingData.AddActionEntry(timestep, Guid,
+                Name, _isCurrentlySick, activity.Name,
+                affordance.Guid, _calcPerson.HouseholdKey,
+                affordance.AffCategory, affordance.BodilyActivityLevel, activity.IsTravel);
         }
 
         /// <summary>
@@ -697,9 +708,7 @@ namespace CalculationEngine.HouseholdElements
             LogThought(time, thought);
 
             // add another action entry, but don't activate the resumed activity again
-            var prevAff = activityQueue.CurrentActivity.Affordance;
-            _calcRepo.OnlineLoggingData.AddActionEntry(time, Guid, Name, _isCurrentlySick, prevAff.Name, prevAff.Guid,
-                _calcPerson.HouseholdKey, prevAff.AffCategory, prevAff.BodilyActivityLevel, activityQueue.CurrentActivity.IsTravel);
+            AddActivityActionEntry(time, activityQueue.CurrentActivity);
             return true;
         }
 
