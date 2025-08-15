@@ -53,8 +53,12 @@ namespace CitySimulation.CityGeneration
             }
             bool reuseDBs = CanUseExistingDatabases(resultDir, numWorkers);
 
+            // check if a file with RNG seeds for each house already exists
+            var seedFile = Path.Combine(resultDir, Constants.HouseSeedMappingFile);
+            bool reuseSeedFile = File.Exists(seedFile);
+
             // check for existing files in the result directory
-            HouseGenerator.CleanResultDirectoryBeforeSimulation(resultDir, false, reuseDBs);
+            HouseGenerator.CleanResultDirectoryBeforeSimulation(resultDir, false, reuseDBs, reuseSeedFile);
 
             // copy DB file to result directory and open a connection to it
             var sim = HouseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
@@ -68,10 +72,9 @@ namespace CitySimulation.CityGeneration
             JsonCalculator.SaveSettingsToDatabase(sim, calcSpec);
 
             Func<string, int> seedProvider;
-            if (reuseDBs)
+            if (reuseSeedFile)
             {
                 // load the seed file and use the already defined seed for each house
-                string seedFile = Path.Combine(resultDir, Constants.HouseSeedMappingFile);
                 var seedsPerHouse = AutomationUtili.ParseJsonFile<Dictionary<string, int>>(seedFile);
                 seedProvider = id => seedsPerHouse[id];
             }

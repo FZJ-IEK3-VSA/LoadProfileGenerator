@@ -240,8 +240,9 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         /// <param name="resultDirectory">the result directory to clean up</param>
         /// <param name="keepLogsAndDBFiles">if true, log files and .db3 files are not deleted</param>
-        /// <param name="reuseCitySimFiles">if true, keeps the Databases directory and seeds file from the city simulation so they can be reused</param>
-        public static void CleanResultDirectoryBeforeSimulation(string resultDirectory, bool keepLogsAndDBFiles = true, bool reuseCitySimFiles = false)
+        /// <param name="reuseCitySimDBs">if true, keeps the Databases directory from the city simulation so it can be reused</param>
+        /// <param name="reuseSeedFile">if true, keeps the seeds file from the city simulation so it can be reused</param>
+        public static void CleanResultDirectoryBeforeSimulation(string resultDirectory, bool keepLogsAndDBFiles = true, bool reuseCitySimDBs = false, bool reuseSeedFile = false)
         {
             var resultDir = new DirectoryInfo(resultDirectory);
             if (Directory.Exists(resultDir.FullName))
@@ -258,7 +259,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                     {
                         continue;
                     }
-                    if (reuseCitySimFiles && file.Name == Constants.HouseSeedMappingFile)
+                    if (reuseSeedFile && file.Name == Constants.HouseSeedMappingFile)
                     {
                         continue;
                     }
@@ -268,7 +269,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 var directories = resultDir.GetDirectories();
                 foreach (DirectoryInfo info in directories)
                 {
-                    if (reuseCitySimFiles && info.Name == Constants.DataBaseDirectory)
+                    if (reuseCitySimDBs && info.Name == Constants.DataBaseDirectory)
                     {
                         continue;
                     }
