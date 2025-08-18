@@ -55,7 +55,8 @@ namespace CalculationEngine.Activities
         int? ExpectedDuration { get; }
 
         /// <summary>
-        /// The timestep in which the activity started
+        /// The timestep in which the activity started. Will be null before starting the activity,
+        /// and will have the correct value after starting it.
         /// </summary>
         TimeStep? StartTime { get; }
 

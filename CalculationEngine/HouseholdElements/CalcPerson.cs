@@ -344,6 +344,11 @@ namespace CalculationEngine.HouseholdElements
                 if (IsOnVacation[time.InternalStep])
                 {
                     // vacation is still ongoing
+                    if (time.ExternalStep == 0)
+                    {
+                        // first external step --> retrospectively add an action entry for the vacation
+                        AddVacationActionEntry(time);
+                    }
                     return false;
                 }
                 // vacation just ended, resume as usual
@@ -364,7 +369,16 @@ namespace CalculationEngine.HouseholdElements
             }
 
             // the person is already busy with an activity, check for a possible interruption
-            return InterruptIfNeeded(time, isDaylight, false);
+            var wasInterrupted = InterruptIfNeeded(time, isDaylight, false);
+
+            if (!wasInterrupted && time.ExternalStep == 0)
+            {
+                // first external step, and no new activity was started --> retrospectively add an action entry for the current activity
+                AddActivityActionEntry(time, activityQueue.CurrentActivity);
+            }
+
+            // return true if there was an interrupt and the new activity is dynamic
+            return wasInterrupted && !activityQueue.CurrentActivity.IsDetermined;
         }
 
         /// <summary>
@@ -410,9 +424,7 @@ namespace CalculationEngine.HouseholdElements
             // only log the vacation if the current time step does not belong to the setup time frame
             if (time.DisplayThisStep)
             {
-                _calcRepo.OnlineLoggingData.AddActionEntry(time, _calcPerson.Guid, _calcPerson.Name,
-                    _isCurrentlySick, "taking a vacation", _vacationAffordanceGuid, _calcPerson.HouseholdKey,
-                    "Vacation", BodilyActivityLevel.Outside, false);
+                AddVacationActionEntry(time);
                 _calcRepo.OnlineLoggingData.AddLocationEntry(new LocationEntry(_calcPerson.HouseholdKey,
                     _calcPerson.Name, _calcPerson.Guid, time, "Vacation", _vacationLocationGuid));
             }
@@ -582,6 +594,17 @@ namespace CalculationEngine.HouseholdElements
         }
 
         /// <summary>
+        /// Adds an action entry for a vacation of this person for the specified timestep.
+        /// </summary>
+        /// <param name="time">the timestep for the vacation</param>
+        private void AddVacationActionEntry(TimeStep time)
+        {
+            _calcRepo.OnlineLoggingData.AddActionEntry(time, _calcPerson.Guid, _calcPerson.Name,
+                _isCurrentlySick, "taking a vacation", _vacationAffordanceGuid, _calcPerson.HouseholdKey,
+                "Vacation", BodilyActivityLevel.Outside, false);
+        }
+
+        /// <summary>
         /// Finishes the specified activity.
         /// </summary>
         /// <param name="timestep">the current timestep</param>
@@ -629,7 +652,7 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="time">current timestep</param>
         /// <param name="isDaylight">daylight information object</param>
         /// <param name="ignorePreviousAffordances">whether the constraint not to activate one of the last few affordances can be ignored</param>
-        /// <returns>whether a remote activity was started</returns>
+        /// <returns>whether the current activity was interrupted</returns>
         /// <exception cref="LPGException"></exception>
         private bool InterruptIfNeeded(TimeStep time, DayLightStatus isDaylight, bool ignorePreviousAffordances)
         {
@@ -680,7 +703,7 @@ namespace CalculationEngine.HouseholdElements
 
                     // log the interruption
                     LogThought(time, "Interrupting the previous affordance for " + bestAffordance.Name);
-                    return !activityQueue.CurrentActivity.IsDetermined;
+                    return true;
                 }
             }
             return false;
