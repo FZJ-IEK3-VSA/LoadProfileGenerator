@@ -70,6 +70,15 @@ namespace Automation {
             EnableFlexibility = o.EnableFlexibility;
         }
 
+        /// <summary>
+        /// Creates a shallow object of this JsonCalcSpecification.
+        /// </summary>
+        /// <returns>a copy of the current JsonCalcSpecification object</returns>
+        public JsonCalcSpecification ShallowCopy()
+        {
+            return (JsonCalcSpecification)MemberwiseClone();
+        }
+
         [Comment(
             "List of all load types to process in postprocessing. Internally if you calculate a house, the LPG needs to calculate the warm water needs to correctly calculate the electricity demand from the heat pump. " +
             "But maybe you don't need the warm water profiles and only want the electricity files. Then you can put Electricity here (case is important!) and the LPG will skip everything " +

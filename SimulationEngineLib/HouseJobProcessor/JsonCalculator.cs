@@ -339,7 +339,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             var calcStartParameterSet = CreateCalcParametersFromJsonCalcSpec(sim, jcs, calcObjectReference, _calculationProfiler, preserveLogfile: true);
 
             // initialize logfile and log the calcspec
-            var resultDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
+            var resultDirectory = new DirectoryInfo(calcStartParameterSet.ResultPath ?? throw new LPGException("Output directory was null."));
             InitLogger(resultDirectory);
             LogCalcSpec(jcs);
 
@@ -351,7 +351,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             cs.Start(calcStartParameterSet);
 
             // write profiler results to JSON file
-            if (jcs.CalcOptions != null && jcs.CalcOptions.Contains(CalcOption.CalculationFlameChart))
+            if (calcStartParameterSet.CalcOptions.Contains(CalcOption.CalculationFlameChart))
             {
                 string targetfile = Path.Combine(resultDirectory.FullName, Constants.CalculationProfilerJson);
                 using (StreamWriter sw = new StreamWriter(targetfile))

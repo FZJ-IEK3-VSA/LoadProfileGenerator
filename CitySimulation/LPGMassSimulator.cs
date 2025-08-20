@@ -160,6 +160,8 @@ namespace CitySimulation
         {
             var simulationTargets = new List<CitySimulationHouse>(scenarioPart.TargetReferences.Count);
             var cmf = new CalcManagerFactory(sim, CalcParameters);
+            // use a copy of the calcspec to avoid changing properties like output dir in the original object
+            var calcSpecCopy = scenarioPart.CalcSpecification.ShallowCopy();
 
             foreach (var target in scenarioPart.TargetReferences)
             {
@@ -176,7 +178,7 @@ namespace CitySimulation
                 try
                 {
                     // create the CalcStartParameterSet containing all parameters for the calculation
-                    var objectsForCalc = JsonCalculator.CreateCalcObjectParams(sim, scenarioPart.CalcSpecification, calcObjectReference, houseResultDir);
+                    var objectsForCalc = JsonCalculator.CreateCalcObjectParams(sim, calcSpecCopy, calcObjectReference, houseResultDir);
                     var calcStartParameterSet = new CalcStartParameterSet(objectsForCalc, CalcParameters, new(), target.Seed);
 
                     // create a calcManager for each household
