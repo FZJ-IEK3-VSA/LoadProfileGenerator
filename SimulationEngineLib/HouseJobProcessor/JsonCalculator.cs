@@ -10,6 +10,7 @@ using Common;
 using Common.Enums;
 using Common.JSON;
 using Database;
+using Database.Tables;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using PowerArgs;
@@ -56,7 +57,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         public static CalcStartParameterSet CreateCalcParametersFromJsonCalcSpec(Simulator sim, JsonCalcSpecification calcSpec, JsonReference calcObjectReference,
             CalculationProfiler? profiler = null, bool citySimulationEnabled = false, bool preserveLogfile=false)
         {
-            CalcParameters parameters = CreateCalcParameters(sim, calcSpec, citySimulationEnabled);
+            CalcParameters parameters = CreateCalcParameters(sim.MyGeneralConfig, calcSpec, citySimulationEnabled);
             CalcObjectParameters calcObjectParams = CreateCalcObjectParams(sim, calcSpec, calcObjectReference);
 
             CalculationHelpers helpers = new(profiler);
@@ -121,12 +122,12 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <summary>
         /// Generates the CalcParameters from the JsonCalcSpecification.
         /// </summary>
-        /// <param name="sim">Simlator to read default values</param>
+        /// <param name="config">general config, usually loaded from the database</param>
         /// <param name="calcSpec">the calculation specification to get parameters from</param>
         /// <param name="citySimulationEnabled">whether city simulation is enabled or not</param>
         /// <returns>the generated CalcParameters</returns>
         /// <exception cref="LPGPBadParameterException">if start or end date are missing</exception>
-        public static CalcParameters CreateCalcParameters(Simulator sim, JsonCalcSpecification calcSpec, bool citySimulationEnabled = false)
+        public static CalcParameters CreateCalcParameters(GeneralConfig config, JsonCalcSpecification calcSpec, bool citySimulationEnabled = false)
         {
             // check if start and end date are set
             var startDate = calcSpec.StartDate ?? throw new LPGPBadParameterException("No StartDate specified.");
@@ -146,18 +147,18 @@ namespace SimulationEngineLib.HouseJobProcessor
                 startDate,
                 endDate,
                 internalResolution,
-                sim.MyGeneralConfig.CSVCharacter,
+                config.CSVCharacter,
                 externalResolution,
-                sim.MyGeneralConfig.WriteExcelColumnBool,
-                sim.MyGeneralConfig.ShowSettlingPeriodBool,
+                config.WriteExcelColumnBool,
+                config.ShowSettlingPeriodBool,
                 SettlingDays,
-                sim.MyGeneralConfig.RepetitionCount,
+                config.RepetitionCount,
                 calcSpec.LoadtypesForPostprocessing,
-                sim.MyGeneralConfig.DeviceProfileHeaderMode,
+                config.DeviceProfileHeaderMode,
                 calcSpec.IgnorePreviousActivitiesWhenNeeded,
                 calcSpec.EnableTransportation,
                 calcSpec.EnableIdlemode,
-                sim.MyGeneralConfig.DecimalSeperator,
+                config.DecimalSeperator,
                 calcSpec.EnableFlexibility,
                 citySimulationEnabled: citySimulationEnabled
             );

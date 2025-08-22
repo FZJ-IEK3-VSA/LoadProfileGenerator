@@ -1,5 +1,4 @@
-﻿using Automation;
-using CalculationEngine.CitySimulation;
+﻿using CalculationEngine.CitySimulation;
 using Common;
 using System.Diagnostics;
 
@@ -16,15 +15,12 @@ namespace CitySimulation.Simulators
         private readonly TextLogger logger;
         private readonly TextLogger presenceLogger;
 
-        private readonly JsonCalcSpecification calcSpec;
-
-        public TransportSimulator(int rank, JsonCalcSpecification calcSpec)
+        public TransportSimulator(int rank, string outputDir)
         {
             WorkerId = rank;
-            this.calcSpec = calcSpec;
             var filename = $"Worker{WorkerId}.txt";
-            logger = new(filename, calcSpec.OutputDirectory, "travel_events");
-            presenceLogger = new(filename, calcSpec.OutputDirectory, "traveling_persons", true, "People traveling");
+            logger = new(filename, outputDir, "travel_events");
+            presenceLogger = new(filename, outputDir, "traveling_persons", true, "People traveling");
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)

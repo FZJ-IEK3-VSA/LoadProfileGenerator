@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace CitySimulation.Simulators
 {
-    class QueuePointOfInterestSimulator(int rank, PointOfInterestId id, JsonCalcSpecification calcSpec, int concurrentActivities) : PointOfInterestSimulator(rank, id, calcSpec)
+    class QueuePointOfInterestSimulator(int rank, PointOfInterestId id, string outputDir, int concurrentActivities) : PointOfInterestSimulator(rank, id, outputDir)
     {
-        Queue<AgentStayState> waitingVisitors = new();
+        readonly Queue<AgentStayState> waitingVisitors = [];
 
         private void AddNewPersons(IEnumerable<RemoteActivityStart> newActivities)
         {

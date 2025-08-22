@@ -11,7 +11,6 @@ using ChartCreator2.OxyCharts;
 using CitySimulation.Scenarios;
 using CitySimulation.SimulationTargets;
 using Common;
-using Common.JSON;
 using Database;
 using MPI;
 using Newtonsoft.Json;
@@ -31,8 +30,6 @@ namespace CitySimulation
         private readonly Simulator sim;
         private readonly ScenarioPart scenarioPart;
         private readonly List<CitySimulationHouse> simulationTargets;
-
-        public CalcParameters CalcParameters;
 
         public LPGMassSimulator(Intracommunicator comm, int rank, ScenarioPart scenarioPart)
         {
@@ -77,11 +74,8 @@ namespace CitySimulation
                 comm.Barrier();
             }
             Logger.LogRAMUsage("LPGMassSimulator-Reopened database");
-            
-            // create common CalcParameters object for the simulation of all houses
-            CalcParameters = JsonCalculator.CreateCalcParameters(sim, scenarioPart.CalcSpecification, true);
 
-            if (CalcParameters.IsSet(CalcOption.LogAllMessages) || CalcParameters.IsSet(CalcOption.LogErrorMessages))
+            if (scenarioPart.CalcParams.IsSet(CalcOption.LogAllMessages) || scenarioPart.CalcParams.IsSet(CalcOption.LogErrorMessages))
             {
                 // info: enabling this would require a general result database for the whole city simulation in which global results
                 //       such as log messages can be stored
@@ -159,7 +153,7 @@ namespace CitySimulation
         private List<CitySimulationHouse> PrepareHousesForSimulation(string baseResultDir, int rank)
         {
             var simulationTargets = new List<CitySimulationHouse>(scenarioPart.TargetReferences.Count);
-            var cmf = new CalcManagerFactory(sim, CalcParameters);
+            var cmf = new CalcManagerFactory(sim, scenarioPart.CalcParams);
             // use a copy of the calcspec to avoid changing properties like output dir in the original object
             var calcSpecCopy = scenarioPart.CalcSpecification.ShallowCopy();
 
@@ -179,7 +173,7 @@ namespace CitySimulation
                 {
                     // create the CalcStartParameterSet containing all parameters for the calculation
                     var objectsForCalc = JsonCalculator.CreateCalcObjectParams(sim, calcSpecCopy, calcObjectReference, houseResultDir);
-                    var calcStartParameterSet = new CalcStartParameterSet(objectsForCalc, CalcParameters, new(), target.Seed);
+                    var calcStartParameterSet = new CalcStartParameterSet(objectsForCalc, scenarioPart.CalcParams, new(), target.Seed);
 
                     // create a calcManager for each household
                     var calcManager = cmf.GetCalcManager(calcStartParameterSet);

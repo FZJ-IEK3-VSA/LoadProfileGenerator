@@ -1,16 +1,14 @@
 ﻿using Automation;
 using Automation.ResultFiles;
-using CitySimulation.Scenarios;
 using CitySimulation.SimulationTargets;
 using Common;
 using Common.JSON;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace CitySimulation.CityGeneration
+namespace CitySimulation.Scenarios
 {
     /// <summary>
     /// Class for loading a city scenario from a directory. The directory must contain
@@ -71,6 +69,9 @@ namespace CitySimulation.CityGeneration
             // save settings to the database copy in the result directory
             JsonCalculator.SaveSettingsToDatabase(sim, calcSpec);
 
+            // create common CalcParameters object from the CalcSpecification and the general config
+            var calcParameters = JsonCalculator.CreateCalcParameters(sim.MyGeneralConfig, calcSpec, true);
+
             Func<string, int> seedProvider;
             if (reuseSeedFile)
             {
@@ -98,7 +99,7 @@ namespace CitySimulation.CityGeneration
             ParseTravelData(inputDirectory, cityData);
 
             // create a new scenario object containing all house and POI configs
-            return new Scenario(newDbPath, calcSpec, houseConfigs, poiConfigs, cityData, inputDirectoryPath);
+            return new Scenario(newDbPath, calcSpec, calcParameters, houseConfigs, poiConfigs, cityData, inputDirectoryPath);
         }
 
         /// <summary>
@@ -150,7 +151,7 @@ namespace CitySimulation.CityGeneration
         private static TimeSlot ParseTimeSlot(string text)
         {
             const string KEY_ALL = "All";
-            var dayTypes = String.Join("|", DayTypeMapping.Keys) + $"|{KEY_ALL}";
+            var dayTypes = string.Join("|", DayTypeMapping.Keys) + $"|{KEY_ALL}";
             Match match = Regex.Match(text, @"_(" + dayTypes + @")_(\d+)to(\d+)");
             if (!match.Success)
                 throw new LPGPBadParameterException($"Could not parse time slot: {text}");

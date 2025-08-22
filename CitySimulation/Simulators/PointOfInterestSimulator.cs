@@ -1,5 +1,4 @@
-﻿using Automation;
-using CalculationEngine.CitySimulation;
+﻿using CalculationEngine.CitySimulation;
 using Common;
 using System.Diagnostics;
 
@@ -15,17 +14,14 @@ namespace CitySimulation.Simulators
         protected readonly TextLogger logger;
         protected readonly TextLogger presenceLogger;
 
-        protected readonly JsonCalcSpecification calcSpec;
-
         public PointOfInterestId PoiId { get; }
 
-        public PointOfInterestSimulator(int rank, PointOfInterestId id, JsonCalcSpecification calcSpec)
+        public PointOfInterestSimulator(int rank, PointOfInterestId id, string outputDir)
         {
             PoiId = id;
-            this.calcSpec = calcSpec;
             var filename = $"{PoiId.Id}.txt";
-            logger = new(filename, calcSpec.OutputDirectory, "poi_events");
-            presenceLogger = new(filename, calcSpec.OutputDirectory, "poi_presence", true, "People present");
+            logger = new(filename, outputDir, "poi_events");
+            presenceLogger = new(filename, outputDir, "poi_presence", true, "People present");
         }
 
         public virtual IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)

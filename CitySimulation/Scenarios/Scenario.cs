@@ -2,6 +2,7 @@
 using Common.Extensions;
 using CitySimulation.SimulationTargets;
 using Automation.ResultFiles;
+using Common.JSON;
 
 namespace CitySimulation.Scenarios
 {
@@ -11,14 +12,16 @@ namespace CitySimulation.Scenarios
     /// </summary>
     /// <param name="databasePath">path of the new database file to use in the target directory</param>
     /// <param name="calcSpec">calc specification with basic simulation parameters for all houses</param>
+    /// <param name="calcParameters">checked calculation parameters for the simulation</param>
     /// <param name="targetReferences">the residential building configurations</param>
     /// <param name="pointsOfInterest">the poin of interest configurations</param>
     /// <param name="cityData">the city object with all points of interest and travel information</param>
     /// <param name="scenarioPath">the path of the scenario directory</param>
-    public class Scenario(string databasePath, JsonCalcSpecification calcSpec, IEnumerable<ResidentialBuildingConfig> targetReferences, IEnumerable<PointOfInterestConfig> pointsOfInterest, CityData cityData, string scenarioPath)
+    public class Scenario(string databasePath, JsonCalcSpecification calcSpec, CalcParameters calcParameters, IEnumerable<ResidentialBuildingConfig> targetReferences, IEnumerable<PointOfInterestConfig> pointsOfInterest, CityData cityData, string scenarioPath)
     {
         public string DatabasePath { get; } = databasePath;
         public JsonCalcSpecification CalcSpecification { get; private set; } = calcSpec;
+        public CalcParameters CalcParams { get; private set; } = calcParameters;
         public IEnumerable<ResidentialBuildingConfig> TargetReferences { get; private set; } = targetReferences;
         public IEnumerable<PointOfInterestConfig> PointsOfInterest { get; private set; } = pointsOfInterest;
         public CityData CityData { get; set; } = cityData;
@@ -39,7 +42,7 @@ namespace CitySimulation.Scenarios
             var poiRegister = BuildPointOfInterestRegister(poiSublists);
 
             // create the list of scenario part objects, each with its own share of households and POIs
-            var parts = targetSublists.ZipLongest(poiSublists, [], []).Select(listPair => new ScenarioPart(listPair.Item1.ToList(), listPair.Item2.ToList(), DatabasePath, CalcSpecification, poiRegister, CityData));
+            var parts = targetSublists.ZipLongest(poiSublists, [], []).Select(listPair => new ScenarioPart(listPair.Item1.ToList(), listPair.Item2.ToList(), DatabasePath, CalcSpecification, CalcParams, poiRegister, CityData));
             return parts.ToArray();
         }
 

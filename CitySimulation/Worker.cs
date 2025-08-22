@@ -1,8 +1,6 @@
 ﻿using Automation.ResultFiles;
 using CalculationEngine.CitySimulation;
 using Common;
-using Common.JSON;
-using CitySimulation.CityGeneration;
 using CitySimulation.Scenarios;
 using CitySimulation.Simulators;
 using MPI;
@@ -12,7 +10,7 @@ using CitySimulation.SimulationTargets;
 namespace CitySimulation
 {
     /// <summary>
-    /// MPI Worker class that is instantiated once per MPI process and handles the whole simulation.
+    /// CitySimulation worker class that is instantiated once per MPI process and handles the whole simulation.
     /// </summary>
     internal class Worker
     {
@@ -21,17 +19,17 @@ namespace CitySimulation
         private readonly int numWorkers;
         private readonly string workerName;
         private readonly string inputPath;
+        private readonly string outputPath;
 
-        private LPGMassSimulator lpgSimulator;
-        private List<PointOfInterestSimulator> poiSimulators = [];
-        private TransportSimulator? transportSimulator;
+        private readonly ScenarioPart scenarioPart;
 
-        private CalcParameters? calcParameters;
-        private Scenario? scenario;
-        private ScenarioPart? scenarioPart;
+        private readonly LPGMassSimulator lpgSimulator;
+        private readonly List<PointOfInterestSimulator> poiSimulators = [];
+        private readonly TransportSimulator transportSimulator;
 
         private readonly MPILogger logger;
         private readonly CalculationProfiler? calculationProfiler;
+        private readonly DateTime start;
 
         public Worker(Intracommunicator comm, string[] args)
         {
@@ -42,6 +40,7 @@ namespace CitySimulation
                 throw new LPGException($"Received unexpected command line arguments: {args}");
             inputPath = args[0];
 
+            // store general MPI information about the process
             this.comm = comm;
             rank = comm.Rank;
             numWorkers = comm.Size;
@@ -49,29 +48,120 @@ namespace CitySimulation
 
             logger = new MPILogger(true, rank);
             calculationProfiler = new();
-        }
 
-        /// <summary>
-        /// Main method that runs the simulation, including setup, execution and postprocessing.
-        /// </summary>
-        public void Run()
-        {
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
+            start = DateTime.Now;
 
-            var start = DateTime.Now;
+            // general settings
+            // avoid MPI processes cluttering the console
+            Config.OutputToConsole = false;
+            Config.ResultLogger = Common.SQLResultLogging.ResultLoggerType.JSON;
+
+            scenarioPart = LoadAndDistributeScenario(inputPath);
+            outputPath = scenarioPart.CalcSpecification.OutputDirectory ?? throw new LPGPBadParameterException("Missing output path");
+
+            InitLogger();
+
+            // init all simulators
             try
             {
-                InitSimulation(inputPath);
+                lpgSimulator = InitLPGSimulator();
+                transportSimulator = new TransportSimulator(rank, scenarioPart.CalcSpecification.OutputDirectory);
+                poiSimulators = CreatePoiSimulators();
             }
             catch (Exception e)
             {
-                logger.Error($"Exception during initialization:\n{e}");
+                logger.Error($"Exception during simulator initialization:\n{e}");
                 throw;
             }
             logger.Info($"Finished initialization in  {DateTime.Now - start}");
+        }
 
+        /// <summary>
+        /// Initializes the logger by setting the logfile path and logging an initial message
+        /// </summary>
+        private void InitLogger()
+        {
+            string logFile = Path.Combine(outputPath, $"Log.CitySimulation.Worker{rank}.txt");
+            logger.SetLogFilePath(logFile);
+            logger.Info($"Worker {rank} on {workerName} is responsible for {scenarioPart.TargetReferences.Count} houses and {scenarioPart.PointsOfInterest.Count} POIs.");
+        }
+
+        /// <summary>
+        /// Loads the city scenario from the specified path, splits it and distributes it across all workers.
+        /// </summary>
+        /// <param name="inputPath">scenario path to load</param>
+        /// <returns>the part of the scenario this worker is responsible for</returns>
+        /// <exception cref="LPGException">if there is not enough work for all workers</exception>
+        private ScenarioPart LoadAndDistributeScenario(string inputPath)
+        {
+            // create scenario
+            ScenarioPart[]? scenarioParts = null;
+            if (rank == 0)
+            {
+                // determine simulation targets
+                var scenario = CityScenarioImport.ReadScenarioFromConfigDirectory(inputPath, numWorkers);
+                scenarioParts = scenario.GetScenarioParts(numWorkers);
+                int length = scenarioParts.Length;
+                if (length < numWorkers)
+                {
+                    // not enough parts for all workers
+                    throw new LPGException($"Not enough work packages for all MPI processes ({length} work packages for {numWorkers} workers).");
+                }
+            }
+
+            // distribute simulation targets
+            logger.Debug("Calling MPI Scatter to distribute scenario parts.");
+            return comm.Scatter(scenarioParts, 0);
+        }
+
+        /// <summary>
+        /// Creates the LPG simulator and initializes it, if necessary creating and preparing
+        /// all houses for simulation.
+        /// </summary>
+        /// <returns>the LPGMassSimulator for this worker</returns>
+        private LPGMassSimulator InitLPGSimulator()
+        {
+            LPGMassSimulator lpgSimulator = new(comm, rank, scenarioPart);
+            int totalPersons = lpgSimulator.TotalNumberOfPersons();
+            int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
+            logger.Info($"In total, this worker simulates {totalPersons} persons in {totalHouseholds} households.");
+
+            lpgSimulator.Init();
+            return lpgSimulator;
+        }
+
+        /// <summary>
+        /// Creates all POI simulators for this worker
+        /// </summary>
+        /// <returns>a list of POI simulators</returns>
+        private List<PointOfInterestSimulator> CreatePoiSimulators()
+        {
+            // initialize the point of interest simulators
+            return [.. scenarioPart.PointsOfInterest.Select(CreatePoiSimulator)];
+        }
+
+        /// <summary>
+        /// Creates a POI simulator for a single POI, depending on the POI type.
+        /// </summary>
+        /// <param name="poi">the POI config</param>
+        /// <returns>the created POI simulator</returns>
+        private PointOfInterestSimulator CreatePoiSimulator(PointOfInterestConfig poi)
+        {
+            return poi.LocationType.Name switch
+            {
+                //"Doctors Office" => new QueuePointOfInterestSimulator(rank, poi.Id, scenarioPart.CalcSpecification, 2),
+                _ => new PointOfInterestSimulator(rank, poi.Id, outputPath),
+            };
+        }
+
+        /// <summary>
+        /// Main method that runs the simulation, postprocessing.
+        /// </summary>
+        public void Run()
+        {
             var simulationStart = DateTime.Now;
-            RunSimulation();
+            RunMainSimulation();
             MPIBarrierWithLog();
             logger.Info($"Finished main simulation in {DateTime.Now - simulationStart}");
 
@@ -91,73 +181,13 @@ namespace CitySimulation
             logger.Info($"Finished city simulation in {DateTime.Now - start}");
         }
 
-        private void InitSimulation(string inputPath)
+        /// <summary>
+        /// Runs the main simulation part of the city simulation, where every timestep is simulated individually.
+        /// </summary>
+        private void RunMainSimulation()
         {
-            // general settings
-            // avoid MPI processes cluttering the console
-            Config.OutputToConsole = false;
-            Config.ResultLogger = Common.SQLResultLogging.ResultLoggerType.JSON;
-
-            // create scenario
-            ScenarioPart[]? scenarioParts = null;
-            if (rank == 0)
-            {
-                // determine simulation targets
-                scenario = CityScenarioImport.ReadScenarioFromConfigDirectory(inputPath, numWorkers);
-                scenarioParts = scenario.GetScenarioParts(numWorkers);
-                int length = scenarioParts.Length;
-                if (length < numWorkers)
-                {
-                    // not enough parts for all workers
-                    throw new LPGException($"Not enough work packages for all MPI processes ({length} work packages for {numWorkers} workers).");
-                }
-            }
-
-            // distribute simulation targets
-            logger.Debug("Calling MPI Scatter to distribute scenario parts.");
-            scenarioPart = comm.Scatter(scenarioParts, 0);
-
-            // configure the logger
-            string logFile = Path.Combine(scenarioPart.CalcSpecification.OutputDirectory, $"Log.CitySimulation.Worker{rank}.txt");
-            logger.SetLogFilePath(logFile);
-            logger.Info($"Worker {rank} on {workerName} is responsible for {scenarioPart.TargetReferences.Count} houses and {scenarioPart.PointsOfInterest.Count} POIs.");
-
-            lpgSimulator = new(comm, rank, scenarioPart);
-            calcParameters = lpgSimulator.CalcParameters;
-            int totalPersons = lpgSimulator.TotalNumberOfPersons();
-            int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
-            logger.Info($"In total, this worker simulates {totalPersons} persons in {totalHouseholds} households.");
-
-            lpgSimulator.Init();
-
-            // initialize the transport simulator
-            transportSimulator = new TransportSimulator(rank, scenarioPart.CalcSpecification);
-            CreatePoiSimulators();
-        }
-
-        private void CreatePoiSimulators()
-        {
-            // initialize the point of interest simulators
-            poiSimulators = [.. scenarioPart.PointsOfInterest.Select(CreatePoiSimulator)];
-        }
-
-        private PointOfInterestSimulator CreatePoiSimulator(PointOfInterestConfig poi)
-        {
-            return poi.LocationType.Name switch
-            {
-                //"Doctors Office" => new QueuePointOfInterestSimulator(rank, poi.Id, scenarioPart.CalcSpecification, 2),
-                _ => new PointOfInterestSimulator(rank, poi.Id, scenarioPart.CalcSpecification),
-            };
-        }
-
-        private void RunSimulation()
-        {
-            if (calcParameters is null)
-            {
-                throw new LPGException("CalcParameters are not set");
-            }
-
             // define iteration variables
+            var calcParameters = scenarioPart.CalcParams;
             var simulationTime = calcParameters.InternalStartTime;
             var timestep = new TimeStep(0, calcParameters);
             // initialize the variable for storing exchanged messages across iterations, starting with no messages
@@ -215,6 +245,9 @@ namespace CitySimulation
                 $"{stepsPerSecond * totalHouseholds:f2} household steps/second, {stepsPerSecond * totalPersons:f2} person steps/second");
         }
 
+        /// <summary>
+        /// Does an MPI barrier with additional logging before and after.
+        /// </summary>
         private void MPIBarrierWithLog()
         {
             logger.Debug("Calling MPI Barrier");
@@ -223,6 +256,13 @@ namespace CitySimulation
             logger.Debug($"MPI Barrier is over after {DateTime.UtcNow - startBarrier}");
         }
 
+        /// <summary>
+        /// Executes a single simulation step.
+        /// </summary>
+        /// <param name="timestep">the current timestep to simulate</param>
+        /// <param name="simulationTime">the simulated datetime</param>
+        /// <param name="activityMessages">the received messages for this worker from the previous timestep</param>
+        /// <returns>an MPIDistributor object with all messages from this worker to others</returns>
         public MPIDistributor SimulateOneStep(TimeStep timestep, DateTime simulationTime, SortedMessageCollection activityMessages)
         {
             // run household simulators first and get newly started remote newTravels
@@ -248,6 +288,9 @@ namespace CitySimulation
             return messageCollector;
         }
 
+        /// <summary>
+        /// Finishes the simulation and runs all postprocessing tasks.
+        /// </summary>
         private void FinishSimulation()
         {
             lpgSimulator.FinishSimulation();
@@ -259,11 +302,11 @@ namespace CitySimulation
             }
 
             // create an additional flame chart for the calculation profiler of this MPI worker
-            if (calculationProfiler is not null && calcParameters.Options.Contains(Automation.CalcOption.CalculationFlameChart))
+            if (calculationProfiler is not null && scenarioPart.CalcParams.Options.Contains(Automation.CalcOption.CalculationFlameChart))
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    var profilerDirectory = Path.Combine(scenarioPart.CalcSpecification.OutputDirectory, "CalculationProfiler");
+                    var profilerDirectory = Path.Combine(outputPath, "CalculationProfiler");
                     ChartCreator2.OxyCharts.ChartMaker.MakeFlameChart(new DirectoryInfo(profilerDirectory), calculationProfiler, $"Worker{rank}");
                 }
                 else
@@ -275,7 +318,7 @@ namespace CitySimulation
             if (rank == 0)
             {
                 // remove unneeded files and subdirectories
-                SimulationEngineLib.HouseJobProcessor.JsonCalculator.CleanUpResultDirectory(scenario!.CalcSpecification);
+                SimulationEngineLib.HouseJobProcessor.JsonCalculator.CleanUpResultDirectory(scenarioPart.CalcSpecification);
             }
         }
     }
