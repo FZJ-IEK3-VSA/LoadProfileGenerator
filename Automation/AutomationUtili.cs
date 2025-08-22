@@ -144,7 +144,7 @@ namespace Automation
             }
             var method = frames[1].GetMethod();
 
-            if (method.DeclaringType == null) {
+            if (method?.DeclaringType == null) {
                 throw new LPGException("DeclaringType was null");
             }
             return method.DeclaringType.Name + "." + method.Name;
@@ -160,7 +160,7 @@ namespace Automation
             }
             var method = frames[2].GetMethod();
 
-            if (method.DeclaringType == null)
+            if (method?.DeclaringType == null)
             {
                 throw new LPGException("DeclaringType was null");
             }
