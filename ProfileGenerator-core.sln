@@ -93,6 +93,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionIncreaser", "Version
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CitySimulation", "CitySimulation\CitySimulation.csproj", "{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CitySimulationTests", "CitySimulationTests\CitySimulationTests.csproj", "{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1031,6 +1033,46 @@ Global
 		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|x64.Build.0 = Debug|Any CPU
 		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|x86.ActiveCfg = Debug|Any CPU
 		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|x86.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Debug|x64.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Debug|x86.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.DebugNoCodeCheck|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.DebugNoCodeCheck|Any CPU.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.DebugNoCodeCheck|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.DebugNoCodeCheck|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.DebugNoCodeCheck|x64.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.DebugNoCodeCheck|x64.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.DebugNoCodeCheck|x86.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.DebugNoCodeCheck|x86.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.debugx64|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.debugx64|Any CPU.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.debugx64|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.debugx64|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.debugx64|x64.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.debugx64|x64.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.debugx64|x86.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.debugx64|x86.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Release|x64.ActiveCfg = Release|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Release|x64.Build.0 = Release|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Release|x86.ActiveCfg = Release|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.Release|x86.Build.0 = Release|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.TeamCity|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.TeamCity|Any CPU.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.TeamCity|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.TeamCity|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.TeamCity|x64.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.TeamCity|x64.Build.0 = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.TeamCity|x86.ActiveCfg = Debug|Any CPU
+		{EAEAE800-CDD3-44BD-BA3A-A0027D539FAA}.TeamCity|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
