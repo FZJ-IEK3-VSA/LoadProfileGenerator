@@ -119,7 +119,7 @@ namespace Common.JSON {
         public DateTime OfficialStartTime { get; set; }
 
         [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
-        public HashSet<CalcOption> Options { get; } = [];
+        public HashSet<CalcOption> Options { get; set; } = [];
 
         public bool ShowSettlingPeriodTime { get; set; }
         public int TimeStepsPerHour { get; set; }
