@@ -100,11 +100,8 @@ namespace Common.JSON {
         public string CSVCharacter { get; set; } = ";";
 
         public string DecimalSeperator { get; set; }
-        public bool DeleteDatFiles { get; set; }
         public int DummyCalcSteps { get; set; }
         public TimeSpan ExternalStepsize { get; set; }
-
-        public bool ForceRandom { get; private set; }
         public DateTime InternalEndTime { get; set; }
         public DateTime InternalStartTime { get; set; }
         public TimeSpan InternalStepsize { get; set; }
