@@ -1,16 +1,17 @@
 ﻿using Automation;
 using Common.Tests;
-using Xunit;
 using Xunit.Abstractions;
 using CitySimulation;
 using Common.JSON;
 using FluentAssertions;
+using CitySimulation.Scenarios;
+using CalculationEngine.CitySimulation;
 
 namespace CitySimulationTests
 {
     /// <summary>
-    /// Tests whether the MpiSerializer used in the City Simulation can transfer relevant
-    /// objects without changing them.
+    /// Tests whether the MpiSerializer used in the City Simulation can serialize and
+    /// deserialize relevant objects without changing them.
     /// </summary>
     /// <param name="testOutputHelper"></param>
     public sealed class TestMpiSerializer(ITestOutputHelper testOutputHelper) : UnitTestBaseClass(testOutputHelper)
@@ -21,10 +22,53 @@ namespace CitySimulationTests
         {
             var serializer = new MPIJsonSerializer();
 
-            var cp = CalcParameters.CreateDefaultParamsForTesting();
-            cp.Options.Add(CalcOption.MakePDF);
+            // use non-default values for all properties in order to notice incorrect property values
+            CalcParameters cp = new([CalcOption.MakePDF], new(2020, 1, 1), new(2020, 12, 31),
+                new(0, 1, 0), "_", new(0, 10, 0), true, true, 10, 10, ["Electricity"],
+                DeviceProfileHeaderMode.OnlyDeviceCategories, true, true, true, "-", true, true);
 
             CheckSerialization(serializer, cp);
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
+        public void TestScenarioPart()
+        {
+            var serializer = new MPIJsonSerializer();
+
+            // use non-default values for all properties in order to notice incorrect property values
+            ScenarioPart p = new([new("myid", "filepath", 99)], [new(new("poi-id"),new("json ref"))],"dbpath", new(),CalcParameters.CreateDefaultParamsForTesting(), new([]), new(new()));
+
+            CheckSerialization(serializer, p);
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
+        public void TestMessageContainer()
+        {
+            var serializer = new MPIJsonSerializer();
+            var m = new MessageContainer();
+            CheckSerialization(serializer, m);
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
+        public void TestRemoteActivityStart()
+        {
+            var serializer = new MPIJsonSerializer();
+            PersonIdentifier person = new("name", new("hhkey"), "house-id", 4);
+            var x = new RemoteActivityStart(person, true, "aff", new("poi1"), new("poi2"), 25);
+            CheckSerialization(serializer, x);
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
+        public void TestRemoteActivityFinished()
+        {
+            var serializer = new MPIJsonSerializer();
+            PersonIdentifier person = new("name", new("hhkey"), "house-id", 4);
+            var x = new RemoteActivityFinished(person, new PointOfInterestId("poi-id"));
+            CheckSerialization(serializer, x);
         }
 
         /// <summary>
