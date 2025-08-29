@@ -66,7 +66,7 @@ namespace CitySimulation
             try
             {
                 lpgSimulator = InitLPGSimulator();
-                transportSimulator = new TransportSimulator(rank, scenarioPart.CalcSpecification.OutputDirectory);
+                transportSimulator = new TransportSimulator(rank, outputPath);
                 poiSimulators = CreatePoiSimulators();
             }
             catch (Exception e)
@@ -278,7 +278,6 @@ namespace CitySimulation
             messageCollector.AddFinishedActivities(finishedTravels);
 
             // run POI simulators
-            Dictionary<PointOfInterestId, IEnumerable<RemoteActivityStart>> newActivities = [];
             foreach (var simulator in poiSimulators)
             {
                 var relevantActivities = activityMessages.NewPoiActivities.GetValueOrDefault(simulator.PoiId, []);
