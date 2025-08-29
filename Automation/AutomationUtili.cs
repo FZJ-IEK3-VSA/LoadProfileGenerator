@@ -46,6 +46,7 @@ namespace Automation
             {
                 RespectNullableAnnotations = true,
                 ReadCommentHandling = JsonCommentHandling.Skip,
+                UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
             };
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
             options.Converters.Add(new JsonReferenceConverter());
@@ -84,7 +85,8 @@ namespace Automation
         public static List<CalcOption> GetOptionList([JetBrains.Annotations.NotNull] params CalcOption[] list)
         {
             List<CalcOption> cos = new List<CalcOption>();
-            foreach (var option in list) {
+            foreach (var option in list)
+            {
                 cos.Add(option);
             }
             return cos;
@@ -123,7 +125,7 @@ namespace Automation
                 leftsize = (leftsize / 1024.0);
                 extension = " GB";
             }
-            return leftsize.ToString("0.0",CultureInfo.InvariantCulture) + extension;
+            return leftsize.ToString("0.0", CultureInfo.InvariantCulture) + extension;
         }
         //public static DateTime ConvertToDateTimeWithMessage(string s) {
         //    DateTime value;
@@ -136,15 +138,18 @@ namespace Automation
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [JetBrains.Annotations.NotNull]
-        public static string GetCurrentMethodAndClass() {
+        public static string GetCurrentMethodAndClass()
+        {
             var stackTrace = new StackTrace(true);
             var frames = stackTrace.GetFrames();
-            if (frames == null) {
+            if (frames == null)
+            {
                 throw new LPGException("frames was null");
             }
             var method = frames[1].GetMethod();
 
-            if (method?.DeclaringType == null) {
+            if (method?.DeclaringType == null)
+            {
                 throw new LPGException("DeclaringType was null");
             }
             return method.DeclaringType.Name + "." + method.Name;
@@ -167,18 +172,22 @@ namespace Automation
             return method.DeclaringType.Name + "." + method.Name;
         }
 
-        public static T ParseStringToEnum<T>([JetBrains.Annotations.NotNull] string s, T defaultValue) where T : struct, IConvertible {
+        public static T ParseStringToEnum<T>([JetBrains.Annotations.NotNull] string s, T defaultValue) where T : struct, IConvertible
+        {
             var defs = Enum.GetValues(typeof(T)).Cast<T>().ToList();
             var result = defaultValue;
-            foreach (var def in defs) {
-                if (string.Equals(def.ToString(CultureInfo.InvariantCulture), s, StringComparison.OrdinalIgnoreCase)) {
+            foreach (var def in defs)
+            {
+                if (string.Equals(def.ToString(CultureInfo.InvariantCulture), s, StringComparison.OrdinalIgnoreCase))
+                {
                     result = def;
                 }
             }
             return result;
         }
 
-        public static void WriteLine([JetBrains.Annotations.NotNull] string message) {
+        public static void WriteLine([JetBrains.Annotations.NotNull] string message)
+        {
 #pragma warning disable S2228 // Console logging should not be used
             Console.WriteLine(message);
 #pragma warning restore S2228 // Console logging should not be used
