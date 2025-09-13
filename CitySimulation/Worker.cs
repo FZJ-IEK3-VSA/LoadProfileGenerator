@@ -1,11 +1,11 @@
-﻿using Automation.ResultFiles;
-using CalculationEngine.CitySimulation;
-using Common;
+﻿using Automation;
+using Automation.ResultFiles;
 using CitySimulation.Scenarios;
+using CitySimulation.SimulationTargets;
 using CitySimulation.Simulators;
+using Common;
 using MPI;
 using System.Runtime.InteropServices;
-using CitySimulation.SimulationTargets;
 
 namespace CitySimulation
 {
@@ -30,6 +30,7 @@ namespace CitySimulation
         private readonly MPILogger logger;
         private readonly CalculationProfiler? calculationProfiler;
         private readonly DateTime start;
+        private readonly List<MPIMessageCountsPerStep[]> messageCounts = [];
 
         public Worker(Intracommunicator comm, string[] args)
         {
@@ -217,6 +218,8 @@ namespace CitySimulation
                 calculationProfiler?.StartPart("MPI message distribution", false);
                 var startDistribution = DateTime.UtcNow;
                 activityMessages = messageDistributor.DistributeMessages(comm);
+                if (rank == 0)
+                    messageCounts.Add(messageDistributor.MessageCounts);
                 totalTimeMPI += DateTime.UtcNow - startDistribution;
                 calculationProfiler?.StopPart("MPI message distribution", false);
 
@@ -269,7 +272,7 @@ namespace CitySimulation
             var remoteTravelsAndActivities = lpgSimulator.SimulateOneStep(timestep, simulationTime, activityMessages.finishedActivities);
 
             // create a new object for message collection and distribution
-            var messageCollector = new MPIDistributor(numWorkers, scenarioPart.PoiRegister);
+            var messageCollector = new MPIDistributor(rank, numWorkers, scenarioPart.PoiRegister);
             messageCollector.AddNewActivities(remoteTravelsAndActivities);
             // remark: for consistency, these messages are only distributed after this timestep is finished
 
@@ -318,7 +321,37 @@ namespace CitySimulation
             {
                 // remove unneeded files and subdirectories
                 SimulationEngineLib.HouseJobProcessor.JsonCalculator.CleanUpResultDirectory(scenarioPart.CalcSpecification);
+
+                LogMessageCounts();
             }
+        }
+
+        private void LogMessageCounts()
+        {
+            // log message counts
+            int total = messageCounts.Sum(countArray => countArray.Sum(c => c.Total));
+            int totalStartMessages = messageCounts.Sum(countArray => countArray.Sum(c => c.StartMessages));
+            int totalFinishedMessages = total - totalStartMessages;
+            var sumPerStep = messageCounts.Select(countArray => countArray.Sum(c => c.Total));
+            
+            int numSteps = messageCounts.Count;
+            // count the number of empty message packages, i.e. when a worker had no messages to send to a specific other worker
+            int numEmptyMessagePackages = messageCounts.Sum(countArray => countArray.Sum(c => c.DirectedCounts.Count(i => i == 0)));
+            numEmptyMessagePackages -= numSteps * numWorkers;
+            // calculate the maximum possible number of message packages sent from one worker to another
+            int possibleMessagePackages = numSteps * numWorkers * numWorkers;
+            Dictionary<string, object> counts =new()
+            {
+                ["total"] = total,
+                ["activity start"] = totalStartMessages,
+                ["activity finished"] = totalFinishedMessages,
+                ["empty message packages"] = numEmptyMessagePackages,
+                ["possible message packages"] = possibleMessagePackages,
+                ["zero rate"] = (double)numEmptyMessagePackages / possibleMessagePackages,
+                ["total per step"] = sumPerStep,
+            };
+            string messageCountFile = Path.Combine(outputPath, "MessageCounts.json");
+            AutomationUtili.WriteToJsonFile(counts, messageCountFile);
         }
     }
 }

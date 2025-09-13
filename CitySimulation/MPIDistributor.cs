@@ -42,11 +42,18 @@ namespace CitySimulation
         public void AddFinishedActivity(RemoteActivityFinished message) => finishedActivities.Add(message);
     }
 
+    internal record MPIMessageCountsPerStep(int Worker, int Total, int StartMessages, int[] DirectedCounts);
+
     /// <summary>
     /// Collects all activity messages and later distributes them across the MPI workers.
     /// </summary>
     internal class MPIDistributor
     {
+        /// <summary>
+        /// The rank of the MPI worker.
+        /// </summary>
+        public readonly int rank;
+
         /// <summary>
         /// An array storing all messages per target worker. Each index is for the worker with the
         /// corresponding MPI rank.
@@ -58,8 +65,16 @@ namespace CitySimulation
         /// </summary>
         private readonly PointOfInterestRegister poiRegister;
 
-        public MPIDistributor(int numWorkers, PointOfInterestRegister poiRegister)
+        private MPIMessageCountsPerStep[]? messageCounts = null;
+
+        public MPIMessageCountsPerStep[] MessageCounts
         {
+            get => messageCounts ?? throw new LPGException($"Message counts have not been set on worker {rank}");
+        }
+
+        public MPIDistributor(int rank, int numWorkers, PointOfInterestRegister poiRegister)
+        {
+            this.rank = rank;
             this.poiRegister = poiRegister;
             // initialize the array of data collection objects
             objectsForWorkers = new MessageContainer[numWorkers];
@@ -138,6 +153,29 @@ namespace CitySimulation
             }
         }
 
+        private MPIMessageCountsPerStep CountMessages(MessageContainer[] containers)
+        {
+            int newActivities = 0;
+            int[] directedCounts = new int[containers.Length];
+
+            // count total number of NewActivity messages, and number of total messages to each target worker
+            for (int i = 0; i < containers.Length; i++)
+            {
+                newActivities += containers[i].newActivities.Count;
+                directedCounts[i] = containers[i].newActivities.Count + containers[i].finishedActivities.Count;
+            }
+            int total = directedCounts.Sum();
+            return new(rank, total, newActivities, directedCounts);
+        }
+
+        private void CollectMessageCounts(Intracommunicator comm)
+        {
+            var countsOfThisWorker = CountMessages(objectsForWorkers);
+            var combinedCounts = comm.Gather(countsOfThisWorker, 0);
+            if (rank == 0)
+                messageCounts = combinedCounts;
+        }
+
         /// <summary>
         /// Sends all stored messages to the intended workers via MPI. Restructures all received messages 
         /// for easier distribution to the correct simulators.
@@ -148,6 +186,8 @@ namespace CitySimulation
         {
             // distribute messages and retrieve the message objects from all other workers in return
             var messageObjectsFromAllWorkers = comm.Alltoall(objectsForWorkers);
+
+            CollectMessageCounts(comm);
 
             // sort all activity messages into suitable datastructures depending on their target
             Dictionary<string, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>> finishedActivitiesSorted = [];

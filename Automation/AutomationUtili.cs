@@ -47,6 +47,7 @@ namespace Automation
                 RespectNullableAnnotations = true,
                 ReadCommentHandling = JsonCommentHandling.Skip,
                 UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+                WriteIndented = true,
             };
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
             options.Converters.Add(new JsonReferenceConverter());
@@ -79,6 +80,18 @@ namespace Automation
         {
             var parsedObject = JsonSerializer.Deserialize<T>(json, jsonOptions);
             return parsedObject ?? throw new LPGException($"Input json string does not contain valid data.");
+        }
+
+        /// <summary>
+        /// Serialize an object with JSON and write it to a file.
+        /// </summary>
+        /// <typeparam name="T">type of the data to serialize</typeparam>
+        /// <param name="data">the data to serialize</param>
+        /// <param name="path">the path of the JSON file</param>
+        public static void WriteToJsonFile<T>(T data, string path)
+        {
+            var jsonString = JsonSerializer.Serialize(data, jsonOptions);
+            File.WriteAllText(path, jsonString);
         }
 
         [JetBrains.Annotations.NotNull]

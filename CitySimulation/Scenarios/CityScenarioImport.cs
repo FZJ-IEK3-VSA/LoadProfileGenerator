@@ -216,9 +216,8 @@ namespace CitySimulation.Scenarios
         private static void CreateTargetSeedFile(string resultDir, IEnumerable<ResidentialBuildingConfig> targets)
         {
             var seedDict = targets.ToDictionary(t => t.Id, t => t.Seed);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            var jsonString = JsonSerializer.Serialize(seedDict, options);
-            File.WriteAllText(Path.Combine(resultDir, Constants.HouseSeedMappingFile), jsonString);
+            string path = Path.Combine(resultDir, Constants.HouseSeedMappingFile);
+            AutomationUtili.WriteToJsonFile(seedDict, path);
         }
 
         /// <summary>

@@ -104,6 +104,11 @@ namespace Common
         /// Name of the file containing the random seed used for each house in a city simulation.
         /// </summary>
         public const string HouseSeedMappingFile = "HouseRNGSeeds.json";
+
+        /// <summary>
+        /// Name of the file containing counts of all MPI messages in the simulation.
+        /// </summary>
+        public const string MpiMessageCountsFile = "MpiMessageCounts.json";
     }
 
     public enum TargetDirectory
