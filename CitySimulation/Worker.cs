@@ -326,6 +326,9 @@ namespace CitySimulation
             }
         }
 
+        /// <summary>
+        /// Logs statistics on the number of MPI messages sent during the simulation.
+        /// </summary>
         private void LogMessageCounts()
         {
             // log message counts
@@ -333,14 +336,30 @@ namespace CitySimulation
             int totalStartMessages = messageCounts.Sum(countArray => countArray.Sum(c => c.StartMessages));
             int totalFinishedMessages = total - totalStartMessages;
             var sumPerStep = messageCounts.Select(countArray => countArray.Sum(c => c.Total));
-            
+
+            // count the total number of message from every worker to every other one
+            int[][] sumFromTo = new int[numWorkers][];
+            for (int srcRank = 0; srcRank < numWorkers; srcRank++)
+            {
+                sumFromTo[srcRank] = new int[numWorkers];
+                for (int dstRank = 0; dstRank < numWorkers; dstRank++)
+                {
+                    foreach (var countArray in messageCounts)
+                    {
+                        sumFromTo[srcRank][dstRank] += countArray[srcRank].DirectedCounts[dstRank];
+                    }
+                }
+            }
+            int minDirectedCount = sumFromTo.Min(arr => arr.Min());
+            double averageDirectedCount = sumFromTo.Average(arr => arr.Average());
+
             int numSteps = messageCounts.Count;
             // count the number of empty message packages, i.e. when a worker had no messages to send to a specific other worker
             int numEmptyMessagePackages = messageCounts.Sum(countArray => countArray.Sum(c => c.DirectedCounts.Count(i => i == 0)));
             numEmptyMessagePackages -= numSteps * numWorkers;
             // calculate the maximum possible number of message packages sent from one worker to another
             int possibleMessagePackages = numSteps * numWorkers * numWorkers;
-            Dictionary<string, object> counts =new()
+            Dictionary<string, object> counts = new()
             {
                 ["total"] = total,
                 ["activity start"] = totalStartMessages,
@@ -348,6 +367,9 @@ namespace CitySimulation
                 ["empty message packages"] = numEmptyMessagePackages,
                 ["possible message packages"] = possibleMessagePackages,
                 ["zero rate"] = (double)numEmptyMessagePackages / possibleMessagePackages,
+                ["min directed message count"] = minDirectedCount,
+                ["mean directed message count"] = averageDirectedCount,
+                ["total directed message counts"] = sumFromTo,
                 ["total per step"] = sumPerStep,
             };
             string messageCountFile = Path.Combine(outputPath, "MessageCounts.json");

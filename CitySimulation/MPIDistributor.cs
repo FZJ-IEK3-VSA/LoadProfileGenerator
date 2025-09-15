@@ -42,6 +42,13 @@ namespace CitySimulation
         public void AddFinishedActivity(RemoteActivityFinished message) => finishedActivities.Add(message);
     }
 
+    /// <summary>
+    /// Stores outgoing message counts for a single worker and timestep.
+    /// </summary>
+    /// <param name="Worker">the rank of the worker that sends the messages</param>
+    /// <param name="Total">the total number of outgoing messages</param>
+    /// <param name="StartMessages">the number of StartActivity messages</param>
+    /// <param name="DirectedCounts">total message counts per target worker (including messages to self)</param>
     internal record MPIMessageCountsPerStep(int Worker, int Total, int StartMessages, int[] DirectedCounts);
 
     /// <summary>
@@ -153,6 +160,12 @@ namespace CitySimulation
             }
         }
 
+        /// <summary>
+        /// Creates a MPIMessageCountsPerStep object containing counts of all outgoing messages
+        /// from the current worker from the current timestep.
+        /// </summary>
+        /// <param name="containers">the message container array of the MPIDistributor</param>
+        /// <returns>the message count object</returns>
         private MPIMessageCountsPerStep CountMessages(MessageContainer[] containers)
         {
             int newActivities = 0;
@@ -168,6 +181,10 @@ namespace CitySimulation
             return new(rank, total, newActivities, directedCounts);
         }
 
+        /// <summary>
+        /// Counts outgoing messages and collects the counts from all workers on rank 0.
+        /// </summary>
+        /// <param name="comm">the MPI communicator</param>
         private void CollectMessageCounts(Intracommunicator comm)
         {
             var countsOfThisWorker = CountMessages(objectsForWorkers);
