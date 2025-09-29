@@ -108,5 +108,16 @@ namespace Common {
             }
             return value;
         }
+
+        /// <summary>
+        /// Checks if two double values are approximately equal within a specified epsilon tolerance.
+        /// </summary>
+        /// <param name="d1">first value</param>
+        /// <param name="d2">second value</param>
+        /// <returns>whether the values are equal within the tolerance</returns>
+        public static bool AreClose(double d1, double d2)
+        {
+            return Math.Abs(d1 - d2) < Constants.Ebsilon;
+        }
     }
 }

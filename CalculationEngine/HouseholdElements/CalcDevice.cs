@@ -337,12 +337,20 @@ namespace CalculationEngine.HouseholdElements {
         private RandomValueProfile GetRandomValueProfile(int count, CalcDeviceLoad cdl, TimeStep timeStep)
         {
             var entry = _randomValues.FirstOrDefault(x =>
-                x.TimeStep == timeStep && Math.Abs(x.PowerStandardDeviation - cdl.PowerStandardDeviation) < 0.000000001 && x.RandomValueProfile.Values.Count == count);
+                x.TimeStep == timeStep && Utili.AreClose(x.PowerStandardDeviation, cdl.PowerStandardDeviation) && x.RandomValueProfile.Values.Count == count);
             if (entry != null) {
                 return entry.RandomValueProfile;
             }
             var newrvp = RandomValueProfile.MakeStepValues(count, CalcRepo.NormalRandom,
                 cdl.PowerStandardDeviation);
+            // check for negative load values
+            if (newrvp.Values.Any(v => v < 0.0))
+            {
+                double val = newrvp.Values.First(v => v < 0.0);
+                string msg = $"Randomly sampled a negative load of {val} for device {Name} for load type {cdl.Name}. ";
+                msg += $"The standard deviation of {cdl.PowerStandardDeviation:f2} was probably too large.";
+                throw new LPGException(msg);
+            }
             while (_randomValues.Count > 10) {
                 _randomValues.RemoveAt(0);
             }
