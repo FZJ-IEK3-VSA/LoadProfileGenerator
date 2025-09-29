@@ -29,21 +29,22 @@ namespace CitySimulation
         private readonly int rank;
         private readonly Simulator sim;
         private readonly ScenarioPart scenarioPart;
+        private readonly MPILogger logger;
         private readonly List<CitySimulationHouse> simulationTargets;
 
-        public LPGMassSimulator(Intracommunicator comm, int rank, ScenarioPart scenarioPart)
+        public LPGMassSimulator(Intracommunicator comm, int rank, ScenarioPart scenarioPart, MPILogger logger)
         {
-            Logger.LogRAMUsage("LPGMassSimulator-Start");
             this.comm = comm;
             this.rank = rank;
             this.scenarioPart = scenarioPart;
+            this.logger = logger;
 
             string baseResultDir = scenarioPart.CalcSpecification.OutputDirectory ?? throw new LPGPBadParameterException("No OutputDirectory specified");
 
             if (scenarioPart.TargetReferences.Count == 0)
                 throw new LPGPBadParameterException($"LPGMassSimulator on worker {rank} received no simulation targets.");
 
-            // configure logger so that each worker logs to a different file
+            // configure the LPG logger and log the calcspec
             Logger.Get().StartCollectingAllMessages();
             JsonCalculator.LogCalcSpec(scenarioPart.CalcSpecification);
 
@@ -55,17 +56,16 @@ namespace CitySimulation
             if (File.Exists(dbFilepath))
             {
                 // load the existing database and reuse it
-                Logger.Info($"Reusing existing database file {dbFilename}");
+                logger.Info($"Reusing existing database file {dbFilename}");
                 sim = HouseGenerator.OpenDatabase(dbFilepath);
             }
             else
             {
                 // create a database copy for this worker and open it
-                Logger.Info($"No reusable database found. Creating a new one: {dbFilename}");
+                logger.Info($"No reusable database found. Creating a new one: {dbFilename}");
                 sim = HouseGenerator.CopyAndOpenDatabase(scenarioPart.DatabasePath, databaseDirectory, out _, dbFilename);
                 // generate all houses according to the config files
                 GenerateHouses();
-                Logger.LogRAMUsage("LPGMassSimulator-Generated all houses");
 
                 // reopening the database is necessary to ensure same results as when cached DBs are reused
                 sim = HouseGenerator.OpenDatabase(dbFilepath);
@@ -73,17 +73,15 @@ namespace CitySimulation
                 // wait for other workers here to make sure that all houses are generated properly and can be reused, in case an error occurs later on
                 comm.Barrier();
             }
-            Logger.LogRAMUsage("LPGMassSimulator-Reopened database");
 
             if (scenarioPart.CalcParams.IsSet(CalcOption.LogAllMessages) || scenarioPart.CalcParams.IsSet(CalcOption.LogErrorMessages))
             {
                 // info: enabling this would require a general result database for the whole city simulation in which global results
                 //       such as log messages can be stored
-                Logger.Warning("The CalcOptions LogAllMessages and LogErrorMessages are currently not supported in CitySimulation.");
+                logger.Warning("The CalcOptions LogAllMessages and LogErrorMessages are currently not supported in CitySimulation.");
             }
 
             simulationTargets = PrepareHousesForSimulation(baseResultDir, rank);
-            Logger.LogRAMUsage("LPGMassSimulator-Prepared all houses");
         }
 
         /// <summary>
@@ -96,7 +94,7 @@ namespace CitySimulation
             {
                 ReadAndGenerateHouse(target, houseGenerator);
             }
-            Logger.Info("Finished generating all houses");
+            logger.Info("Finished generating all houses");
         }
 
         /// <summary>
@@ -110,7 +108,7 @@ namespace CitySimulation
         /// <exception cref="CitySimWrapperException">if there was an error during house generation</exception>
         private JsonReference ReadAndGenerateHouse(ResidentialBuildingConfig target, HouseGenerator houseGenerator)
         {
-            Logger.Info($"Generating house {target.Id} from templates");
+            logger.Info($"Generating house {target.Id} from templates");
             // read house job file for this target
             string houseJobStr = File.ReadAllText(target.ConfigFilePath).Trim(HouseGenerator.charsToTrim);
             var hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr) ?? throw new LPGPBadParameterException("housejob was null");
@@ -121,7 +119,7 @@ namespace CitySimulation
             // copy information from the global city data object
             if (hcj.City is null)
             {
-                Logger.Info($"City object of house {target.Id} was null, using the global city data object with all POIs instead.");
+                logger.Info($"City object of house {target.Id} was null, using the global city data object with all POIs instead.");
                 hcj.City = scenarioPart.CityData;
             }
             else
@@ -159,7 +157,7 @@ namespace CitySimulation
 
             foreach (var target in scenarioPart.TargetReferences)
             {
-                Logger.Info($"Preparing house {target.Id} for calculation");
+                logger.Info($"Preparing house {target.Id} for calculation");
                 // create a separate subdirectory for each simulation target
                 string subdir = target.Id;
                 string houseResultDir = Path.Combine(baseResultDir, Constants.HousesDirectory, subdir);
@@ -183,11 +181,6 @@ namespace CitySimulation
                 {
                     throw new CitySimWrapperException(ex, rank, target.Id, "initialization");
                 }
-                Logger.LogRAMUsage($"LPGMassSimulator-Prepared house {target.Id}");
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                Logger.LogRAMUsage($"LPGMassSimulator-GC after preparing house");
             }
             return simulationTargets;
         }

@@ -101,7 +101,7 @@ namespace CitySimulation
             if (rank == 0)
             {
                 // determine simulation targets
-                var scenario = CityScenarioImport.ReadScenarioFromConfigDirectory(inputPath, numWorkers);
+                var scenario = CityScenarioImport.ReadScenarioFromConfigDirectory(inputPath, numWorkers, logger);
                 scenarioParts = scenario.GetScenarioParts(numWorkers);
                 int length = scenarioParts.Length;
                 if (length < numWorkers)
@@ -123,7 +123,7 @@ namespace CitySimulation
         /// <returns>the LPGMassSimulator for this worker</returns>
         private LPGMassSimulator InitLPGSimulator()
         {
-            LPGMassSimulator lpgSimulator = new(comm, rank, scenarioPart);
+            LPGMassSimulator lpgSimulator = new(comm, rank, scenarioPart, logger);
             int totalPersons = lpgSimulator.TotalNumberOfPersons();
             int totalHouseholds = lpgSimulator.TotalNumberOfHouseholds();
             logger.Info($"In total, this worker simulates {totalPersons} persons in {totalHouseholds} households.");

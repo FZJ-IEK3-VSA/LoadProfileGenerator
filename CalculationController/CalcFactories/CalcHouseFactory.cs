@@ -81,7 +81,6 @@ namespace CalculationController.CalcFactories
         public CalcHouse MakeCalcHouse([JetBrains.Annotations.NotNull] CalcHouseDto calcHouseDto, [JetBrains.Annotations.NotNull] CalcRepo calcRepo,
             [JetBrains.Annotations.NotNull] List<CalcAffordanceTaggingSetDto> affordanceTaggingSets)
         {
-            Logger.LogRAMUsage($"Start MakeCalcHouse");
             HouseholdKey houseKey = Constants.HouseKey;
             var calchouse = new CalcHouse(calcHouseDto.HouseName, calcHouseDto.HouseKey, calcRepo);
             List<CalcLocation> houseLocations = new List<CalcLocation>();

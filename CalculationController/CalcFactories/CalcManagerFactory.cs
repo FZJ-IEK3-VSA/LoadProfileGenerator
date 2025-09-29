@@ -193,7 +193,6 @@ namespace CalculationController.CalcFactories
                                                    [JetBrains.Annotations.NotNull] out CalcVariableRepository variableRepository
                                                    )
         {
-            Logger.LogRAMUsage($"Start PrepareCalculation");
             CalcRepo calcRepo = scope.Resolve<CalcRepo>();
             var inputDataLogger = scope.Resolve<IInputDataLogger>();
             inputDataLogger.Save(Constants.GeneralHouseholdKey, calcRepo.CalcParameters);
@@ -251,14 +250,12 @@ namespace CalculationController.CalcFactories
                                                            [JetBrains.Annotations.NotNull] List<CalcAffordanceTaggingSetDto> affordanceTaggingSets,
                                                            out CalcObjectType cot, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
         {
-            Logger.LogRAMUsage($"Start MakeCalcHouseObject");
             var house =(House) hh;
             calcRepo.FileFactoryAndTracker.RegisterHousehold(Constants.HouseKey, "House Infrastructure",
                 HouseholdKeyType.House, "House Infrastructure",house.Name,house.Description);
             var housedtoFac = scope.Resolve<CalcHouseDtoFactory>();
             var housedto = housedtoFac.MakeHouseDto(sim, house, csps.TemperatureProfile,
                 csps.GeographicLocation,csps.EnergyIntensity);
-            Logger.LogRAMUsage($"Finished MakeHouseDto");
             foreach (HouseholdKeyEntry entry in housedto.GetHouseholdKeyEntries()) {
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, entry);
             }

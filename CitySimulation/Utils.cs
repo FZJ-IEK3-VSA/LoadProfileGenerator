@@ -7,20 +7,11 @@ namespace CitySimulation
     /// specific MPI rank to avoid duplicate log messages.
     /// Uses the LPG Logger.
     /// </summary>
-    internal class MPILogger
+    internal class MPILogger(bool logToConsole, int rank)
     {
         // the rank responsible for logging to console
         private const int LoggingRank = 0;
-
-        // rank of the MPI process this logger is used in
-        private readonly int rank;
-        private readonly Logger logger;
-
-        public MPILogger(bool logToConsole, int rank)
-        {
-            this.rank = rank;
-            logger = new Logger(logToConsole && rank == LoggingRank);
-        }
+        public Logger Logger { get; } = new Logger(logToConsole && rank == LoggingRank);
 
         public void SetLogFilePath(string path)
         {
@@ -30,22 +21,22 @@ namespace CitySimulation
 
         public void Debug(string message)
         {
-            logger.DebugMessage(message);
+            Logger.DebugMessage(message);
         }
 
         public void Info(string message)
         {
-            logger.InfoMessage(message);
+            Logger.InfoMessage(message);
         }
 
         public void Warning(string message)
         {
-            logger.WarningMessage(message);
+            Logger.WarningMessage(message);
         }
 
         public void Error(string message)
         {
-            logger.ErrorMessage(message);
+            Logger.ErrorMessage(message);
         }
     }
 }

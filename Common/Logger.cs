@@ -295,13 +295,17 @@ namespace Common {
 
         private static double LastRAMUsage = 0;
 
-        public static void LogRAMUsage(string context = "")
+        /// <summary>
+        /// Helper method to log the current RAM consumption.
+        /// </summary>
+        /// <param name="context">optional description of the current situation</param>
+        public void LogRAMUsage(string context = "")
         {
             var ramInGiB = Process.GetCurrentProcess().WorkingSet64 / Math.Pow(1024, 3);
             var contextStr = string.IsNullOrEmpty(context) ? "" : $" {context}";
             var diff = ramInGiB - LastRAMUsage;
             LastRAMUsage = ramInGiB;
-            Info($"RAM usage{contextStr}: {ramInGiB:f2} GiB  ({diff:+0.00;-0.00})");
+            InfoMessage($"RAM usage{contextStr}: {ramInGiB:f2} GiB  ({diff:+0.00;-0.00})");
         }
 
         public static void Info([JetBrains.Annotations.NotNull] string message, bool preserveLinebreaks = false)

@@ -5,7 +5,6 @@ using Common;
 using Common.JSON;
 using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace CitySimulation.Scenarios
@@ -30,15 +29,23 @@ namespace CitySimulation.Scenarios
             { "Sun", DayOfWeek.Sunday },
         };
 
-        public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath, int numWorkers)
+        /// <summary>
+        /// Parses a city scenario from a directory. Loads general info from a calcspec.json file, residential buildings
+        /// from the houses subdirectory, city data from city.json, and optionally route data from the routes subdirectory.
+        /// </summary>
+        /// <param name="inputDirectoryPath">path to the scenario input directory</param>
+        /// <param name="numWorkers">the number of workers to use</param>
+        /// <param name="logger">the logger object to use for messages</param>
+        /// <returns>the generated scenario parsed from the directory</returns>
+        /// <exception cref="LPGException">if the scenario was invalid or could not be parsed</exception>
+        public static Scenario ReadScenarioFromConfigDirectory(string inputDirectoryPath, int numWorkers, MPILogger logger)
         {
+            logger.Info($"Loading city scenario from path {inputDirectoryPath}");
             var inputDirectory = new DirectoryInfo(inputDirectoryPath);
             // read file calcspec.json; it is a HouseCreationAndCalculationJob object, but only calcspec
             // and database path are required
             var hcj = AutomationUtili.ParseJsonFile<HouseCreationAndCalculationJob>(inputDirectory.CombineName("calcspec.json"));
             var calcSpec = hcj.CalcSpec ?? throw new LPGException("No CalcSpec was given in the input file");
-            // TODO: calcspec should be complete and single-source-of-parameters
-            // --> check and fill all missing values in the calcspec first, then move on
             if (!calcSpec.EnableTransportation)
                 throw new LPGException("Transport must be enabled for the city simulation.");
 
@@ -49,7 +56,12 @@ namespace CitySimulation.Scenarios
                 Directory.CreateDirectory(resultDir);
                 Thread.Sleep(100);
             }
-            bool reuseDBs = CanUseExistingDatabases(resultDir, numWorkers);
+
+            if (string.IsNullOrEmpty(hcj.PathToDatabase))
+                throw new LPGException("No database source path given");
+            if (!File.Exists(hcj.PathToDatabase))
+                throw new LPGException("Could not find source database file: " + hcj.PathToDatabase);
+            bool reuseDBs = CanUseExistingDatabases(resultDir, numWorkers, hcj.PathToDatabase);
 
             // check if a file with RNG seeds for each house already exists
             var seedFile = Path.Combine(resultDir, Constants.HouseSeedMappingFile);
@@ -61,7 +73,7 @@ namespace CitySimulation.Scenarios
             // copy DB file to result directory and open a connection to it
             var sim = HouseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
             string fullDbPath = Path.GetFullPath(hcj.PathToDatabase!);
-            Logger.Info("Using database file: " + fullDbPath);
+            logger.Info("Using database file: " + fullDbPath);
 
             // disable cleanup checks, as they can severly degrade performance in large scenarios, e.g., with many travel routes
             sim.MyGeneralConfig.PerformCleanUpChecksBool = false;
@@ -96,7 +108,7 @@ namespace CitySimulation.Scenarios
             CreateTargetSeedFile(resultDir, houseConfigs);
 
             // check if there is travel data in separate files and assign it to the CityData object
-            ParseTravelData(inputDirectory, cityData);
+            ParseTravelData(inputDirectory, cityData, logger);
 
             // create a new scenario object containing all house and POI configs
             return new Scenario(newDbPath, calcSpec, calcParameters, houseConfigs, poiConfigs, cityData, inputDirectoryPath);
@@ -110,8 +122,9 @@ namespace CitySimulation.Scenarios
         /// </summary>
         /// <param name="inputDirectory">the scenario input directory</param>
         /// <param name="city">the parsed city definition</param>
+        /// <param name="logger">logger object to use</param>
         /// <exception cref="LPGException">if two conflicting travel definitions are found</exception>
-        private static void ParseTravelData(DirectoryInfo inputDirectory, CityData city)
+        private static void ParseTravelData(DirectoryInfo inputDirectory, CityData city, MPILogger logger)
         {
             // check if routes are defined in a separate file
             var routesDir = new DirectoryInfo(inputDirectory.CombineName("routes"));
@@ -131,7 +144,7 @@ namespace CitySimulation.Scenarios
             }
 
             var routeFiles = routesDir.GetFiles();
-            Logger.Info($"Found {routeFiles.Length} files in the routes subdirectory.");
+            logger.Info($"Found {routeFiles.Length} files in the routes subdirectory.");
             foreach (var routeFile in routeFiles)
             {
                 if (routeFile.FullName == clusterFile)
@@ -226,9 +239,10 @@ namespace CitySimulation.Scenarios
         /// </summary>
         /// <param name="resultDir">result directory of the simulation</param>
         /// <param name="numWorkers">number of workers for the simulation</param>
+        /// <param name="pathToDb">path to the source database to use</param>
         /// <returns>true if database files exist and can be used, otherwhise false</returns>
         /// <exception cref="LPGPBadParameterException">if files exist, but the number of workers does not match</exception>
-        private static bool CanUseExistingDatabases(string resultDir, int numWorkers)
+        private static bool CanUseExistingDatabases(string resultDir, int numWorkers, string pathToDb)
         {
             var databaseDir = Path.Combine(resultDir, Constants.DataBaseDirectory);
             var seedFile = Path.Combine(resultDir, Constants.HouseSeedMappingFile);
@@ -244,6 +258,11 @@ namespace CitySimulation.Scenarios
                 throw new LPGPBadParameterException($"Starting a city simulation with {numWorkers} workers, but found {files.Length} existing database files. "
                     + "The city simulation can only reuse existing databases when using the same number of workers. Please either start the simulation again with "
                      + $"{numWorkers} workers or delete the existing database directory: {databaseDir}");
+
+            // check if the source database has been modified after creation of the worker databases
+            var oldestWorkerDbDate = files.Min(f => f.LastWriteTime);
+            if (oldestWorkerDbDate < File.GetLastWriteTime(pathToDb))
+                throw new LPGPBadParameterException($"Existing databases are older than the source database to use: {pathToDb}");
 
             // reuse the existing databases to skip house generation from templates
             return true;
