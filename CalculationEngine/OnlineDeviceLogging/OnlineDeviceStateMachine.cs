@@ -40,13 +40,29 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
     public class RandomValueProfile
     {
+        /// <summary>
+        /// Maximum number of attempts to generate a random value again if the original value
+        /// was not suitable (e.g., negative).
+        /// </summary>
+        private const int MAX_RANDOM_ATTEMPTS = 100;
+
         private RandomValueProfile([NotNull] List<double> values)
         {
             Values = values;
         }
 
+        /// <summary>
+        /// Generates a profile of random values of the desired length, using a normal distribution with
+        /// expectation value 1.
+        /// </summary>
+        /// <param name="stepCount">the length of the profile</param>
+        /// <param name="nr">the NormalRandom object to generate random values</param>
+        /// <param name="powerStandardDeviation">the standard deviation for the normal distribution</param>
+        /// <param name="retryNegatives">if true, avoids negative values by sampling again</param>
+        /// <returns>the generated random value profile</returns>
+        /// <exception cref="LPGException">if a non-negative value could not be obtained in the maximum number of attempts</exception>
         [NotNull]
-        public static RandomValueProfile MakeStepValues(int stepCount, [NotNull] NormalRandom nr, double powerStandardDeviation)
+        public static RandomValueProfile MakeStepValues(int stepCount, [NotNull] NormalRandom nr, double powerStandardDeviation, bool retryNegatives = false)
         {
             if (stepCount == 0) {
                 throw new LPGException("stepcount was 0");
@@ -54,7 +70,15 @@ namespace CalculationEngine.OnlineDeviceLogging {
             var values = new List<double>(new double[stepCount]);
             if (Math.Abs(powerStandardDeviation) > 0.00000001) {
                 for (var i = 0; i < stepCount; i++) {
-                    values[i] = nr.NextDouble(1, powerStandardDeviation);
+                    // if negatives are not allowed, sample again until a positive value is generated
+                    int attempts = 0;
+                    do
+                    {
+                        if (attempts > MAX_RANDOM_ATTEMPTS)
+                            throw new LPGException($"Could not create a non-negative value for a profile in {MAX_RANDOM_ATTEMPTS} attempts. Standard deviation: {powerStandardDeviation}");
+                        values[i] = nr.NextDouble(1, powerStandardDeviation);
+                        attempts++;
+                    } while (retryNegatives && values[i] < 0);
                 }
             }
             else {
