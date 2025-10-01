@@ -341,8 +341,7 @@ namespace CalculationEngine.HouseholdElements {
             if (entry != null) {
                 return entry.RandomValueProfile;
             }
-            var newrvp = RandomValueProfile.MakeStepValues(count, CalcRepo.NormalRandom,
-                cdl.PowerStandardDeviation, true);
+            var newrvp = RandomValueProfile.MakeStepValues(count, CalcRepo.NormalRandom, cdl.PowerStandardDeviation);
             // check for negative load values
             if (newrvp.Values.Any(v => v < 0.0))
             {

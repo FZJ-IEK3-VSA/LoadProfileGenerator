@@ -46,9 +46,31 @@ namespace CalculationEngine.OnlineDeviceLogging {
         /// </summary>
         private const int MAX_RANDOM_ATTEMPTS = 100;
 
+        /// <summary>
+        /// Maximum deviation from the expectation value (higher or lower) that is
+        /// permitted for a random value. Random values outside of this range are sampled again.
+        /// The setting 0.75 only allows values in the range [0.25, 1.75]. This is used to avoid
+        /// unrealistically high or low load values, e.g., negative values.
+        /// </summary>
+        private const double MAX_ALLOWED_DEVIATION = 0.75;
+
         private RandomValueProfile([NotNull] List<double> values)
         {
             Values = values;
+        }
+
+        /// <summary>
+        /// Checks whether the passed value is within the permitted range.
+        /// The range is defined by the maximum allowed deviation around the
+        /// expectation value 1.
+        /// </summary>
+        /// <param name="value">the value to check</param>
+        /// <returns>true if the value is within the range; otherwise, false</returns>
+        private static bool IsInRange(double value)
+        {
+            // subtract the expectation value and remove the sign
+            double normedVal = Math.Abs(value - 1);
+            return normedVal <= MAX_ALLOWED_DEVIATION;
         }
 
         /// <summary>
@@ -58,11 +80,11 @@ namespace CalculationEngine.OnlineDeviceLogging {
         /// <param name="stepCount">the length of the profile</param>
         /// <param name="nr">the NormalRandom object to generate random values</param>
         /// <param name="powerStandardDeviation">the standard deviation for the normal distribution</param>
-        /// <param name="retryNegatives">if true, avoids negative values by sampling again</param>
+        /// <param name="enforceRange">if true, avoids values outside of the range [0.25, 1.75] by sampling again</param>
         /// <returns>the generated random value profile</returns>
         /// <exception cref="LPGException">if a non-negative value could not be obtained in the maximum number of attempts</exception>
         [NotNull]
-        public static RandomValueProfile MakeStepValues(int stepCount, [NotNull] NormalRandom nr, double powerStandardDeviation, bool retryNegatives = false)
+        public static RandomValueProfile MakeStepValues(int stepCount, [NotNull] NormalRandom nr, double powerStandardDeviation, bool enforceRange = true)
         {
             if (stepCount == 0) {
                 throw new LPGException("stepcount was 0");
@@ -78,7 +100,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                             throw new LPGException($"Could not create a non-negative value for a profile in {MAX_RANDOM_ATTEMPTS} attempts. Standard deviation: {powerStandardDeviation}");
                         values[i] = nr.NextDouble(1, powerStandardDeviation);
                         attempts++;
-                    } while (retryNegatives && values[i] < 0);
+                    } while (enforceRange && !IsInRange(values[i]));
                 }
             }
             else {
