@@ -40,11 +40,6 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
     public class RandomValueProfile
     {
-        /// <summary>
-        /// Maximum number of attempts to generate a random value again if the original value
-        /// was not suitable (e.g., negative).
-        /// </summary>
-        private const int MAX_RANDOM_ATTEMPTS = 100;
 
         /// <summary>
         /// Maximum deviation from the expectation value (higher or lower) that is
@@ -57,20 +52,6 @@ namespace CalculationEngine.OnlineDeviceLogging {
         private RandomValueProfile([NotNull] List<double> values)
         {
             Values = values;
-        }
-
-        /// <summary>
-        /// Checks whether the passed value is within the permitted range.
-        /// The range is defined by the maximum allowed deviation around the
-        /// expectation value 1.
-        /// </summary>
-        /// <param name="value">the value to check</param>
-        /// <returns>true if the value is within the range; otherwise, false</returns>
-        private static bool IsInRange(double value)
-        {
-            // subtract the expectation value and remove the sign
-            double normedVal = Math.Abs(value - 1);
-            return normedVal <= MAX_ALLOWED_DEVIATION;
         }
 
         /// <summary>
@@ -91,16 +72,16 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
             var values = new List<double>(new double[stepCount]);
             if (Math.Abs(powerStandardDeviation) > 0.00000001) {
-                for (var i = 0; i < stepCount; i++) {
-                    // if negatives are not allowed, sample again until a positive value is generated
-                    int attempts = 0;
-                    do
+                for (var i = 0; i < stepCount; i++)
+                {
+                    if (enforceRange)
                     {
-                        if (attempts > MAX_RANDOM_ATTEMPTS)
-                            throw new LPGException($"Could not create a non-negative value for a profile in {MAX_RANDOM_ATTEMPTS} attempts. Standard deviation: {powerStandardDeviation}");
+                        // if negatives are not allowed, sample again until a positive value is generated
+                        values[i] = RandomUtils.GetNormalRandomWithinLimits(nr, 1, powerStandardDeviation, MAX_ALLOWED_DEVIATION);
+                    } else
+                    {
                         values[i] = nr.NextDouble(1, powerStandardDeviation);
-                        attempts++;
-                    } while (enforceRange && !IsInRange(values[i]));
+                    }
                 }
             }
             else {

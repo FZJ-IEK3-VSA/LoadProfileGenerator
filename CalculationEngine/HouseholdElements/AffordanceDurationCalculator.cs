@@ -26,6 +26,8 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         private readonly double standardDeviation = standardDeviation;
 
+        private readonly double threeSigma = standardDeviation * 3;
+
         /// <summary>
         /// the CalcRepo containing the random number generators
         /// </summary>
@@ -144,7 +146,8 @@ namespace CalculationEngine.HouseholdElements
             var factorsForPerson = _timeFactorsForTimes.GetOrAddDefault(personName);
             if (!factorsForPerson.ContainsKey(time.InternalStep))
             {
-                factorsForPerson[time.InternalStep] = _calcRepo.NormalRandom.NextDouble(1, standardDeviation);
+                // determine a time factor randomly, limiting values to a three-sigma interval around the mean to avoid extreme outliers
+                factorsForPerson[time.InternalStep] = RandomUtils.GetNormalRandomWithinLimits(_calcRepo.NormalRandom, 1, standardDeviation, threeSigma);
                 if (factorsForPerson[time.InternalStep] < 0)
                 {
                     throw new DataIntegrityException($"The duration standard deviation on {_affordanceName} is too large: a negative value of " +
