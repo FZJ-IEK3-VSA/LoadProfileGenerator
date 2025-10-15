@@ -22,7 +22,7 @@ namespace Common.SQLResultLogging.Loggers {
             {
                 throw new LPGException("Data Logger was null.");
             }
-            var res = Srls.ReadFromJson<TransportationEventEntry>(ResultTableDefinition, hhkey, ExpectedResultCount.OneOrMore);
+            var res = Srls.ReadFromJson<TransportationEventEntry>(ResultTableDefinition, hhkey, ExpectedResultCount.AnyNumber);
             return res;
         }
 

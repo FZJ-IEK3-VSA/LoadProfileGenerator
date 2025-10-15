@@ -321,6 +321,8 @@ namespace Common.SQLResultLogging
                     }
 
                     break;
+                case ExpectedResultCount.AnyNumber:
+                    break; // any number is allowed
                 default:
                     throw new ArgumentOutOfRangeException(nameof(expectedResult), expectedResult, null);
             }
@@ -772,7 +774,8 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
     {
         One,
         OneOrMore,
-        Many
+        Many,
+        AnyNumber
     }
 
     public enum SqliteDataType

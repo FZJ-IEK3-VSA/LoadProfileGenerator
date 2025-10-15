@@ -95,7 +95,8 @@ namespace Common.SQLResultLogging
             }
 
             // remove the trailing comma
-            builder.Length--;
+            if (data.Any())
+                builder.Length--;
 
             // add the final closing bracket and write the remaining buffer to file
             builder.Append(']');
@@ -129,6 +130,13 @@ namespace Common.SQLResultLogging
 
         public IEnumerable<T> ReadFromJsonAsEnumerable<T>(ResultTableDefinition rtd, HouseholdKey key)
         {
+            string filepath = GetFilePath(key, rtd.TableName);
+            if (!File.Exists(filepath))
+            {
+                // no entry was ever logged to this file - return an empty collection
+                return [];
+            }
+
             // load all items
             var items = LoadItemsFromFile<Dictionary<string, object>>(key, rtd.TableName);
             // deserialize the JSON strings contained in the Json column
