@@ -11,7 +11,8 @@ namespace Common.SQLResultLogging
         ParkingAndCharging,
         ParkingAndFullyCharged,
         ParkingAndNoChargingAvailableHere,
-        ParkingAndWaitingForCharging
+        ParkingAndWaitingForCharging,
+        ParkingAndAboveChargingThreshold
     }
     public class TransportationDeviceStateEntry:IHouseholdKey
     {

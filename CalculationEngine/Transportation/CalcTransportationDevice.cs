@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Automation;
@@ -9,9 +8,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
 using Common.Extensions;
-using Common.JSON;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation
 {
@@ -40,6 +37,11 @@ namespace CalculationEngine.Transportation
 
         private readonly CalcDeviceDto _calcDeviceDto;
         private readonly CalcRepo _calcRepo;
+
+        /// <summary>
+        /// Capacity above which no charging is started.
+        /// </summary>
+        private const double ChargingThreshold = 0.75;
 
         public CalcTransportationDevice(CalcTransportationDeviceCategory category, double averageSpeedInMPerS,
             List<CalcDeviceLoad> loads, double fullRangeInMeters, double energyToDistanceFactor, double maxChargingPower,
@@ -208,10 +210,7 @@ namespace CalculationEngine.Transportation
             {
                 // device does not need to be charged
                 DisconnectCar();
-                _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
-                    Name, Guid, currentTimeStep, TransportationDeviceState.Undefined,
-                    CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
-                    _lastUsingPerson, _dsc.MakeDateStringFromTimeStep(currentTimeStep), 0));
+                LogTransportationDeviceState(currentTimeStep, TransportationDeviceState.Undefined, _lastUsingPerson);
                 return;
             }
 
@@ -233,24 +232,23 @@ namespace CalculationEngine.Transportation
                 {
                     _availableRangeInMeters = 0;
                 }
-                _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
-                    Name, Guid, currentTimeStep, TransportationDeviceState.Driving,
-                    CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters,
-                    _currentSite?.Name,
-                    _lastUsingPerson, _dsc.MakeDateStringFromTimeStep(currentTimeStep), distancePerTimestep));
+                LogTransportationDeviceState(currentTimeStep, TransportationDeviceState.Driving, _lastUsingPerson, distancePerTimestep);
                 return;
             }
 
             if (_availableRangeInMeters >= _fullRangeInMeters)
             {
                 // car is fully charged
-                _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
-                    Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndFullyCharged,
-                    CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
-                    null
-                    , _dsc.MakeDateStringFromTimeStep(currentTimeStep), 0));
+                LogTransportationDeviceState(currentTimeStep, TransportationDeviceState.ParkingAndFullyCharged);
                 DisconnectCar();
                 //TODO: different disconnect strategies
+                return;
+            }
+
+            if (_availableRangeInMeters >= _fullRangeInMeters * ChargingThreshold && _lastChargingStation is null)
+            {
+                // car is parked, but still above the capacity threshold for charging, so not charging
+                LogTransportationDeviceState(currentTimeStep, TransportationDeviceState.ParkingAndAboveChargingThreshold);
                 return;
             }
 
@@ -265,10 +263,7 @@ namespace CalculationEngine.Transportation
                 {
                     if (chargingStations.All(x => !x.IsAvailable) && _lastChargingStation == null)
                     {
-                        _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
-                            Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndWaitingForCharging,
-                            CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite.Name,
-                            null, _dsc.MakeDateStringFromTimeStep(currentTimeStep), 0));
+                        LogTransportationDeviceState(currentTimeStep, TransportationDeviceState.ParkingAndWaitingForCharging);
                         DisconnectCar();
                         return;
                     }
@@ -286,10 +281,7 @@ namespace CalculationEngine.Transportation
                         throw new LPGException("Charging station for charging was null");
                     }
 
-                    _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
-                        Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndCharging,
-                        CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite.Name,
-                        null, _dsc.MakeDateStringFromTimeStep(currentTimeStep), 0));
+                    LogTransportationDeviceState(currentTimeStep, TransportationDeviceState.ParkingAndCharging);
                     double maxChargingPower = Math.Min(_maxChargingPower, chargingStation.MaxChargingPower);
 
                     List<double> chargingProfile = [maxChargingPower];
@@ -324,10 +316,22 @@ namespace CalculationEngine.Transportation
             }
 
             DisconnectCar();
+            LogTransportationDeviceState(currentTimeStep, TransportationDeviceState.ParkingAndNoChargingAvailableHere);
+        }
+
+        /// <summary>
+        /// Logs the current state of the transportation device.
+        /// </summary>
+        /// <param name="currentTimeStep">current timestep</param>
+        /// <param name="state">state of this transportation device</param>
+        /// <param name="currentUser">the current user, or null if not in use</param>
+        /// <param name="distance">the distance driven in this timestep; 0 if not driving</param>
+        private void LogTransportationDeviceState(TimeStep currentTimeStep, TransportationDeviceState state,
+            string? currentUser = null, double distance = 0)
+        {
             _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
-                Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndNoChargingAvailableHere,
-                CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name, null
-                , _dsc.MakeDateStringFromTimeStep(currentTimeStep), 0));
+                Name, Guid, currentTimeStep, state, CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters,
+                _currentSite?.Name, currentUser, _dsc.MakeDateStringFromTimeStep(currentTimeStep), distance));
         }
 
         /// <summary>
