@@ -132,11 +132,6 @@ namespace CalculationEngine.Transportation
             _lastUsingPerson = personName;
             _activationStartTimestep = startTimeStep;
             _activationStopTimestep = startTimeStep.AddSteps(durationInTimesteps);
-            if (Category.IsLimitedToSingleLocation)
-            {
-                // set site to null while traveling
-                _currentSite = null;
-            }
 
             // create load profiles for all load types
             foreach (CalcDeviceLoad load in _loads)
@@ -218,10 +213,11 @@ namespace CalculationEngine.Transportation
             {
                 // device is currently driving
                 DisconnectCar();
-
-                if (_currentSite != null)
+                
+                if (Category.IsLimitedToSingleLocation)
                 {
-                    throw new LPGException("transportation device was assigned to a site, even though it is driving");
+                    // set site to null while traveling
+                    _currentSite = null;
                 }
 
                 // calculate and log the distance driven in this timestep
