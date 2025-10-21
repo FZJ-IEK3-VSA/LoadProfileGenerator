@@ -67,7 +67,7 @@ namespace CitySimulationTests
         {
             var serializer = new MPIJsonSerializer();
             PersonIdentifier person = new("name", new("hhkey"), "house-id", 4);
-            var x = new RemoteActivityFinished(person, new PointOfInterestId("poi-id"));
+            var x = new RemoteActivityFinished(person, new PointOfInterestId("poi-id"), true);
             CheckSerialization(serializer, x);
         }
 

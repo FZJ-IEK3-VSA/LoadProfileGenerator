@@ -30,13 +30,13 @@ namespace CitySimulation.Simulators
 
             foreach (var state in activeVisitors)
             {
-                // update travel progress
                 UpdateRemainingStayTime(state);
             }
 
             var finishedActivitites = GetFinishedAgents();
             LogState(timeStep, dateTime, newActivities, finishedActivitites);
-            return finishedActivitites;
+            var finishedMessages = GetFinishedMessages(finishedActivitites);
+            return finishedMessages;
         }
 
         private void AddNewPersons(TimeStep timeStep, IEnumerable<RemoteActivityStart> newActivities)
@@ -63,7 +63,14 @@ namespace CitySimulation.Simulators
             return activity.ExpectedDuration - 2 ?? throw new NotImplementedException("No default duration for remote activity implemented");
         }
 
-        protected virtual void LogState(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities, IEnumerable<RemoteActivityFinished> finishedActivities)
+        /// <summary>
+        /// Logs the current state of this POI, if necessary.
+        /// </summary>
+        /// <param name="timestep">the current time step</param>
+        /// <param name="dateTime">the current datetime</param>
+        /// <param name="newActivities">new arrivals, if any</param>
+        /// <param name="finishedActivities">visitors who finished their stay</param>
+        protected virtual void LogState(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities, IEnumerable<AgentStayState> finishedActivities)
         {
             // only create a log entry if something changes
             if (newActivities.Any() || finishedActivities.Any())
@@ -72,23 +79,43 @@ namespace CitySimulation.Simulators
             }
         }
 
+        /// <summary>
+        /// Updates the remaining stay duration of a visitor.
+        /// </summary>
+        /// <param name="state">the stay state of the visitor to update</param>
         protected void UpdateRemainingStayTime(AgentStayState state)
         {
             state.RemainingDuration--;
         }
 
-        protected IEnumerable<RemoteActivityFinished> GetFinishedAgents()
+        /// <summary>
+        /// Collects all stay state objects of visitors who finish their stay at the end
+        /// of the current time step and removes them from the active visitors list.
+        /// </summary>
+        /// <returns>stay states of the finished visitors</returns>
+        protected IEnumerable<AgentStayState> GetFinishedAgents()
         {
             // collect all persons that finished their activity in the current Timestep
-            Predicate<AgentStayState> isFinished = t => t.RemainingDuration <= 0;
-            var arrived = activeVisitors.FindAll(isFinished);
+            bool isFinished(AgentStayState t) => t.RemainingDuration <= 0;
+            var finished = activeVisitors.FindAll(isFinished);
             // remove the finished persons from the list of present persons
             activeVisitors.RemoveAll(isFinished);
-            // create the corresponding finished activity messages
-            return arrived.Select(t => new RemoteActivityFinished(t.Activity.Person, PoiId));
+            return finished;
         }
 
-        public void FinishSimulation()
+        /// <summary>
+        /// Creates an activity finished message for every visitor that
+        /// finished their stay.
+        /// </summary>
+        /// <param name="finishedStates">state objects of all finished visitors</param>
+        /// <returns>finished activity messages</returns>
+        protected IEnumerable<RemoteActivityFinished> GetFinishedMessages(IEnumerable<AgentStayState> finishedStates)
+        {
+            // create the corresponding finished activity messages for all visitors
+            return finishedStates.Select(t => new RemoteActivityFinished(t.Activity.Person, PoiId, true));
+        }
+
+        public virtual void FinishSimulation()
         {
             csvLogger.WriteToFile();
         }

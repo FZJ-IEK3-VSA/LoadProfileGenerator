@@ -55,6 +55,14 @@ namespace CalculationEngine.CitySimulation
             return !string.IsNullOrEmpty(PersonName) && !string.IsNullOrEmpty(HouseholdKey.Key)
                 && !string.IsNullOrEmpty(TargetId) && WorkerId >= 0;
         }
+
+        public override string ToString()
+        {
+            string firstPart = $"{HouseholdKey.Key}.{PersonName}";
+            if (!IsComplete())
+                return firstPart;
+            return $"{WorkerId}.{TargetId}.{firstPart}";
+        }
     }
 
     /// <summary>

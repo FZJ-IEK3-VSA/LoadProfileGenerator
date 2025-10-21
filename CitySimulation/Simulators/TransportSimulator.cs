@@ -19,7 +19,7 @@ namespace CitySimulation.Simulators
         public TransportSimulator(int rank, string outputDir)
         {
             WorkerId = rank;
-            var filename = $"Worker{WorkerId}.txt";
+            var filename = $"Worker{WorkerId}.csv";
             travelLogger = new CsvIndexDateLogger(filename, outputDir, ["People traveling"], "traveling_persons");
         }
 
@@ -76,7 +76,7 @@ namespace CitySimulation.Simulators
             // remove the arrived persons from the collection of currently traveling persons
             travelStates.RemoveAll(hasArrived);
             // create the corresponding finished activity messages
-            return arrived.Select(t => new RemoteActivityFinished(t.ActivityInfo.Person, t.ActivityInfo.Poi));
+            return arrived.Select(t => new RemoteActivityFinished(t.ActivityInfo.Person, t.ActivityInfo.Poi, true));
         }
 
         public void FinishSimulation()
