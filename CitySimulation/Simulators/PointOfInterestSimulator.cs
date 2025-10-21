@@ -6,29 +6,30 @@ namespace CitySimulation.Simulators
 {
     /// <summary>
     /// Simulates agent stays in any point of interest, for example a small enterprise.
+    /// This is the most basic implementation of a POI simulator. It just keeps track of
+    /// visitors, and every visitor stays for the duration sampled for the affordance.
     /// </summary>
     internal class PointOfInterestSimulator : ISimulator
     {
         protected List<AgentStayState> activeVisitors = [];
 
         protected readonly TextLogger logger;
-        protected readonly TextLogger presenceLogger;
+        protected readonly CsvLogger csvLogger;
 
         public PointOfInterestId PoiId { get; }
 
         public PointOfInterestSimulator(int rank, PointOfInterestId id, string outputDir)
         {
             PoiId = id;
-            var filename = $"{PoiId.Id}.txt";
-            logger = new(filename, outputDir, "poi_events");
-            presenceLogger = new(filename, outputDir, "poi_presence", true, "People present");
+            var filename = $"{PoiId.Id}.csv";
+            logger = new FreeTextLogger(filename, outputDir, "poi_events");
+            csvLogger = new CsvLogger(filename, outputDir, ["People present", "People arriving", "People leaving"], "poi_presence");
         }
 
         public virtual IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
             AddNewPersons(newActivities);
 
-            // TODO: dummy implementation
             foreach (var state in activeVisitors)
             {
                 // update travel progress
@@ -72,7 +73,7 @@ namespace CitySimulation.Simulators
                     var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
                     logger.Log(timestep, dateTime, $"Finished activitites: {finishedPersons}");
                 }
-                presenceLogger.Log(timestep, dateTime, $"{activeVisitors.Count}");
+                csvLogger.Log(timestep, dateTime, [activeVisitors.Count, newActivities.Count(), finishedActivities.Count()]);
             }
         }
 
@@ -95,6 +96,7 @@ namespace CitySimulation.Simulators
         public void FinishSimulation()
         {
             logger.WriteToFile();
+            csvLogger.WriteToFile();
         }
     }
 }

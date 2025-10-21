@@ -1,5 +1,4 @@
-﻿using Automation;
-using CalculationEngine.CitySimulation;
+﻿using CalculationEngine.CitySimulation;
 using Common;
 using System.Diagnostics;
 
@@ -24,7 +23,7 @@ namespace CitySimulation.Simulators
         {
             AddNewPersons(newActivities);
 
-            while (activeVisitors.Count < concurrentActivities && waitingVisitors.Any())
+            while (activeVisitors.Count < concurrentActivities && waitingVisitors.Count != 0)
             {
                 // the next agents can start their activity
                 activeVisitors.Add(waitingVisitors.Dequeue());
@@ -57,7 +56,7 @@ namespace CitySimulation.Simulators
                     var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
                     logger.Log(timestep, dateTime, $"Finished activitites: {finishedPersons}");
                 }
-                presenceLogger.Log(timestep, dateTime, $"{totalVisitors}");
+                csvLogger.Log(timestep, dateTime, $"{totalVisitors}");
             }
         }
     }

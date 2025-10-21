@@ -6,6 +6,8 @@ namespace CitySimulation.Simulators
 {
     /// <summary>
     /// Stores all currently traveling agents and simulates their travel times.
+    /// Only keeps track of all travelers and does not change the travel
+    /// times determined by the affordance transport decorator.
     /// </summary>
     internal class TransportSimulator : ISimulator
     {
@@ -19,15 +21,14 @@ namespace CitySimulation.Simulators
         {
             WorkerId = rank;
             var filename = $"Worker{WorkerId}.txt";
-            logger = new(filename, outputDir, "travel_events");
-            presenceLogger = new(filename, outputDir, "traveling_persons", true, "People traveling");
+            logger = new FreeTextLogger(filename, outputDir, "travel_events");
+            presenceLogger = new CsvLogger(filename, outputDir, ["People traveling"], "traveling_persons");
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
             AddNewTravelers(newActivities);
 
-            // TODO: dummy implementation
             foreach (var state in travelStates)
             {
                 // update travel progress
@@ -41,7 +42,6 @@ namespace CitySimulation.Simulators
 
         private void UpdateRemainingTravelDistance(AgentTravelState state)
         {
-            // TODO: update depending on the number of traveling agents
             state.RemainingTravelDistance--;
         }
 
