@@ -151,7 +151,7 @@ namespace CitySimulation
         {
             return poi.LocationType.Name switch
             {
-                //"Doctors Office" => new QueuePointOfInterestSimulator(rank, poi.Id, scenarioPart.CalcSpecification, 2),
+                "Pharmacy" => new QueuePointOfInterestSimulator(rank, poi.Id, outputPath, 2),
                 _ => new PointOfInterestSimulator(rank, poi.Id, outputPath),
             };
         }
