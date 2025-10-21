@@ -148,7 +148,7 @@ namespace CitySimulation
         /// <param name="columns">the column names to add</param>
         public void AddColumns(IEnumerable<string> columns)
         {
-            Debug.Assert(File.ReadAllLines(Filepath).Length > 1, "CSV columns may only be added before logging any data.");
+            Debug.Assert(!File.Exists(Filepath) || File.ReadAllLines(Filepath).Length <= 1, "CSV columns may only be added before logging any data.");
             Columns.AddRange(columns);
             WriteHeaderLine();
         }
