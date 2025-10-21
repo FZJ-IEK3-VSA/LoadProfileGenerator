@@ -4,24 +4,31 @@ using System.Diagnostics;
 
 namespace CitySimulation.Simulators
 {
-    class QueuePointOfInterestSimulator(int rank, PointOfInterestId id, string outputDir, int concurrentActivities) : PointOfInterestSimulator(rank, id, outputDir)
+    class QueuePointOfInterestSimulator : PointOfInterestSimulator
     {
         readonly Queue<AgentStayState> waitingVisitors = [];
+        private readonly int concurrentActivities;
 
-        private void AddNewPersons(IEnumerable<RemoteActivityStart> newActivities)
+        public QueuePointOfInterestSimulator(int rank, PointOfInterestId id, string outputDir, int concurrentActivities) : base(rank, id, outputDir)
+        {
+            this.concurrentActivities = concurrentActivities;
+            csvLogger.AddColumns([""]);
+        }
+
+        private void AddNewPersons(TimeStep timeStep, IEnumerable<RemoteActivityStart> newActivities)
         {
             foreach (var newActivity in newActivities)
             {
                 Debug.Assert(!newActivity.IsTravel, "TransportSimulator received a non-travel activity.");
 
-                double duration = DetermineDuration(newActivity);
-                waitingVisitors.Enqueue(new AgentStayState(newActivity, duration));
+                int duration = DetermineDuration(newActivity);
+                waitingVisitors.Enqueue(new AgentStayState(timeStep, newActivity, duration));
             }
         }
 
         public override IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
-            AddNewPersons(newActivities);
+            AddNewPersons(timeStep, newActivities);
 
             while (activeVisitors.Count < concurrentActivities && waitingVisitors.Count != 0)
             {
@@ -45,18 +52,7 @@ namespace CitySimulation.Simulators
             if (newActivities.Any() || finishedActivities.Any())
             {
                 int totalVisitors = activeVisitors.Count + waitingVisitors.Count;
-                logger.Log(timestep, dateTime, $"Persons present: {totalVisitors}, active: {activeVisitors.Count}");
-                // log each newly started activity
-                foreach (var newActivity in newActivities)
-                {
-                    logger.Log(timestep, dateTime, $"{newActivity.Person.PersonName} arrived for {newActivity.Affordance}");
-                }
-                if (finishedActivities.Any())
-                {
-                    var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
-                    logger.Log(timestep, dateTime, $"Finished activitites: {finishedPersons}");
-                }
-                csvLogger.Log(timestep, dateTime, $"{totalVisitors}");
+                csvLogger.Log(timestep, dateTime, [totalVisitors, newActivities.Count(), finishedActivities.Count()]);
             }
         }
     }

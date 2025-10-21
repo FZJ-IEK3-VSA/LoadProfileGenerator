@@ -14,15 +14,13 @@ namespace CitySimulation.Simulators
         public readonly int WorkerId;
         private List<AgentTravelState> travelStates = [];
 
-        private readonly TextLogger logger;
-        private readonly TextLogger presenceLogger;
+        private readonly TextLogger travelLogger;
 
         public TransportSimulator(int rank, string outputDir)
         {
             WorkerId = rank;
             var filename = $"Worker{WorkerId}.txt";
-            logger = new FreeTextLogger(filename, outputDir, "travel_events");
-            presenceLogger = new CsvLogger(filename, outputDir, ["People traveling"], "traveling_persons");
+            travelLogger = new CsvIndexDateLogger(filename, outputDir, ["People traveling"], "traveling_persons");
         }
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
@@ -66,13 +64,7 @@ namespace CitySimulation.Simulators
         {
             if (newActivities.Any() || finishedActivities.Any())
             {
-                var message = $"Persons traveling: {travelStates.Count}";
-                if (newActivities.Any())
-                    message += "; started: " + string.Join(", ", newActivities.Select(a => a.Person.PersonName));
-                if (finishedActivities.Any())
-                    message += "; arrived: " + string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
-                logger.Log(timestep, dateTime, message);
-                presenceLogger.Log(timestep, dateTime, $"{travelStates.Count}");
+                travelLogger.Log(timestep, dateTime, $"{travelStates.Count}");
             }
         }
 
@@ -89,7 +81,7 @@ namespace CitySimulation.Simulators
 
         public void FinishSimulation()
         {
-            logger.WriteToFile();
+            travelLogger.WriteToFile();
         }
     }
 }

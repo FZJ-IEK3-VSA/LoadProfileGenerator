@@ -13,7 +13,6 @@ namespace CitySimulation.Simulators
     {
         protected List<AgentStayState> activeVisitors = [];
 
-        protected readonly TextLogger logger;
         protected readonly CsvLogger csvLogger;
 
         public PointOfInterestId PoiId { get; }
@@ -22,13 +21,12 @@ namespace CitySimulation.Simulators
         {
             PoiId = id;
             var filename = $"{PoiId.Id}.csv";
-            logger = new FreeTextLogger(filename, outputDir, "poi_events");
-            csvLogger = new CsvLogger(filename, outputDir, ["People present", "People arriving", "People leaving"], "poi_presence");
+            csvLogger = new CsvIndexDateLogger(filename, outputDir, ["People present", "People arriving", "People leaving"], "poi_presence");
         }
 
         public virtual IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
-            AddNewPersons(newActivities);
+            AddNewPersons(timeStep, newActivities);
 
             foreach (var state in activeVisitors)
             {
@@ -41,17 +39,24 @@ namespace CitySimulation.Simulators
             return finishedActivitites;
         }
 
-        private void AddNewPersons(IEnumerable<RemoteActivityStart> newActivities)
+        private void AddNewPersons(TimeStep timeStep, IEnumerable<RemoteActivityStart> newActivities)
         {
             foreach (var newActivity in newActivities)
             {
                 Debug.Assert(!newActivity.IsTravel, "PointOfInterestSimulator received a travel activity.");
 
-                double duration = DetermineDuration(newActivity);
-                activeVisitors.Add(new AgentStayState(newActivity, duration));
+                int duration = DetermineDuration(newActivity);
+                activeVisitors.Add(new AgentStayState(timeStep, newActivity, duration));
             }
         }
 
+        /// <summary>
+        /// Determines the stay duration of the person. The default implementation just uses the duration
+        /// defined by the affordance.
+        /// </summary>
+        /// <param name="activity">the ActivityStart message</param>
+        /// <returns>the duration in timesteps</returns>
+        /// <exception cref="NotImplementedException">if no duration was specified in the message</exception>
         protected int DetermineDuration(RemoteActivityStart activity)
         {
             // -2 to account for the timesteps lost due to messaging until the CalcPerson receives the ActivityFinished message
@@ -60,19 +65,9 @@ namespace CitySimulation.Simulators
 
         protected virtual void LogState(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities, IEnumerable<RemoteActivityFinished> finishedActivities)
         {
+            // only create a log entry if something changes
             if (newActivities.Any() || finishedActivities.Any())
             {
-                logger.Log(timestep, dateTime, $"Persons present: {activeVisitors.Count}");
-                // log each newly started activity
-                foreach (var newActivity in newActivities)
-                {
-                    logger.Log(timestep, dateTime, $"{newActivity.Person.PersonName} started {newActivity.Affordance}");
-                }
-                if (finishedActivities.Any())
-                {
-                    var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
-                    logger.Log(timestep, dateTime, $"Finished activitites: {finishedPersons}");
-                }
                 csvLogger.Log(timestep, dateTime, [activeVisitors.Count, newActivities.Count(), finishedActivities.Count()]);
             }
         }
@@ -95,7 +90,6 @@ namespace CitySimulation.Simulators
 
         public void FinishSimulation()
         {
-            logger.WriteToFile();
             csvLogger.WriteToFile();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Common;
+using System.Diagnostics;
 using System.Text;
 
 namespace CitySimulation
@@ -6,7 +7,13 @@ namespace CitySimulation
     internal abstract class TextLogger
     {
         private List<LogEntry> logEntries = [];
-        private int lastWrittenEntry = 0;
+
+        /// <summary>
+        /// Determines how many messages are collected until they
+        /// are written to file. 0 means every message is immediately
+        /// written to file.
+        /// </summary>
+        private const int MessageFlushCount = 100;
 
         public TextLogger(string fileName, string outputDirectory, string subdirectory = "")
         {
@@ -16,21 +23,44 @@ namespace CitySimulation
             Filepath = Path.Combine(outputSubDirectory, Filename);
         }
 
+        /// <summary>
+        /// Name of the log file
+        /// </summary>
         public string Filename { get; }
+        /// <summary>
+        /// Full path of the log file
+        /// </summary>
         public string Filepath { get; }
 
+        /// <summary>
+        /// Log a single string message
+        /// </summary>
+        /// <param name="timestep">current timestep</param>
+        /// <param name="dateTime">current datetime</param>
+        /// <param name="message">the message to log</param>
         public void Log(TimeStep timestep, DateTime dateTime, string message)
-        {
-            logEntries.Add(new(timestep, dateTime, [message]));
-            WriteToFile();
-        }
+            => Log(timestep, dateTime, [message]);
 
+        /// <summary>
+        /// Logs a list of items. How the data is handled depends on the CreateLine method.
+        /// </summary>
+        /// <param name="timestep">current timestep</param>
+        /// <param name="dateTime">current datetime</param>
+        /// <param name="data">the data to log</param>
         public void Log(TimeStep timestep, DateTime dateTime, object[] data)
         {
             logEntries.Add(new(timestep, dateTime, data));
-            WriteToFile();
+
+            // write to file if enough log entries have accumulated
+            if (logEntries.Count > MessageFlushCount)
+                WriteToFile();
         }
 
+        /// <summary>
+        /// Turns a single log entry into a line for the log file.
+        /// </summary>
+        /// <param name="entry">the entry to log</param>
+        /// <returns>the line for the log file, without newline char</returns>
         protected abstract string CreateLine(LogEntry entry);
 
         /// <summary>
@@ -39,7 +69,7 @@ namespace CitySimulation
         public void WriteToFile()
         {
             StringBuilder logMessage = new();
-            foreach (LogEntry entry in logEntries.Skip(lastWrittenEntry))
+            foreach (LogEntry entry in logEntries)
             {
                 string line = CreateLine(entry);
                 logMessage.Append(line + Environment.NewLine);
@@ -47,8 +77,8 @@ namespace CitySimulation
             // append new entries to the log file
             File.AppendAllText(Filepath, logMessage.ToString());
 
-            // save which entries have been logged already
-            lastWrittenEntry = logEntries.Count;
+            // clear the list of log entries
+            logEntries = [];
         }
     }
 
@@ -92,26 +122,62 @@ namespace CitySimulation
         /// </summary>
         public const string Delimiter = ",";
 
+        public CsvLogger(string fileName, string outputDirectory, IEnumerable<string> columns, string subdirectory = "") : base(fileName, outputDirectory, subdirectory)
+        {
+            AddColumns(columns);
+        }
+
         /// <summary>
         /// Column names for the CSV file
         /// </summary>
-        public readonly string[] Columns;
+        public List<string> Columns { get; protected set; } = [];
 
-        public CsvLogger(string fileName, string outputDirectory, string[] columns, string subdirectory = "") : base(fileName, outputDirectory, subdirectory)
+        /// <summary>
+        /// Writes the header line into the CSV file.
+        /// </summary>
+        protected void WriteHeaderLine()
         {
-            Columns = columns;
-            string[] fixedColumns = ["Timestep", "Datetime"];
-            var allColumns = fixedColumns.Concat(columns);
-            string columString = string.Join(Delimiter, allColumns);
-            // write a header line
-            File.AppendAllText(Filepath, columString + Environment.NewLine);
+            string columString = string.Join(Delimiter, Columns);
+            File.WriteAllText(Filepath, columString + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Adds more columns for the CSV file, and rewrites the header. May only be called
+        /// before any actual data is logged.
+        /// </summary>
+        /// <param name="columns">the column names to add</param>
+        public void AddColumns(IEnumerable<string> columns)
+        {
+            Debug.Assert(File.ReadAllLines(Filepath).Length > 1, "CSV columns may only be added before logging any data.");
+            Columns.AddRange(columns);
+            WriteHeaderLine();
         }
 
         protected override string CreateLine(LogEntry entry)
         {
+            return string.Join(Delimiter, entry.Data);
+        }
+    }
+
+    /// <summary>
+    /// CSV logger that automatically logs timestep and datetime as first two columns.
+    /// </summary>
+    internal class CsvIndexDateLogger : CsvLogger
+    {
+        /// <summary>
+        /// Additional index columns that are always included as the first two columns for this logger
+        /// </summary>
+        protected static readonly string[] indexColumns = ["Timestep", "Datetime"];
+
+        public CsvIndexDateLogger(string fileName, string outputDirectory, IEnumerable<string> columns, string subdirectory = "")
+            : base(fileName, outputDirectory, indexColumns.Concat(columns), subdirectory)
+        { }
+
+        protected override string CreateLine(LogEntry entry)
+        {
             string dateString = entry.DateTime.ToString("O");
-            string linePrefix = $"{entry.Timestep.InternalStep},{dateString},";
-            return linePrefix + string.Join(Delimiter, entry.Data);
+            string linePrefix = $"{entry.Timestep.InternalStep}{Delimiter}{dateString}{Delimiter}";
+            return linePrefix + base.CreateLine(entry);
         }
     }
 
