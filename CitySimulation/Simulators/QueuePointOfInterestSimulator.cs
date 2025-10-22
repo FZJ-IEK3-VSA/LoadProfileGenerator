@@ -35,8 +35,8 @@ namespace CitySimulation.Simulators
             this.maxWaitingFactor = maxWaitingFactor;
             csvLogger.AddColumns(["People cancelling"]);
 
-            var filename = $"{PoiId.Id}_waiting.csv";
-            waitingTimeLogger = new(filename, outputDir, ["Person ID", "Waiting time"], "poi_presence");
+            var filename = $"{PoiId.Id}.csv";
+            waitingTimeLogger = new(filename, outputDir, ["Person ID", "Waiting time"], "poi_queue");
         }
 
         /// <summary>
