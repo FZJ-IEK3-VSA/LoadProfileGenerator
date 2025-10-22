@@ -332,9 +332,9 @@ namespace CitySimulation
         private void LogMessageCounts()
         {
             // log message counts
-            int total = messageCounts.Sum(countArray => countArray.Sum(c => c.Total));
-            int totalStartMessages = messageCounts.Sum(countArray => countArray.Sum(c => c.StartMessages));
-            int totalFinishedMessages = total - totalStartMessages;
+            long total = messageCounts.Sum(countArray => countArray.Sum(c => c.Total));
+            long totalStartMessages = messageCounts.Sum(countArray => countArray.Sum(c => c.StartMessages));
+            long totalFinishedMessages = total - totalStartMessages;
             var sumPerStep = messageCounts.Select(countArray => countArray.Sum(c => c.Total));
 
             // count the total number of message from every worker to every other one
@@ -353,12 +353,12 @@ namespace CitySimulation
             int minDirectedCount = sumFromTo.Min(arr => arr.Min());
             double averageDirectedCount = sumFromTo.Average(arr => arr.Average());
 
-            int numSteps = messageCounts.Count;
+            long numSteps = messageCounts.Count;
             // count the number of empty message packages, i.e. when a worker had no messages to send to a specific other worker
-            int numEmptyMessagePackages = messageCounts.Sum(countArray => countArray.Sum(c => c.DirectedCounts.Count(i => i == 0)));
+            long numEmptyMessagePackages = messageCounts.Sum(countArray => countArray.Sum(c => c.DirectedCounts.Count(i => i == 0)));
             numEmptyMessagePackages -= numSteps * numWorkers;
             // calculate the maximum possible number of message packages sent from one worker to another
-            int possibleMessagePackages = numSteps * numWorkers * numWorkers;
+            long possibleMessagePackages = numSteps * numWorkers * numWorkers;
             Dictionary<string, object> counts = new()
             {
                 ["total"] = total,
