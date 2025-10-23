@@ -70,6 +70,15 @@ namespace CitySimulation.Scenarios
             // check for existing files in the result directory
             HouseGenerator.CleanResultDirectoryBeforeSimulation(resultDir, false, reuseDBs, reuseSeedFile);
 
+            try
+            {
+                // try to create a link to the scenario directory, as a reference
+                Directory.CreateSymbolicLink(Path.Combine(resultDir, "scenario"), inputDirectoryPath);
+            } catch (IOException)
+            {
+                logger.Warning("Could not create a symbolic link to the scenario directory.");
+            }
+
             // copy DB file to result directory and open a connection to it
             var sim = HouseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
             string fullDbPath = Path.GetFullPath(hcj.PathToDatabase!);
