@@ -149,11 +149,16 @@ namespace CitySimulation
         /// <returns>the created POI simulator</returns>
         private PointOfInterestSimulator CreatePoiSimulator(PointOfInterestConfig poi)
         {
-            return poi.LocationType.Name switch
+            if (poi.QueueCapacity > 0)
             {
-                "Pharmacy" => new QueuePointOfInterestSimulator(rank, poi.Id, outputPath, 2),
-                _ => new PointOfInterestSimulator(rank, poi.Id, outputPath),
-            };
+                return new QueuePointOfInterestSimulator(rank, poi.Id, outputPath, poi.QueueCapacity);
+            }
+            return new PointOfInterestSimulator(rank, poi.Id, outputPath);
+            //return poi.LocationType.Name switch
+            //{
+            //    "Pharmacy" => new QueuePointOfInterestSimulator(rank, poi.Id, outputPath, 2),
+            //    _ => new PointOfInterestSimulator(rank, poi.Id, outputPath),
+            //};
         }
 
         /// <summary>
