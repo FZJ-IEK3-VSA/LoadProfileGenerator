@@ -29,6 +29,12 @@ namespace CitySimulation.Simulators
         /// </summary>
         private readonly int maxWaitingFactor;
 
+        /// <summary>
+        /// Indicates how long in timesteps any visitor is willing to wait,
+        /// independent of their own activity duration.
+        /// </summary>
+        private readonly int minWaitingTime = 5;
+
         public QueuePointOfInterestSimulator(int rank, PointOfInterestId id, string outputDir, int concurrentActivities, int maxWaitingFactor = 3) : base(rank, id, outputDir)
         {
             this.concurrentActivities = concurrentActivities;
@@ -54,6 +60,17 @@ namespace CitySimulation.Simulators
             return expectedWait;
         }
 
+        /// <summary>
+        /// Determines if the visitor will cancel the visit due to the long waiting time.
+        /// </summary>
+        /// <param name="expectedWaitingTime">the estimated waiting time</param>
+        /// <param name="activityDuration">the activity duration of the visitor</param>
+        /// <returns>true if the visitor cancels their visit; otherwise, false</returns>
+        private bool DoesVisitorCancel(int expectedWaitingTime, int activityDuration)
+        {
+            return expectedWaitingTime > minWaitingTime && expectedWaitingTime > maxWaitingFactor * activityDuration;
+        }
+
         private List<RemoteActivityFinished> AddNewPersons(TimeStep timeStep, IEnumerable<RemoteActivityStart> newActivities)
         {
             List<RemoteActivityFinished> cancelling = [];
@@ -63,7 +80,7 @@ namespace CitySimulation.Simulators
 
                 int expectedWaitingTime = CalcExpectedWaitingTime();
                 int duration = DetermineDuration(newActivity);
-                if (expectedWaitingTime > maxWaitingFactor * duration)
+                if (DoesVisitorCancel(expectedWaitingTime, duration))
                 {
                     // waiting time is too long, the visitor leaves again
                     cancelling.Add(new RemoteActivityFinished(newActivity.Person, PoiId, false));
