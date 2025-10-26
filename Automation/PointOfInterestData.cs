@@ -7,7 +7,4 @@
     /// <param name="Coordinates">coordinates of the POI</param>
     /// <param name="TimeLimit">an optional timelimit that will be imposed on all affordances at this POI</param>
     public record PointOfInterestData(JsonReference LocationType, Coordinates Coordinates, JsonReference? TimeLimit = null, int QueueCapacity = -1);
-
-    //public record QueuePOIData(JsonReference LocationType, Coordinates Coordinates, JsonReference? TimeLimit = null, int QueueCapacity = 1)
-    //    : PointOfInterestData(LocationType, Coordinates, TimeLimit);
 }
