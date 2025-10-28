@@ -33,9 +33,9 @@ namespace CitySimulation.Simulators
         /// Indicates how long in timesteps any visitor is willing to wait,
         /// independent of their own activity duration.
         /// </summary>
-        private readonly int minWaitingTime = 5;
+        private readonly int minWaitingTime = 10;
 
-        public QueuePointOfInterestSimulator(int rank, PointOfInterestId id, string outputDir, int concurrentActivities, int maxWaitingFactor = 3) : base(rank, id, outputDir)
+        public QueuePointOfInterestSimulator(int rank, PointOfInterestId id, string outputDir, int concurrentActivities, int maxWaitingFactor = 4) : base(rank, id, outputDir)
         {
             this.concurrentActivities = concurrentActivities;
             this.maxWaitingFactor = maxWaitingFactor;
