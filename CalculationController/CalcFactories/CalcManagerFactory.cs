@@ -106,9 +106,15 @@ namespace CalculationController.CalcFactories
                 }
 
                 if (csps.CalcTarget.CalcObjectType == CalcObjectType.House && (csps.LoadTypePriority == LoadTypePriority.RecommendedForHouseholds ||
-                                                                               csps.LoadTypePriority == LoadTypePriority.Mandatory)) {
-                    throw new DataIntegrityException(
-                        "You are trying to calculate a house with only the load types for a household. This would mess up the warm water calculations. Please fix the load type selection.");
+                                                                               csps.LoadTypePriority == LoadTypePriority.Mandatory))
+                {
+                    // check the house type; if there is no infrastructure, no House load types are required
+                    var house = (House)csps.CalcTarget;
+                    if (!house.HouseType.Name.Contains("HT23 No Infrastructure at all"))
+                    {
+                        throw new DataIntegrityException(
+                            "You are trying to calculate a house with only the load types for a household. This would mess up the warm water calculations. Please fix the load type selection.");
+                    }
                 }
             }
             finally {

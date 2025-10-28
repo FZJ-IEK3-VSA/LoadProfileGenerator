@@ -39,7 +39,7 @@ namespace Common.JSON {
 
         public CalcParameters(List<CalcOption> calcOptions, DateTime startDate, DateTime endDate, TimeSpan internalResolution, string cSVCharacter,
             TimeSpan externalResolution, bool writeExcelColumnBool, bool showSettlingPeriodBool, int settlingDays, int repetitionCount, List<string> loadtypesForPostprocessing,
-            DeviceProfileHeaderMode deviceProfileHeaderMode, bool ignorePreviousActivitiesWhenNeeded, bool enableTransportation,
+            LoadTypePriority loadTypePriority, DeviceProfileHeaderMode deviceProfileHeaderMode, bool ignorePreviousActivitiesWhenNeeded, bool enableTransportation,
             bool enableIdlemode, string decimalSeperator, bool enableFlexibility, bool citySimulationEnabled = false) : this(startDate, endDate)
         {
             Options = calcOptions?.ToHashSet() ?? [];
@@ -51,6 +51,7 @@ namespace Common.JSON {
             NumberOfSettlingDays = settlingDays;
             AffordanceRepetitionCount = repetitionCount;
             LoadtypesToPostprocess = loadtypesForPostprocessing;
+            LoadTypePriority = loadTypePriority;
             DeviceProfileHeaderMode = deviceProfileHeaderMode;
             IgnorePreviousActivitesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
             TransportationEnabled = enableTransportation;
@@ -107,7 +108,7 @@ namespace Common.JSON {
         public TimeSpan InternalStepsize { get; set; }
         public int InternalTimesteps { get; set; }
 
-        public LoadTypePriority LoadTypePriority { get; set; } = LoadTypePriority.All;
+        public LoadTypePriority LoadTypePriority { get; set; }
         [CanBeNull]
         public List<string> LoadtypesToPostprocess { get; set; } = [];
         public int OfficalTimesteps { get; set; }

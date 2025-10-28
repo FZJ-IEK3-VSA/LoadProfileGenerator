@@ -85,26 +85,12 @@ namespace SimulationEngineLib.HouseJobProcessor
                 throw new LPGException("No calculation object was selected.");
             }
             var calcObject = GetCalcObject(sim, calcObjectReference);
-
-            // check if all required parameters are set and valid, or else choose default values
-            if (outputDirectory.IsNullOrEmpty())
-            {
-                calcSpec.OutputDirectory ??= SelectDefaultResultDirectory(calcObject);
-            } else
-            {
-                calcSpec.OutputDirectory = outputDirectory;
-            }
+            SetCalcSpecDefaults(calcSpec, calcObject, outputDirectory);
 
             var energyIntensity = calcSpec.EnergyIntensityType;
             if (energyIntensity == EnergyIntensityType.AsOriginal)
             {
                 energyIntensity = calcObject.EnergyIntensityType;
-            }
-            if (calcSpec.LoadTypePriority == LoadTypePriority.Undefined)
-            {
-                // set default LoadTypePriority depending on CalcObject type
-                calcSpec.LoadTypePriority = (calcObject.CalcObjectType == CalcObjectType.ModularHousehold) ?
-                    LoadTypePriority.RecommendedForHouseholds : LoadTypePriority.RecommendedForHouses;
             }
 
             // look up objects matching the specified JsonReferences
@@ -116,7 +102,26 @@ namespace SimulationEngineLib.HouseJobProcessor
             var geographicLocation = sim.GeographicLocations.FindWithException(calcSpec.GeographicLocation, true);
             geographicLocation ??= calcObject.DefaultGeographicLocation;
             geographicLocation ??= sim.GeographicLocations.GetDefault();
-            return new(calcObject, calcSpec.OutputDirectory, temperatureProfile, geographicLocation, energyIntensity, calcSpec.LoadTypePriority, deviceSelection);
+            return new(calcObject, calcSpec.OutputDirectory, temperatureProfile, geographicLocation, energyIntensity, deviceSelection);
+        }
+
+        /// <summary>
+        /// Set defaults for missing values in the CalcSpecification.
+        /// </summary>
+        /// <param name="calcSpec">the CalcSpec to check and adapt</param>
+        /// <param name="calcObject">the object to simulate</param>
+        /// <param name="outputDirectory">optional output directory</param>
+        private static void SetCalcSpecDefaults(JsonCalcSpecification calcSpec, ICalcObject calcObject, string outputDirectory = "")
+        {
+            // check if all required parameters are set and valid, or else choose default values
+            if (outputDirectory.IsNullOrEmpty())
+            {
+                calcSpec.OutputDirectory ??= SelectDefaultResultDirectory(calcObject);
+            }
+            else
+            {
+                calcSpec.OutputDirectory = outputDirectory;
+            }
         }
 
         /// <summary>
@@ -154,6 +159,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 SettlingDays,
                 config.RepetitionCount,
                 calcSpec.LoadtypesForPostprocessing,
+                calcSpec.LoadTypePriority,
                 config.DeviceProfileHeaderMode,
                 calcSpec.IgnorePreviousActivitiesWhenNeeded,
                 calcSpec.EnableTransportation,

@@ -144,9 +144,9 @@ namespace CalculationController.Queue
             string resultPath, bool transportationEnabled, bool enableIdlemode, string decimalSeperator,
             bool flexibilityEnabled, bool citySimulationEnabled = false)
             : this(
-                 new CalcObjectParameters(calcTarget, resultPath, temperatureProfile, geographicLocation, energyIntensity, loadTypePriority, deviceSelection),
+                 new CalcObjectParameters(calcTarget, resultPath, temperatureProfile, geographicLocation, energyIntensity, deviceSelection),
                  new CalcParameters(calcOptions, officialSimulationStartTime, officialSimulationEndTime, internalTimeResolution, csvCharacter, externalTimeResolution,
-                    writeExcelColumn, showSettlingPeriod, settlingDays, affordanceRepetitionCount, loadTypesToProcess, deviceProfileHeaderMode, ignorePreviousActivitiesWhenNeeded,
+                    writeExcelColumn, showSettlingPeriod, settlingDays, affordanceRepetitionCount, loadTypesToProcess, loadTypePriority, deviceProfileHeaderMode, ignorePreviousActivitiesWhenNeeded,
                     transportationEnabled, enableIdlemode, decimalSeperator, flexibilityEnabled, citySimulationEnabled),
                  new CalculationHelpers(calculationProfiler, dispatcher, reportFinishFuncForHouseAndSettlement, reportFinishFuncForHousehold, openTabFunc, reportCancelFunc), selectedRandomSeed,
                  new TransportObjects(travelRouteSet, transportationDeviceSet, chargingStationSet), resumeSettlement)
@@ -270,7 +270,7 @@ namespace CalculationController.Queue
     /// In a mass simulation, each house has its own CalcObjectParameters.
     /// </summary>
     public record CalcObjectParameters(ICalcObject CalcObject, string OutputDirectory, TemperatureProfile TemperatureProfile,
-        GeographicLocation GeographicLocation, EnergyIntensityType EnergyIntensity, LoadTypePriority LoadTypePriority, DeviceSelection? DeviceSelection = null);
+        GeographicLocation GeographicLocation, EnergyIntensityType EnergyIntensity, DeviceSelection? DeviceSelection = null);
 
     /// <summary>
     /// Objects for transport simulation. If transportation is enabled, all of them must be set.

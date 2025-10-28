@@ -24,7 +24,7 @@ namespace CitySimulationTests
 
             // use non-default values for all properties in order to notice incorrect property values
             CalcParameters cp = new([CalcOption.MakePDF], new(2020, 1, 1), new(2020, 12, 31),
-                new(0, 1, 0), "_", new(0, 10, 0), true, true, 10, 10, ["Electricity"],
+                new(0, 1, 0), "_", new(0, 10, 0), true, true, 10, 10, ["Electricity"], LoadTypePriority.Mandatory,
                 DeviceProfileHeaderMode.OnlyDeviceCategories, true, true, true, "-", true, true);
 
             CheckSerialization(serializer, cp);
