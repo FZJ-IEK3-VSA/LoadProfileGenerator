@@ -121,12 +121,13 @@ namespace CalculationController.CalcFactories {
                                        [NotNull] Dictionary<string, SharedDesireValue> sharedDesireValues,
                                        [NotNull] string householdName)
         {
+            decimal initialDesireVal = (decimal)(_calcRepo.Rnd.NextDouble() * 0.5 + 0.5);
             var sdv = GetSharedDesireValue(desire, sharedDesireValues);
             var cd1 = new CalcDesire(desire.Name,
                 desire.DesireID,
                 desire.Threshold,
                 desire.DecayTime,
-                1,
+                initialDesireVal,
                 desire.Weight,
                 _calcRepo.CalcParameters.TimeStepsPerHour,
                 desire.CriticalThreshold,
