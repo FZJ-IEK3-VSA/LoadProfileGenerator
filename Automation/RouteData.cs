@@ -30,6 +30,6 @@ namespace Automation
         Dictionary<string, double> prob_with_car_hh, Dictionary<string, double> prob_no_car_hh,
         Dictionary<string, double>? prob_with_car_hh_pt_abo, Dictionary<string, double>? prob_no_car_hh_pt_abo,
         Dictionary<string, double>? prob_with_car_hh_no_pt_abo, Dictionary<string, double>? prob_no_car_hh_no_pt_abo,
-        int index = -1, double logsum_util_all = -1, double logsum_util_no_car_hh = -1, double logsum_util_with_car_hh = -1,
-        double logsum_time = -1);
+        int index = -1, double? logsum_util_all = -1, double logsum_util_no_car_hh = -1, double logsum_util_with_car_hh = -1,
+        double? logsum_time = -1);
 }
