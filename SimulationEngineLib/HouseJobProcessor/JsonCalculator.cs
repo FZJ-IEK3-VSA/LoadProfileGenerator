@@ -153,7 +153,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 config.CSVCharacter,
                 externalResolution,
                 config.WriteExcelColumnBool,
-                config.ShowSettlingPeriodBool,
+                calcSpec.ShowSettlingPeriod,
                 calcSpec.SettlingDays,
                 config.RepetitionCount,
                 calcSpec.LoadtypesForPostprocessing,

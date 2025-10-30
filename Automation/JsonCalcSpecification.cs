@@ -159,6 +159,9 @@ namespace Automation {
             "The LPG runs a 3-day period before the simulation start to initialize the people. For debugging purposes it is possible to include this in the result files. Defaults to false.")]
         public bool ShowSettlingPeriod { get; set; }
 
+        [Comment("Determines the number of settling days that are simulated before the actual start date. These days help to avoid simulation artifacts in the beginning. Default=3")]
+        public int SettlingDays { get; set; } = 3;
+
         [Comment(
             "Flexibility modelling seperates the electric devices out that can time shifted. The LPG then generates two distinct profiles.")]
         public bool EnableFlexibility { get; set; }
@@ -186,9 +189,6 @@ namespace Automation {
 
         [Comment("When using household templates, sometimes random households are generated that don't work. With this option you can force the LPG force to simulate all cases, no matter how messed up the definition is. Basically this enables a special activity \"Idle\" that always gets activated whenever the person can't find something to do. Default=false")]
         public bool EnableIdlemode { get; set; }
-
-        [Comment("Determines the number of settling days that are simulated before the actual start date. These days help to avoid simulation artifacts in the beginning. Default=3")]
-        public int SettlingDays { get; set; } = 3;
 
 
         [NotNull]

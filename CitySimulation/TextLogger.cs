@@ -49,6 +49,12 @@ namespace CitySimulation
         /// <param name="data">the data to log</param>
         public void Log(TimeStep timestep, DateTime dateTime, object[] data)
         {
+            if (!timestep.DisplayThisStep)
+            {
+                // in settling period and logging is disabled
+                return;
+            }
+
             logEntries.Add(new(timestep, dateTime, data));
 
             // write to file if enough log entries have accumulated
