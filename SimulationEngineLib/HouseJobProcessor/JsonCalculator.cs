@@ -7,7 +7,6 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
 using Common;
-using Common.Enums;
 using Common.JSON;
 using Database;
 using Database.Tables;
@@ -19,7 +18,6 @@ namespace SimulationEngineLib.HouseJobProcessor
 {
     public class JsonCalculator
     {
-        public const int SettlingDays = 3;
         public static readonly TimeSpan InternalTimeResolution = new(0, 1, 0);
 
         [JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler = new();
@@ -156,7 +154,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 externalResolution,
                 config.WriteExcelColumnBool,
                 config.ShowSettlingPeriodBool,
-                SettlingDays,
+                calcSpec.SettlingDays,
                 config.RepetitionCount,
                 calcSpec.LoadtypesForPostprocessing,
                 calcSpec.LoadTypePriority,

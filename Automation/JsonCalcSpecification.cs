@@ -183,8 +183,12 @@ namespace Automation {
         public bool IgnorePreviousActivitiesWhenNeeded { get; [UsedImplicitly] set; }
 
         public bool EnableTransportation { get; set; }
+
         [Comment("When using household templates, sometimes random households are generated that don't work. With this option you can force the LPG force to simulate all cases, no matter how messed up the definition is. Basically this enables a special activity \"Idle\" that always gets activated whenever the person can't find something to do. Default=false")]
         public bool EnableIdlemode { get; set; }
+
+        [Comment("Determines the number of settling days that are simulated before the actual start date. These days help to avoid simulation artifacts in the beginning. Default=3")]
+        public int SettlingDays { get; set; } = 3;
 
 
         [NotNull]
