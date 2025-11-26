@@ -267,11 +267,12 @@ namespace SimulationEngineLib.HouseJobProcessor
             // get the timelimit that applies for these routes
             var timeLimit = TimeLimitMap[timeSlot];
 
-            foreach (var categoryDistancePair in routeData.mode_distances)
+            // create one route per relevant mode
+            foreach (var categoryWeightPair in weights)
             {
                 // check if a duration is specified for this route and mode
-                double? durationInMin = routeData.mode_times.GetValueOrDefault(categoryDistancePair.Key, -1);
-                double? distanceInKm = categoryDistancePair.Value;
+                double? durationInMin = routeData.mode_times.GetValueOrDefault(categoryWeightPair.Key, -1);
+                double? distanceInKm = routeData.mode_distances[categoryWeightPair.Key];
                 if (!durationInMin.HasValue || !distanceInKm.HasValue)
                     continue; // skip this mode
 
@@ -279,7 +280,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 double distanceInM = distanceInKm.Value * 1000;
 
                 // create a single step with the specified transportation device category
-                var deviceCategory = TransportModes[categoryDistancePair.Key];
+                var deviceCategory = TransportModes[categoryWeightPair.Key];
                 var deviceCategoryName = deviceCategory.Name;
 
                 // create the new travel route
@@ -297,7 +298,7 @@ namespace SimulationEngineLib.HouseJobProcessor
 
                 // set the specified minimum driving age for cars; -1 means no restriction
                 int minimumAge = deviceCategory == CarCategory ? hj.City.TravelDefinition.MinimumDrivingAge : -1;
-                var routeWeight = weights[categoryDistancePair.Key];
+                var routeWeight = categoryWeightPair.Value;
                 travelRouteSet.AddRoute(route, minimumAge: minimumAge, personID: personId, weight: routeWeight, timeLimit: timeLimit, savetodb: false);
             }
         }
