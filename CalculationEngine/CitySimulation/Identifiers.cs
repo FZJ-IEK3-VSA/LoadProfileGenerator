@@ -13,19 +13,19 @@ namespace CalculationEngine.CitySimulation
         /// </summary>
         /// <param name="personName">the name of the person</param>
         /// <param name="householdKey">the key of the person's household</param>
-        /// <param name="targetId">the simulation target, i.e. the building that contains the household</param>
+        /// <param name="houseId">the ID of the simulation target, i.e. the house that contains the household</param>
         /// <param name="workerId">the rank of the worker that simulates the target</param>
-        public PersonIdentifier(string personName, HouseholdKey householdKey, string targetId = "", int workerId = -1)
+        public PersonIdentifier(string personName, HouseholdKey householdKey, string houseId = "", int workerId = -1)
         {
             PersonName = personName;
             HouseholdKey = householdKey;
-            TargetId = targetId;
+            HouseId = houseId;
             WorkerId = workerId;
         }
 
         public string PersonName { get; }
         public HouseholdKey HouseholdKey { get; }
-        public string TargetId { get; private set; }
+        public string HouseId { get; private set; }
         public int WorkerId { get; private set; }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace CalculationEngine.CitySimulation
         {
             if (IsComplete())
                 throw new LPGException("Tried to change an already complete PersonIdentifier");
-            TargetId = targetId;
+            HouseId = targetId;
             WorkerId = workerId;
             if (!IsComplete())
                 throw new LPGException($"The added target ID '{targetId}' or worker ID '{workerId}' are invalid.");
@@ -53,7 +53,7 @@ namespace CalculationEngine.CitySimulation
         public bool IsComplete()
         {
             return !string.IsNullOrEmpty(PersonName) && !string.IsNullOrEmpty(HouseholdKey.Key)
-                && !string.IsNullOrEmpty(TargetId) && WorkerId >= 0;
+                && !string.IsNullOrEmpty(HouseId) && WorkerId >= 0;
         }
 
         public override string ToString()
@@ -61,7 +61,7 @@ namespace CalculationEngine.CitySimulation
             string firstPart = $"{HouseholdKey.Key}.{PersonName}";
             if (!IsComplete())
                 return firstPart;
-            return $"{WorkerId}.{TargetId}.{firstPart}";
+            return $"{WorkerId}.{HouseId}.{firstPart}";
         }
     }
 

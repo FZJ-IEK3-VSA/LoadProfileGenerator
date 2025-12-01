@@ -216,7 +216,7 @@ namespace CitySimulation
                 foreach (var finishedActivity in messageContainer.finishedActivities)
                 {
                     // get the list for the correct household from the nested dictionary
-                    var targetDict = finishedActivitiesSorted.GetOrAddDefault(finishedActivity.Person.TargetId);
+                    var targetDict = finishedActivitiesSorted.GetOrAddDefault(finishedActivity.Person.HouseId);
                     var householdDict = targetDict.GetOrAddDefault(finishedActivity.Person.HouseholdKey);
                     Debug.Assert(!householdDict.ContainsKey(finishedActivity.Person.PersonName), "Found two 'finished activity' messages for the same person.");
                     // add the finished activity message
