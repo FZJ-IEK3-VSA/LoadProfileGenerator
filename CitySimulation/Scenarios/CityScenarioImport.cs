@@ -17,19 +17,6 @@ namespace CitySimulation.Scenarios
     internal class CityScenarioImport
     {
         /// <summary>
-        /// Maps the day of week key in route data filenames to the corresponding enum value
-        /// </summary>
-        private static readonly Dictionary<string, DayOfWeek> DayTypeMapping = new() {
-            { "Mon", DayOfWeek.Monday },
-            { "Tue", DayOfWeek.Tuesday },
-            { "Wed", DayOfWeek.Wednesday },
-            { "Thu", DayOfWeek.Thursday },
-            { "Fri", DayOfWeek.Friday },
-            { "Sat", DayOfWeek.Saturday },
-            { "Sun", DayOfWeek.Sunday },
-        };
-
-        /// <summary>
         /// Parses a city scenario from a directory. Loads general info from a calcspec.json file, residential buildings
         /// from the houses subdirectory, city data from city.json, and optionally route data from the routes subdirectory.
         /// </summary>
@@ -174,7 +161,7 @@ namespace CitySimulation.Scenarios
         private static TimeSlot ParseTimeSlot(string text)
         {
             const string KEY_ALL = "All";
-            var dayTypes = string.Join("|", DayTypeMapping.Keys) + $"|{KEY_ALL}";
+            var dayTypes = $"\\d+|{KEY_ALL}";
             Match match = Regex.Match(text, @"_(" + dayTypes + @")_(\d+)to(\d+)");
             if (!match.Success)
                 throw new LPGPBadParameterException($"Could not parse time slot: {text}");
@@ -182,9 +169,11 @@ namespace CitySimulation.Scenarios
             // parse the weekday this time slot applies to
             string dayTypeText = match.Groups[1].Value;
             HashSet<DayOfWeek> daysOfWeek;
-            if (DayTypeMapping.TryGetValue(dayTypeText, out var dayOfWeek))
+            if (int.TryParse(dayTypeText, out int dayTypeIndex))
             {
                 // time slot only applies to this specific day of week
+                // 0 means Monday in the input, unlike with DayOfWeek --> convert
+                var dayOfWeek = (DayOfWeek)((dayTypeIndex + 1) % 7);
                 daysOfWeek = [dayOfWeek];
             }
             else if (dayTypeText == KEY_ALL)
