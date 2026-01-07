@@ -61,7 +61,8 @@ namespace CitySimulation.Scenarios
             {
                 // try to create a link to the scenario directory, as a reference
                 Directory.CreateSymbolicLink(Path.Combine(resultDir, "scenario"), inputDirectoryPath);
-            } catch (IOException)
+            }
+            catch (IOException)
             {
                 logger.Warning("Could not create a symbolic link to the scenario directory.");
             }
@@ -98,7 +99,7 @@ namespace CitySimulation.Scenarios
             // create house configs and POI configs from the files in the input directory
             var houseConfigs = CollectHouseConfigs(inputDirectory.CombineName("houses"), seedProvider);
             var cityData = AutomationUtili.ParseJsonFile<CityData>(inputDirectory.CombineName("city.json"));
-            var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key), 
+            var poiConfigs = cityData.PointsOfInterest.Select(entry => new PointOfInterestConfig(new(entry.Key),
                 entry.Value.LocationType, entry.Value.QueueCapacity));
 
             // log the seed used for each target to make simulation reproducible

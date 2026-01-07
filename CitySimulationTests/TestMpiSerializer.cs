@@ -1,11 +1,11 @@
 ﻿using Automation;
-using Common.Tests;
-using Xunit.Abstractions;
-using CitySimulation;
-using Common.JSON;
-using FluentAssertions;
-using CitySimulation.Scenarios;
 using CalculationEngine.CitySimulation;
+using CitySimulation;
+using CitySimulation.Scenarios;
+using Common.JSON;
+using Common.Tests;
+using FluentAssertions;
+using Xunit.Abstractions;
 
 namespace CitySimulationTests
 {
@@ -37,7 +37,7 @@ namespace CitySimulationTests
             var serializer = new MPIJsonSerializer();
 
             // use non-default values for all properties in order to notice incorrect property values
-            ScenarioPart p = new([new("myid", "filepath", 99)], [new(new("poi-id"),new("json ref"))],"dbpath", new(),CalcParameters.CreateDefaultParamsForTesting(), new([]), new(new()));
+            ScenarioPart p = new([new("myid", "filepath", 99)], [new(new("poi-id"), new("json ref"))], "dbpath", new(), CalcParameters.CreateDefaultParamsForTesting(), new([]), new(new()));
 
             CheckSerialization(serializer, p);
         }

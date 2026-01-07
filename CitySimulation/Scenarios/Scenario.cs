@@ -1,7 +1,7 @@
 ﻿using Automation;
-using Common.Extensions;
-using CitySimulation.SimulationTargets;
 using Automation.ResultFiles;
+using CitySimulation.SimulationTargets;
+using Common.Extensions;
 using Common.JSON;
 
 namespace CitySimulation.Scenarios
