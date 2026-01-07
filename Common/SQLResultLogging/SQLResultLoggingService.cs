@@ -24,6 +24,12 @@ namespace Common.SQLResultLogging
         string GetTypeDescription();
     }*/
 
+    /// <summary>
+    /// The original result logging service that stores data in sqlite database files. There is one database file
+    /// for every different HouseholdKey, so one per household and additionally one general database for the house.
+    /// When using many SQLResultLoggingServices in parallel, e.g. in a city simulation, errors with database locking
+    /// can occur. In this case, use the JsonResultLoggingService instead.
+    /// </summary>
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class SqlResultLoggingService : IResultLoggingService
     {
