@@ -93,13 +93,9 @@ namespace Common.SQLResultLogging
         /// <param name="directoryPath">the path of the directory</param>
         private void AddDBListEntryForDirectory(HouseholdKey key, string directoryPath)
         {
-            var row = new Dictionary<string, object>
-            {
-                ["Filename"] = directoryPath,
-                ["HouseholdKey"] = key.Key
-            };
             // save the path to the new database directory in the General database
-            SaveToFile([row], Constants.DatabaseListTableName, Constants.GeneralHouseholdKey);
+            var entry = new DatabaseEntry(directoryPath, key);
+            SaveToFile([entry], Constants.DatabaseListTableName, Constants.GeneralHouseholdKey);
         }
 
         /// <summary>
