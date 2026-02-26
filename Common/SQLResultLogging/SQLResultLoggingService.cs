@@ -497,7 +497,7 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
 
             if (fi.Directory?.Exists != true)
             {
-                throw new LPGException("Directory does not exist.");
+                throw new LPGException($"Result directory does not exist: {fi.Directory?.FullName}");
             }
             // create a new database file if necessary
             string connectionString = MakeconnectionString(fi.FullName);
