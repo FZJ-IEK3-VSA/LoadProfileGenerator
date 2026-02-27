@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using Automation;
+﻿using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
 using Common;
+using Common.Enums;
 using Common.JSON;
 using Database;
 using Database.Tables;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using PowerArgs;
+using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
 
 namespace SimulationEngineLib.HouseJobProcessor
 {
@@ -57,11 +58,31 @@ namespace SimulationEngineLib.HouseJobProcessor
         {
             CalcParameters parameters = CreateCalcParameters(sim.MyGeneralConfig, calcSpec, citySimulationEnabled);
             CalcObjectParameters calcObjectParams = CreateCalcObjectParams(sim, calcSpec, calcObjectReference);
+            SetSuitableLoadTypePriority(parameters, calcObjectParams.CalcObject);
 
             CalculationHelpers helpers = new(profiler);
 
             // Combine all settings in a CalcStartParameterSet object.
             return new CalcStartParameterSet(calcObjectParams, parameters, helpers, calcSpec.RandomSeed, null, preserveLogfile: preserveLogfile);
+        }
+
+        /// <summary>
+        /// If the LoadtypePriority is undefined and there is only a single CalcObject that will be simulated, a
+        /// sensible default value will be selected depending on the CalcObject type (house or household).
+        /// Cannot be used for the CitySimulation, as there is only one LoadTypePriority for the whole simulation instead
+        /// of one per CalcObject.
+        /// </summary>
+        /// <param name="parameters">the CalcParameters to check and adapt if necessary</param>
+        /// <param name="calcObject">the CalcObject</param>
+        public static void SetSuitableLoadTypePriority(CalcParameters parameters, ICalcObject calcObject)
+        {
+            if (parameters.LoadTypePriority == LoadTypePriority.Undefined)
+            {
+                // set default LoadTypePriority depending on CalcObject type
+                parameters.LoadTypePriority = (calcObject.CalcObjectType == CalcObjectType.ModularHousehold) ?
+                LoadTypePriority.RecommendedForHouseholds : LoadTypePriority.RecommendedForHouses;
+                Logger.Info($"Changing LoadTypePriority from \"{LoadTypePriority.Undefined}\" to \"{parameters.LoadTypePriority}\"");
+            }
         }
 
         /// <summary>
