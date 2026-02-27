@@ -495,10 +495,9 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
                 throw new LPGException("Filename length > 260. This is a Windows limitation: " + fi.FullName);
             }
 
-            if (fi.Directory?.Exists != true)
-            {
-                throw new LPGException($"Result directory does not exist: {fi.Directory?.FullName}");
-            }
+            // create the result directory if it does not exist yet
+            fi.Directory.Create();
+
             // create a new database file if necessary
             string connectionString = MakeconnectionString(fi.FullName);
             using (SQLiteConnection dbcon = new SQLiteConnection(connectionString))
