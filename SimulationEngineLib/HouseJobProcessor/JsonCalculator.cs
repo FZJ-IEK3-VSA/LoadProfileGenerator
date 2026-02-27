@@ -61,7 +61,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             CalculationHelpers helpers = new(profiler);
 
             // Combine all settings in a CalcStartParameterSet object.
-            return new CalcStartParameterSet(calcObjectParams, parameters, helpers, calcSpec.RandomSeed, null, preserveLogfile);
+            return new CalcStartParameterSet(calcObjectParams, parameters, helpers, calcSpec.RandomSeed, null, preserveLogfile: preserveLogfile);
         }
 
         /// <summary>
