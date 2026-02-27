@@ -105,15 +105,15 @@ namespace CalculationController.CalcFactories
                     SimIntegrityChecker.Run(sim, CheckingOptions.FromStartParameters(csps));
                 }
 
-                if (csps.CalcTarget.CalcObjectType == CalcObjectType.House && (csps.LoadTypePriority == LoadTypePriority.RecommendedForHouseholds ||
-                                                                               csps.LoadTypePriority == LoadTypePriority.Mandatory))
+                if (csps.CalcTarget.CalcObjectType == CalcObjectType.House && (csps.LoadTypePriority < LoadTypePriority.RecommendedForHouses))
                 {
                     // check the house type; if there is no infrastructure, no House load types are required
                     var house = (House)csps.CalcTarget;
                     if (!house.HouseType.Name.Contains("HT23 No Infrastructure at all"))
                     {
                         throw new DataIntegrityException(
-                            "You are trying to calculate a house with only the load types for a household. This would mess up the warm water calculations. Please fix the load type selection.");
+                            $"You are trying to calculate a house without the required load types (LoadTypePriority \"{csps.LoadTypePriority}\"). " +
+                            "This would mess up the warm water calculations. Please fix the load type priority.");
                     }
                 }
             }
