@@ -80,7 +80,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             {
                 // set default LoadTypePriority depending on CalcObject type
                 parameters.LoadTypePriority = (calcObject.CalcObjectType == CalcObjectType.ModularHousehold) ?
-                LoadTypePriority.RecommendedForHouseholds : LoadTypePriority.RecommendedForHouses;
+                    LoadTypePriority.RecommendedForHouseholds : LoadTypePriority.RecommendedForHouses;
                 Logger.Info($"Changing LoadTypePriority from \"{LoadTypePriority.Undefined}\" to \"{parameters.LoadTypePriority}\"");
             }
         }
