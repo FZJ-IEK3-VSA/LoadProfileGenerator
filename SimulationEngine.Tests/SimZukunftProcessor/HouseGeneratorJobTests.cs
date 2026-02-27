@@ -202,6 +202,33 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void JsonReferenceDeserializeTest()
+        {
+            // serialize and deserialize each JsonReference object, and check if the result is the same
+            JsonReference[] testCases = [new("myname", new("myguid")), new(), new("name only"), new("name", null), new("", new("empty name"))];
+            foreach (var testCase in testCases)
+            {
+                string referenceString = JsonConvert.SerializeObject(testCase);
+                JsonReference? deserialized = JsonConvert.DeserializeObject<JsonReference>(referenceString);
+                deserialized.Should().BeEquivalentTo(testCase);
+            }
+
+            // test some special cases
+            Dictionary<string, JsonReference> specialJsonCases = new(){
+                ["\"string only\""]= new("string only"),
+                ["{\"Name\": \"Name only\"}"] = new("Name only"),
+                ["{\"Guid\": {\"StrVal\": \"Guid only\"}}"] = new("", new("Guid only")) { Name = null },
+            };
+            foreach (var kvp in specialJsonCases)
+            {
+                JsonReference? deserialized = JsonConvert.DeserializeObject<JsonReference>(kvp.Key);
+                deserialized.Should().BeEquivalentTo(kvp.Value);
+            }
+
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void HouseJobDeserializeTest() {
             Logger.Get().StartCollectingAllMessages();
             using (WorkingDir workingDir = new WorkingDir(Utili.GetCurrentMethodAndClass())) {

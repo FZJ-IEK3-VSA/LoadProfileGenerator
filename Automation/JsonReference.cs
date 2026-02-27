@@ -63,18 +63,38 @@ namespace Automation {
 
         public override object? ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object? existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
-            Newtonsoft.Json.Linq.JToken token = Newtonsoft.Json.Linq.JToken.Load(reader);
+            var token = Newtonsoft.Json.Linq.JToken.Load(reader);
             switch (token.Type) {
                 case Newtonsoft.Json.Linq.JTokenType.Null:
                     return null;
                 case Newtonsoft.Json.Linq.JTokenType.String:
                      // if the json only contains a string, then use this as the name and leave the Guid blank
-                    string? name = (string?) token;
-                    return new JsonReference(name!, StrGuid.Empty);
-                default:
-                    JsonReference? jsonReference = new JsonReference();
-                    serializer.Populate(token.CreateReader(), jsonReference);
+                    string name = token.ToString()!;
+                    return new JsonReference(name, StrGuid.Empty);
+                case Newtonsoft.Json.Linq.JTokenType.Object:
+                    // there is a JSON object; check which attributes are present and parse them individually
+                    var jobject = (Newtonsoft.Json.Linq.JObject) token;
+                    var jsonReference = new JsonReference();
+
+                    // populate Name manually if it is present and not null
+                    if (jobject.TryGetValue("Name", out var nameToken) && nameToken.Type != Newtonsoft.Json.Linq.JTokenType.Null)
+                    {
+                        if (nameToken.Type != Newtonsoft.Json.Linq.JTokenType.String)
+                            throw new LPGException($"Could not parse Name of JsonReference at {reader.Path}: {nameToken}");
+
+                        jsonReference.Name = nameToken.ToObject<string>()!;
+                    }
+
+                    // populate Guid manually if it is present and not null
+                    if (jobject.TryGetValue("Guid", out var guidToken) && guidToken.Type != Newtonsoft.Json.Linq.JTokenType.Null)
+                    {
+                        if (guidToken.Type != Newtonsoft.Json.Linq.JTokenType.Object)
+                            throw new LPGException($"Could not parse Guid of JsonReference at {reader.Path}: {guidToken}");
+                        jsonReference.Guid = guidToken.ToObject<StrGuid>(serializer)!;
+                    }
                     return jsonReference;
+                default:
+                    throw new LPGException($"Could not parse JsonReference at {reader.Path}: {token}");
             }
         }
 
@@ -158,7 +178,6 @@ namespace Automation {
             Guid = StrGuid.Empty;
         }
 
-        [JetBrains.Annotations.NotNull]
         public string? Name { get; set; }
         public StrGuid Guid { get; set; }
 
