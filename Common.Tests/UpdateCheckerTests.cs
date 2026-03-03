@@ -6,17 +6,15 @@ namespace Common.Tests
 {
     public class UpdateCheckerTests : UnitTestBaseClass
     {
-        [Fact(Skip ="The API for retrieving the latest version is currently not available")]
+        [Fact(Skip = "The API for retrieving the latest version is currently not available")]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetLatestVersionTest()
         {
-            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
-            {
-                UpdateChecker uc = new UpdateChecker();
-                string s = uc.GetLatestVersion(out _);
-                Logger.Info(s);
-                wd.CleanUp();
-            }
+            using WorkingDir wd = new(Utili.GetCurrentMethodAndClass());
+            UpdateChecker uc = new();
+            string s = uc.GetLatestVersion(out _);
+            Logger.Info(s);
+            wd.CleanUp();
         }
 
         public UpdateCheckerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
