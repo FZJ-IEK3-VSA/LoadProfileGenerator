@@ -83,6 +83,8 @@ namespace CalculationController.Integrity {
                         "The person " + mhhPerson.Person.PrettyName + " has no living pattern tag set.", mhh);
                 }
                 var traitsWithMissingTags = new List<HouseholdTrait>();
+
+                // check if all assigned traits are allowed for this person, based on their LivingPatternTags
                 var personTraits = mhh.Traits.Where(x => x.DstPerson == mhhPerson.Person).ToList();
                 foreach (var personTrait in personTraits) {
                     if (personTrait.HouseholdTrait == null) {
@@ -96,6 +98,8 @@ namespace CalculationController.Integrity {
                         //the person will have the most specific tag, the traits can be more generic
                         continue;
                     }
+
+                    // the trait is not allowed for the LivingPatternTag of the person
                     traitsWithMissingTags.Add(personTrait.HouseholdTrait);
                 }
                 if (traitsWithMissingTags.Count > 0) {
@@ -105,7 +109,7 @@ namespace CalculationController.Integrity {
                     };
                     elementsToOpen.AddRange(traitsWithMissingTags);
                     throw new DataIntegrityException(
-                        "The opened traits have no matching living pattern tag for " + mhhPerson.LivingPatternTag, elementsToOpen);
+                        $"The opened traits have no matching living pattern tag for {mhhPerson.LivingPatternTag} and cannot be used by person {mhhPerson.Name}", elementsToOpen);
                 }
             }
         }
