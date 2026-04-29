@@ -78,6 +78,9 @@ namespace CitySimulation.Scenarios
             // save settings to the database copy in the result directory
             JsonCalculator.SaveSettingsToDatabase(sim, calcSpec);
 
+            // optionally import custom LivingPatternTag weights into the database
+            ImportLivingPatternTagWeights(sim, inputDirectory, logger);
+
             // create common CalcParameters object from the CalcSpecification and the general config
             var calcParameters = JsonCalculator.CreateCalcParameters(sim.MyGeneralConfig, calcSpec, true);
 
@@ -231,6 +234,31 @@ namespace CitySimulation.Scenarios
             var seedDict = targets.ToDictionary(t => t.Id, t => t.Seed);
             string path = Path.Combine(resultDir, Constants.HouseSeedMappingFile);
             AutomationUtili.WriteToJsonFile(seedDict, path);
+        }
+
+        /// <summary>
+        /// If custom LivingPatternTag weights are given as part of the scenario, reads the weights from a JSON file
+        /// and sets them in the database.
+        /// </summary>
+        /// <param name="simulator">database access object</param>
+        /// <param name="inputDirectory">scenario input directory</param>
+        /// <param name="logger">logger object for logging messages</param>
+        private static void ImportLivingPatternTagWeights(Database.Simulator simulator, DirectoryInfo inputDirectory, MPILogger logger)
+        {
+            string filepath = inputDirectory.CombineName("living_pattern_tag_weights.json");
+            if (!File.Exists(filepath))
+                return; // no custom living pattern tag weights specified - keep the default
+
+            var weights  = AutomationUtili.ParseJsonFile<Dictionary<string, double>>(filepath);
+            logger.Info("Using LivingPatternTag weights from scenario directory");
+
+            // store all given weights in the database
+            foreach (var tagWeightPair in weights)
+            {
+                var tag = simulator.LivingPatternTags.FindFirstByNameNotNull(tagWeightPair.Key);
+                tag.Weight = tagWeightPair.Value;
+                tag.SaveToDB();
+            }
         }
 
         /// <summary>
