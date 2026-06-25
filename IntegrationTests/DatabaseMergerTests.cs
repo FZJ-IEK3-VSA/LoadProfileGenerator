@@ -62,7 +62,7 @@ namespace IntegrationTests {
             var di = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), path));
             Logger.Debug(di.FullName);
             var fi = FindImportFiles(path);
-            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            using (var wd = new WorkingDir($"{Utili.GetCurrentMethodAndClass()}-{path}"))
             {
                 var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
                 File.Copy(fi.FullName, newpath);
