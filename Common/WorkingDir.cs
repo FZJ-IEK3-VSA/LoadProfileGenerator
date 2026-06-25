@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
@@ -92,6 +93,10 @@ namespace Common {
             GC.WaitForPendingFinalizers();
             GC.Collect();
             var di = new DirectoryInfo(_lastDirectory);
+            if (!di.Exists)
+                throw new LPGException($"Test error: working dir not found during cleanup.\n{di}");
+
+            // check for unittest error log files, and if there are any, throw them as exceptions
             var fis = di.GetFiles("Log.Unittest.Error.txt", SearchOption.AllDirectories);
             if (fis.Length > 0) {
                 string s;
@@ -103,6 +108,8 @@ namespace Common {
             if (Logger.Get().Errors.Count > 0 && throwAllErrors) {
                 Logger.Get().ThrowAllErrors();
             }
+
+            // try to recursively delete the working dir and everything in it
             var tryCount = 0;
             Exception lastException = null;
             _isClean = true;
@@ -129,7 +136,7 @@ namespace Common {
                     tryCount++;
                     bool logtoFile = Logger.LogToFile;
                     Logger.LogToFile = false;
-                    Logger.Error("File blocked for " + tryCount + "s... waiting 1s and trying again. File" + e.Message);
+                    Logger.Error("File blocked for " + tryCount + "s... waiting 1s and trying again. File " + e.Message);
                     Logger.LogToFile = logtoFile;
                     Thread.Sleep(1000);
                 }
@@ -138,7 +145,6 @@ namespace Common {
                 Logger.Exception(lastException);
                 throw lastException;
             }
-
         }
 
         [JetBrains.Annotations.NotNull]
@@ -152,12 +158,14 @@ namespace Common {
             var resultdir = Path.Combine(baseWorkingDir, testname);
             try {
                 if (Directory.Exists(resultdir)) {
+                    if (Directory.EnumerateFileSystemEntries(resultdir).Any())
+                        Logger.Warning($"Working dir already exists and is not empty: {resultdir}");
                     Directory.Delete(resultdir, true);
                     Thread.Sleep(1000);
                 }
             }
             catch (Exception e) {
-                Logger.Error("Error cleaning/creating:" + resultdir + Environment.NewLine + e.Message);
+                Logger.Error("Error deleting existing WorkingDir:" + resultdir + Environment.NewLine + e.Message);
                 Logger.Exception(e);
             }
             try
@@ -167,10 +175,10 @@ namespace Common {
             }
             catch (Exception e)
             {
-                Logger.Error("Error cleaning/creating:" + resultdir + Environment.NewLine + e.Message);
+                Logger.Error("Error creating WorkingDir:" + resultdir + Environment.NewLine + e.Message);
                 Logger.Exception(e);
             }
-            Logger.Info("using:" + resultdir);
+            Logger.Info("using WorkingDir: " + resultdir);
             return resultdir;
         }
 
