@@ -1175,7 +1175,7 @@ namespace CalculationController.Tests {
                     //              if(count<490) {//for skipping the first 50 for debugging
                     //                continue;
                     //          }
-                    using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+                    using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + $"_{index}"))
                     {
                         //CalcDevice.UseRanges = true;
                         var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
