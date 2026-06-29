@@ -20,11 +20,12 @@ namespace IntegrationTests.FullCalc
         {
             CleanTestBase.RunAutomatically(false);
             var start = DateTime.Now;
-            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            string testname = Utili.GetCurrentMethodAndClass() + $"_{house}";
+            using (var wd1 = new WorkingDir(testname))
             {
                 var path = wd1.WorkingDirectory;
                 Config.MakePDFCharts = false;
-                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                using (var db = new DatabaseSetup(testname))
                 {
                     var sim = new Simulator(db.ConnectionString);
                     var calcstart = DateTime.Now;
