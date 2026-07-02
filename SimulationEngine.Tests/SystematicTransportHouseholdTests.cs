@@ -1,7 +1,8 @@
 using Automation;
 using Automation.ResultFiles;
-using Xunit;
+using Common;
 using Common.Tests;
+using Xunit;
 using Xunit.Abstractions;
 #pragma warning disable 8602
 namespace SimulationEngine.Tests
@@ -18,7 +19,8 @@ namespace SimulationEngine.Tests
 
         private static void RunHouseJobNoChecks(string hhguid)
         {
-            HouseJobTestHelper.RunSingleHouse(sim => MakeHouseJob(sim, hhguid), _ => { });
+            string testname = Utili.GetCallingMethodAndClass();
+            HouseJobTestHelper.RunSingleHouse(sim => MakeHouseJob(sim, hhguid), _ => { }, testname: testname);
         }
 
         [Fact]
