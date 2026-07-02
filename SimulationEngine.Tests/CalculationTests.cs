@@ -26,6 +26,7 @@ using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 using Xunit.Abstractions;
@@ -380,13 +381,15 @@ namespace SimulationEngine.Tests
         }
 
         public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob?> makeHj, Action<string> checkResults,
-                                          bool skipcleaning = false)
+                                          bool skipcleaning = false, string testname = "")
         {
             Logger.Get().StartCollectingAllMessages();
             //Logger.Threshold = Severity.Debug;
-            using var wd = new WorkingDir(Utili.GetCallingMethodAndClass());
+            if (testname.IsNullOrEmpty())
+                testname = Utili.GetCallingMethodAndClass();
+            using var wd = new WorkingDir(testname);
             wd.SkipCleaning = skipcleaning;
-            using var db = new DatabaseSetup(Utili.GetCallingMethodAndClass());
+            using var db = new DatabaseSetup(testname);
             var targetdb = wd.Combine("profilegenerator.db3");
             File.Copy(db.FileName, targetdb, true);
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
