@@ -39,7 +39,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsOverallSum()
@@ -48,7 +47,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.OverallSum;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -59,7 +57,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsActionCarpetPlot()
@@ -68,7 +65,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.ActionCarpetPlot;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -79,7 +75,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsVariableLogFile()
@@ -88,7 +83,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.VariableLogFile;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -99,7 +93,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsDaylightTimesList()
@@ -108,7 +101,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.DaylightTimesList;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -119,7 +111,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsDeviceProfilesIndividualHouseholds()
@@ -128,7 +119,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.DeviceProfilesIndividualHouseholds;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -139,7 +129,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsHouseholdContents()
@@ -148,7 +137,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.HouseholdContents;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -159,7 +147,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsTotalsPerDevice()
@@ -168,7 +155,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.TotalsPerDevice;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -179,7 +165,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsDurationCurve()
@@ -188,7 +173,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.DurationCurve;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -199,7 +183,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsThoughtsLogfile()
@@ -208,7 +191,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.ThoughtsLogfile;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -219,7 +201,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsCriticalViolations()
@@ -228,7 +209,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.CriticalViolations;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -239,7 +219,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsSumProfileExternalIndividualHouseholds()
@@ -248,7 +227,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.SumProfileExternalIndividualHouseholds;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -259,7 +237,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsAffordanceEnergyUse()
@@ -268,7 +245,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.AffordanceEnergyUse;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -279,7 +255,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsLocationsFile()
@@ -288,7 +263,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.LocationsFile;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -299,7 +273,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsDeviceProfileExternalEntireHouse()
@@ -308,7 +281,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.DeviceProfileExternalEntireHouse;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -319,7 +291,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsMakeGraphics()
@@ -328,7 +299,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.MakeGraphics;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -339,7 +309,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsLocationCarpetPlot()
@@ -348,7 +317,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.LocationCarpetPlot;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -359,7 +327,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsTransportationDeviceCarpetPlot()
@@ -368,7 +335,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.TransportationDeviceCarpetPlot;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -379,7 +345,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsLogAllMessages()
@@ -388,7 +353,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.LogAllMessages;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -399,7 +363,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsActionsEachTimestep()
@@ -408,7 +371,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.ActionsEachTimestep;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -419,7 +381,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsSumProfileExternalIndividualHouseholdsAsJson()
@@ -428,7 +389,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.SumProfileExternalIndividualHouseholdsAsJson;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -439,7 +399,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsBodilyActivityStatistics()
@@ -448,7 +407,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.BodilyActivityStatistics;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -459,7 +417,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsDeviceActivations()
@@ -468,7 +425,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.DeviceActivations;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -479,7 +435,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsActionEntries()
@@ -488,7 +443,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.ActionEntries;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -499,7 +453,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsDeviceProfilesHouse()
@@ -508,7 +461,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.DeviceProfilesHouse;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -519,7 +471,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsJsonHouseholdSumFiles()
@@ -528,7 +479,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.JsonHouseholdSumFiles;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -539,7 +489,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsTansportationDeviceJsons()
@@ -548,7 +497,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.TansportationDeviceJsons;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -559,7 +507,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsAffordanceDefinitions()
@@ -568,7 +515,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.AffordanceDefinitions;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
@@ -579,7 +525,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsHouseholdSumProfilesCsvNoFlex()
@@ -589,7 +534,6 @@ namespace SimulationEngine.Tests
             RunHousejobWithResultFileCheck(hhguid, co);
         }
 
-
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestHouseJobsFlexibilityEvents()
@@ -598,7 +542,6 @@ namespace SimulationEngine.Tests
             const CalcOption co = CalcOption.FlexibilityEvents;
             RunHousejobWithResultFileCheck(hhguid, co);
         }
-
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
