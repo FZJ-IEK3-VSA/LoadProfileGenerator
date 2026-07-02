@@ -10,7 +10,7 @@ namespace SimulationEngine.Tests
     {
         private static HouseCreationAndCalculationJob MakeHouseJob(Database.Simulator sim, string hhguid)
         {
-            var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid, TestDuration.ThreeDays);
+            var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid, TestDuration.ThreeMonths);
             if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
             return hj;
