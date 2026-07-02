@@ -43,14 +43,7 @@ namespace Common.SQLResultLogging
 
         public bool DoesTableExist(HouseholdKey key, [JetBrains.Annotations.NotNull] string tableName)
         {
-            if (!File.Exists(FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename))
-            {
-                throw new LPGException(
-                    "Missing file: " + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename);
-            }
-
-            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename +
-                            ";Version=3";
+            string constr = GetConnectionString(Constants.GeneralHouseholdKey, false);
             using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
@@ -77,17 +70,11 @@ namespace Common.SQLResultLogging
 
         public SqlResultLoggingService([JetBrains.Annotations.NotNull] string basePath)
         {
-            //loggingServices.Add(this);
-
             _basePath = basePath;
-
             if (_basePath.Contains(".sqlite"))
             {
                 throw new LPGException("need to put in the path, not a filename");
             }
-
-            //initialize main file
-            GetFilenameForHouseholdKey(Constants.GeneralHouseholdKey);
         }
 
         [JetBrains.Annotations.NotNull]
@@ -100,7 +87,7 @@ namespace Common.SQLResultLogging
             List<DatabaseEntry> td = new List<DatabaseEntry>();
             const string sql = $"SELECT * FROM {Constants.DatabaseListTableName}";
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
+            string constr = GetConnectionString(Constants.GeneralHouseholdKey);
             using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
@@ -135,7 +122,7 @@ namespace Common.SQLResultLogging
             }
             const string sql = $"SELECT * FROM {Constants.TableDescriptionTableName}";
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[dbKey].Filename + ";Version=3";
+            string constr = GetConnectionString(dbKey);
             using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
@@ -173,7 +160,6 @@ namespace Common.SQLResultLogging
                 throw new LPGException("No fields defined for database");
             }
 
-            string dstFileName = GetFilenameForHouseholdKey(householdKey);
             string sql = "CREATE TABLE " + tableName + "(";
             foreach (var field in fields)
             {
@@ -181,7 +167,8 @@ namespace Common.SQLResultLogging
             }
 
             sql = sql.Substring(0, sql.Length - 1) + ");";
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=" + dstFileName + ";Version=3;")
+            string conStr = GetConnectionString(householdKey, true);
+            using (SQLiteConnection conn = new SQLiteConnection(conStr)
             )
             {
                 AttemptToOpenDBConnection(conn);
@@ -209,7 +196,7 @@ namespace Common.SQLResultLogging
                 throw new LPGException("Missing sql file for household key " + key);
             }
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
+            string constr = GetConnectionString(key);
             using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
@@ -256,12 +243,8 @@ namespace Common.SQLResultLogging
             }
 
             string sql = $"SELECT {Constants.JsonColumnName} FROM " + rtd.TableName;
-            if (!FilenameByHouseholdKey.ContainsKey(key))
-            {
-                throw new LPGException("Missing sql file for household key " + key);
-            }
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
+            string constr = GetConnectionString(key);
             using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
@@ -356,34 +339,31 @@ namespace Common.SQLResultLogging
             fields = fields.Substring(0, fields.Length - 1);
             parameters = parameters.Substring(0, parameters.Length - 1);
             sql += fields + ") VALUES (" + parameters + ")";
-            string dstFileName = GetFilenameForHouseholdKey(householdKey);
-            using (SQLiteConnection conn =
-                new SQLiteConnection("Data Source=" + dstFileName + ";Version=3;Synchronous=OFF;Journal Mode=WAL;"))
+            string conStr = GetConnectionString(householdKey, true, true);
+            using SQLiteConnection conn = new(conStr);
+            AttemptToOpenDBConnection(conn);
+            using (var transaction = conn.BeginTransaction())
             {
-                AttemptToOpenDBConnection(conn);
-                using (var transaction = conn.BeginTransaction())
+                var command = conn.CreateCommand();
+                command.CommandText = sql;
+                foreach (Dictionary<string, object> row in values)
                 {
-                    var command = conn.CreateCommand();
-                    command.CommandText = sql;
-                    foreach (Dictionary<string, object> row in values)
+                    if (row.Count != values[0].Count)
                     {
-                        if (row.Count != values[0].Count)
-                        {
-                            throw new LPGException("Incorrect number of columns");
-                        }
-
-                        command.Parameters.Clear();
-                        foreach (KeyValuePair<string, object> pair in row)
-                        {
-                            string parameter = "@" + pair.Key;
-                            command.Parameters.AddWithValue(parameter, pair.Value);
-                        }
-
-                        command.ExecuteNonQuery();
+                        throw new LPGException("Incorrect number of columns");
                     }
 
-                    transaction.Commit();
+                    command.Parameters.Clear();
+                    foreach (KeyValuePair<string, object> pair in row)
+                    {
+                        string parameter = "@" + pair.Key;
+                        command.Parameters.AddWithValue(parameter, pair.Value);
+                    }
+
+                    command.ExecuteNonQuery();
                 }
+
+                transaction.Commit();
             }
         }
 
@@ -422,18 +402,15 @@ namespace Common.SQLResultLogging
         public void SaveResultEntry([JetBrains.Annotations.NotNull] SaveableEntry entry)
         {
             entry.IntegrityCheck();
-            string dstFileName = GetFilenameForHouseholdKey(entry.HouseholdKey);
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source=" + dstFileName + ";Version=3"))
+            string conStr = GetConnectionString(entry.HouseholdKey, true);
+            using SQLiteConnection conn = new(conStr);
+            AttemptToOpenDBConnection(conn);
+            if (!CheckIfTableExists(entry.ResultTableDefinition.TableName, entry.HouseholdKey))
             {
-                //;Synchronous=OFF;Journal Mode=WAL;"
-                AttemptToOpenDBConnection(conn);
-                if (!CheckIfTableExists(entry.ResultTableDefinition.TableName, entry.HouseholdKey))
-                {
-                    CreateNewTable(entry, conn);
-                }
-
-                SaveDictionaryToDatabase(entry.RowEntries, entry.ResultTableDefinition.TableName, conn);
+                CreateNewTable(entry, conn);
             }
+
+            SaveDictionaryToDatabase(entry.RowEntries, entry.ResultTableDefinition.TableName, conn);
         }
 
         /*
@@ -471,35 +448,75 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
    }
 }*/
 
+        /// <summary>
+        /// Build an SQLite connection string for the specified database file
+        /// </summary>
+        /// <param name="filename">the file path of the database to open</param>
+        /// <param name="walMode">if true, sets journal mode to WAL</param>
+        /// <returns>the connection string that can be used to open the database</returns>
+        private static string MakeConnectionString(string filename, bool walMode=false)
+        {
+            string additionalParams = walMode ? ";Synchronous=OFF;Journal Mode=WAL;" : "";
+            return $"Data Source={filename};Version=3{additionalParams}";
+        }
+
+        /// <summary>
+        /// Gets the connection string for opening a specific database file. Makes sure the file exists.
+        /// </summary>
+        /// <param name="key">the household key of the database to open</param>
+        /// <param name="writing">whether the database should be openend for writing</param>
+        /// <param name="walMode">if true, sets journal mode to WAL in the connection string</param>
+        /// <returns>the connection string that can be used to open the database</returns>
+        private string GetConnectionString(HouseholdKey key, bool writing = false, bool walMode = false)
+        {
+            string databaseFile = InitDatabaseFile(key, writing);
+            return MakeConnectionString(databaseFile, walMode);
+        }
+
+        /// <summary>
+        /// Checks if a specific database file already exists, and if not, creates and initializes it if it is
+        /// opened for writing.
+        /// </summary>
+        /// <param name="key">the household key of the database to check</param>
+        /// <param name="writing">whether the database will be openend for writing</param>
+        /// <returns>the file path of the database</returns>
+        /// <exception cref="LPGException">if the database should be opened for reading, but does not exist</exception>
         [JetBrains.Annotations.NotNull]
-        private string GetFilenameForHouseholdKey([JetBrains.Annotations.NotNull] HouseholdKey key)
+        private string InitDatabaseFile([JetBrains.Annotations.NotNull] HouseholdKey key, bool writing = false)
         {
             if (FilenameByHouseholdKey.TryGetValue(key, out FileEntry? value))
             {
-                // database file already exists
+                // database file exists and file path is already cached
                 return value.Filename;
             }
 
-            bool isMainDatabase = key == Constants.GeneralHouseholdKey;
-
-            string newName = Path.Combine(_basePath, "Results." + key + ".sqlite");
-            FilenameByHouseholdKey.Add(key, new FileEntry(newName, true));
-            FileInfo fi = new FileInfo(newName);
+            // determine the file path of the database file based on the household key
+            string dbPath = Path.Combine(_basePath, "Results." + key + ".sqlite");
+            FileInfo fi = new(dbPath);
             if (fi.Exists && fi.Length > 1000)
             {
-                return newName;
+                // file already exists and is not empty, so assume it is a valid database file
+                return dbPath;
             }
 
+            if (!writing)
+            {
+                // the database should be opened for reading, but it does not exist
+                throw new LPGException($"Database file for household key {key} does not exist: {dbPath}");
+            }
             if (fi.FullName.Length > 260)
             {
-                throw new LPGException("Filename length > 260. This is a Windows limitation: " + fi.FullName);
+                throw new LPGException($"Filename length > 260. This is a Windows limitation: {fi.FullName}");
             }
 
             // create the result directory if it does not exist yet
             fi.Directory.Create();
 
-            // create a new database file if necessary
-            string connectionString = MakeconnectionString(fi.FullName);
+            // cache the file path of the new database file in advance
+            FilenameByHouseholdKey.Add(key, new FileEntry(dbPath, true));
+
+            // create and initialize the new database file
+            string connectionString = MakeConnectionString(fi.FullName, true);
             using (SQLiteConnection dbcon = new SQLiteConnection(connectionString))
             {
                 AttemptToOpenDBConnection(dbcon);
@@ -517,6 +534,7 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
                     MakeTableForListOfFields(fields, dbcon, Constants.TableDescriptionTableName);
                 }
 
+                bool isMainDatabase = key == Constants.GeneralHouseholdKey;
                 if (isMainDatabase)
                 {
                     //MainFilename = newName;
@@ -534,15 +552,9 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
                 }
             }
             AddResultFileEntry(this, key, fi);
-
-            /* DatabaseList dbl = new DatabaseList(key.Key, null, newName)
-             {
-                 HouseholdKey = key.Key,
-                 Filename = newName
-             };*/
-            var row = RowBuilder.Start("HouseholdKey", key.Key).Add("Filename", newName).ToDictionary();
+            var row = RowBuilder.Start("HouseholdKey", key.Key).Add("Filename", dbPath).ToDictionary();
             SaveDictionaryToDatabaseNewConnection(row, "DatabaseList", Constants.GeneralHouseholdKey);
-            return newName;
+            return dbPath;
         }
 
         /// <summary>
@@ -561,11 +573,7 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
         private void LoadFileNameDict()
         {
             const string sql = "SELECT * FROM DatabaseList";
-            if (!File.Exists(FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename))
-            {
-                throw new LPGException("Missing file: " + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename);
-            }
-            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
+            string constr = GetConnectionString(Constants.GeneralHouseholdKey, false);
             using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
@@ -606,8 +614,8 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
             }
 
             // open the SQLite database connection
-            string dstFileName = GetFilenameForHouseholdKey(householdKey);
-            using SQLiteConnection conn = new SQLiteConnection("Data Source=" + dstFileName + ";Version=3");
+            string conStr = GetConnectionString(householdKey, true);
+            using SQLiteConnection conn = new(conStr);
             AttemptToOpenDBConnection(conn);
 
             // prepare the sql command without the specific conditions
@@ -636,10 +644,6 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
                 transaction.Commit();
             }
         }
-
-        [JetBrains.Annotations.NotNull]
-        private static string MakeconnectionString([JetBrains.Annotations.NotNull] string filename) =>
-            "Data Source=" + filename + ";Version=3;Synchronous=OFF;Journal Mode=WAL;";
 
         private static void MakeTableForListOfFields([JetBrains.Annotations.NotNull] [ItemNotNull]
                                                      List<FieldDefinition> fields,
@@ -748,7 +752,7 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
         {
             string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';";
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
+            string constr = GetConnectionString(key);
             int lines = 0;
             using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
