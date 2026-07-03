@@ -2,28 +2,28 @@ REM Builds a new release version of the LoadProfileGenerator for all target plat
 
 REM get the path to the current directory
 set "srcdirectory=%~dp0"
-set "vsdirectory=D:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin"
 
 cd /D %srcdirectory%
 %srcdirectory%\VersionIncreaser\bin\Debug\versionincreaser.exe
 
 cd /D %srcdirectory%\SimulationEngine
 rmdir /S /Q %srcdirectory%\SimulationEngine\bin
-"%vsdirectory%\msbuild.exe" SimulationEngine.csproj -t:rebuild -v:m
+dotnet build --configuration Release SimulationEngine.csproj -t:rebuild -v:m
 
 cd /D %srcdirectory%\WpfApplication1
 rmdir /S/Q %srcdirectory%\WpfApplication1\bin
-"%vsdirectory%\msbuild.exe" LoadProfileGenerator.csproj -t:rebuild  -v:m
+dotnet build --configuration Release LoadProfileGenerator.csproj -t:rebuild  -v:m
 
 cd /D %srcdirectory%\SimEngine2
 rmdir /S /Q %srcdirectory%\SimEngine2\bin
-dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -f net9.0-windows
-dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -f net9.0
+dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -f net10.0
+dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -f net10.0
+pause
 
 cd /D %srcdirectory%\ReleaseMaker
-"%vsdirectory%\msbuild.exe" ReleaseMaker.csproj -t:rebuild  -v:m
+dotnet build ReleaseMaker.csproj -t:rebuild  -v:m
 
-cd /D %srcdirectory%\ReleaseMaker\bin\Debug\net9.0-windows
+cd /D %srcdirectory%\ReleaseMaker\bin\Debug\net10.0-windows
 releasemaker
 pause
 

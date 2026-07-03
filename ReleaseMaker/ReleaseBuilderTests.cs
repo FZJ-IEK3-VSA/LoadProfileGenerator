@@ -468,30 +468,23 @@ namespace ReleaseMaker
             PrepareDirectory(dstWin);
             PrepareDirectory(dstLinux);
             PrepareDirectory(dstWinCore);
-            // Currently, this source file is located in a subdirectory of the base development directory.
+            // This source file (ReleaseBuilderTests.cs) is located in a subdirectory of the base development directory.
             // Use this to get the base development path from the file path
-            string? baseDevelopPath = Directory.GetParent(sourceFilePath)?.Parent?.FullName;
-            if (baseDevelopPath == null)
+            var baseDevelopPath = Directory.GetParent(sourceFilePath)?.Parent;
+            if (baseDevelopPath is null || !baseDevelopPath.Exists)
             {
-                throw new LPGException("Could not find the base development path");
+                throw new LPGException("Could not find the base development path: " + baseDevelopPath);
             }
-            // add a trailing \ if there is none
-            char sepChar = Path.DirectorySeparatorChar;
-            char altSepChar = Path.AltDirectorySeparatorChar;
-            if (!baseDevelopPath.EndsWith(sepChar) && !baseDevelopPath.EndsWith(sepChar))
-            {
-                baseDevelopPath += sepChar;
-            }
-            Logger.Info("Using base development path '" + baseDevelopPath + "'");
-            string srclpg = baseDevelopPath + @"WpfApplication1\bin\Debug\net10.0-windows";
+            Logger.Info($"Using base development path '{baseDevelopPath}'");
+            string srclpg = baseDevelopPath.CombineName(@"WpfApplication1\bin\Release\net10.0-windows");
             Logger.Info("### Copying win lpg files");
             var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
-            string srcsim = baseDevelopPath + @"SimulationEngine\bin\Debug\net10.0-windows";
+            string srcsim = baseDevelopPath.CombineName(@"SimulationEngine\bin\Release\net10.0");
             var filesForSetup2 = SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
 
-            string srcsim2 = baseDevelopPath + @"SimEngine2\bin\Release\net10.0-windows\win-x64\publish";
+            string srcsim2 = baseDevelopPath.CombineName(@"SimEngine2\bin\Release\net10.0\win-x64\publish");
             SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
-            string srcsimLinux = baseDevelopPath + @"SimEngine2\bin\Release\net10.0\linux-x64\publish";
+            string srcsimLinux = baseDevelopPath.CombineName(@"SimEngine2\bin\Release\net10.0\linux-x64\publish");
             LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinux);
             Logger.Info("### Finished copying lpg files");
             // CopyFiles(src, dst);
@@ -687,7 +680,7 @@ namespace ReleaseMaker
         {
             using (var process = new Process()) {
                 // Configure the process using the StartInfo properties.
-                process.StartInfo.FileName = @"D:\Program Files\7-Zip\7z.exe";
+                process.StartInfo.FileName = @"C:\Program Files\7-Zip\7z.exe";
                 process.StartInfo.Arguments = "a -tzip -mx9 LPG" + releaseName + ".zip  *";
                 Logger.Info(process.StartInfo.FileName + " " + process.StartInfo.Arguments);
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
