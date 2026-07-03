@@ -74,7 +74,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.ServiceProcess.ServiceController.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Speech.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Threading.AccessControl.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Windows.Extensions.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll");
 

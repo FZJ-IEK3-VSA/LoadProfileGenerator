@@ -261,6 +261,8 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"System.Security.Cryptography.dll");
             Copy(programFiles, srcDi, src, dst, @"libclrgcexp.so");
             Copy(programFiles, srcDi, src, dst, @"System.IO.Pipelines.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.Linq.AsyncEnumerable.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.Net.ServerSentEvents.dll");
 
             CheckIfFilesAreCompletelyCopied(src, programFiles);
         }
