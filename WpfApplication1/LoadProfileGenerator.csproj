@@ -55,12 +55,12 @@
         </Resource>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
-        <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.4" />
+        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.9" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
-        <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
-        <PackageReference Include="Roslynator.Analyzers" Version="4.12.1">
+        <PackageReference Include="OxyPlot.Wpf" Version="2.2.0" />
+        <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
