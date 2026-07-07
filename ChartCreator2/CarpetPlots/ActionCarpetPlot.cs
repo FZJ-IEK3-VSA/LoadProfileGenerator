@@ -122,7 +122,7 @@ namespace ChartCreator2.CarpetPlots
 
         public override List<CalcOption> NeededOptions { get; } = new List<CalcOption> {
             CalcOption.DeviceActivations, CalcOption.HouseholdContents, CalcOption.AffordanceDefinitions,
-            CalcOption.ActionEntries
+            CalcOption.AffordanceTaggingSets, CalcOption.ActionEntries
         };
 
         /*[JetBrains.Annotations.NotNull]
