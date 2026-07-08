@@ -127,9 +127,11 @@ namespace SimulationEngine.Tests
             {
                 Households = new List<HouseholdData>()
             };
+            // get the first transportation device set that contains a car, as the default travel route sets only contain car routes
+            var transportDeviceSet = sim.TransportationDeviceSets.Items.First(set => set.TransportationDeviceSetEntries.Any(device => device.Name.ToLower().Contains("car")));
             var hhd = new HouseholdData("householdid",
                 "householdname", sim.ChargingStationSets[0].GetJsonReference(),
-                sim.TransportationDeviceSets[0].GetJsonReference(),
+                transportDeviceSet.GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds.FindByGuid(StringExtensions.ToStrGuid(guid));
