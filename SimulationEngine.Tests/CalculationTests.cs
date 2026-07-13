@@ -409,13 +409,16 @@ namespace SimulationEngine.Tests
         }
 
         /// <summary>
-        /// Generates one household from a household template and simulates them.
+        /// Generates one household from a household template and simulates it.
         /// </summary>
         /// <param name="testID">A unique name of the calling test for setting up a working directory</param>
         /// <param name="hhTemplateGuid">The Guid of the household template to use</param>
         /// <param name="duration">Duration for which the household should be simulated</param>
         public static void GenerateAndSimulateHHFromTemplate(string testID, StrGuid hhTemplateGuid, TestDuration duration)
         {
+            // use JSON result logger to avoid "SQL database is locked" error
+            Config.ResultLogger = ResultLoggerType.JSON;
+
             Logger.Get().StartCollectingAllMessages();
             // set up a working directory
             using var wd = new WorkingDir(testID);

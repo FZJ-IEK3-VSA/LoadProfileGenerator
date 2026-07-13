@@ -1,6 +1,7 @@
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.SQLResultLogging;
 using Common.Tests;
 using Xunit;
 using Xunit.Abstractions;
@@ -543,6 +544,10 @@ namespace SimulationEngine.Tests
             RunHouseJobNoChecks(hhguid);
         }
 
-        public SystematicTransportHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
+        public SystematicTransportHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+            // use JSON result logger to avoid "SQL database is locked" error
+            Config.ResultLogger = ResultLoggerType.JSON;
+        }
     }
 }
