@@ -108,23 +108,6 @@ namespace Database.Tables.Transportation
         [UsedImplicitly]
         public ObservableCollection<TravelRouteStep> Steps => _steps;
 
-        [UsedImplicitly]
-        //TODO: use and remove used implictily
-        public void AddStep([JetBrains.Annotations.NotNull] TravelRouteStep step)
-        {
-            if (step == null) {
-                throw new LPGException("Can't add a null step.");
-            }
-            if (step.ConnectionString != ConnectionString) {
-                throw new LPGException("A step from another DB was just added!");
-            }
-
-            _steps.Add(step);
-            step.SaveToDB();
-            _steps.Sort();
-            OnPropertyChanged(nameof(PrettyName));
-        }
-
         public void AddStep([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, double durationInS = -1, bool save = true)
         {
             var step = new TravelRouteStep(null, IntID, ConnectionString,
@@ -196,7 +179,7 @@ namespace Database.Tables.Transportation
         /// </summary>
         /// <param name="route">the travel route object</param>
         /// <param name="step">the travel route step object</param>
-        private static void AddRouteStep(DBBase route, DBBase step) => ((TravelRoute)route).AddStep((TravelRouteStep)step);
+        private static void AssignStep(DBBase route, DBBase step) => ((TravelRoute)route)._steps.Add((TravelRouteStep)step);
 
         protected override bool IsItemLoadedCorrectly(out string message)
         {
@@ -222,7 +205,7 @@ namespace Database.Tables.Transportation
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
             var ld = new ObservableCollection<TravelRouteStep>();
             TravelRouteStep.LoadFromDatabase(ld, connectionString, transportationDeviceCategories, ignoreMissingTables);
-            SetSubitemsByParentId([.. result], [.. ld], step => ((TravelRouteStep)step).RouteID, AddRouteStep, ignoreMissingTables);
+            SetSubitemsByParentId([.. result], [.. ld], step => ((TravelRouteStep)step).RouteID, AssignStep, ignoreMissingTables);
             foreach (TravelRoute route in result) {
                 route.Steps.Sort();
             }
