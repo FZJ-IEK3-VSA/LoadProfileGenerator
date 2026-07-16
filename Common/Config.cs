@@ -79,7 +79,7 @@ namespace Common {
         public static bool CatchErrors { get; set; }
         public static bool OutputToConsole { get; set; }
         public static string LPGVersion { get; set; }
-        public static ResultLoggerType ResultLogger { get; set; } = ResultLoggerType.SQL;
+        public static ResultLoggerType ResultLogger { get; set; } = ResultLoggerType.JSON;
 
         public static void InitConfig([JetBrains.Annotations.NotNull] string startpath) {
             if (_config != null) {
