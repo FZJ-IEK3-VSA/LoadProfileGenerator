@@ -362,7 +362,13 @@ namespace CalculationController.Tests.CalcFactories {
                     var rfes1 = rfel1.Load();
                     var rfel2 = new ResultFileEntryLogger(wd2.SqlResultLoggingService);
                     var rfes2 = rfel2.Load();
-                    rfes1.Should().BeEquivalentTo(rfes2, o => o.Excluding(
+
+                    // don't compare logfiles as their content always differs
+                    HashSet<string> files_to_ignore = ["LogMessages.json"];
+                    var rfes1_filtered = rfes1.Where(x => !files_to_ignore.Contains(x.FileName)).ToList();
+                    var rfes2_filtered = rfes2.Where(x => !files_to_ignore.Contains(x.FileName)).ToList();
+
+                    rfes1_filtered.Should().BeEquivalentTo(rfes2_filtered, o => o.Excluding(
                          x => x.Path.EndsWith("FullFileName", StringComparison.InvariantCultureIgnoreCase) ||
                               x.Path.EndsWith("PersonInformation.Guid", StringComparison.InvariantCultureIgnoreCase)
                               ));
