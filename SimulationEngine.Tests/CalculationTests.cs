@@ -246,22 +246,10 @@ namespace SimulationEngine.Tests
                 foundOptions.Add(rfe.EnablingCalcOption);
             }
 
-            // ReSharper disable once CollectionNeverQueried.Local
-            var allTables = new List<ResultTableDefinition>();
-            var hhKeyLogger = new HouseholdKeyLogger(srls);
-            var keys = hhKeyLogger.Load();
-            foreach (var key in keys) {
-                if (!srls.FilenameByHouseholdKey.ContainsKey(key.HHKey)) {
-                    continue;
-                }
-
-                var fn = srls.FilenameByHouseholdKey[key.HHKey];
-                if (!File.Exists(fn.Filename)) {
-                    continue;
-                }
-
-                var tables = srls.LoadTables(key.HHKey);
-                allTables.AddRange(tables);
+            // load all generated tables and collect the respective enabling CalcOptions
+            var databases = srls.LoadDatabases();
+            foreach (var database in databases) {
+                var tables = srls.LoadTables(database.Key);
                 foreach (var table in tables) {
                     foundOptions.Add(table.EnablingOption);
                 }

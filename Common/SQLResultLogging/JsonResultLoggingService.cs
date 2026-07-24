@@ -24,8 +24,6 @@ namespace Common.SQLResultLogging
         /// </summary>
         private readonly string basePath = basePath;
 
-        public Dictionary<HouseholdKey, FileEntry> FilenameByHouseholdKey { get; } //  TODO: unused dummy for interface; can be removed
-
         /// <summary>
         /// Returns the directory in which the data for the specified household key is stored.
         /// </summary>

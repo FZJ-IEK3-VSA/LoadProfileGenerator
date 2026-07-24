@@ -78,7 +78,6 @@ namespace Common.SQLResultLogging
         /// <param name="entry">the entry to save</param>
         void SaveResultEntry(SaveableEntry entry);
 
-        Dictionary<HouseholdKey, FileEntry> FilenameByHouseholdKey { get; } // TODO: only used for testing
         void MakeTableForListOfFields(List<FieldDefinition> fields, HouseholdKey householdKey, string tableName); // TODO: only used for testing
     }
 
