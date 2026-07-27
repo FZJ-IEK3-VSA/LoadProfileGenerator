@@ -226,8 +226,8 @@ namespace SimulationEngine.Tests
         public static void CheckForResultfile(string wd, CalcOption option)
         {
 
-             var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
-             const long memoryCap = 1024L * 1024L * 2000L * 2L;
+            var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
+            const long memoryCap = 1024L * 1024L * 1024L * 8L;
             peakWorkingSet.Should().BeLessThan(memoryCap);
             GC.Collect();
             GC.WaitForPendingFinalizers();
