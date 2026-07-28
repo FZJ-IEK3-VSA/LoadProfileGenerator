@@ -258,6 +258,11 @@ namespace Common.SQLResultLogging
 
         public List<ResultTableDefinition> LoadTables(HouseholdKey dbKey)
         {
+            if (!CheckifTableExists(Constants.TableDescriptionTableName, dbKey))
+            {
+                // there are no tables for this household key - return an empty collection
+                return [];
+            }
             return [.. LoadItemsFromFile<ResultTableDefinition>(dbKey, Constants.TableDescriptionTableName)];
         }
 
