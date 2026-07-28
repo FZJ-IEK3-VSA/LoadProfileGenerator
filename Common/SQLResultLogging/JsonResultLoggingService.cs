@@ -176,7 +176,6 @@ namespace Common.SQLResultLogging
         private IEnumerable<T> LoadItemsFromFile<T>(HouseholdKey key, string tableName)
         {
             string filepath = GetFilePath(key, tableName);
-            string jsonString = File.ReadAllText(filepath);
 
             //return AutomationUtili.ParseJsonFile<IEnumerable<T>>(filepath);
             return AutomationUtili.ParseJsonFileNewtonsoft<IEnumerable<T>>(filepath);
