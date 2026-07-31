@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace VersionIncreaser
+﻿namespace VersionIncreaser
 {
     public static class Program
     {
@@ -12,7 +9,7 @@ namespace VersionIncreaser
         /// <exception cref="Exception">if one of the files is missing or has an unexpected format</exception>
         public static void Main()
         {
-            DirectoryInfo di = new DirectoryInfo(Environment.CurrentDirectory);
+            var di = new DirectoryInfo(Environment.CurrentDirectory);
             var buildPropsFiles = di.GetFiles("Directory.Build.props");
             if (buildPropsFiles.Length != 1)
             {
@@ -20,9 +17,9 @@ namespace VersionIncreaser
             }
 
             // find and parse the current assembly version from the build props file
-            StreamReader sr = new StreamReader(buildPropsFiles[0].FullName);
-            string s = sr.ReadLine();
-            while (!s.Contains("AssemblyVersion"))
+            var sr = new StreamReader(buildPropsFiles[0].FullName);
+            string? s = sr.ReadLine();
+            while (s?.Contains("AssemblyVersion") != true)
             {
                 s = sr.ReadLine();
             }
