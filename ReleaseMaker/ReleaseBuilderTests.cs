@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Integrity;
 using Common;
 using Common.Extensions;
 using Database;
-using Database.Database;
 using Database.Helpers;
 using Database.Tables;
 using Database.Tables.BasicHouseholds;
@@ -22,9 +16,6 @@ using Database.Tables.Validation;
 using Database.Tests;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
-
-#nullable enable
-#pragma warning disable 162
 
 namespace ReleaseMaker
 {
@@ -160,12 +151,9 @@ namespace ReleaseMaker
             {
                 Logger.Error("unused desire:" + unusedDesire);
             }
-#pragma warning disable S2583 // Conditionally executed blocks should be reachable
-#pragma warning disable S2589 // Boolean expressions should not be gratuitous
+
             if (ThrowOnUnusedDesires && unusedDesires.Count > 0)
             {
-#pragma warning restore S2589 // Boolean expressions should not be gratuitous
-#pragma warning restore S2583 // Conditionally executed blocks should be reachable
                 throw new LPGException(unusedDesires.Count + " unused desires found!");
             }
             foreach (var category in sim.Categories)
@@ -444,9 +432,6 @@ namespace ReleaseMaker
         }
 
 
-//        [Test]
-        //[Fact]
-        //      [Trait(UnitTestCategories.Category,"ReleaseMaker")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         public void MakeRelease([System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
@@ -611,71 +596,6 @@ namespace ReleaseMaker
             Thread.Sleep(250);
         }
 
-//        private static FileInfo MakeSetup([JetBrains.Annotations.NotNull] string dst, [JetBrains.Annotations.NotNull] string releaseName, List<string> programFiles)
-//        {
-////make iss
-//            string dstFileName = dst + "\\lpgsetup.iss";
-//            using (var sw = new StreamWriter(dstFileName)) {
-//                const string top = @"V:\Dropbox\Development\LPGSetup\lpgsetup_start.iss";
-//                using (var sr = new StreamReader(top)) {
-//                    while (!sr.EndOfStream) {
-//                        var s = sr.ReadLine();
-//                        if (s == null) {
-//                            throw new LPGException("Readline failed");
-//                        }
-
-//                        if (s.StartsWith("AppVersion=", StringComparison.Ordinal)) {
-//                            sw.WriteLine("AppVersion=" + releaseName);
-//                        }
-//                        else {
-//                            sw.WriteLine(s);
-//                        }
-//                    }
-//                }
-
-//                //insert the files
-//                foreach (var programFile in programFiles) {
-//                    sw.WriteLine("Source: \"" + programFile + "\"; DestDir: \"{app}\"");
-//                }
-
-//                //bottom of the file
-//                const string bottom = @"V:\Dropbox\Development\LPGSetup\lpgsetup_end.iss";
-//                using (var sr = new StreamReader(bottom)) {
-//                    while (!sr.EndOfStream) {
-//                        var s = sr.ReadLine();
-//                        if (s == null) {
-//                            throw new LPGException("Readline failed");
-//                        }
-
-//                        sw.WriteLine(s);
-//                    }
-//                }
-//            }
-
-//            Logger.Info("Currently open connections:" + Connection.ConnectionCount);
-//            //Thread.Sleep(3000);
-//            GC.WaitForPendingFinalizers();
-//            GC.Collect();
-//            //Thread.Sleep(3000);
-//            using (var process2 = new Process()) {
-//                // Configure the process using the StartInfo properties.
-//                process2.StartInfo.FileName = @"C:\Program Files (x86)\Inno Setup 6\Compil32.exe";
-//                process2.StartInfo.Arguments = "/cc lpgsetup.iss";
-//                Logger.Info(process2.StartInfo.FileName + " " + process2.StartInfo.Arguments);
-//                process2.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
-//                process2.StartInfo.WorkingDirectory = dst;
-//                process2.Start();
-//                process2.WaitForExit(); // Waits here for the process to exit.
-//            }
-
-//            var fi = new FileInfo(Path.Combine(dst, "mysetup.exe"));
-//            var newsetupFileName = Path.Combine(dst, "Setup" + releaseName + ".exe");
-//            if (fi.Exists) {
-//                fi.MoveTo(newsetupFileName);
-//            }
-//            return new FileInfo(newsetupFileName);
-//        }
-
         private static FileInfo MakeZipFile([JetBrains.Annotations.NotNull] string releaseName, [JetBrains.Annotations.NotNull] string dst)
         {
             using (var process = new Process()) {
@@ -690,7 +610,5 @@ namespace ReleaseMaker
             }
             return new FileInfo( Path.Combine( dst, "LPG"+releaseName + ".zip"));
         }
-
- //       public ReleaseBuilderTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper){}
     }
 }
