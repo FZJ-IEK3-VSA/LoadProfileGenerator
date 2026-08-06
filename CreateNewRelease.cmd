@@ -3,28 +3,24 @@ REM Builds a new release version of the LoadProfileGenerator for all target plat
 REM get the path to the current directory
 set "srcdirectory=%~dp0"
 
-cd /D %srcdirectory%
-%srcdirectory%\VersionIncreaser\bin\Debug\versionincreaser.exe
+REM increment the LPG build number
+dotnet build VersionIncreaser
+VersionIncreaser\bin\Debug\net10.0\versionincreaser.exe
 
-cd /D %srcdirectory%\SimulationEngine
-rmdir /S /Q %srcdirectory%\SimulationEngine\bin
-dotnet build --configuration Release SimulationEngine.csproj -t:rebuild -v:m
+REM clear bin directories
+rmdir /S /Q SimulationEngine\bin
+rmdir /S /Q WpfApplication1\bin
+rmdir /S /Q SimEngine2\bin
 
-cd /D %srcdirectory%\WpfApplication1
-rmdir /S/Q %srcdirectory%\WpfApplication1\bin
-dotnet build --configuration Release LoadProfileGenerator.csproj -t:rebuild  -v:m
-
-cd /D %srcdirectory%\SimEngine2
-rmdir /S /Q %srcdirectory%\SimEngine2\bin
-dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -f net10.0
-dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -f net10.0
+REM build simengine2 for Linux and Windows, and LoadProfileGenerator for Windows
+dotnet publish WpfApplication1\LoadProfileGenerator.csproj --configuration Release
+dotnet publish simengine2 --configuration Release --self-contained true --runtime win-x64 --verbosity quiet
+dotnet publish simengine2 --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet
 pause
 
-cd /D %srcdirectory%\ReleaseMaker
-dotnet build ReleaseMaker.csproj -t:rebuild  -v:m
-
-cd /D %srcdirectory%\ReleaseMaker\bin\Debug\net10.0-windows
-releasemaker
+REM run release checks
+dotnet build ReleaseMaker -t:rebuild  -v:m
+ReleaseMaker\bin\Debug\net10.0-windows\releasemaker
 pause
 
 
