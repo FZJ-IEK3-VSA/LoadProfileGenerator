@@ -5,26 +5,26 @@ set "srcdirectory=%~dp0"
 set "dotnetversion=net10.0"
 
 REM increment the LPG build number
-REM dotnet build VersionIncreaser --configuration Debug
-REM VersionIncreaser\bin\Debug\%dotnetversion%\versionincreaser.exe
+dotnet build VersionIncreaser --configuration Debug
+VersionIncreaser\bin\Debug\%dotnetversion%\versionincreaser.exe
 
 REM clear bin directories
-REM rmdir /S /Q SimulationEngine\bin
-REM rmdir /S /Q WpfApplication1\bin
-REM rmdir /S /Q SimEngine2\bin
+rmdir /S /Q SimulationEngine\bin
+rmdir /S /Q WpfApplication1\bin
+rmdir /S /Q SimEngine2\bin
 
 REM build simengine2 for Linux and Windows, and LoadProfileGenerator for Windows
-REM dotnet publish WpfApplication1\LoadProfileGenerator.csproj --configuration Release --verbosity quiet -p:DebugType=none
-REM dotnet publish SimulationEngine --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -p:DebugType=none
-REM dotnet publish simengine2 --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -p:DebugType=none
-REM dotnet publish simengine2 --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -p:DebugType=none
-REM pause
+dotnet publish WpfApplication1\LoadProfileGenerator.csproj --configuration Release --verbosity quiet -p:DebugType=none
+dotnet publish SimulationEngine --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -p:DebugType=none
+dotnet publish simengine2 --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -p:DebugType=none
+dotnet publish simengine2 --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -p:DebugType=none
+pause
 
 REM run release checks and collect release files
-REM dotnet build ReleaseMaker --configuration Debug -t:rebuild  -v:m
-REM cd /D %srcdirectory%\ReleaseMaker\bin\Debug\%dotnetversion%-windows
-REM releasemaker
-REM pause
+dotnet build ReleaseMaker --configuration Debug -t:rebuild  -v:m
+cd /D %srcdirectory%\ReleaseMaker\bin\Debug\%dotnetversion%-windows
+releasemaker
+pause
 
 
 REM create new python bindings for the pylpg
