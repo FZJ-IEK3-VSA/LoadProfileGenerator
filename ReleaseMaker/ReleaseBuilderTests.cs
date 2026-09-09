@@ -420,12 +420,10 @@ namespace ReleaseMaker
             Logger.Info("Using file " + db.FileName);
             var sim = new Simulator(db.ConnectionString);
             var count = CalculationOutcomesPresenter.CountMissingEntries(sim);
-#pragma warning disable S2583 // Conditionally executed blocks should be reachable
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (count != 0 && ThrowOnMissingOutcomes)
                 // ReSharper disable once HeuristicUnreachableCode
             {
-#pragma warning restore S2583 // Conditionally executed blocks should be reachable
                 throw new LPGException("Missing " + count + " calculation outcomes!");
             }
             db.Cleanup();
@@ -435,24 +433,30 @@ namespace ReleaseMaker
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         public void MakeRelease([System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
-            const string filename = "profilegenerator-latest.db3";
+            const string dotnetVersion = "net10.0";
+            const string dbFilename = "profilegenerator-latest.db3";
             const bool cleanDatabase = true;
-            const bool makeZipAndSetup = true;
+            const bool makeZip = true;
             const bool cleanCalcOutcomes = true;
             Logger.Info("### Starting Release");
-            var releasename = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            releasename = releasename.Substring(0, 6);
+            // get version number and remove the build number from that
+            var fullVersion = Assembly.GetExecutingAssembly().GetName().Version!.ToString();
+            int lastDot = fullVersion.LastIndexOf('.');
+            var releasename = fullVersion[..lastDot];
+            if (string.IsNullOrEmpty(releasename))
+                throw new LPGException("Could not determine proper release version number.");
+            // TODO: use reduced name? or don't include in directory name? Else, the name cannot be known in CreateNewRelease.cmd
             Logger.Info("Release name: " + releasename);
-            //return;
-            var baseReleasePath = @"C:\LPGReleaseMakerResults\";
-            var dstWin = baseReleasePath + @"LPGReleases\releases" + releasename + "\\windows";
-            var dstLinux = baseReleasePath + @"LPGReleases\releases" + releasename + "\\linux";
-            var dstWinCore = baseReleasePath + @"LPGReleases\releases" + releasename + "\\netCore";
-            //const string srcsim = @"v:\Dropbox\LPG\SimulationEngine\bin\x64\Debug";
+            
+            var baseReleasePath = $"LPGReleases\\releases{releasename}\\";
+            var dstWinFull = baseReleasePath + "windows";
+            var dstLinuxSimEngine = baseReleasePath + "linux_simengine";
+            var dstWinSimEngine = baseReleasePath + "windows_simengine";
 
-            PrepareDirectory(dstWin);
-            PrepareDirectory(dstLinux);
-            PrepareDirectory(dstWinCore);
+            ClearDirectory(dstWinFull);
+            ClearDirectory(dstLinuxSimEngine);
+            ClearDirectory(dstWinSimEngine);
+
             // This source file (ReleaseBuilderTests.cs) is located in a subdirectory of the base development directory.
             // Use this to get the base development path from the file path
             var baseDevelopPath = Directory.GetParent(sourceFilePath)?.Parent;
@@ -461,28 +465,32 @@ namespace ReleaseMaker
                 throw new LPGException("Could not find the base development path: " + baseDevelopPath);
             }
             Logger.Info($"Using base development path '{baseDevelopPath}'");
-            string srclpg = baseDevelopPath.CombineName(@"WpfApplication1\bin\Release\net10.0-windows");
-            Logger.Info("### Copying win lpg files");
-            var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
-            string srcsim = baseDevelopPath.CombineName(@"SimulationEngine\bin\Release\net10.0");
-            var filesForSetup2 = SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
 
-            string srcsim2 = baseDevelopPath.CombineName(@"SimEngine2\bin\Release\net10.0\win-x64\publish");
-            SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
-            string srcsimLinux = baseDevelopPath.CombineName(@"SimEngine2\bin\Release\net10.0\linux-x64\publish");
-            LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinux);
+            // copy both the main LPG GUI program and the simulation engine
+            Logger.Info("### Copying lpg files");
+            string srcWinFull = baseDevelopPath.CombineName($"WpfApplication1\\bin\\Release\\{dotnetVersion}-windows\\publish");
+            WinLpgCopier.CopyLpgFiles(srcWinFull, dstWinFull);
+            string srcWinSimengine = baseDevelopPath.CombineName($"SimulationEngine\\bin\\Release\\{dotnetVersion}\\win-x64\\publish");
+            SimEngineCopier.CopySimEngineFiles(srcWinSimengine, dstWinFull);
+            // TODO: what is the difference between SimEngine2 and SimulationEngine?
+            // --> SimulationEngine is with GUI and includes a FlameChart function, it is included with the LoadProfileGenerator GUI for Windows only. SimEngine2 is the simple simengine for Windows and Linux without GUI.
+
+            const string simengine2Path = $"SimEngine2\\bin\\Release\\{dotnetVersion}\\";
+            string srcWinSimEngine = baseDevelopPath.CombineName($"{simengine2Path}win-x64\\publish");
+            SimEngine2Copier.CopySimEngine2Files(srcWinSimEngine, dstWinSimEngine);
+            string srcsimLinux = baseDevelopPath.CombineName($"{simengine2Path}linux-x64\\publish");
+            LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinuxSimEngine);
             Logger.Info("### Finished copying lpg files");
-            // CopyFiles(src, dst);
+
             Logger.Info("### Performing release checks");
-            ReleaseCheck(filename);
-            //CopyFilesSimulationEngine(srcsim, dst);
-            using (var db = new DatabaseSetup("Release", filename))
+            ReleaseCheck(dbFilename);
+
+            // clean database
+            using (var db = new DatabaseSetup("Release", dbFilename))
             {
-                Logger.Info("Using database " + filename);
-#pragma warning disable S2583 // Conditionally executed blocks should be reachable
+                Logger.Info("Using database " + dbFilename);
                 if (cleanDatabase)
                 {
-#pragma warning restore S2583 // Conditionally executed blocks should be reachable
                     //DeleteOldCalcOutcomes(db);
                     Logger.Info("### cleaning database");
                     DissStuffDatabaseCleaner.Run(db.FileName);
@@ -500,8 +508,8 @@ namespace ReleaseMaker
                 sim.MyGeneralConfig.DestinationPath = "C:\\Work\\";
                 sim.MyGeneralConfig.ImagePath = "C:\\Work\\";
                 sim.MyGeneralConfig.RandomSeed = -1;
-                sim.MyGeneralConfig.StartDateString = "01.01.2021";
-                sim.MyGeneralConfig.EndDateString = "31.12.2021";
+                sim.MyGeneralConfig.StartDateString = "01.01.2026";
+                sim.MyGeneralConfig.EndDateString = "31.12.2026";
                 SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 sim.MyGeneralConfig.PerformCleanUpChecks = "False";
                 sim.MyGeneralConfig.CSVCharacter = ";";
@@ -536,11 +544,9 @@ namespace ReleaseMaker
                 }
 
                 // get rid of all templated items
-#pragma warning disable S2583 // Conditions should not unconditionally evaluate to "true" or to "false"
                 if (cleanDatabase)
                 {
                     Logger.Info("### deleting all templated items");
-#pragma warning restore S2583 // Conditions should not unconditionally evaluate to "true" or to "false" {
                     sim.FindAndDeleteAllTemplated();
                     var templatedItems = sim.FindAndDeleteAllTemplated();
                     if (templatedItems > 0)
@@ -549,29 +555,25 @@ namespace ReleaseMaker
                     }
                 }
 
-                File.Copy(db.FileName, Path.Combine(dstWin, "profilegenerator.db3"));
-                File.Copy(db.FileName, Path.Combine(dstWinCore, "profilegenerator.db3"));
-                File.Copy(db.FileName, Path.Combine(dstLinux, "profilegenerator.db3"));
+                // copy cleaned database to release folders
+                const string targetName = "profilegenerator.db3";
+                File.Copy(db.FileName, Path.Combine(dstWinFull, targetName));
+                File.Copy(db.FileName, Path.Combine(dstWinSimEngine, targetName));
+                File.Copy(db.FileName, Path.Combine(dstLinuxSimEngine, targetName));
             }
             Thread.Sleep(1000);
             Logger.Info("### Finished copying all files");
-            //CopyFilesSimulationEngine(srcsim, dst);
-            if (makeZipAndSetup)
+            
+            if (makeZip)
             {
-                List<FileInfo> fileForUpload = new List<FileInfo>
-                {
-                    MakeZipFile(releasename, dstWin),
-                    MakeZipFile(releasename + "_core", dstWinCore),
-                    MakeZipFile(releasename + "_linux", dstLinux)
-                };
+                List<FileInfo> fileForUpload = [
+                    MakeZipFile(releasename, dstWinFull),
+                    MakeZipFile(releasename + "_core", dstWinSimEngine),
+                    MakeZipFile(releasename + "_linux", dstLinuxSimEngine)
+                ];
 
-                var allSetupFiles = filesForSetup.ToList();
-                allSetupFiles.AddRange(filesForSetup2);
-                allSetupFiles = allSetupFiles.Distinct().ToList();
-
-                //fileForUpload.Add(MakeSetup(dstWin, releasename, allSetupFiles));
-                var dstUpload = baseReleasePath + @"releases" + releasename + "\\upload";
-                PrepareDirectory(dstUpload);
+                var dstUpload = $"{baseReleasePath}releases{releasename}/upload";
+                ClearDirectory(dstUpload);
                 foreach (FileInfo fi in fileForUpload) {
                     string dstName = Path.Combine(dstUpload, fi.Name);
                     fi.CopyTo(dstName,true);
@@ -579,11 +581,15 @@ namespace ReleaseMaker
             }
         }
 
-        private static void PrepareDirectory(string dstWin)
+        /// <summary>
+        /// Deletes the directory and creates it again, to ensure it is empty
+        /// </summary>
+        /// <param name="directory"></param>
+        private static void ClearDirectory(string directory)
         {
-            if (Directory.Exists(dstWin)) {
+            if (Directory.Exists(directory)) {
                 try {
-                    Directory.Delete(dstWin, true);
+                    Directory.Delete(directory, true);
                 }
                 catch (Exception ex) {
                     Logger.Info(ex.Message);
@@ -592,7 +598,7 @@ namespace ReleaseMaker
                 Thread.Sleep(250);
             }
 
-            Directory.CreateDirectory(dstWin);
+            Directory.CreateDirectory(directory);
             Thread.Sleep(250);
         }
 

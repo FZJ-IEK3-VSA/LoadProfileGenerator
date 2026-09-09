@@ -14,9 +14,10 @@ namespace ReleaseMaker {
             }
 
             Copy(programFiles, srcDi, src, dst, @"createdump.exe");
-            Copy(programFiles, srcDi, src, dst, @"simengine2.deps.json");
-            Copy(programFiles, srcDi, src, dst, @"simengine2.exe");
-            Copy(programFiles, srcDi, src, dst, @"simengine2.runtimeconfig.json");
+
+            Copy(programFiles, srcDi, src, dst, @"SimEngine2.deps.json");
+            Copy(programFiles, srcDi, src, dst, @"SimEngine2.exe");
+            Copy(programFiles, srcDi, src, dst, @"SimEngine2.runtimeconfig.json");
 
             CheckIfFilesAreCompletelyCopied(src, programFiles);
         }

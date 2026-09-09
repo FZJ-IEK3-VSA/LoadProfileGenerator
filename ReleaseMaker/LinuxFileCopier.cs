@@ -16,8 +16,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"Common.dll");
             Copy(programFiles, srcDi, src, dst, @"createdump");
             Copy(programFiles, srcDi, src, dst, @"Database.dll");
-            Copy(programFiles, srcDi, src, dst, @"EntityFramework.dll");
-            Copy(programFiles, srcDi, src, dst, @"EntityFramework.SqlServer.dll");
             Copy(programFiles, srcDi, src, dst, @"HarfBuzzSharp.dll");
             Copy(programFiles, srcDi, src, dst, @"JetBrains.Annotations.dll");
             Copy(programFiles, srcDi, src, dst, @"libclrjit.so");
@@ -47,10 +45,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"OxyPlot.dll");
             Copy(programFiles, srcDi, src, dst, @"OxyPlot.SkiaSharp.dll");
             Copy(programFiles, srcDi, src, dst, @"PowerArgs.dll");
-            Copy(programFiles, srcDi, src, dst, @"simengine2");
-            Copy(programFiles, srcDi, src, dst, @"simengine2.deps.json");
-            Copy(programFiles, srcDi, src, dst, @"simengine2.dll");
-            Copy(programFiles, srcDi, src, dst, @"simengine2.runtimeconfig.json");
             Copy(programFiles, srcDi, src, dst, @"SimulationEngineLib.dll");
             Copy(programFiles, srcDi, src, dst, @"SkiaSharp.dll");
             Copy(programFiles, srcDi, src, dst, @"SkiaSharp.HarfBuzz.dll");
@@ -82,7 +76,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"System.Data.OleDb.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Data.SqlClient.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Data.SQLite.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Data.SQLite.EF6.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Diagnostics.Contracts.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Diagnostics.Debug.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Diagnostics.DiagnosticSource.dll");
@@ -154,7 +147,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"System.ObjectModel.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Private.CoreLib.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Private.DataContractSerialization.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Private.ServiceModel.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Private.Uri.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Private.Xml.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Private.Xml.Linq.dll");
@@ -252,7 +244,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"WindowsBase.dll");
             Copy(programFiles, srcDi, src, dst, @"xunit.abstractions.dll");
             Copy(programFiles, srcDi, src, dst, @"xunit.runner.json");
-            Copy(programFiles, srcDi, src, dst, @"Microsoft.Bcl.AsyncInterfaces.dll");
             Copy(programFiles, srcDi, src, dst, @"Microsoft.Extensions.ObjectPool.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Web.Services.Description.dll");
             Copy(programFiles, srcDi, src, dst, @"libclrgc.so");
@@ -263,6 +254,19 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"System.IO.Pipelines.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Linq.AsyncEnumerable.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Net.ServerSentEvents.dll");
+
+            Copy(programFiles, srcDi, src, dst, @"libe_sqlite3.so");
+            Copy(programFiles, srcDi, src, dst, @"SQLitePCLRaw.batteries_v2.dll");
+            Copy(programFiles, srcDi, src, dst, @"SQLitePCLRaw.core.dll");
+            Copy(programFiles, srcDi, src, dst, @"SQLitePCLRaw.provider.e_sqlite3.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.Private.Windows.Core.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.Private.Windows.GdiPlus.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.ServiceModel.NetFramingBase.dll");
+
+            Copy(programFiles, srcDi, src, dst, @"SimEngine2");
+            Copy(programFiles, srcDi, src, dst, @"SimEngine2.deps.json");
+            Copy(programFiles, srcDi, src, dst, @"SimEngine2.dll");
+            Copy(programFiles, srcDi, src, dst, @"SimEngine2.runtimeconfig.json");
 
             CheckIfFilesAreCompletelyCopied(src, programFiles);
         }

@@ -14,10 +14,10 @@ rmdir /S /Q WpfApplication1\bin
 rmdir /S /Q SimEngine2\bin
 
 REM build simengine2 for Linux and Windows, and LoadProfileGenerator for Windows
-dotnet publish WpfApplication1\LoadProfileGenerator.csproj --configuration Release --verbosity quiet -p:DebugType=none
-dotnet publish SimulationEngine --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -p:DebugType=none
-dotnet publish simengine2 --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -p:DebugType=none
-dotnet publish simengine2 --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -p:DebugType=none
+dotnet publish WpfApplication1\LoadProfileGenerator.csproj --configuration Release --no-self-contained --verbosity quiet -p:DebugType=none
+dotnet publish SimulationEngine                            --configuration Release --no-self-contained --verbosity quiet -p:DebugType=none --runtime win-x64
+dotnet publish simengine2                                  --configuration Release --self-contained    --verbosity quiet -p:DebugType=none --runtime win-x64
+dotnet publish simengine2                                  --configuration Release --self-contained    --verbosity quiet -p:DebugType=none --runtime linux-x64
 pause
 
 REM run release checks and collect release files
