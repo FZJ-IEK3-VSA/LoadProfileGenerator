@@ -466,20 +466,19 @@ namespace ReleaseMaker
             }
             Logger.Info($"Using base development path '{baseDevelopPath}'");
 
-            // copy both the main LPG GUI program and the simulation engine
+            // combine the main LPG GUI program and the SimulationEngine (with FlameChart function) in the same release folder
             Logger.Info("### Copying lpg files");
-            string srcWinFull = baseDevelopPath.CombineName($"WpfApplication1\\bin\\Release\\{dotnetVersion}-windows\\publish");
-            WinLpgCopier.CopyLpgFiles(srcWinFull, dstWinFull);
+            string srcWinGUI = baseDevelopPath.CombineName($"WpfApplication1\\bin\\Release\\{dotnetVersion}-windows\\publish");
+            CopyDirectoryContents(srcWinGUI, dstWinFull);
             string srcWinSimengine = baseDevelopPath.CombineName($"SimulationEngine\\bin\\Release\\{dotnetVersion}\\win-x64\\publish");
-            SimEngineCopier.CopySimEngineFiles(srcWinSimengine, dstWinFull);
-            // TODO: what is the difference between SimEngine2 and SimulationEngine?
-            // --> SimulationEngine is with GUI and includes a FlameChart function, it is included with the LoadProfileGenerator GUI for Windows only. SimEngine2 is the simple simengine for Windows and Linux without GUI.
+            CopyDirectoryContents(srcWinSimengine, dstWinFull);
 
+            // copy the SimEngine2 binaries (no GUI) for Windows and Linux to the respective release folders
             const string simengine2Path = $"SimEngine2\\bin\\Release\\{dotnetVersion}\\";
             string srcWinSimEngine = baseDevelopPath.CombineName($"{simengine2Path}win-x64\\publish");
-            SimEngine2Copier.CopySimEngine2Files(srcWinSimEngine, dstWinSimEngine);
+            CopyDirectoryContents(srcWinSimEngine, dstWinSimEngine);
             string srcsimLinux = baseDevelopPath.CombineName($"{simengine2Path}linux-x64\\publish");
-            LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinuxSimEngine);
+            CopyDirectoryContents(srcsimLinux, dstLinuxSimEngine);
             Logger.Info("### Finished copying lpg files");
 
             Logger.Info("### Performing release checks");
@@ -557,9 +556,9 @@ namespace ReleaseMaker
 
                 // copy cleaned database to release folders
                 const string targetName = "profilegenerator.db3";
-                File.Copy(db.FileName, Path.Combine(dstWinFull, targetName));
-                File.Copy(db.FileName, Path.Combine(dstWinSimEngine, targetName));
-                File.Copy(db.FileName, Path.Combine(dstLinuxSimEngine, targetName));
+                File.Copy(db.FileName, Path.Combine(dstWinFull, targetName), true);
+                File.Copy(db.FileName, Path.Combine(dstWinSimEngine, targetName), true);
+                File.Copy(db.FileName, Path.Combine(dstLinuxSimEngine, targetName), true);
             }
             Thread.Sleep(1000);
             Logger.Info("### Finished copying all files");
@@ -600,6 +599,38 @@ namespace ReleaseMaker
 
             Directory.CreateDirectory(directory);
             Thread.Sleep(250);
+        }
+
+        /// <summary>
+        /// Copies all contents of one directory to another directory, including subdirectories and files.
+        /// Keeps any existing contents in the destination directory, but overwrites files with the same name.
+        /// </summary>
+        /// <param name="sourcePath">the source directory</param>
+        /// <param name="destinationPath">the destination directory</param>
+        /// <exception cref="DirectoryNotFoundException">if the source directory does not exist</exception>
+        private static void CopyDirectoryContents(string sourcePath, string destinationPath)
+        {
+            var sourceDir = new DirectoryInfo(sourcePath);
+
+            if (!sourceDir.Exists)
+                throw new DirectoryNotFoundException($"Source directory not found: {sourceDir.FullName}");
+
+            // create directory if it doesn't exist
+            Directory.CreateDirectory(destinationPath);
+
+            // Copy files
+            foreach (FileInfo file in sourceDir.GetFiles())
+            {
+                string targetFilePath = Path.Combine(destinationPath, file.Name);
+                file.CopyTo(targetFilePath, overwrite: true);
+            }
+
+            // Recurse into subdirectories
+            foreach (DirectoryInfo subDir in sourceDir.GetDirectories())
+            {
+                string newDestinationDir = Path.Combine(destinationPath, subDir.Name);
+                CopyDirectoryContents(subDir.FullName, newDestinationDir);
+            }
         }
 
         private static FileInfo MakeZipFile([JetBrains.Annotations.NotNull] string releaseName, [JetBrains.Annotations.NotNull] string dst)
