@@ -341,13 +341,15 @@ namespace ReleaseMaker
             var releasename = fullVersion[..lastDot];
             if (string.IsNullOrEmpty(releasename))
                 throw new LPGException("Could not determine proper release version number.");
-            // TODO: use reduced name? or don't include in directory name? Else, the name cannot be known in CreateNewRelease.cmd
             Logger.Info("Release name: " + releasename);
-            
-            var baseReleasePath = $"LPGReleases\\releases{releasename}\\";
-            var dstWinFull = baseReleasePath + "windows";
-            var dstLinuxSimEngine = baseReleasePath + "linux_simengine";
-            var dstWinSimEngine = baseReleasePath + "windows_simengine";
+
+            // get the path to the root of the LPG repository, based on the location of this source file
+            var lpgRepoPath = new FileInfo(sourceFilePath).Directory!.Parent;
+            var baseReleasePath = lpgRepoPath!.CombineName("LPGRelease\\");
+            var releaseDirectoriesPath = baseReleasePath + "release_directories\\";
+            var dstWinFull = releaseDirectoriesPath + "windows";
+            var dstLinuxSimEngine = releaseDirectoriesPath + "linux_simengine";
+            var dstWinSimEngine = releaseDirectoriesPath + "windows_simengine";
 
             ClearDirectory(dstWinFull);
             ClearDirectory(dstLinuxSimEngine);
@@ -467,10 +469,10 @@ namespace ReleaseMaker
                     MakeZipFile(releasename + "_linux", dstLinuxSimEngine)
                 ];
 
-                var dstUpload = $"{baseReleasePath}releases{releasename}/upload";
-                ClearDirectory(dstUpload);
+                var zipFilesPath = $"{baseReleasePath}zip_files";
+                ClearDirectory(zipFilesPath);
                 foreach (FileInfo fi in fileForUpload) {
-                    string dstName = Path.Combine(dstUpload, fi.Name);
+                    string dstName = Path.Combine(zipFilesPath, fi.Name);
                     fi.CopyTo(dstName,true);
                 }
             }

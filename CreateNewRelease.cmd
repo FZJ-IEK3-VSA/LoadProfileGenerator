@@ -5,8 +5,9 @@ set "srcdirectory=%~dp0"
 set "dotnetversion=net10.0"
 
 REM increment the LPG build number
-dotnet build VersionIncreaser --configuration Debug
-VersionIncreaser\bin\Debug\%dotnetversion%\versionincreaser.exe
+REM dotnet build VersionIncreaser --configuration Debug
+REM VersionIncreaser\bin\Debug\%dotnetversion%\versionincreaser.exe
+
 
 REM clear bin directories
 rmdir /S /Q SimulationEngine\bin
@@ -28,8 +29,8 @@ pause
 
 
 REM create new python bindings for the pylpg
-set "releasedirectory=%srcdirectory%\LPGReleases\releases10.10"
-set "pylpgdirectory=%srcdirectory%\LPGReleases\pylpg\"
+set "releasedirectory=%srcdirectory%\LPGRelease\release_directories"
+set "pylpgdirectory=%srcdirectory%\LPGRelease\pylpg\"
 
 cd /D %releasedirectory%\windows
 simulationengine CreatePythonBindings
