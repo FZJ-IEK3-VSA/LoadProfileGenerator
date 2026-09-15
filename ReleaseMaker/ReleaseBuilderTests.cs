@@ -465,8 +465,8 @@ namespace ReleaseMaker
             {
                 List<FileInfo> fileForUpload = [
                     MakeZipFile(releasename, dstWinFull),
-                    MakeZipFile(releasename + "_core", dstWinSimEngine),
-                    MakeZipFile(releasename + "_linux", dstLinuxSimEngine)
+                    MakeZipFile(releasename + "_windows_simengine", dstWinSimEngine),
+                    MakeZipFile(releasename + "_linux_simengine", dstLinuxSimEngine)
                 ];
 
                 var zipFilesPath = $"{baseReleasePath}zip_files";
