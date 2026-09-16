@@ -10,7 +10,7 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Database.Tests\Database.Tests.csproj" />
     <ProjectReference Include="..\Database\Database.csproj" />
-    <ProjectReference Include="..\WpfApplication1\LoadProfileGenerator.csproj" />
+    <ProjectReference Include="..\LoadProfileGenerator\LoadProfileGenerator.csproj" />
   </ItemGroup>
   
 </Project>

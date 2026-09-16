@@ -366,7 +366,7 @@ namespace ReleaseMaker
 
             // combine the main LPG GUI program and the SimulationEngine (with FlameChart function) in the same release folder
             Logger.Info("### Copying lpg files");
-            string srcWinGUI = baseDevelopPath.CombineName($"WpfApplication1\\bin\\Release\\{dotnetVersion}-windows\\publish");
+            string srcWinGUI = baseDevelopPath.CombineName($"LoadProfileGenerator\\bin\\Release\\{dotnetVersion}-windows\\publish");
             CopyDirectoryContents(srcWinGUI, dstWinFull);
             string srcWinSimengine = baseDevelopPath.CombineName($"SimulationEngine\\bin\\Release\\{dotnetVersion}\\win-x64\\publish");
             CopyDirectoryContents(srcWinSimengine, dstWinFull);

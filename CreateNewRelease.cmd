@@ -11,11 +11,11 @@ REM VersionIncreaser\bin\Debug\%dotnetversion%\versionincreaser.exe
 
 REM clear bin directories
 rmdir /S /Q SimulationEngine\bin
-rmdir /S /Q WpfApplication1\bin
+rmdir /S /Q LoadProfileGenerator\bin
 rmdir /S /Q SimEngine2\bin
 
 REM build simengine2 for Linux and Windows, and LoadProfileGenerator for Windows
-dotnet publish WpfApplication1  --configuration Release --no-self-contained --verbosity quiet -p:DebugType=none
+dotnet publish LoadProfileGenerator  --configuration Release --no-self-contained --verbosity quiet -p:DebugType=none
 dotnet publish SimulationEngine --configuration Release --no-self-contained --verbosity quiet -p:DebugType=none --runtime win-x64
 dotnet publish simengine2       --configuration Release --self-contained    --verbosity quiet -p:DebugType=none --runtime win-x64
 dotnet publish simengine2       --configuration Release --self-contained    --verbosity quiet -p:DebugType=none --runtime linux-x64

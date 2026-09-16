@@ -968,18 +968,23 @@ namespace Database.Tests
             return null;
         }
 
+        /// <summary>
+        /// Looks for a file with the given name in the directory of the LoadProfileGenerator GUI project (formerly WpfApplication1).
+        /// </summary>
+        /// <param name="filename">the name of the file to look for</param>
+        /// <returns>a FileInfo object for that file; otherwise, returns null</returns>
         [CanBeNull]
-        private static FileInfo CheckWpfApplicationPath([JetBrains.Annotations.NotNull] string filename)
+        private static FileInfo CheckLoadProfileGeneratorProjectPath([JetBrains.Annotations.NotNull] string filename)
         {
             // if started from the target directory
             DirectoryInfo di =
-                new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\wpfapplication1"));
+                new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\LoadProfileGenerator"));
             Logger.Info("Trying " + di.FullName);
             if (!di.Exists)
             {
                 // depending on the current directory we need to get one level higher
                 di =
-                   new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\wpfapplication1"));
+                   new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\LoadProfileGenerator"));
                 Logger.Info("Trying " + di.FullName);
             }
             if (di.Exists)
@@ -1033,7 +1038,7 @@ namespace Database.Tests
                 return di;
             }
 
-            di = CheckWpfApplicationPath(filename);
+            di = CheckLoadProfileGeneratorProjectPath(filename);
             if (di != null)
             {
                 return di;

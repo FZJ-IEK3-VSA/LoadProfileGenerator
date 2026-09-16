@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		lpg.FxCop = lpg.FxCop
 		MyRules.ruleset = MyRules.ruleset
 		MyRules_UnitTests.ruleset = MyRules_UnitTests.ruleset
-		WpfApplication1\profilegenerator-latest.db3 = WpfApplication1\profilegenerator-latest.db3
+		LoadProfileGenerator\profilegenerator-latest.db3 = LoadProfileGenerator\profilegenerator-latest.db3
 		readme.md = readme.md
 		VersionInfo.cs = VersionInfo.cs
 	EndProjectSection
@@ -83,7 +83,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationEngine", "Simulat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationEngine.Tests", "SimulationEngine.Tests\SimulationEngine.Tests.csproj", "{152142AC-7EB1-484E-A6F2-2D5EBF779B21}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadProfileGenerator", "WpfApplication1\LoadProfileGenerator.csproj", "{7091E0BD-EAB7-4BE7-BD74-F359A583E936}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadProfileGenerator", "LoadProfileGenerator\LoadProfileGenerator.csproj", "{7091E0BD-EAB7-4BE7-BD74-F359A583E936}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadProfileGenerator.Tests", "LoadProfileGenerator.Tests\LoadProfileGenerator.Tests.csproj", "{ADB80A35-CF4B-46C3-A39A-81503D1E5422}"
 EndProject

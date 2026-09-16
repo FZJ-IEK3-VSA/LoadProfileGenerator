@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\WpfApplication1\profilegenerator-latest.db3" Link="profilegenerator.db3">
+    <None Include="..\LoadProfileGenerator\profilegenerator-latest.db3" Link="profilegenerator.db3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
