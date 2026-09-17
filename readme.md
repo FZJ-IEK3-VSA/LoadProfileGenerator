@@ -12,6 +12,38 @@ The manual is available [here](https://nbn-resolving.org/urn:nbn:de:bsz:ch1-quco
 
 Contributions are highly welcome. Feel free to send me pull requests.
 
+## City Simulation
+
+The CitySimulation project allows simulating a whole city at once. Input scenario configurations can be generated using the [CityScenarioGenerator](https://github.com/FZJ-IEK3-VSA/CityScenarioGenerator).
+
+CitySimulation is parallelized with MPI, so it needs both an MPI implementation and the .NET bindings [MPI.NET](https://github.com/microsoft/MPI.NET). Depending on the system, both have to be installed separately.
+
+### Windows
+
+Install Microsoft MPI, as it is the only implementation supported on Windows.
+
+### Linux
+
+Any MPI implementation can be used, but MPI.NET has to be built by yourself:
+
+- Build MPI.NET following the [installation instructions for Unix](https://github.com/microsoft/MPI.NET#installation-on-unix).
+- Copy the resulting `libmpinet.so` and `MPI.dll` into `CitySimulation/lib/` inside the LoadProfileGenerator repository (create the directory if it does not exist).
+- Build the project with ```dotnet build CitySimulation -r linux-x64```
+
+### Running a simulation
+
+CitySimulation expects a single argument, the directory containing the scenario to simulate. It can be started on its own:
+
+```
+CitySimulation <scenario directory>
+```
+
+or as an MPI program, to distribute the simulation over several processes:
+
+```
+mpiexec -n 4 CitySimulation <scenario directory>
+```
+
 ## Plans
 
 - Improve electromobility
@@ -30,6 +62,7 @@ If not, see <https://opensource.org/licenses/MIT>
 ## Citation
 
 If you want to use the LoadProfileGenerator for a publication, please cite the following paper:
+
 ```
 Pflugradt et al., (2022). LoadProfileGenerator: An Agent-Based Behavior Simulation for Generating Residential Load Profiles. Journal of Open Source Software, 7(71), 3574, https://doi.org/10.21105/joss.03574
 ```
@@ -43,7 +76,6 @@ The LoadProfileGenerator uses solar radiation profiles from Deutscher Wetterdien
 <p align="center"><a href="https://www.fz-juelich.de/en/iek/iek-3"><img src="https://github.com/OfficialCodexplosive/README_Assets/blob/master/iek3-wide.png?raw=true" alt="Institut TSA"></a></p>
 We are the <a href="https://www.fz-juelich.de/en/iek/iek-3">Institute of Energy and Climate Research - Techno-economic Systems Analysis (IEK-3)</a> belonging to the <a href="https://www.fz-juelich.de/en">Forschungszentrum Jülich</a>. Our interdisciplinary department's research is focusing on energy-related process and systems analyses. Data searches and system simulations are used to determine energy and mass balances, as well as to evaluate performance, emissions and costs of energy systems. The results are used for performing comparative assessment studies between the various systems. Our current priorities include the development of energy strategies, in accordance with the German Federal Government’s greenhouse gas reduction targets, by designing new infrastructures for sustainable and secure energy supply chains and by conducting cost analysis studies for integrating new technologies into future energy market frameworks.
 
-
 # Acknowledgements
 
 ### 2010-2016
@@ -56,7 +88,7 @@ __Technische Universität Chemnitz - Professur Technische Thermodynamik__
 
 __Berner Fachhochschule - Labor für Photovoltaik-Systeme__
 
-Part of the Development was funded by the 
+Part of the Development was funded by the
 
 __Swiss Federal Office of Energy__
 
