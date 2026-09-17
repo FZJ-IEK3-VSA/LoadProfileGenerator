@@ -6,7 +6,6 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationController.Integrity;
 using Common;
-using Common.Extensions;
 using Database;
 using Database.Helpers;
 using Database.Tables;
