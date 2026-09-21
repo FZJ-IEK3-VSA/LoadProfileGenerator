@@ -9,8 +9,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <DebugType>Full</DebugType>
-        <Nullable>enable</Nullable>
+            <Nullable>enable</Nullable>
         <LangVersion>12.0</LangVersion>
         <IsTestProject>false</IsTestProject>
     </PropertyGroup>

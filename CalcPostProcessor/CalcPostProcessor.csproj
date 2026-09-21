@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DebugType>Full</DebugType>
     <Nullable>disable</Nullable>
     <LangVersion>12.0</LangVersion>
   </PropertyGroup>
