@@ -1,5 +1,4 @@
-﻿using Automation;
-using Automation.ResultFiles;
+﻿using Automation.ResultFiles;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -176,9 +175,93 @@ namespace Common.SQLResultLogging
         private IEnumerable<T> LoadItemsFromFile<T>(HouseholdKey key, string tableName)
         {
             string filepath = GetFilePath(key, tableName);
+            return StreamItemsFromJsonArrayFile<T>(filepath);
+        }
 
-            //return AutomationUtili.ParseJsonFile<IEnumerable<T>>(filepath);
-            return AutomationUtili.ParseJsonFileNewtonsoft<IEnumerable<T>>(filepath);
+        /// <summary>
+        /// Opens a result JSON file and positions the reader on the opening bracket of the top-level array.
+        /// </summary>
+        /// <param name="filepath">the path of the JSON file</param>
+        /// <returns>the JSON reader, positioned on the StartArray token; must be disposed by the caller</returns>
+        /// <exception cref="LPGException">if the file does not start with a JSON array</exception>
+        private static JsonTextReader OpenJsonArrayReader(string filepath)
+        {
+            var filereader = new StreamReader(filepath);
+            var jsonreader = new JsonTextReader(filereader)
+            {
+                // keep date-like strings as strings
+                DateParseHandling = DateParseHandling.None
+            };
+            if (!jsonreader.Read() || jsonreader.TokenType != JsonToken.StartArray)
+            {
+                filereader.Dispose();
+                throw new LPGException($"Unexpected JSON format in result file {filepath}: expected an array");
+            }
+            return jsonreader;
+        }
+
+        /// <summary>
+        /// Streams all objects from a JSON file containing a top-level array, deserializing one object at a time.
+        /// Only one object is held in memory at a time to reduce RAM usage.
+        /// </summary>
+        /// <typeparam name="T">the type of the objects to deserialize</typeparam>
+        /// <param name="filepath">the path of the JSON file</param>
+        /// <returns>the deserialized objects, one at a time</returns>
+        /// <exception cref="LPGException">if an element of the array could not be deserialized</exception>
+        private static IEnumerable<T> StreamItemsFromJsonArrayFile<T>(string filepath)
+        {
+            using var jsonreader = OpenJsonArrayReader(filepath);
+            var serializer = new JsonSerializer();
+            while (jsonreader.Read() && jsonreader.TokenType != JsonToken.EndArray)
+            {
+                var item = serializer.Deserialize<T>(jsonreader) ?? throw new LPGException($"Result file {filepath} contains an invalid entry.");
+                yield return item;
+            }
+        }
+
+        /// <summary>
+        /// Directly streams the content of the Json column of every row in a result table file, without
+        /// loading the other columns or more than one row at a time.
+        /// This avoids creating a dictionary for every row and is therefore more memory-efficient than StreamItemsFromFile.
+        /// </summary>
+        /// <param name="filepath">the path of the JSON file</param>
+        /// <returns>the JSON strings stored in the Json column, one per row</returns>
+        /// <exception cref="LPGException">if a row is malformed or has no Json column</exception>
+        private static IEnumerable<string> StreamJsonColumnFromFile(string filepath)
+        {
+            using var jsonreader = OpenJsonArrayReader(filepath);
+            // read the rows (i.e. JSON array elements) one at a time
+            while (jsonreader.Read() && jsonreader.TokenType != JsonToken.EndArray)
+            {
+                if (jsonreader.TokenType != JsonToken.StartObject)
+                {
+                    throw new LPGException($"Unexpected JSON format in result file {filepath}: expected an object");
+                }
+
+                // read all columns (i.e. properties) of the row, looking for the "Json" column
+                string? json = null;
+                while (jsonreader.Read() && jsonreader.TokenType != JsonToken.EndObject)
+                {
+                    if (jsonreader.TokenType != JsonToken.PropertyName)
+                    {
+                        throw new LPGException($"Unexpected JSON format in result file {filepath}: expected a property name");
+                    }
+
+                    if ((string?)jsonreader.Value == Constants.JsonColumnName)
+                    {
+                        // the property value follows the property name token
+                        jsonreader.Read();
+                        json = jsonreader.Value as string;
+                    }
+                    else
+                    {
+                        // skip the value of any other column
+                        jsonreader.Skip();
+                    }
+                }
+
+                yield return json ?? throw new LPGException($"Row without {Constants.JsonColumnName} column in result file {filepath}");
+            }
         }
 
         public IEnumerable<T> ReadFromJsonAsEnumerable<T>(ResultTableDefinition rtd, HouseholdKey key)
@@ -190,11 +273,9 @@ namespace Common.SQLResultLogging
                 return [];
             }
 
-            // load all items
-            var items = LoadItemsFromFile<Dictionary<string, object>>(key, rtd.TableName);
-            // deserialize the JSON strings contained in the Json column
-            //return items.Select(item => ParseJsonColumn<T>(item[Constants.JsonColumnName]));
-            return items.Select(item => JsonConvert.DeserializeObject<T>((string)item[Constants.JsonColumnName]));
+            // stream the items of the JSON array and deserialize the JSON strings contained in the Json column one at a time
+            return StreamJsonColumnFromFile(filepath)
+                .Select(json => JsonConvert.DeserializeObject<T>(json) ?? throw new LPGException($"Invalid entry in result file {filepath}"));
         }
 
         public List<T> ReadFromJson<T>(ResultTableDefinition rtd, HouseholdKey key, ExpectedResultCount expectedResult)
