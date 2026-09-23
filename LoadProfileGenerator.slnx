@@ -1,0 +1,183 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="DebugNoCodeCheck" />
+    <BuildType Name="debugx64" />
+    <BuildType Name="Release" />
+    <BuildType Name="TeamCity" />
+    <Platform Name="Any CPU" />
+    <Platform Name="Mixed Platforms" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="BuildWarningReportGenerator.ps1" />
+    <File Path="copy_new_db.cmd" />
+    <File Path="Directory.Build.props" />
+    <File Path="LoadProfileGenerator/profilegenerator-latest.db3" />
+    <File Path="MyRules.ruleset" />
+    <File Path="MyRules_UnitTests.ruleset" />
+    <File Path="readme.md" />
+    <File Path="VersionInfo.cs" />
+  </Folder>
+  <Folder Name="/Solution Items/ImportFiles/">
+    <File Path="ImportFiles/MinMaxCurves.csv" />
+    <File Path="ImportFiles/MinMaxCurves.xlsx" />
+    <File Path="ImportFiles/profilegenerator124.db3" />
+    <File Path="ImportFiles/profilegenerator160.db3" />
+    <File Path="ImportFiles/profilegenerator170.db3" />
+    <File Path="ImportFiles/profilegenerator171.db3" />
+    <File Path="ImportFiles/profilegenerator175.db3" />
+    <File Path="ImportFiles/profilegenerator201.db3" />
+    <File Path="ImportFiles/profilegenerator203.db3" />
+    <File Path="ImportFiles/profilegenerator210.db3" />
+    <File Path="ImportFiles/profilegenerator220.db3" />
+    <File Path="ImportFiles/profilegenerator520.db3" />
+    <File Path="ImportFiles/profilegenerator520_simon.db3" />
+    <File Path="ImportFiles/profilegenerator600.db3" />
+    <File Path="ImportFiles/profilegenerator880.db3" />
+    <File Path="ImportFiles/profilegenerator900.db3" />
+    <File Path="ImportFiles/profilegenerator920_casa.db3" />
+  </Folder>
+  <Folder Name="/Solution Items/Oxyplot/">
+    <File Path="Oxyplot/OxyPlot.dll" />
+    <File Path="Oxyplot/OxyPlot.Pdf.dll" />
+    <File Path="Oxyplot/OxyPlot.Wpf.dll" />
+    <File Path="Oxyplot/PdfSharp.Charting.dll" />
+    <File Path="Oxyplot/PdfSharp.dll" />
+  </Folder>
+  <Project Path="Automation/Automation.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="CalcPostProcessor/CalcPostProcessor.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="CalcPostProcessorTests/CalcPostProcessorTests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="Calculation.Tests/Calculation.Tests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+    <Build Solution="debugx64|x64" Project="false" />
+    <Build Solution="debugx64|x86" Project="false" />
+    <Build Solution="Debug|x64" Project="false" />
+    <Build Solution="Debug|x86" Project="false" />
+    <Build Solution="Release|x64" Project="false" />
+    <Build Solution="Release|x86" Project="false" />
+  </Project>
+  <Project Path="CalculationController.Tests/CalculationController.Tests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="CalculationController/CalculationController.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="CalculationEngine/CalculationEngine.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="ChartCreator2.Tests/ChartCreator2.Tests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="ChartCreator2/ChartCreator2.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="CitySimulation/CitySimulation.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="CitySimulationTests/CitySimulationTests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="Common.Tests/Common.Tests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="Common/Common.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="Database.Tests/Database.Tests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="Database/Database.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="IntegrationTests/IntegrationTests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="LoadProfileGenerator.Tests/LoadProfileGenerator.Tests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="LoadProfileGenerator/LoadProfileGenerator.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="ReleaseMaker/ReleaseMaker.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Release" />
+  </Project>
+  <Project Path="SimEngine2/SimEngine2.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="SimulationEngine.Tests/SimulationEngine.Tests.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="SimulationEngine/SimulationEngine.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="SimulationEngineLib/SimulationEngineLib.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Project Path="VersionIncreaser/VersionIncreaser.csproj">
+    <BuildType Solution="DebugNoCodeCheck|*" Project="Debug" />
+    <BuildType Solution="debugx64|*" Project="Debug" />
+    <BuildType Solution="TeamCity|*" Project="Debug" />
+  </Project>
+  <Properties Name="ExtensibilityGlobals" Scope="PostLoad">
+    <Property Name="VisualSVNWorkingCopyRoot" Value="." />
+  </Properties>
+  <Properties Name="SubversionScc">
+    <Property Name="Manager" Value="AnkhSVN - Subversion Support for Visual Studio" />
+    <Property Name="Svn-Managed" Value="True" />
+  </Properties>
+</Solution>
