@@ -32,10 +32,4 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="SQLite.Interop.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

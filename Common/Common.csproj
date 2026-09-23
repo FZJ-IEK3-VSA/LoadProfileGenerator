@@ -7,31 +7,19 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
     <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
+    <PackageReference Include="System.Data.SQLite" Version="2.0.3" />
     <PackageReference Include="xunit.abstractions" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Automation\Automation.csproj" />
-  </ItemGroup>
-
-<ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
-    <Compile Update="Settings.Designer.cs" AutoGen="True" DependentUpon="Settings.settings" />
-    <None Update="Settings.settings" LastGenOutput="Settings.Designer.cs" Generator="SettingsSingleFileGenerator" />
-
-    <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" Exclude="App.xaml" />
-    <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
   </ItemGroup>
 
 </Project>

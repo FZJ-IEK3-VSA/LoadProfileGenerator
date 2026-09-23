@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Speech.Recognition.SrgsGrammar;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Activities;
