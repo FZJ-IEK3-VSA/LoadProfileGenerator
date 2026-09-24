@@ -91,14 +91,8 @@ namespace IntegrationTests {
             Logger.Info("file not found: " + fi.FullName + ", trying jenkins path next");
             const string jenkinsrelativePath = "Importfiles\\";
             fi = new FileInfo(Path.Combine(jenkinsrelativePath, path));
-            if (!fi.Exists) {
-            }
-            const string dropboxpath = @"v:\dropbox\lpg\importfiles\";
-            fi = new FileInfo(Path.Combine(dropboxpath, path));
-            if (!fi.Exists) {
+            if (fi.Exists)
                 return fi;
-            }
-            Logger.Info("file not found: " + fi.FullName + ", trying jenkins path next");
             throw new LPGException("Missing file: " + fi.FullName + "\n Current Directory:" + Directory.GetCurrentDirectory());
         }
 
