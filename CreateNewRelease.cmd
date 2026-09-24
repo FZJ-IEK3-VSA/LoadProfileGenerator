@@ -39,6 +39,7 @@ set "pylpgdirectory=%srcdirectory%\LPGRelease\pylpg\"
 
 cd /D %releasedirectory%\windows
 simulationengine CreatePythonBindings || goto :error
+md %pylpgdirectory% 2> nul
 move lpgdata.py %pylpgdirectory%
 move lpgpythonbindings.py %pylpgdirectory%
 pause
