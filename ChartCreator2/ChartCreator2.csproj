@@ -1,12 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net10.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <Nullable>disable</Nullable>
-    <LangVersion>12.0</LangVersion>
   </PropertyGroup>
 <ItemGroup>
     <None Update="xunit.runner.json"> 
@@ -14,17 +9,11 @@
     </None>
 </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="9.3.0" />
-    <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
-    <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
-    <PackageReference Include="OxyPlot.Core" Version="2.2.0" />
-    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.2.0" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="SkiaSharp" Version="4.148.0" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.148.0" />
+    <PackageReference Include="Autofac" />
+    <PackageReference Include="OxyPlot.Core" />
+    <PackageReference Include="OxyPlot.SkiaSharp" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
   </ItemGroup>
 
   <ItemGroup>

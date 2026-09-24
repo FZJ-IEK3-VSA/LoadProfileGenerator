@@ -42,8 +42,8 @@ namespace ChartCreator2.Tests.Oxyplot {
 
                 Logger.Info("finished picture");
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "SumProfiles_1800s.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
-                fft.ResultFileList.ResultFiles.Count.Should().BeGreaterOrEqualTo( 1);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(1);
+                fft.ResultFileList.ResultFiles.Count.Should().BeGreaterThanOrEqualTo(1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

@@ -35,7 +35,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Info("finished picture");
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "ActivityPercentage.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo( 2);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(2);
             }
             Logger.Warning("Leftover connections: " + Connection.ConnectionCount);
             cs.CleanUp();

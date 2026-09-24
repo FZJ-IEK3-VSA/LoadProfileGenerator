@@ -326,7 +326,7 @@ namespace Database.Tests.Tables.ModularHouseholds
                     total += entry.TraitCountMax;
                 }
 
-                total.Should().BeGreaterOrEqualTo(existingHouseholdTemplate.Traits.Count);
+                total.Should().BeGreaterThanOrEqualTo(existingHouseholdTemplate.Traits.Count);
                 db.Cleanup();
             }
         }

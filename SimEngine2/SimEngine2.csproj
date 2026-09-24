@@ -2,18 +2,8 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-		<TargetFramework>net10.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
-        <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\SimulationEngineLib\SimulationEngineLib.csproj" />

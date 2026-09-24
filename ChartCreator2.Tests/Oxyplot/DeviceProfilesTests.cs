@@ -44,7 +44,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 aeupp.MakePlot(rfe);
                 Logger.Info("finished picture");
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "DeviceProfiles.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

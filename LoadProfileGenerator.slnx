@@ -2,6 +2,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
     <File Path="LoadProfileGenerator/profilegenerator-latest.db3" />
     <File Path="MyRules.ruleset" />
     <File Path="MyRules_UnitTests.ruleset" />

@@ -1,21 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net10.0</TargetFramework>
     <Nullable>annotations</Nullable>
- </PropertyGroup>
+  </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.3" />
-    <PackageReference Include="System.Data.SQLite" Version="2.0.3" />
-    <PackageReference Include="xunit.abstractions" Version="2.0.3" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
+    <PackageReference Include="System.Data.SQLite" />
+    <PackageReference Include="xunit.abstractions" />
   </ItemGroup>
 
   <ItemGroup>

@@ -399,7 +399,7 @@ namespace Database.Tests.Tables
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                houseTypes.Count.Should().BeGreaterOrEqualTo( 1);
+                houseTypes.Count.Should().BeGreaterThanOrEqualTo(1);
                 db.Cleanup();
             }
         }

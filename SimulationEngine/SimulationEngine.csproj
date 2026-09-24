@@ -1,24 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <PropertyGroup>
-            <Nullable>enable</Nullable>
-        <LangVersion>12.0</LangVersion>
         <IsTestProject>false</IsTestProject>
     </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
-        <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
-        <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ChartCreator2\ChartCreator2.csproj" />

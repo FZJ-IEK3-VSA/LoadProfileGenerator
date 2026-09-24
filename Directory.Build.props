@@ -1,6 +1,18 @@
 <Project>
-<PropertyGroup>
- <AssemblyVersion>10.10.0.5</AssemblyVersion>
+  <PropertyGroup>
+    <AssemblyVersion>10.10.0.5</AssemblyVersion>
     <FileVersion>10.10.0.5</FileVersion>
   </PropertyGroup>
-  </Project>
+
+  <!-- Defaults for all projects. Projects override these where needed (e.g. net10.0-windows, Nullable). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Nullable reference types are the default. Projects that are not migrated yet opt out explicitly
+         with Nullable=disable or Nullable=annotations. -->
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" />
+  </ItemGroup>
+</Project>
