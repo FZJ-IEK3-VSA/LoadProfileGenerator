@@ -9,25 +9,6 @@
     <File Path="readme.md" />
     <File Path="VersionInfo.cs" />
   </Folder>
-  <Folder Name="/Solution Items/ImportFiles/">
-    <File Path="ImportFiles/MinMaxCurves.csv" />
-    <File Path="ImportFiles/MinMaxCurves.xlsx" />
-    <File Path="ImportFiles/profilegenerator124.db3" />
-    <File Path="ImportFiles/profilegenerator160.db3" />
-    <File Path="ImportFiles/profilegenerator170.db3" />
-    <File Path="ImportFiles/profilegenerator171.db3" />
-    <File Path="ImportFiles/profilegenerator175.db3" />
-    <File Path="ImportFiles/profilegenerator201.db3" />
-    <File Path="ImportFiles/profilegenerator203.db3" />
-    <File Path="ImportFiles/profilegenerator210.db3" />
-    <File Path="ImportFiles/profilegenerator220.db3" />
-    <File Path="ImportFiles/profilegenerator520.db3" />
-    <File Path="ImportFiles/profilegenerator520_simon.db3" />
-    <File Path="ImportFiles/profilegenerator600.db3" />
-    <File Path="ImportFiles/profilegenerator880.db3" />
-    <File Path="ImportFiles/profilegenerator900.db3" />
-    <File Path="ImportFiles/profilegenerator920_casa.db3" />
-  </Folder>
   <Project Path="Automation/Automation.csproj" />
   <Project Path="CalcPostProcessor/CalcPostProcessor.csproj" />
   <Project Path="CalcPostProcessorTests/CalcPostProcessorTests.csproj" />
