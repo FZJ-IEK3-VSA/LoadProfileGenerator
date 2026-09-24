@@ -2,8 +2,12 @@ REM Builds a new release version of the LoadProfileGenerator for all target plat
 
 REM use the repository root as working directory
 set "srcdirectory=%~dp0"
-set "dotnetversion=net10.0"
 cd /D %srcdirectory%
+
+REM read the .NET version from Directory.Build.props
+for /f "usebackq delims=" %%v in (`dotnet msbuild ReleaseMaker -getProperty:LpgDotnetVersion`) do set "dotnetversion=%%v"
+if not defined dotnetversion goto :error
+echo Using .NET version %dotnetversion%
 
 REM increment the LPG build number
 REM dotnet build VersionIncreaser --configuration Debug

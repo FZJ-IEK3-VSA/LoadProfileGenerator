@@ -328,7 +328,12 @@ namespace ReleaseMaker
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         public void MakeRelease([System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
-            const string dotnetVersion = "net10.0";
+            // the .NET version is defined centrally in Directory.Build.props and embedded as assembly metadata
+            var dotnetVersion = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyMetadataAttribute>()
+                .FirstOrDefault(a => a.Key == "LpgDotnetVersion")?.Value;
+            if (string.IsNullOrEmpty(dotnetVersion))
+                throw new LPGException("Could not determine the .NET version from the assembly metadata.");
+            
             const string dbFilename = "profilegenerator-latest.db3";
             const bool cleanDatabase = true;
             const bool makeZip = true;
@@ -371,7 +376,7 @@ namespace ReleaseMaker
             CopyDirectoryContents(srcWinSimengine, dstWinFull);
 
             // copy the SimEngine2 binaries (no GUI) for Windows and Linux to the respective release folders
-            const string simengine2Path = $"SimEngine2\\bin\\Release\\{dotnetVersion}\\";
+            string simengine2Path = $"SimEngine2\\bin\\Release\\{dotnetVersion}\\";
             string srcWinSimEngine = baseDevelopPath.CombineName($"{simengine2Path}win-x64\\publish");
             CopyDirectoryContents(srcWinSimEngine, dstWinSimEngine);
             string srcsimLinux = baseDevelopPath.CombineName($"{simengine2Path}linux-x64\\publish");

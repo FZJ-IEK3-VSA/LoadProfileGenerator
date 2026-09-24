@@ -4,11 +4,12 @@
     <FileVersion>10.10.0.5</FileVersion>
   </PropertyGroup>
 
-  <!-- Defaults for all projects. Projects override these where needed (e.g. net10.0-windows, Nullable). -->
+  <!-- Defaults for all projects. Projects override these where needed (e.g. Windows target framework, Nullable). -->
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <!-- Nullable reference types are the default. Projects that are not migrated yet opt out explicitly
-         with Nullable=disable or Nullable=annotations. -->
+    <!-- Single source of truth for the .NET version. Windows-only projects use $(LpgDotnetVersion)-windows.
+         CreateNewRelease.cmd and the ReleaseMaker read this value, so it only needs to be changed here. -->
+    <LpgDotnetVersion>net10.0</LpgDotnetVersion>
+    <TargetFramework>$(LpgDotnetVersion)</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
