@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>10.10.0.5</AssemblyVersion>
-    <FileVersion>10.10.0.5</FileVersion>
+    <AssemblyVersion>11.0.0.0</AssemblyVersion>
+    <FileVersion>11.0.0.0</FileVersion>
   </PropertyGroup>
 
   <!-- Defaults for all projects. Projects override these where needed (e.g. Windows target framework, Nullable). -->
