@@ -145,6 +145,7 @@ namespace Database.Tests.Tables.ModularHouseholds
                     var tt2 = sim1C.ModularHouseholds[0];
                     var jsonHH2 = tt2.GetJson();
                     jsonHH2.Should().BeEquivalentTo(jsonHH1, o => o
+                        .ComparingByMembers<JsonReference>()
                         .Excluding(x => x.Path.EndsWith("Guid")
                                         || x.Path.EndsWith("ID")));
                     db1.Cleanup();
