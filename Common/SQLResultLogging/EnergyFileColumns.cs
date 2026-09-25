@@ -15,7 +15,7 @@ namespace Common.SQLResultLogging
         public HouseholdKey Key { get; }
         [NotNull] private readonly CalcParameters _calcParameters;
         [ItemNotNull] [NotNull] private readonly List<ColumnEntry> _columnEntries;
-        public EnergyFileColumns([NotNull] SqlResultLoggingService srls, [NotNull] HouseholdKey key, [NotNull] CalcParameters calcParameters)
+        public EnergyFileColumns([NotNull] IResultLoggingService srls, [NotNull] HouseholdKey key, [NotNull] CalcParameters calcParameters)
         {
             Key = key;
             _calcParameters = calcParameters;

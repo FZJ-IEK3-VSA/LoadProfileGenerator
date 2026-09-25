@@ -11,12 +11,14 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Transportation {
+namespace Database.Tables.Transportation
+{
     public class Site : DBBaseElement {
         public const string TableName = "tblSites";
         [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<SiteLocation> _siteLocations = new ObservableCollection<SiteLocation>();

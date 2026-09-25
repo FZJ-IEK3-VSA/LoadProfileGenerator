@@ -10,7 +10,8 @@ using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 
-namespace CalculationController.Integrity {
+namespace CalculationController.Integrity
+{
     internal class LocationChecker : BasicChecker {
         public LocationChecker(bool performCleanupChecks) : base("Locations", performCleanupChecks) {
         }
@@ -62,7 +63,7 @@ namespace CalculationController.Integrity {
         }
 
         private static void CheckUses([NotNull][ItemNotNull] ObservableCollection<Location> locations,
-            [NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits, [NotNull][ItemNotNull] ObservableCollection<HouseType> houseTypes) {
+            [NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits, [NotNull][ItemNotNull] ObservableCollection<HouseType> houseTypes, CheckingOptions options) {
             var usedLocations = new List<Location>();
             foreach (var trait in traits) {
                 foreach (var location in trait.Locations) {
@@ -74,11 +75,17 @@ namespace CalculationController.Integrity {
                     usedLocations.Add(device.Location);
                 }
             }
-            foreach (var location in locations) {
-                if (!usedLocations.Contains(location)) {
-                    throw new DataIntegrityException(
-                        "The Location " + location.Name + " is not used in any trait or household. Please fix.",
-                        location);
+            if (!options.CitySimulationEnabled)
+            {
+                // when city simulation is enabled, lots of new locations are generated that sometimes might not be used
+                foreach (var location in locations)
+                {
+                    if (!usedLocations.Contains(location))
+                    {
+                        throw new DataIntegrityException(
+                            "The Location " + location.Name + " is not used in any trait or household. Please fix.",
+                            location);
+                    }
                 }
             }
         }
@@ -87,7 +94,7 @@ namespace CalculationController.Integrity {
             if (!PerformCleanupChecks) {
                 return;
             }
-            CheckUses(sim.Locations.Items, sim.HouseholdTraits.Items, sim.HouseTypes.Items);
+            CheckUses(sim.Locations.Items, sim.HouseholdTraits.Items, sim.HouseTypes.Items, options);
             foreach (var location in sim.Locations.Items) {
                 CheckForDuplicateDevices(location);
                 CheckDevicesAtLocation(location);

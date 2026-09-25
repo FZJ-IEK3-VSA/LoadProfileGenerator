@@ -54,7 +54,7 @@ namespace Database.Tables.ModularHouseholds {
             var templatePersonID = dr.GetIntFromLong("TemplatePersonID");
             var traitID = dr.GetNullableIntFromLong("HouseholdTraitID", false, ignoreMissingFields);
 
-            var trait = aic.HouseholdTraits.FirstOrDefault(mytrait => mytrait.ID == traitID);
+            var trait = aic.HouseholdTraits.FindById(traitID);
             var name = "(no name)";
 
             if (trait != null) {

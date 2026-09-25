@@ -2,6 +2,7 @@
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.Transportation;
 using FluentAssertions;
@@ -37,14 +38,11 @@ namespace Database.Tests.Tables.Transportation
                 double weighting = 1.0;
                 set.AddRoute(route, minimumAge, maximumAge, gender, null, null, weighting);
                 //loading
-                ObservableCollection<TravelRoute> routes = new ObservableCollection<TravelRoute>
-            {
-                route
-            };
-                ObservableCollection<TravelRouteSet> sets = new ObservableCollection<TravelRouteSet>();
-                var affordances = db.LoadAffordances(out _, out _, out _, out _, out _, out var loadTypes, out _, out _, out _, out _, out _ , out _);
+                ObservableCollection<TravelRoute> routes = [route];
+                ObservableCollection<TravelRouteSet> sets = [];
+                var affordances = db.LoadAffordances(out _, out _, out _, out _, out _, out var loadTypes, out var timeLimits, out _, out _, out _, out _, out _);
                 var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadTypes);
-                TravelRouteSet.LoadFromDatabase(sets, db.ConnectionString, false, routes, affordanceTaggingSets);
+                TravelRouteSet.LoadFromDatabase(sets, db.ConnectionString, false, routes, affordanceTaggingSets, timeLimits);
                 db.Cleanup();
                 (sets.Count).Should().Be(1);
             }

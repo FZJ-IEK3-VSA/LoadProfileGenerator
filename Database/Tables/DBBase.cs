@@ -40,6 +40,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -53,17 +54,6 @@ using JetBrains.Annotations;
 
 namespace Database.Tables
 {
-    public static class HashSetUtility {
-        [JetBrains.Annotations.NotNull]
-        public static HashSet<T> ToHashSet<T>([JetBrains.Annotations.NotNull] this IEnumerable<T> list)
-        {
-            HashSet<T> mySet = new HashSet<T>();
-            foreach (var item in list) {
-                mySet.Add(item);
-            }
-            return mySet;
-        }
-    }
     public abstract class DBBase : BasicElement, INotifyPropertyChanged
     {
         public void CheckIfAllPropertiesWereCovered<T>(List<string> checkedProperties, [JetBrains.Annotations.NotNull] T obj)
@@ -291,6 +281,20 @@ namespace Database.Tables
                 OnPropertyChanged(nameof(PrettyName));
                 OnPropertyChanged(nameof(HeaderString));
             }
+        }
+
+        /// <summary>
+        /// Changes the name of the item without triggering any
+        /// OnPropertyChanged events or other custom behavior in
+        /// the Name property setter, only setting the needsUpdate
+        /// flag. This can be required if changing many names at
+        /// once to avoid bad performance.
+        /// </summary>
+        /// <param name="name">the new name</param>
+        internal void SetNameWithoutEvents(string name)
+        {
+            base.Name = name;
+            NeedsUpdate = true;
         }
 
         protected bool NeedsUpdate
@@ -773,31 +777,73 @@ namespace Database.Tables
             {
                 var found = parents.Any(parent => isCorrectParent(parent, child));
                 if (!found)
-                {
-                    var parentdescription = string.Empty;
-                    if (!doNotdeleteFromDB)
-                    {
-                        child.DeleteFromDB();
+                    HandleItemWithoutParent(child, parents, doNotdeleteFromDB);
+            }
+        }
 
-                        if (parents.Count > 0)
-                        {
-                            parentdescription = parents[0].TypeDescription;
-                        }
-                        if (child.TypeDescription == "ERROR")
-                        {
-                            throw new LPGException("Type name not set for " + child.GetType() +
-                                                   ". This is a bug. Please report.");
-                        }
-                        if (ShowDeleteMessage)
-                        {
-                            Logger.Error("Deleted orphaned " + child.TypeDescription + " with ID " + child.ID +
-                                         " because the parent " + parentdescription + " was deleted.");
-                        }
-                    }
-                    else
-                    {
-                        Logger.Info("During import could not find a parent for the item " + child.Name);
-                    }
+        protected delegate int GetParentIdCallback(DBBase child);
+        protected delegate void AddChildToParentCallback(DBBase parent, DBBase child);
+
+        /// <summary>
+        /// Checks if all child items have a corresponding parent item, and adds the child item to the parent object.
+        /// </summary>
+        /// <param name="parents">the list of parent objects which reference child objects</param>
+        /// <param name="children">the list of child objects which reference a parent object</param>
+        /// <param name="getParentId">function that returns the parent object id from a given child object</param>
+        /// <param name="addChild">function that adds a child object to a parent object</param>
+        /// <param name="doNotdeleteFromDB">whether child objects without a matching parent shoud be kept or deleted</param>
+        protected static void SetSubitemsByParentId(List<DBBase> parents, List<DBBase> children, GetParentIdCallback getParentId, AddChildToParentCallback addChild, bool doNotdeleteFromDB)
+        {
+            // first create a map for fast parent object lookups
+            var parentsById = parents.ToDictionary(p => p.IntID, p=>p);
+
+            foreach (var child in children)
+            {
+                // for each child object, find the corresponding parent
+                bool found = parentsById.TryGetValue(getParentId(child), out var parent);
+                if (found)
+                {
+                    addChild(parent, child);
+                }
+                else
+                {
+                    HandleItemWithoutParent(child, parents, doNotdeleteFromDB);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Helper method that handles a subitem for which no parent object could be found. Either deletes the
+        /// subitem, or creates a log message.
+        /// </summary>
+        /// <param name="child">the object without a parent</param>
+        /// <param name="parents">the list of parent objects</param>
+        /// <param name="doNotdeleteFromDB">if true, deletes the item; otherwise, keeps it in the DB</param>
+        /// <exception cref="LPGException"></exception>
+        private static void HandleItemWithoutParent(DBBase child, List<DBBase> parents, bool doNotdeleteFromDB)
+        {
+            if (doNotdeleteFromDB)
+            {
+                Logger.Info("During import could not find a parent for the item " + child.Name);
+            }
+            else
+            {
+                child.DeleteFromDB();
+
+                var parentdescription = string.Empty;
+                if (parents.Count > 0)
+                {
+                    parentdescription = parents[0].TypeDescription;
+                }
+                if (child.TypeDescription == "ERROR")
+                {
+                    throw new LPGException("Type name not set for " + child.GetType() +
+                                           ". This is a bug. Please report.");
+                }
+                if (ShowDeleteMessage)
+                {
+                    Logger.Error($"Deleted orphaned {child.TypeDescription} with ID {child.ID} " +
+                                 $"because the parent {parentdescription} was deleted.");
                 }
             }
         }

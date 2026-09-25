@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using FluentAssertions;
@@ -9,7 +10,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables.BasicElements {
+namespace Database.Tests.Tables.BasicElements
+{
 
     public class HouseholdPlanTests : UnitTestBaseClass
     {

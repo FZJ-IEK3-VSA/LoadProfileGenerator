@@ -32,7 +32,7 @@ namespace Common.JSON
     public class TransportationDeviceEventStatisticsLogger : DataSaverBase
     {
         private const string TableName = "TransportationDeviceEventStatistics";
-        public TransportationDeviceEventStatisticsLogger([NotNull] SqlResultLoggingService srls) :
+        public TransportationDeviceEventStatisticsLogger([NotNull] IResultLoggingService srls) :
             base(typeof(List<TransportationDeviceEventStatistics>),
                 new ResultTableDefinition(TableName,
                     ResultTableID.TransportationDeviceEventStatistics, "Statistics about the transportation",CalcOption.TransportationStatistics), srls)

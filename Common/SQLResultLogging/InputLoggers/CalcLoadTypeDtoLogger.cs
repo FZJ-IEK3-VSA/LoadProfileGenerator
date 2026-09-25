@@ -10,7 +10,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class CalcLoadTypeDtoLogger : DataSaverBase
     {
         public const string TableName  = "CalcLoadTypeDto";
-        public CalcLoadTypeDtoLogger( [NotNull] SqlResultLoggingService srls): base(typeof(List<CalcLoadTypeDto>),
+        public CalcLoadTypeDtoLogger( [NotNull] IResultLoggingService srls): base(typeof(List<CalcLoadTypeDto>),
             new ResultTableDefinition(TableName,ResultTableID.LoadTypeDefinitions,"All the load types", CalcOption.BasicOverview), srls)
         {
         }

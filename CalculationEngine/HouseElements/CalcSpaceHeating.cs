@@ -32,9 +32,11 @@ using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using JetBrains.Annotations;
 
-namespace CalculationEngine.HouseElements {
+namespace CalculationEngine.HouseElements
+{
     public class CalcSpaceHeating : CalcDevice {
         [NotNull] private readonly Dictionary<Tuple<int, int, int>, CalcDegreeDay> _calcDegreeDays;
 

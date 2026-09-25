@@ -41,10 +41,9 @@ namespace Database.Tables.ModularHouseholds {
             var deviceSelectionID = dr.GetIntFromLong("deviceSelectionID", false, ignoreMissingFields, -1);
             var deviceActionGroupID = dr.GetIntFromLong("DeviceActionGroupID", false, ignoreMissingFields, -1);
             var deviceActionID = dr.GetIntFromLong("DeviceActionID", false, ignoreMissingFields, -1);
-            var da = aic.DeviceActions.FirstOrDefault(myDeviceAction => myDeviceAction.ID == deviceActionID);
+            var da = aic.DeviceActions.FindById(deviceActionID);
             var dag =
-                aic.DeviceActionGroups.FirstOrDefault(
-                    myDeviceActionGroup => myDeviceActionGroup.ID == deviceActionGroupID);
+                aic.DeviceActionGroups.FindById(deviceActionGroupID);
             var name = "(no name)";
             if (dag != null) {
                 name = dag.Name;

@@ -23,7 +23,7 @@ namespace Common.SQLResultLogging.InputLoggers
     }
     public class BodilyActivityLevelStatisticsLogger : DataSaverBase
     {
-        public BodilyActivityLevelStatisticsLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) :
+        public BodilyActivityLevelStatisticsLogger([JetBrains.Annotations.NotNull] IResultLoggingService srls) :
             base(typeof(BodilyActivityLevelStatistics),
             new ResultTableDefinition("BodilyActivityLevelCount",
                 ResultTableID.BodilyActivityLevelCount,

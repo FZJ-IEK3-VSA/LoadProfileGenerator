@@ -40,21 +40,48 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
     public class RandomValueProfile
     {
+
+        /// <summary>
+        /// Maximum deviation from the expectation value (higher or lower) that is
+        /// permitted for a random value. Random values outside of this range are sampled again.
+        /// The setting 0.75 only allows values in the range [0.25, 1.75]. This is used to avoid
+        /// unrealistically high or low load values, e.g., negative values.
+        /// </summary>
+        private const double MAX_ALLOWED_DEVIATION = 0.75;
+
         private RandomValueProfile([NotNull] List<double> values)
         {
             Values = values;
         }
 
+        /// <summary>
+        /// Generates a profile of random values of the desired length, using a normal distribution with
+        /// expectation value 1.
+        /// </summary>
+        /// <param name="stepCount">the length of the profile</param>
+        /// <param name="nr">the NormalRandom object to generate random values</param>
+        /// <param name="powerStandardDeviation">the standard deviation for the normal distribution</param>
+        /// <param name="enforceRange">if true, avoids values outside of the range [0.25, 1.75] by sampling again</param>
+        /// <returns>the generated random value profile</returns>
+        /// <exception cref="LPGException">if a non-negative value could not be obtained in the maximum number of attempts</exception>
         [NotNull]
-        public static RandomValueProfile MakeStepValues(int stepCount, [NotNull] NormalRandom nr, double powerStandardDeviation)
+        public static RandomValueProfile MakeStepValues(int stepCount, [NotNull] NormalRandom nr, double powerStandardDeviation, bool enforceRange = true)
         {
             if (stepCount == 0) {
                 throw new LPGException("stepcount was 0");
             }
             var values = new List<double>(new double[stepCount]);
             if (Math.Abs(powerStandardDeviation) > 0.00000001) {
-                for (var i = 0; i < stepCount; i++) {
-                    values[i] = nr.NextDouble(1, powerStandardDeviation);
+                for (var i = 0; i < stepCount; i++)
+                {
+                    if (enforceRange)
+                    {
+                        // if negatives are not allowed, sample again until a positive value is generated
+                        values[i] = RandomUtils.GetNormalRandomWithinLimits(nr, 1, powerStandardDeviation, MAX_ALLOWED_DEVIATION);
+                    } else
+                    {
+                        values[i] = nr.NextDouble(1, powerStandardDeviation);
+                    }
                 }
             }
             else {

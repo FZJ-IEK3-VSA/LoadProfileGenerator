@@ -32,6 +32,7 @@ using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.OnlineLogging;
 using Common;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
@@ -55,7 +56,7 @@ namespace Calculation.Tests.Logfile
             {
                 DateTime startdate = new DateTime(2018, 1, 1);
                 DateTime enddate = startdate.AddMinutes(1000);
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
                 calcParameters.Options.Add(CalcOption.LocationsEntries);
                 //FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory,"blub",wd.InputDataLogger);
                 //CalcLocation cl = new CalcLocation("blub", 1, Guid.NewGuid().ToStrGuid());
@@ -63,8 +64,17 @@ namespace Calculation.Tests.Logfile
                 //CalcPerson cp = MakeCalcPerson(cl,calcParameters,lf.Object);
                 HouseholdKey key = new HouseholdKey("hh1");
                 TimeStep ts = new TimeStep(1, 0, false);
-                LocationEntry le = new LocationEntry(key, "personName", "personGuid".ToStrGuid(), ts, "locname",
+
+/* Unmerged change from project 'Calculation.Tests (net8.0)'
+Before:
                     "locguid".ToStrGuid());
+                DateStampCreator dsc = new DateStampCreator(calcParameters);
+After:
+"locguid".ToStrGuid());
+                DateStampCreator dsc = new DateStampCreator(calcParameters);
+*/
+                LocationEntry le = new LocationEntry(key, "personName", StringExtensions.ToStrGuid("personGuid"), ts, "locname",
+StringExtensions.ToStrGuid("locguid"));
                 DateStampCreator dsc = new DateStampCreator(calcParameters);
                 using (OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
                 {
@@ -89,7 +99,7 @@ namespace Calculation.Tests.Logfile
                 wd.InputDataLogger.AddSaver(new LocationEntryLogger(wd.SqlResultLoggingService));
                 DateTime startdate = new DateTime(2018, 1, 1);
                 DateTime enddate = startdate.AddMinutes(1000);
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
                 calcParameters.Options.Add(CalcOption.LocationsEntries);
                 //FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hhname", wd.InputDataLogger);
                 //LocationsLogFile llf = new LocationsLogFile(true, fft, calcParameters);
@@ -103,14 +113,41 @@ namespace Calculation.Tests.Logfile
                 //llf.Close();
                 HouseholdKey key1 = new HouseholdKey("hh1");
                 TimeStep ts = new TimeStep(1, 0, false);
-                LocationEntry le1 = new LocationEntry(key1, "personName", "personGuid".ToStrGuid(), ts, "locname",
+
+/* Unmerged change from project 'Calculation.Tests (net8.0)'
+Before:
                     "locguid".ToStrGuid());
                 HouseholdKey key2 = new HouseholdKey("hh2");
-                LocationEntry le2 = new LocationEntry(key2, "personName", "personGuid".ToStrGuid(), ts, "locname",
+After:
+"locguid".ToStrGuid());
+                HouseholdKey key2 = new HouseholdKey("hh2");
+*/
+                LocationEntry le1 = new LocationEntry(key1, "personName", StringExtensions.ToStrGuid("personGuid"), ts, "locname",
+StringExtensions.ToStrGuid("locguid"));
+                HouseholdKey key2 = new HouseholdKey("hh2");
+
+/* Unmerged change from project 'Calculation.Tests (net8.0)'
+Before:
                     "locguid".ToStrGuid());
                 HouseholdKey key3 = new HouseholdKey("hh3");
-                LocationEntry le3 = new LocationEntry(key3, "personName", "personGuid".ToStrGuid(), ts, "locname",
+After:
+"locguid".ToStrGuid());
+                HouseholdKey key3 = new HouseholdKey("hh3");
+*/
+                LocationEntry le2 = new LocationEntry(key2, "personName", StringExtensions.ToStrGuid("personGuid"), ts, "locname",
+StringExtensions.ToStrGuid("locguid"));
+                HouseholdKey key3 = new HouseholdKey("hh3");
+
+/* Unmerged change from project 'Calculation.Tests (net8.0)'
+Before:
                     "locguid".ToStrGuid());
+                DateStampCreator dsc = new DateStampCreator(calcParameters);
+After:
+"locguid".ToStrGuid());
+                DateStampCreator dsc = new DateStampCreator(calcParameters);
+*/
+                LocationEntry le3 = new LocationEntry(key3, "personName", StringExtensions.ToStrGuid("personGuid"), ts, "locname",
+StringExtensions.ToStrGuid("locguid"));
                 DateStampCreator dsc = new DateStampCreator(calcParameters);
                 using (OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
                 {

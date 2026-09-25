@@ -36,7 +36,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Debug("finished picture");
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "AffordanceEnergyUse.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo(1);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(1);
             }
             cs.CleanUp();
             //CleanTestBase.RunAutomatically(true);

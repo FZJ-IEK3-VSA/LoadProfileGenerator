@@ -37,7 +37,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 //OxyCalculationSetup.CopyImage(ffe);
 
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "Variablelogfile.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo(1);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

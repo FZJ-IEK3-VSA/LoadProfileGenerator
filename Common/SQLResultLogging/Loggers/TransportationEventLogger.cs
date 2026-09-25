@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.Loggers {
     public class TransportationEventLogger : DataSaverBase {
         private const string TableName = "TransportationEvents";
 
-        public TransportationEventLogger([NotNull] SqlResultLoggingService srls) :
+        public TransportationEventLogger([NotNull] IResultLoggingService srls) :
             base(typeof(TransportationEventEntry),  new ResultTableDefinition(TableName,ResultTableID.TransportationEvents, "Transportation Events", CalcOption.TransportationStatistics), srls)
         {
         }
@@ -22,7 +22,7 @@ namespace Common.SQLResultLogging.Loggers {
             {
                 throw new LPGException("Data Logger was null.");
             }
-            var res = Srls.ReadFromJson<TransportationEventEntry>(ResultTableDefinition, hhkey, ExpectedResultCount.OneOrMore);
+            var res = Srls.ReadFromJson<TransportationEventEntry>(ResultTableDefinition, hhkey, ExpectedResultCount.AnyNumber);
             return res;
         }
 

@@ -82,7 +82,7 @@ namespace ChartCreator2
         public static  IContainer RegisterEverything(string resultPath, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [JetBrains.Annotations.CanBeNull] IFileFactoryAndTracker fft)
         {
             var builder = new ContainerBuilder();
-            builder.Register(_ => new SqlResultLoggingService(resultPath)).As<SqlResultLoggingService>().SingleInstance();
+            builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(resultPath)).As<IResultLoggingService>().SingleInstance();
             //builder.Register(c =>_logFile).As<ILogFile>().SingleInstance();
             builder.Register(_ => calculationProfiler).As<ICalculationProfiler>().SingleInstance();
             builder.Register(_ => fft).As<IFileFactoryAndTracker>().SingleInstance();

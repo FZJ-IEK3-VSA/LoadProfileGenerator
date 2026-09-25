@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(LpgDotnetVersion)-windows</TargetFramework>
+        <OutputType>winexe</OutputType>
+        <ApplicationIcon>Resources\lpgicon4b.ico</ApplicationIcon>
+        <UseWPF>true</UseWPF>
+        <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+        <Nullable>disable</Nullable>
+        <EnableDefaultPageItems>False</EnableDefaultPageItems>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Properties\Resources.resx" Generator="PublicResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+        <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+
+        <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" Exclude="App.xaml" />
+        <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
+
+        <None Remove="Images\lpgicon4b.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Images\lpgicon4b.ico">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Resource>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Windows.Compatibility" />
+        <PackageReference Include="OxyPlot.Wpf" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CalculationController\CalculationController.csproj" />
+        <ProjectReference Include="..\ChartCreator2\ChartCreator2.csproj" />
+        <ProjectReference Include="..\Database\Database.csproj" />
+    </ItemGroup>
+
+</Project>

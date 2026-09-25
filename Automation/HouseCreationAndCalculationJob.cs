@@ -44,6 +44,12 @@ namespace Automation {
 
         [CanBeNull]
         public HouseData? House { get; set; }
+
+        /// <summary>
+        /// Specifies all information on the city the household are located in.
+        /// </summary>
+        public CityData? City { get; set; }
+
         public JsonCalcSpecification? CalcSpec { get; set; }
 
         public HouseDefinitionType HouseDefinitionType { get; set; }

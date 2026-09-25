@@ -32,6 +32,7 @@ using Automation;
 using CalculationEngine.HouseElements;
 using CalculationEngine.HouseholdElements;
 using Common;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using Xunit;
@@ -56,7 +57,7 @@ namespace Calculation.Tests
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void EnergyStorageSignalTests()
         {
-            CalcParameters cp = CalcParameters.GetNew();
+            CalcParameters cp = CalcParameters.CreateDefaultParamsForTesting();
             cp.DummyCalcSteps = 0;
             //CalcLoadType clt = new CalcLoadType("clt","power","sum",1,true, Guid.NewGuid().ToStrGuid());
             CalcVariable cv = new CalcVariable("myvariable",Guid.NewGuid().ToStrGuid(),0,"House",Guid.NewGuid().ToStrGuid(),
@@ -84,7 +85,7 @@ namespace Calculation.Tests
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void EnergyStorageSignalTests2()
         {
-            CalcParameters cp = CalcParameters.GetNew();
+            CalcParameters cp = CalcParameters.CreateDefaultParamsForTesting();
             cp.DummyCalcSteps = 0;
             //CalcLoadType clt = new CalcLoadType("clt",  "power", "sum", 1, true, Guid.NewGuid().ToStrGuid());
             CalcVariable cv = new CalcVariable("myvariable", Guid.NewGuid().ToStrGuid(), 0, "House", Guid.NewGuid().ToStrGuid(),

@@ -17,10 +17,10 @@ namespace Common.SQLResultLogging {
 
     public abstract class DataSaverBase : IDataSaverBase {
         public ResultTableDefinition ResultTableDefinition { get; }
-        [CanBeNull] private readonly SqlResultLoggingService _srls;
+        [CanBeNull] private readonly IResultLoggingService _srls;
 
         protected DataSaverBase([NotNull] Type savingType, [NotNull] ResultTableDefinition resultTableDefinition,
-                                [CanBeNull] SqlResultLoggingService srls)
+                                [CanBeNull] IResultLoggingService srls)
         {
             SavingType = savingType;
             //check if no readonly properties
@@ -63,7 +63,7 @@ namespace Common.SQLResultLogging {
         public Type SavingType { get; }
 
         [CanBeNull]
-        protected SqlResultLoggingService Srls => _srls;
+        protected IResultLoggingService Srls => _srls;
 
         [NotNull]
         protected SaveableEntry GetStandardSaveableEntry([NotNull] HouseholdKey key)

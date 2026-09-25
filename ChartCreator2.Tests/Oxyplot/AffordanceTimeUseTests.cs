@@ -38,7 +38,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Debug("finished picture");
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "AffordanceTimeUse.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo( 2);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(2);
             }
             Logger.Warning("Open threads for database: " + Connection.ConnectionCount);
             cs.CleanUp();

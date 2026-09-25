@@ -139,39 +139,32 @@ namespace CalcPostProcessor {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void RunPostProcessing()
         {
-            try {
-                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
-                if (_repository.CalcParameters.CSVCharacter.Length != 1) {
+            using var outerProfiler = _calculationProfiler.MeasureScope(Utili.GetCurrentMethodAndClass());
+            using (_calculationProfiler.MeasureScope(Utili.GetCurrentMethodAndClass() + " - Preparation"))
+            {
+                if (_repository.CalcParameters.CSVCharacter.Length != 1)
+                {
                     throw new DataIntegrityException(
                         "The length of the CSV-Character is not 1. Please enter a single, valid character in the settings.");
                 }
 
                 /*    var deviceNamesToCategory = new Dictionary<string, string>();
-                  //  foreach (var calcDevice in _repository.GetDevices().Devices)
+                    //  foreach (var calcDevice in _repository.GetDevices().Devices)
                     {
                         if (!deviceNamesToCategory.ContainsKey(calcDevice.Name))
                         {
                             deviceNamesToCategory.Add(calcDevice.Name, calcDevice.DeviceCategoryName);
                         }
                     }*/
-                if (_repository.HouseholdKeys.Count == 0) {
+                if (_repository.HouseholdKeys.Count == 0)
+                {
                     throw new LPGException("No household Numbers!");
                 }
-
-                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
-                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing");
-                try {
-                    ActualFunctionCaller(_repository.CalcParameters.LoadtypesToPostprocess);
-                }
-                finally {
-                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing");
-                }
-
-                //repository.CalculationResult.RandomSeed = _randomSeed;
             }
-            finally {
-                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+
+            using (_calculationProfiler.MeasureScope(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing"))
+            {
+                ActualFunctionCaller(_repository.CalcParameters.LoadtypesToPostprocess);
             }
         }
 

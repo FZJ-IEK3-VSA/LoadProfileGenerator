@@ -30,7 +30,7 @@ using System;
 using System.Collections.ObjectModel;
 using Automation;
 using CalculationController.CalcFactories;
-using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using FluentAssertions;

@@ -51,7 +51,7 @@ namespace Calculation.Tests.Logfile
         {
             using (WorkingDir wd = new WorkingDir("BasicLogfileTest"))
             {
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().EnableShowSettlingPeriod();
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 using (FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger))

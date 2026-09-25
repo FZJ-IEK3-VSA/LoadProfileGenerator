@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Autofac;
@@ -7,6 +8,7 @@ using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using CalculationController.DtoFactories;
 using CalculationController.Helpers;
+using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
@@ -52,7 +54,7 @@ namespace CalculationController.Tests.Transportation {
             var ltdtoDict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, new TimeSpan(0, 1, 0),
                 LoadTypePriority.RecommendedForHouseholds);
             var ltdict = CalcLoadTypeFactory.MakeLoadTypes(ltdtoDict);
-            var parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+            var parameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             builder.Register(_ => parameters).As<CalcParameters>().SingleInstance();
             builder.Register(_ => new DateStampCreator(parameters)).As<DateStampCreator>().SingleInstance();
@@ -62,7 +64,7 @@ namespace CalculationController.Tests.Transportation {
             builder.Register(_ => new FileFactoryAndTracker(wd.WorkingDirectory, mhh.Name, wd.InputDataLogger))
                 .As<FileFactoryAndTracker>()
                 .SingleInstance();
-            builder.Register(_ => new SqlResultLoggingService(wd.WorkingDirectory)).As<SqlResultLoggingService>()
+            builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(wd.WorkingDirectory)).As<IResultLoggingService>()
                 .SingleInstance();
             builder.Register(_ => wd.InputDataLogger).As<IInputDataLogger>().SingleInstance();
 
@@ -213,7 +215,7 @@ namespace CalculationController.Tests.Transportation {
                     var ltdict = CalcLoadTypeFactory.MakeLoadTypes(ltdtoDict);
                     //var picker = new DeviceCategoryPicker(r,null);
                     var nr = new NormalRandom(0, 0.1, r);
-                    var parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+                    var parameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                         .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
                     parameters.TransportationEnabled = true;
                     builder.Register(_ => parameters).As<CalcParameters>().SingleInstance();
@@ -223,7 +225,7 @@ namespace CalculationController.Tests.Transportation {
                     builder.Register(_ => new NormalRandom(0, 1, r)).As<NormalRandom>().SingleInstance();
                     builder.Register(_ => new FileFactoryAndTracker(path, mhh.Name, inputlogger))
                         .As<FileFactoryAndTracker>().SingleInstance();
-                    builder.Register(_ => new SqlResultLoggingService(path)).As<SqlResultLoggingService>()
+                    builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(path)).As<IResultLoggingService>()
                         .SingleInstance();
                     builder.Register(_ => inputlogger).As<IInputDataLogger>().As<InputDataLogger>().SingleInstance();
 
@@ -263,7 +265,8 @@ namespace CalculationController.Tests.Transportation {
                     using (var scope = container.BeginLifetimeScope()) {
                         var hhdtofac = scope.Resolve<CalcModularHouseholdDtoFactory>();
 
-                        var tds = sim.TransportationDeviceSets[0];
+                        // currently all predefined travel routes sets are for cars, so select a transportation device set with cars
+                        var tds = sim.TransportationDeviceSets.Items.First(set => !set.Name.ToLower().Contains("no car"));
                         tds.SaveToDB();
                         var trs = sim.TravelRouteSets[0];
                         trs.SaveToDB();
@@ -319,12 +322,18 @@ namespace CalculationController.Tests.Transportation {
                             throw new LPGException("no transportation handler");
                         }
 
-                        var src = chh.TransportationHandler.CalcSites[0].Locations[0];
-                        var dst = chh.TransportationHandler.CalcSites[1].Locations[0];
+                        var daylight = new BitArray(parameters.InternalTimesteps);
+                        daylight.SetAll(true);
+                        var dls = new DayLightStatus(daylight);
+
+                        var src = chh.TransportationHandler.CalcSites[0].Locations.ElementAt(0);
+                        var dst = chh.TransportationHandler.CalcSites[1].Locations.ElementAt(0);
                         var ts = new TimeStep(1, parameters);
                         var person = new CalcPersonDto("personname", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
-                        dst.Affordances[0].IsBusy(ts, src, person, false);
-                        dst.Affordances[0].Activate(ts, person.Name, src, out var personTimeProfile);
+                        var affordance = dst.Affordances[0];
+                        affordance.IsBusy(ts, src.CalcSite, person, false);
+                        var activities = affordance.PlanActivation(ts, person, src.CalcSite);
+                        activities.First().Start(ts, dls);
                         fft.Dispose();
                     }
 

@@ -70,6 +70,15 @@ namespace Automation {
             EnableFlexibility = o.EnableFlexibility;
         }
 
+        /// <summary>
+        /// Creates a shallow object of this JsonCalcSpecification.
+        /// </summary>
+        /// <returns>a copy of the current JsonCalcSpecification object</returns>
+        public JsonCalcSpecification ShallowCopy()
+        {
+            return (JsonCalcSpecification)MemberwiseClone();
+        }
+
         [Comment(
             "List of all load types to process in postprocessing. Internally if you calculate a house, the LPG needs to calculate the warm water needs to correctly calculate the electricity demand from the heat pump. " +
             "But maybe you don't need the warm water profiles and only want the electricity files. Then you can put Electricity here (case is important!) and the LPG will skip everything " +
@@ -150,6 +159,9 @@ namespace Automation {
             "The LPG runs a 3-day period before the simulation start to initialize the people. For debugging purposes it is possible to include this in the result files. Defaults to false.")]
         public bool ShowSettlingPeriod { get; set; }
 
+        [Comment("Determines the number of settling days that are simulated before the actual start date. These days help to avoid simulation artifacts in the beginning. Default=3")]
+        public int SettlingDays { get; set; } = 3;
+
         [Comment(
             "Flexibility modelling seperates the electric devices out that can time shifted. The LPG then generates two distinct profiles.")]
         public bool EnableFlexibility { get; set; }
@@ -174,6 +186,7 @@ namespace Automation {
         public bool IgnorePreviousActivitiesWhenNeeded { get; [UsedImplicitly] set; }
 
         public bool EnableTransportation { get; set; }
+
         [Comment("When using household templates, sometimes random households are generated that don't work. With this option you can force the LPG force to simulate all cases, no matter how messed up the definition is. Basically this enables a special activity \"Idle\" that always gets activated whenever the person can't find something to do. Default=false")]
         public bool EnableIdlemode { get; set; }
 

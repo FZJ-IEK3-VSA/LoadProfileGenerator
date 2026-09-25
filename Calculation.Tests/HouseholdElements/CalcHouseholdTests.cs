@@ -13,6 +13,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using Database;
@@ -22,7 +23,8 @@ using Moq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Calculation.HouseholdElements.Tests {
+namespace Calculation.HouseholdElements.Tests
+{
     public class CalcHouseholdTests : UnitTestBaseClass {
         public CalcHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
@@ -51,13 +53,13 @@ namespace Calculation.HouseholdElements.Tests {
                     SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     CalcManagerFactory.DoIntegrityRun = false;
 
-                    var cmf = new CalcManagerFactory();
                     var calculationProfiler = new CalculationProfiler();
                     var csps = new CalcStartParameterSet(sim.GeographicLocations[0], sim.TemperatureProfiles[0], sim.ModularHouseholds[0],
                         EnergyIntensityType.Random, false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2), new TimeSpan(0, 1, 0), ";", 5,
                         new TimeSpan(0, 15, 0), false, false, 3, 3, calculationProfiler, wd1.WorkingDirectory, false, false, ".", false);
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
+                    var cm = cmf.GetCalcManager(csps);
                     //,, wd1.WorkingDirectory, sim.ModularHouseholds[0], false,
                     //sim.TemperatureProfiles[0], sim.GeographicLocations[0], EnergyIntensityType.Random, version,
                     //LoadTypePriority.RecommendedForHouses, null,null
@@ -66,7 +68,7 @@ namespace Calculation.HouseholdElements.Tests {
                         throw new LPGException("CalcObject was null");
                     }
 
-                    cm.CalcObject.Init(dls, 1);
+                    cm.CalcObject.Init(dls);
                     CalcManager.ExitCalcFunction = true;
                     cm.CalcObject.DumpHouseholdContentsToText();
                     cm.Dispose();
@@ -79,7 +81,8 @@ namespace Calculation.HouseholdElements.Tests {
     }
 }
 
-namespace Calculation.Tests.HouseholdElements {
+namespace Calculation.Tests.HouseholdElements
+{
     public class CalcHouseholdTests : UnitTestBaseClass {
         public CalcHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
@@ -93,7 +96,7 @@ namespace Calculation.Tests.HouseholdElements {
             // only a single one should be matched.
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(100);
-            var calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(startdate).SetEndDate(enddate);
 
             //_calcParameters.InitializeTimeSteps(startdate, enddate, new TimeSpan(0, 1, 0), 3, false);
 

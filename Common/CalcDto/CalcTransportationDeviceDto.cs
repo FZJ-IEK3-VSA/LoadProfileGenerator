@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;

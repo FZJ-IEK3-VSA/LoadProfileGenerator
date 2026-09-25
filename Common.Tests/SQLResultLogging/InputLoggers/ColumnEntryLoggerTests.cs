@@ -3,6 +3,7 @@ using System.IO;
 using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -13,7 +14,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Common.Tests.SQLResultLogging.InputLoggers {
+namespace Common.Tests.SQLResultLogging.InputLoggers
+{
     public class ColumnEntryLoggerTests : UnitTestBaseClass
     {
         [Fact]
@@ -29,9 +31,9 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
                 ael
             };
                 InputDataLogger idl = new InputDataLogger(savers.ToArray());
-                CalcLoadTypeDto cltd = new CalcLoadTypeDto("ltname", "kw", "kwh", 1, false, "guid".ToStrGuid());
-                CalcDeviceDto cdd = new CalcDeviceDto("device", "guid".ToStrGuid(), key, OefcDeviceType.Device, "devcatname", "", "guid".ToStrGuid(), "guid".ToStrGuid(), "loc", FlexibilityType.NoFlexibility, 0);
-                ColumnEntry ce = new ColumnEntry("name", 1, "locname", "guid".ToStrGuid(), key, cltd, "oefckey", "devicecategory", cdd);
+                CalcLoadTypeDto cltd = new CalcLoadTypeDto("ltname", "kw", "kwh", 1, false, StringExtensions.ToStrGuid("guid"));
+                CalcDeviceDto cdd = new CalcDeviceDto("device", StringExtensions.ToStrGuid("guid"), key, OefcDeviceType.Device, "devcatname", "", StringExtensions.ToStrGuid("guid"), StringExtensions.ToStrGuid("guid"), "loc", FlexibilityType.NoFlexibility, 0);
+                ColumnEntry ce = new ColumnEntry("name", 1, "locname", StringExtensions.ToStrGuid("guid"), key, cltd, "oefckey", "devicecategory", cdd);
                 List<ColumnEntry> aes = new List<ColumnEntry>
             {
                 ce

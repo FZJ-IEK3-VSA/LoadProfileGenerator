@@ -90,7 +90,7 @@ namespace Database.Tables.Houses {
             var loadTypeID = dr.GetIntFromLong("VLoadTypeID");
             var factor = dr.GetDouble("Factor");
             var transformationDeviceID = dr.GetIntFromLong("TransformationDeviceID");
-            var vlt = aic.LoadTypes.FirstOrDefault(mylt => mylt.ID == loadTypeID);
+            var vlt = aic.LoadTypes.FindById(loadTypeID);
             var factorType =
                 (TransformationFactorType) dr.GetIntFromLong("FactorType", false, ignoreMissingFields);
             var loadTypeName = string.Empty;

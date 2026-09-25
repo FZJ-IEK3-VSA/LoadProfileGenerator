@@ -7,11 +7,13 @@ using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.ModularHouseholds {
+namespace Database.Tables.ModularHouseholds
+{
     public class HHTemplateEntry : DBBase, IComparable<HHTemplateEntry>, IJSonSubElement<HHTemplateEntry.JsonDto>
     {
 
@@ -179,7 +181,7 @@ namespace Database.Tables.ModularHouseholds {
             var maxCount = dr.GetIntFromLong("TraitCountMax");
             var tagID = dr.GetNullableIntFromLong("TraitTagID", false, ignoreMissingFields);
             var isMandatory = dr.GetBool("IsMandatory", false, false, ignoreMissingFields);
-            var traitTag = aic.TraitTags.FirstOrDefault(mytrait => mytrait.ID == tagID);
+            var traitTag = aic.TraitTags.FindById(tagID);
             var name = "(no name)" + hhgID + minCount + maxCount + tagID;
             var guid = GetGuid(dr, ignoreMissingFields);
 

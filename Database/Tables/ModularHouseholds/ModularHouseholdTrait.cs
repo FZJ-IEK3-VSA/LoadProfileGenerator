@@ -198,9 +198,9 @@ namespace Database.Tables.ModularHouseholds {
             var modularHouseholdTraitAssignType =
                 (ModularHouseholdTraitAssignType) dr.GetIntFromLong("AssignType", false, ignoreMissingFields);
             var personID = dr.GetIntFromLong("PersonID", false, ignoreMissingFields, -1);
-            var p = aic.Persons.FirstOrDefault(myPerson => myPerson.ID == personID);
+            var p = aic.Persons.FindById(personID);
             var householdTraitid = dr.GetIntFromLong("HouseholdTraitID");
-            var ht = aic.HouseholdTraits.FirstOrDefault(mytrait => mytrait.ID == householdTraitid);
+            var ht = aic.HouseholdTraits.FindById(householdTraitid);
             var name = "(no name)";
             if (ht != null) {
                 name = ht.Name;

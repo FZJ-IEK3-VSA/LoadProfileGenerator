@@ -114,13 +114,13 @@ namespace Database.Tables.BasicElements {
             var id = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("TaggingSetID");
             var tagID = dr.GetIntFromLong("TagID");
-            var tag = aic.DeviceTags.FirstOrDefault(myTag => myTag.ID == tagID);
+            var tag = aic.DeviceTags.FindById(tagID);
             var personCount = dr.GetIntFromLong("PersonCount", false, ignoreMissingFields, -1);
             var referenceValue = dr.GetDouble("ReferenceValue", false, -1, ignoreMissingFields);
             var loadtypeID = dr.GetIntFromLong("LoadTypeID", false, ignoreMissingFields);
-            var loadType = aic.LoadTypes.FirstOrDefault(x => x.IntID == loadtypeID);
+            var loadType = aic.LoadTypes.FindById(loadtypeID);
             if (loadType == null) {
-                loadType = aic.LoadTypes.FirstOrDefault(
+                loadType = aic.LoadTypes.Items.FirstOrDefault(
                     x => x.Name.ToLower(CultureInfo.CurrentCulture) == "electricity");
             }
             var name = GetName(tag, personCount, referenceValue, loadType);

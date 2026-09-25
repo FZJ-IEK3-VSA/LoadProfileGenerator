@@ -1,0 +1,163 @@
+﻿using System.Collections.Generic;
+using Automation.ResultFiles;
+using CalculationEngine.Activities;
+using CalculationEngine.Transportation;
+using Common;
+using Common.CalcDto;
+using Common.Enums;
+
+namespace CalculationEngine.HouseholdElements
+{
+    public class CalcAffordanceRemote : CalcAffordanceWithTimeLimit
+    {
+        /// <summary>
+        /// Stores all current activations of this affordance. Maps name of the activating person
+        /// to the start time of the activation.
+        /// </summary>
+        /// TODO: current activations are not tracked yet
+        private Dictionary<string, TimeStep> _currentActivations = [];
+
+        /// <summary>
+        /// Helper object for calculating expected activity durations
+        /// </summary>
+        internal AffordanceDurationCalculator DurationCalculator { get; }
+
+        /// <summary>
+        /// The specific site where the affordance takes place, including the ID of the
+        /// selcted point of interest. Must not be null for remote affordances.
+        /// </summary>
+        public override CalcSite Site => base.Site!;
+
+        /// <summary>
+        /// Creates a remote affordance from another affordance that uses a time limit. Creates a shallow copy
+        /// of the original affordance.
+        /// </summary>
+        /// <param name="affordance">the original affordance</param>
+        public CalcAffordanceRemote(CalcAffordance affordance) : base(affordance)
+        {
+            if (Site?.PointOfInterest is null)
+                throw new LPGException("A remote affordance needs a site with a valid point of interest ID.");
+            DurationCalculator = affordance.DurationCalculator;
+        }
+
+        /// <summary>
+        /// Creates a new remote from a non-remote affordance. The new remote affordance is based on a shallow copy of the
+        /// original affordance.
+        /// </summary>
+        /// <param name="affordance">the original affordance</param>
+        /// <returns>the new remote affordance</returns>
+        /// <exception cref="LPGException">if the original affordance cannot be turned into a remote affordance</exception>
+        public static CalcAffordanceRemote CreateFromNormalAffordance(ICalcAffordanceBase affordance)
+        {
+            // check if the original affordance can be turned into a remote affordance
+            if (affordance is CalcAffordanceRemote)
+            {
+                throw new LPGException("The affordance to convert is already a remote affordance.");
+            }
+            if (affordance is AffordanceBaseTransportDecorator)
+            {
+                throw new LPGException("Cannot convert a transport decorator - pass the source affordance instead");
+            }
+            if (affordance is not CalcAffordance calcAffordance)
+            {
+                throw new LPGException($"Trying to create a remote affordance from an unknown affordance type: {affordance.GetType().Name}");
+            }
+
+            return new CalcAffordanceRemote(calcAffordance);
+        }
+
+        public override IEnumerable<RemoteActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite)
+        {
+            var expectedDuration = DurationCalculator.GetEnd(startTime, activator.Name) - startTime;
+            var activation = new RemoteActivity(Name, activator.Name, Site.PointOfInterest, this, expectedDuration.InternalStep);
+            return [activation];
+        }
+
+        public override void StartActivation(TimeStep startTime, string activatorName)
+        {
+            // execute only variable operations that occur in the beginning
+            ExecuteVariableOperations(startTime, [VariableExecutionTime.Beginning], true);
+        }
+
+        /// <summary>
+        /// Finishes an activation of this affordance. Must be called once for each activation.
+        /// </summary>
+        /// <param name="endTime">the timestep in which the activity ended</param>
+        /// <param name="activatorName">the person activating the affordance</param>
+        public override void FinishActivation(TimeStep endTime, string activatorName)
+        {
+            // execute only variable operations that occur at the end of the affordance, which is
+            // also always the end of the person time
+            ExecuteVariableOperations(endTime, [VariableExecutionTime.EndofDevices, VariableExecutionTime.EndOfPerson], true);
+        }
+
+        /// <summary>
+        /// Collect all subaffordances of this affordance that are currently available. This depends
+        /// on whether this affordance is currently active and whether the activation was long enough ago, but
+        /// not longer than the permitted buffer time frame.
+        /// </summary>
+        /// <param name="time">current timestep</param>
+        /// <param name="onlyInterrupting">whether only interrupting subaffordances should be collected</param>
+        /// <param name="srcSite">the current site of the person</param>
+        /// <returns>a list of available subaffordances</returns>
+        public override IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite)
+        {
+            if (SubAffordances.Count == 0)
+            {
+                return [];
+            }
+
+            if (_currentActivations.Count == 0)
+            {
+                // the affordance is currently not active
+                return [];
+            }
+
+            // collect all available subaffordances
+            var availableSubAffs = new List<ICalcAffordanceBase>();
+            foreach (var subAffordance in SubAffordances)
+            {
+                if (!onlyInterrupting || subAffordance.IsInterrupting)
+                {
+                    if (IsSubaffordanceAvailable(time, srcSite, subAffordance.GetAsSubAffordance()))
+                    {
+                        availableSubAffs.Add(subAffordance);
+                    }
+                }
+            }
+            return availableSubAffs;
+        }
+
+        /// <summary>
+        /// Checks if there is a current activation of the affordance that offers the specified subaffordance.
+        /// </summary>
+        /// <param name="time">the timestep for which to check if the subaffordance is available</param>
+        /// <param name="srcSite">the site of the affordance</param>
+        /// <param name="subAffordance">the subaffordance to check</param>
+        /// <returns>whether the subaffordance is currently available</returns>
+        private bool IsSubaffordanceAvailable(TimeStep time, ICalcSite? srcSite, CalcSubAffordance subAffordance)
+        {
+            // check all current activations if one of them offers the subaffordance now
+            foreach (var kvPair in _currentActivations)
+            {
+                // start and end time for this activation
+                int personStartTime = kvPair.Value.InternalStep;
+
+                // the subaffordance can only be activated after the delay time, but before the buffer time is over
+                var isDelayTimePassed = personStartTime + subAffordance.Delaytimesteps < time.InternalStep;
+                var isBufferTimePassed = personStartTime + subAffordance.Delaytimesteps + SubAffordanceStartFrame <= time.InternalStep;
+                // check if the subaffordance could be activated right now
+                var person = new CalcPersonDto("name", null, -1, PermittedGender.All, null, null, null, -1, null, null);
+                var isSubAffordanceBusy = subAffordance.IsBusy(time, srcSite, person);
+                if (isDelayTimePassed && !isBufferTimePassed && isSubAffordanceBusy == BusynessType.NotBusy)
+                {
+                    // TODO: Subaffordance needs to be a RemoteAffordance with variable duration too
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override string ToString() => "RemoteAffordance:" + Name;
+    }
+}

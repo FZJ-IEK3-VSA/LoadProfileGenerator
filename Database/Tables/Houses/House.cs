@@ -36,6 +36,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -45,7 +46,8 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.Houses {
+namespace Database.Tables.Houses
+{
     public class House : DBBaseElement, ICalcObject {
         internal const string TableName = "tblHouses";
 
@@ -421,19 +423,19 @@ namespace Database.Tables.Houses {
             var temperatureprofileID = dr.GetNullableIntFromLong("TemperatureProfileID", false);
             TemperatureProfile tp = null;
             if (temperatureprofileID != null) {
-                tp = aic.TemperatureProfiles.FirstOrDefault(tp1 => tp1.ID == temperatureprofileID);
+                tp = aic.TemperatureProfiles.FindById(temperatureprofileID);
             }
 
             var geographicLocationID = dr.GetNullableIntFromLong("GeographicLocationID", false);
             GeographicLocation geoloc = null;
             if (geographicLocationID != null) {
-                geoloc = aic.GeographicLocations.FirstOrDefault(geo1 => geo1.ID == geographicLocationID);
+                geoloc = aic.GeographicLocations.FindById(geographicLocationID);
             }
 
             var houseTypeID = dr.GetNullableIntFromLong("HouseTypeID", false);
             HouseType houseType = null;
             if (houseTypeID != null) {
-                houseType = aic.HouseTypes.FirstOrDefault(housetype => housetype.ID == houseTypeID);
+                houseType = aic.HouseTypes.FindById(houseTypeID);
             }
 
             var energyintensityID = dr.GetString("EnergyIntensityType", false, EnergyIntensityType.Random.ToString(), ignoreMissingFields);

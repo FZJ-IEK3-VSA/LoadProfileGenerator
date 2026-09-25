@@ -12,7 +12,7 @@ namespace Common.SQLResultLogging.Loggers {
     public class PersonStatusLogger : DataSaverBase {
         private const string TableName = "PersonStatus";
 
-        public PersonStatusLogger([NotNull] SqlResultLoggingService srls) : base(typeof(PersonStatus),
+        public PersonStatusLogger([NotNull] IResultLoggingService srls) : base(typeof(PersonStatus),
             new ResultTableDefinition(TableName, ResultTableID.PersonStatus, "The status of each person for each timestep", CalcOption.PersonStatus),
             srls)
         {

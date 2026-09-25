@@ -83,7 +83,7 @@ namespace Database.Tables.BasicHouseholds {
             var value = dr.GetDouble("Value");
             var standardDeviation = dr.GetDouble("StandardDeviation");
             var averageYearlyConsumption = dr.GetDouble("AverageYearlyConsumption", false);
-            var lt = aic.LoadTypes.FirstOrDefault(x => x.ID == loadTypeID);
+            var lt = aic.LoadTypes.FindById(loadTypeID);
             var name = "(no name)";
             if (lt != null) {
                 name = lt.Name;

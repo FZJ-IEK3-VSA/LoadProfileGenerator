@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 namespace Common.SQLResultLogging.Loggers {
     public class SingleTimestepActionEntryLogger : DataSaverBase
     {
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly IResultLoggingService _srls;
         private const string TableName = "ActionsEachTimestep";
-        public SingleTimestepActionEntryLogger([NotNull] SqlResultLoggingService srls) :
+        public SingleTimestepActionEntryLogger([NotNull] IResultLoggingService srls) :
             base(typeof(SingleTimestepActionEntry), new ResultTableDefinition(TableName,
                 ResultTableID.SingleTimeStepActionEntry, "Selected Action for each time step for each person", CalcOption.ActionsEachTimestep), srls)
         {

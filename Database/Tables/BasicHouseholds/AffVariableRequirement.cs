@@ -68,10 +68,10 @@ namespace Database.Tables.BasicHouseholds {
             var locmode =
                 (VariableLocationMode) dr.GetIntFromLong("LocationMode", false, ignoreMissingFields);
             var locationID = dr.GetIntFromLong("LocationID", false, ignoreMissingFields, -1);
-            var loc = aic.Locations.FirstOrDefault(x => x.IntID == locationID);
+            var loc = aic.Locations.FindById(locationID);
             var ta = (VariableCondition) dr.GetIntFromLong("Condition", false, ignoreMissingFields);
             var variableID = dr.GetIntFromLong("VariableID", false, ignoreMissingFields, -1);
-            var va = aic.Variables.FirstOrDefault(x => x.ID == variableID);
+            var va = aic.Variables.FindById(variableID);
             var description = dr.GetString("Description", false, string.Empty, ignoreMissingFields);
             var name = "(no name)";
             if (va != null) {

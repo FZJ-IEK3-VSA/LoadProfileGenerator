@@ -19,6 +19,7 @@
         public const string FullCalcHouses2 = "FullCalcHouses2";
         public const string FullCalcHouses3 = "FullCalcHouses3";
         public const string LongTermMerge = "LongTermMerge";
+        public const string CitySimulationTest = "CitySimulationTest";
         public const string Category = "Category";
         public const string SystematicSettlementTemplateTests = "SystematicSettlementTemplateTests";
     }

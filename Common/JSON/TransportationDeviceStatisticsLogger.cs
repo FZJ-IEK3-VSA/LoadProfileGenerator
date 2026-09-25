@@ -10,7 +10,7 @@ namespace Common.JSON
     public class TransportationDeviceStatisticsLogger : DataSaverBase
     {
         private const string TableName = "TransportationDeviceStatistics";
-        public TransportationDeviceStatisticsLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) :
+        public TransportationDeviceStatisticsLogger([JetBrains.Annotations.NotNull] IResultLoggingService srls) :
             base(typeof(List<TransportationDeviceStatisticsEntry>), new ResultTableDefinition(TableName, ResultTableID.TransportationDeviceStatistics, "Statistics about the transportation", CalcOption.TransportationStatistics), srls)
         {
         }

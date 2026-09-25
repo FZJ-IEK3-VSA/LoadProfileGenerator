@@ -33,14 +33,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Automation;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     [Serializable]
     public class Desire : DBBaseElement {
         public const string TableName = "tblDesires";

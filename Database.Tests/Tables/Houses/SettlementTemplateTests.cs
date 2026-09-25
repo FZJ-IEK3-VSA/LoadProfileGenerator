@@ -5,6 +5,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationController.Integrity;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.Houses;
 using FluentAssertions;
@@ -12,7 +13,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables.Houses {
+namespace Database.Tests.Tables.Houses
+{
 
     public class SettlementTemplateTests : UnitTestBaseClass
     {
@@ -113,7 +115,7 @@ namespace Database.Tests.Tables.Houses {
                 var householdTags = db.LoadHouseholdTags();
                 db.LoadTransportation(allLocations, out var transportationDeviceSets,
                     out var travelRouteSets, out _,out _,
-                    loadTypes,out var chargingStationSets, affordanceTaggingSets);
+                    loadTypes,out var chargingStationSets, affordanceTaggingSets, timeLimits);
                 db.ClearTable(SettlementTemplate.TableName);
                 db.ClearTable(STHouseholdDistribution.TableName);
                 db.ClearTable(STHouseholdTemplate.TableName);

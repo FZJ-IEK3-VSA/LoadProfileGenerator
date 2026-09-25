@@ -6,25 +6,25 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Transportation {
+namespace Database.Tables.Transportation
+{
     public class TravelRouteSet : DBBaseElement {
         public const string TableName = "tblTravelRouteSet";
 
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TravelRouteSetEntry> _routes =
             new ObservableCollection<TravelRouteSetEntry>();
 
-        [CanBeNull] private string _description;
-        [CanBeNull] private AffordanceTaggingSet _affordanceTaggingSet;
+        private string? _description;
+        private AffordanceTaggingSet? _affordanceTaggingSet;
 
 
-        public TravelRouteSet([JetBrains.Annotations.NotNull] string name,
-                              [CanBeNull]int? pID,
-                              [JetBrains.Annotations.NotNull] string connectionString,
-                              [CanBeNull] string description, [NotNull] StrGuid guid, AffordanceTaggingSet affordanceTaggingSet) : base(name,
+        public TravelRouteSet(string name, int? pID, string connectionString, string? description, StrGuid guid,
+                              AffordanceTaggingSet? affordanceTaggingSet) : base(name,
             TableName, connectionString, guid)
         {
             _description = description;
@@ -34,16 +34,14 @@ namespace Database.Tables.Transportation {
             _affordanceTaggingSet = affordanceTaggingSet;
         }
 
-        [CanBeNull]
         [UsedImplicitly]
-        public string Description {
+        public string? Description {
             get => _description;
             set => SetValueWithNotify(value, ref _description, nameof(Description));
         }
 
-        [CanBeNull]
         [UsedImplicitly]
-        public AffordanceTaggingSet AffordanceTaggingSet
+        public AffordanceTaggingSet? AffordanceTaggingSet
         {
             get => _affordanceTaggingSet;
             set => SetValueWithNotify(value, ref _affordanceTaggingSet, true, nameof(AffordanceTaggingSet));
@@ -55,7 +53,7 @@ namespace Database.Tables.Transportation {
         public ObservableCollection<TravelRouteSetEntry> TravelRoutes => _routes;
 
         public void AddRoute([JetBrains.Annotations.NotNull] TravelRoute route, int minimumAge = -1, int maximumAge = -1,
-            PermittedGender gender = PermittedGender.All, AffordanceTag affordanceTag = null, int? personID = null, double weight = 1.0, bool savetodb = true)
+            PermittedGender gender = PermittedGender.All, AffordanceTag affordanceTag = null, int? personID = null, double weight = 1.0, TimeLimit? timeLimit = null, bool savetodb = true)
         {
             if (route == null) {
                 throw new LPGException("Can't add a null route.");
@@ -64,7 +62,7 @@ namespace Database.Tables.Transportation {
             if (route.ConnectionString != ConnectionString) {
                 throw new LPGException("A location from another DB was just added!");
             }
-            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, minimumAge, maximumAge, gender, affordanceTag, personID, weight, System.Guid.NewGuid().ToStrGuid());
+            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, minimumAge, maximumAge, gender, affordanceTag, personID, weight, timeLimit, System.Guid.NewGuid().ToStrGuid());
             _routes.Add(entry);
             if(savetodb) {
                 entry.SaveToDB();
@@ -81,7 +79,7 @@ namespace Database.Tables.Transportation {
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
             var id = dr.GetIntFromLong("ID", false, ignoreMissingFields, -1);
             var affordanceTaggingSetID = dr.GetIntFromLong("AffordanceTaggingSetID", false, ignoreMissingFields, -1);
-            var affordanceTaggingSet = aic.AffordanceTaggingSets.FirstOrDefault(x => x.IntID == affordanceTaggingSetID);
+            var affordanceTaggingSet = aic.AffordanceTaggingSets.FindById(affordanceTaggingSetID);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new TravelRouteSet(name, id, connectionString, description, guid, affordanceTaggingSet);
         }
@@ -132,21 +130,17 @@ namespace Database.Tables.Transportation {
                         routeEntry.AffordanceTag.Name);
                 }
 
-                loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, newAffordanceTag, routeEntry.PersonID, routeEntry.Weight);
+                loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, newAffordanceTag, routeEntry.PersonID, routeEntry.Weight, routeEntry.TimeLimit);
             }
             return loc;
         }
 
-        private static bool IsCorrectTravelRouteSetParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
-        {
-            var setEntry = (TravelRouteSetEntry) child;
-            if (parent.ID == setEntry.TravelRouteSetID) {
-                var travelRouteSet = (TravelRouteSet) parent;
-                travelRouteSet.TravelRoutes.Add(setEntry);
-                return true;
-            }
-            return false;
-        }
+        /// <summary>
+        /// Adds an entry to a travel route set. Used for loading from the database.
+        /// </summary>
+        /// <param name="set">the travel route set object</param>
+        /// <param name="entry">the travel route set entry object</param>
+        private static void AddEntryToTravelRouteSet(DBBase set, DBBase entry) => ((TravelRouteSet)set).TravelRoutes.Add((TravelRouteSetEntry)entry);
 
         protected override bool IsItemLoadedCorrectly(out string message)
         {
@@ -155,23 +149,31 @@ namespace Database.Tables.Transportation {
         }
 
         public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteSet> result, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes, ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets)
+            bool ignoreMissingTables, [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes, ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets,
+            ObservableCollection<TimeLimit> timeLimits)
         {
-            var aic = new AllItemCollections(travelRoutes: travelRoutes, affordanceTaggingSets: affordanceTaggingSets);
+            ObservableCollection<AffordanceTag> affordanceTags = [.. affordanceTaggingSets.SelectMany(set => set.Tags)];
+            var aic = new AllItemCollections(affordanceTags, timeLimits: timeLimits, affordanceTaggingSets: affordanceTaggingSets, travelRoutes: travelRoutes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             var ld = new ObservableCollection<TravelRouteSetEntry>();
             // Store all AffordanceTags in the AllItemCollections object so that the TravelRouteSetEntries can access them
-            aic.AffordanceTags = new ObservableCollection<AffordanceTag>(affordanceTaggingSets.SelectMany(set => set.Tags));
             TravelRouteSetEntry.LoadFromDatabase(ld, connectionString, ignoreMissingTables, aic);
-            SetSubitems(new List<DBBase>(result), new List<DBBase>(ld), IsCorrectTravelRouteSetParent,
-                ignoreMissingTables);
+            SetSubitemsByParentId([.. result], [.. ld], entry=>((TravelRouteSetEntry)entry).TravelRouteSetID, AddEntryToTravelRouteSet, ignoreMissingTables);
         }
 
         public override void SaveToDB()
         {
-            base.SaveToDB();
-            foreach (var routeEntry in _routes) {
-                routeEntry.SaveToDB();
+            using Connection con = new(ConnectionString);
+            con.Open();
+            base.SaveToDB(con);
+            using (var tr = con.BeginTransaction())
+            {
+                foreach (var routeEntry in _routes)
+                {
+                    routeEntry.SaveToDB(con);
+                }
+
+                tr.Commit();
             }
         }
 

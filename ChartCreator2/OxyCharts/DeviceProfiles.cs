@@ -19,13 +19,13 @@ namespace ChartCreator2.OxyCharts {
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class DeviceProfiles : ChartBaseFileStep
     {
-        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
+        [JetBrains.Annotations.NotNull] private readonly IResultLoggingService _srls;
         private readonly CalcParameters _calcParameters;
 
         public DeviceProfiles([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
                               [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
                               [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-                              [JetBrains.Annotations.NotNull] SqlResultLoggingService srls, CalcParameters calcParameters) : base(parameters, fft,
+                              [JetBrains.Annotations.NotNull] IResultLoggingService srls, CalcParameters calcParameters) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DeviceProfileCSV
             },
             "Device Profiles", FileProcessingResult.ShouldCreateFiles

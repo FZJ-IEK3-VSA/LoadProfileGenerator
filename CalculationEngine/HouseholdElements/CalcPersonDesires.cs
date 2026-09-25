@@ -212,7 +212,7 @@ namespace CalculationEngine.HouseholdElements {
                     var personNumber = _persons.Count;
                     _persons.Add(new Tuple<string, HouseholdKey>(person.Name, householdKey), personNumber);
                     _sw = fft.MakeFile<StreamWriter>(
-                        "CriticalThresholdViolations." + householdKey + "." + person + ".csv",
+                        $"CriticalThresholdViolations.{householdKey}.{person.PrettyName}.csv",
                         "Lists the critical threshold violations for " + person, true,
                         ResultFileID.CriticalThresholdViolations, householdKey,
                         TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize, CalcOption.CriticalViolations, null,person.MakePersonInformation());

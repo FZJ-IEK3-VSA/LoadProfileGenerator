@@ -35,7 +35,6 @@ namespace Calculation.Tests.PostProcessing
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
             sim.Should().NotBeNull();
             sim.MyGeneralConfig.RandomSeed = 10;
-            CalcManagerFactory cmf = new CalcManagerFactory();
                 CalculationProfiler calculationProfiler = new CalculationProfiler();
             CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                 sim.TemperatureProfiles[0], sim.ModularHouseholds[0],
@@ -44,7 +43,8 @@ namespace Calculation.Tests.PostProcessing
                 new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", 10, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
                 wd.WorkingDirectory, false,
                 false, ".", false);
-            CalcManager cm = cmf.GetCalcManager(sim, csps, false);
+            CalcManagerFactory cmf = new CalcManagerFactory(sim, csps.CalcParams);
+            CalcManager cm = cmf.GetCalcManager(csps);
                 //wd.WorkingDirectory, sim.ModularHouseholds[0],  false,
                 //sim.TemperatureProfiles[0], sim.GeographicLocations[0], EnergyIntensityType.Random, version,
                 //LoadTypePriority.All, null,null,null);

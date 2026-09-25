@@ -57,7 +57,7 @@ namespace Database.Tables.ModularHouseholds {
             LivingPatternTag livingPatternTag = null;
             if (livingpatternID != null)
             {
-                livingPatternTag = aic.LivingPatternTags.FirstOrDefault(x => x.ID == livingpatternID);
+                livingPatternTag = aic.LivingPatternTags.FindById(livingpatternID);
             }
             var name = "unknown";
             if (livingPatternTag != null)

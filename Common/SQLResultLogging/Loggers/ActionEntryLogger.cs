@@ -10,7 +10,7 @@ namespace Common.SQLResultLogging.Loggers {
 
     public class ActionEntryLogger : DataSaverBase {
         private const string TableName = "PerformedActions";
-        public ActionEntryLogger([NotNull] SqlResultLoggingService srls) :
+        public ActionEntryLogger([NotNull] IResultLoggingService srls) :
             base(typeof(ActionEntry), new ResultTableDefinition(TableName,ResultTableID.PerformedActions, "Action Entries", CalcOption.ActionEntries), srls)
         {
         }

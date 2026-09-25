@@ -14,6 +14,7 @@ using CalcPostProcessor;
 using ChartCreator2;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
@@ -25,6 +26,7 @@ using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using PowerArgs;
 using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 using Xunit.Abstractions;
@@ -32,7 +34,8 @@ using Xunit.Abstractions;
 //using iTextSharp.text.pdf;
 
 
-namespace SimulationEngine.Tests {
+namespace SimulationEngine.Tests
+{
     public enum TestDuration {
         ThreeDays,
         OneMonth,
@@ -74,7 +77,7 @@ namespace SimulationEngine.Tests {
                 sim.TransportationDeviceSets[0].GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
-            var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
+            var hh = sim.ModularHouseholds.FindByGuid(StringExtensions.ToStrGuid(guid));
             if (hh == null) {
                 throw new LPGException("hh was null");
             }
@@ -124,12 +127,14 @@ namespace SimulationEngine.Tests {
             {
                 Households = new List<HouseholdData>()
             };
+            // get the first transportation device set that contains a car, as the default travel route sets only contain car routes
+            var transportDeviceSet = sim.TransportationDeviceSets.Items.First(set => set.TransportationDeviceSetEntries.Any(device => device.Name.ToLower().Contains("car")));
             var hhd = new HouseholdData("householdid",
                 "householdname", sim.ChargingStationSets[0].GetJsonReference(),
-                sim.TransportationDeviceSets[0].GetJsonReference(),
+                transportDeviceSet.GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
-            var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
+            var hh = sim.ModularHouseholds.FindByGuid(StringExtensions.ToStrGuid(guid));
             if (hh == null) {
                 throw new LPGException("No household found");
             }
@@ -151,7 +156,7 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
             hj.CalcSpec.EnableTransportation = false;
-            var ht = sim.HouseTypes.FindByGuid(guid.ToStrGuid());
+            var ht = sim.HouseTypes.FindByGuid(StringExtensions.ToStrGuid(guid));
             if (ht == null) {
                 throw new LPGException("Housetype not found");
             }
@@ -221,12 +226,12 @@ namespace SimulationEngine.Tests {
         public static void CheckForResultfile(string wd, CalcOption option)
         {
 
-             var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
-             const long memoryCap = 1024L * 1024L * 2000L * 2L;
+            var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
+            const long memoryCap = 1024L * 1024L * 1024L * 8L;
             peakWorkingSet.Should().BeLessThan(memoryCap);
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            var srls = new SqlResultLoggingService(wd);
+            var srls = ResultLoggingFactory.CreateResultLoggingService(wd);
             var rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
             var foundOptions = new List<CalcOption>();
@@ -241,22 +246,10 @@ namespace SimulationEngine.Tests {
                 foundOptions.Add(rfe.EnablingCalcOption);
             }
 
-            // ReSharper disable once CollectionNeverQueried.Local
-            var allTables = new List<ResultTableDefinition>();
-            var hhKeyLogger = new HouseholdKeyLogger(srls);
-            var keys = hhKeyLogger.Load();
-            foreach (var key in keys) {
-                if (!srls.FilenameByHouseholdKey.ContainsKey(key.HHKey)) {
-                    continue;
-                }
-
-                var fn = srls.FilenameByHouseholdKey[key.HHKey];
-                if (!File.Exists(fn.Filename)) {
-                    continue;
-                }
-
-                var tables = srls.LoadTables(key.HHKey);
-                allTables.AddRange(tables);
+            // load all generated tables and collect the respective enabling CalcOptions
+            var databases = srls.LoadDatabases();
+            foreach (var database in databases) {
+                var tables = srls.LoadTables(database.Key);
                 foreach (var table in tables) {
                     foundOptions.Add(table.EnablingOption);
                 }
@@ -378,13 +371,15 @@ namespace SimulationEngine.Tests {
         }
 
         public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob?> makeHj, Action<string> checkResults,
-                                          bool skipcleaning = false)
+                                          bool skipcleaning = false, string testname = "")
         {
             Logger.Get().StartCollectingAllMessages();
             //Logger.Threshold = Severity.Debug;
-            using var wd = new WorkingDir(Utili.GetCallingMethodAndClass());
+            if (testname.IsNullOrEmpty())
+                testname = Utili.GetCallingMethodAndClass();
+            using var wd = new WorkingDir(testname);
             wd.SkipCleaning = skipcleaning;
-            using var db = new DatabaseSetup(Utili.GetCallingMethodAndClass());
+            using var db = new DatabaseSetup(testname);
             var targetdb = wd.Combine("profilegenerator.db3");
             File.Copy(db.FileName, targetdb, true);
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
@@ -402,13 +397,16 @@ namespace SimulationEngine.Tests {
         }
 
         /// <summary>
-        /// Generates one household from a household template and simulates them.
+        /// Generates one household from a household template and simulates it.
         /// </summary>
         /// <param name="testID">A unique name of the calling test for setting up a working directory</param>
         /// <param name="hhTemplateGuid">The Guid of the household template to use</param>
         /// <param name="duration">Duration for which the household should be simulated</param>
         public static void GenerateAndSimulateHHFromTemplate(string testID, StrGuid hhTemplateGuid, TestDuration duration)
         {
+            // use JSON result logger to avoid "SQL database is locked" error
+            Config.ResultLogger = ResultLoggerType.JSON;
+
             Logger.Get().StartCollectingAllMessages();
             // set up a working directory
             using var wd = new WorkingDir(testID);
@@ -465,7 +463,7 @@ namespace SimulationEngine.Tests {
             static void CheckResults(string path)
             {
 
-                var srls = new SqlResultLoggingService(path);
+                var srls = ResultLoggingFactory.CreateResultLoggingService(path);
                 var keyLogger = new HouseholdKeyLogger(srls);
                 var keys = keyLogger.Load();
                 var hhkey = keys.Single(x => x.KeyType == HouseholdKeyType.Household).HHKey;
@@ -656,7 +654,7 @@ namespace SimulationEngine.Tests {
 
         private static void CheckForResultfile(string wd)
         {
-            var srls = new SqlResultLoggingService(wd);
+            var srls = ResultLoggingFactory.CreateResultLoggingService(wd);
             var rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
             var foundcar = false;

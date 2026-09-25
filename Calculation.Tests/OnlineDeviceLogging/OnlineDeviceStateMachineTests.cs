@@ -36,6 +36,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.Tests;
 using FluentAssertions;
@@ -43,7 +44,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.OnlineDeviceLogging {
+namespace Calculation.Tests.OnlineDeviceLogging
+{
     public class OnlineDeviceStateMachineTests : UnitTestBaseClass
     {
         public OnlineDeviceStateMachineTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -56,7 +58,7 @@ namespace Calculation.Tests.OnlineDeviceLogging {
         {
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(200);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults()
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting()
                 .SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
             var values = new double[10];
             for (var i = 0; i < values.Length; i++) {

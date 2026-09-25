@@ -11,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class ChargingStationStateLogger : DataSaverBase {
         private const string Tablename = "ChargingStationStates";
 
-        public ChargingStationStateLogger([NotNull] SqlResultLoggingService srls)
+        public ChargingStationStateLogger([NotNull] IResultLoggingService srls)
             : base(typeof(ChargingStationState), new ResultTableDefinition(Tablename,ResultTableID.ChargingeStationState, "State of the charging stations", CalcOption.TransportationStatistics), srls)
         {
         }

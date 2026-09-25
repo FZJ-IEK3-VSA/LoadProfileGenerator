@@ -40,6 +40,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.Tests;
@@ -53,7 +54,8 @@ using Xunit.Abstractions;
 
 using Logger = Common.Logger;
 
-namespace CalculationController.Tests.CalcFactories {
+namespace CalculationController.Tests.CalcFactories
+{
     public class CalcLocationFactoryTests : UnitTestBaseClass {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -68,7 +70,7 @@ namespace CalculationController.Tests.CalcFactories {
             //var dict =new Dictionary<CalcLocation, List<IAssignableDevice>>();
             var deviceActions = new ObservableCollection<DeviceAction>();
             //var locdict = new Dictionary<Location, CalcLocation>();
-            CalcParameters cp = CalcParametersFactory.MakeGoodDefaults();
+            CalcParameters cp = CalcParameters.CreateDefaultParamsForTesting();
             //var mock = new Mock<IOnlineDeviceActivationProcessor>();
             //var iodap = mock.Object;
             var locationDtoDict = new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>());
@@ -103,7 +105,7 @@ namespace CalculationController.Tests.CalcFactories {
         {
             var builder = new ContainerBuilder();
             var r = new Random(1);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             var locations = new List<Location>();
             var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToStrGuid());
@@ -161,7 +163,7 @@ namespace CalculationController.Tests.CalcFactories {
         {
             var builder = new ContainerBuilder();
             var r = new Random(1);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             var picker = new DeviceCategoryPicker(r, null);
             builder.Register(_ => picker).As<DeviceCategoryPicker>().SingleInstance();
@@ -223,7 +225,7 @@ namespace CalculationController.Tests.CalcFactories {
             using WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var builder = new ContainerBuilder();
             var r = new Random(1);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             //CalcFactoryParameters.SetSkipChecking(true);
             //var nr = new NormalRandom(0, 1, r);
@@ -263,7 +265,7 @@ namespace CalculationController.Tests.CalcFactories {
             string path = wd.WorkingDirectory;
             builder.Register(_ => new FileFactoryAndTracker(path, "HH1", idl)).As<FileFactoryAndTracker>()
                 .SingleInstance();
-            builder.Register(_ => new SqlResultLoggingService(path)).As<SqlResultLoggingService>().SingleInstance();
+            builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(path)).As<IResultLoggingService>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(x => new OnlineLoggingData(x.Resolve<DateStampCreator>(), x.Resolve<IInputDataLogger>(), x.Resolve<CalcParameters>()))

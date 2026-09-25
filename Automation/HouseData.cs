@@ -27,6 +27,8 @@ namespace Automation {
         public string? Name { get; set; }
         public StrGuid? HouseGuid { get; set; }
 
+        public Coordinates? Coordinates { get; set; }
+
         [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<HouseholdData> Households { get; set; } = new List<HouseholdData>();

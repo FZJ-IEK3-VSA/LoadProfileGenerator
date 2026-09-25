@@ -1,17 +1,29 @@
-﻿using System;
+﻿using Automation.ResultFiles;
+using Common.Extensions;
+using JetBrains.Annotations;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
-using Automation.ResultFiles;
-using JetBrains.Annotations;
-using Newtonsoft.Json;
+using static Common.CalculationProfiler;
 
-namespace Common {
+namespace Common
+{
     public interface ICalculationProfiler {
-        void StartPart([JetBrains.Annotations.NotNull] string key);
+        void StartPart([JetBrains.Annotations.NotNull] string key, bool log = true);
 
-        void StopPart([JetBrains.Annotations.NotNull] string key);
+        void StopPart([JetBrains.Annotations.NotNull] string key, bool log = true);
+
+        /// <summary>
+        /// Starts profiling for a program part. The part is continued until the returned
+        /// scope object is closed.
+        /// </summary>
+        /// <param name="key">program part key for the profiler</param>
+        /// <param name="log">whether to log info messages on starting/stopping profiling parts</param>
+        /// <returns>an IDisposable scope object for securely stopping the profiling</returns>
+        ProfilerScope MeasureScope(string key, bool log = true);
     }
 
     public class CalculationProfiler : ICalculationProfiler {
@@ -31,7 +43,13 @@ namespace Common {
         [JetBrains.Annotations.NotNull]
         private Dictionary<string, ProgramPart> Current { get; set; }
 
-        public void StartPart(string key)
+        public ProfilerScope MeasureScope(string key, bool log = true)
+        {
+            StartPart(key, log);
+            return new ProfilerScope(this, key, log);
+        }
+
+        public void StartPart(string key, bool log = true)
         {
             lock (MainPart) {
                 //Logger.Info("Starting "+ key);
@@ -47,7 +65,8 @@ namespace Common {
                     throw new LPGException("The current key is already " + key + ". Copy&Paste error?");
                 }
 
-                Logger.Info("Starting " + threadName + ": " + key);
+                if (log)
+                    Logger.Info("Starting " + threadName + ": " + key);
                 var newCurrent = new ProgramPart(Current[threadName], key);
                 Current[threadName].Children.Add(newCurrent);
                 Current[threadName] = newCurrent;
@@ -55,7 +74,7 @@ namespace Common {
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public void StopPart(string key)
+        public void StopPart(string key, bool log = true)
         {
             lock (MainPart) {
                 var threadname = Thread.CurrentThread.GetNotNullThreadName();
@@ -63,7 +82,8 @@ namespace Common {
                     throw new LPGException("Current was null");
                 }
 
-                Logger.Info("Stopping " + threadname + ": " + key);
+                if (log)
+                    Logger.Info("Stopping " + threadname + ": " + key);
 
                 if (Current[threadname].Key != key) {
                     StreamWriter sw = new StreamWriter("DebuggingCalcProfiler.json");
@@ -79,7 +99,8 @@ namespace Common {
 
                 Current[threadname].Stop = DateTime.Now;
 
-                Logger.Info("Finished " + key + " after " + Current[threadname].Duration.ToString());
+                if (log)
+                    Logger.Info("Finished " + key + " after " + Current[threadname].Duration.ToString());
 
                 Current[threadname] = Current[threadname].Parent;
             }
@@ -173,6 +194,24 @@ namespace Common {
             Logger.Info(padding + part.Key + "\t" + part.Duration.TotalSeconds);
             foreach (var child in part.Children) {
                 LogOneProgramPartToConsole(child, level + 1);
+            }
+        }
+
+        /// <summary>
+        /// Helper class to make sure that a profiling section is always stopped, even if an exception occurs.
+        /// </summary>
+        /// <param name="profiler">the profiler object to manage</param>
+        /// <param name="key">the key of the profiled program part</param>
+        /// <param name="log">whether to log start and stop of profiling</param>
+        public class ProfilerScope(CalculationProfiler profiler, string key, bool log) : IDisposable
+        {
+            private bool _disposed;
+
+            public void Dispose()
+            {
+                if (_disposed) return;
+                _disposed = true;
+                profiler.StopPart(key, log);
             }
         }
 

@@ -69,7 +69,7 @@ namespace Database.Tables.Houses {
             var id = dr.GetIntFromLong("ID");
             var energyStorageID = dr.GetIntFromLong("EnergyStorageID");
             var loadTypeID = dr.GetIntFromLong("LoadTypeID");
-            var variable = aic.Variables.FirstOrDefault(mylt => mylt.ID == loadTypeID);
+            var variable = aic.Variables.FindById(loadTypeID);
             var triggerLevelOn = dr.GetDouble("TriggerLevelOn");
             var triggerLevelOff = dr.GetDouble("TriggerLevelOff");
             var value = dr.GetDouble("Value");

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
+using Common.Extensions;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 
-namespace Common.CalcDto {
+namespace Common.CalcDto
+{
     [Serializable]
     public class CalcPersonDto : IHouseholdKey {
         public CalcPersonDto([NotNull]string name, StrGuid guid, int age, PermittedGender gender,

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Automation;
+using CalculationEngine.Activities;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
@@ -9,7 +10,8 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements
 {
-    public enum BusynessType {
+    public enum BusynessType
+    {
         NotBusy,
         Occupied,
         NoTransportation,
@@ -19,56 +21,48 @@ namespace CalculationEngine.HouseholdElements
     }
     public interface ICalcAffordanceBase
     {
-        [NotNull]
         string Name { get; }
-        [NotNull]
         string AffCategory { get; }
         ActionAfterInterruption AfterInterruption { get; }
-        int CalcAffordanceSerial { get; }
         CalcAffordanceType CalcAffordanceType { get; }
-        //BitArray IsBusyArray { get; set; }
         bool IsInterruptable { get; }
         bool IsInterrupting { get; }
         int MaximumAge { get; }
         int MiniumAge { get; }
-        [NotNull]
         string PrettyNameForDumping { get; }
         bool NeedsLight { get; }
-        [NotNull]
         CalcLocation ParentLocation { get; }
         PermittedGender PermittedGender { get; }
         bool RandomEffect { get; }
         bool RequireAllAffordances { get; }
-        [NotNull]
-        [ItemNotNull]
         List<CalcDesire> Satisfactionvalues { get; }
-        int Weight { get; }
+        double Weight { get; }
         StrGuid Guid { get; }
 
-        void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName,
-             [NotNull] CalcLocation personSourceLocation,
-            [NotNull] out ICalcProfile personTimeProfile);
-        //ICalcProfile CollectPersonProfile();
-        int DefaultPersonProfileLength { get; }
-        BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true);
+        IEnumerable<IActivity> PlanActivation(TimeStep startTime, CalcPersonDto activator, ICalcSite? personSourceSite);
 
-        [NotNull]
-        [ItemNotNull]
-        List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,  bool onlyInterrupting,
-            [NotNull] CalcLocation srcLocation);
+        void StartActivation(TimeStep startTime, string activatorName);
 
-        [NotNull]
-        [ItemNotNull]
-        List<CalcSubAffordance> SubAffordances { get; }
+        void FinishActivation(TimeStep endTime, string activatorName);
 
-        [CanBeNull]
-        [ItemNotNull]
-        List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
-         ColorRGB AffordanceColor { get; }
-        [NotNull]
+        BusynessType IsBusy(TimeStep time, ICalcSite? srcSite, CalcPersonDto calcPerson, bool clearDictionaries = true);
+
+        IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, ICalcSite? srcSite);
+
+        CalcSubAffordance GetAsSubAffordance();
+
+        List<ICalcAffordanceBase> SubAffordances { get; }
+
+        List<DeviceEnergyProfileTuple> Energyprofiles { get; }
+
+        ColorRGB AffordanceColor { get; }
+        
         string SourceTrait { get; }
+        
         string? TimeLimitName { get; }
+        
         bool AreThereDuplicateEnergyProfiles();
+        
         string? AreDeviceProfilesEmpty();
 
         CalcSite? Site { get; }

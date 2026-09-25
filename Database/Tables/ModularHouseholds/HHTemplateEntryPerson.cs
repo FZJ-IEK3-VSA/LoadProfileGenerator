@@ -33,7 +33,7 @@ namespace Database.Tables.ModularHouseholds {
             var hhpID = dr.GetIntFromLong("ID");
             var personID = dr.GetIntFromLong("PersonID", ignoreMissingField: ignoreMissingFields);
             var householdID = dr.GetIntFromLong("HHGEntryID");
-            var p = aic.Persons.FirstOrDefault(mypers => mypers.ID == personID);
+            var p = aic.Persons.FindById(personID);
             var name = "(no name)";
             if (p != null) {
                 name = p.Name;

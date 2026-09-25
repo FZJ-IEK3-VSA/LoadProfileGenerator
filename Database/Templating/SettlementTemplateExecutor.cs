@@ -9,12 +9,14 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
 
-namespace Database.Templating {
+namespace Database.Templating
+{
     public class SettlementTemplateExecutor {
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HouseEntry> _previewHouseEntries = new ObservableCollection<HouseEntry>();
         [ItemNotNull]

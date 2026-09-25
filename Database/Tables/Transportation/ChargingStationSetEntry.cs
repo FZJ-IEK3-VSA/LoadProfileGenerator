@@ -60,17 +60,17 @@ namespace Database.Tables.Transportation {
             var chargingStationID = dr.GetIntFromLong("ID");
             var chargingStationSetID = dr.GetIntFromLong("chargingStationSetID");
             var carChargingLoadTypeId = dr.GetIntFromLong("CarChargingLoadTypeID",false,ignoreMissingFields);
-            var carLoadtype = aic.LoadTypes.FirstOrDefault(x => x.ID == carChargingLoadTypeId);
+            var carLoadtype = aic.LoadTypes.FindById(carChargingLoadTypeId);
 
             var gridChargingLoadTypeId = dr.GetIntFromLong("GridChargingLoadTypeID",false,ignoreMissingFields);
-            var gridLoadtype = aic.LoadTypes.FirstOrDefault(x => x.ID == gridChargingLoadTypeId);
+            var gridLoadtype = aic.LoadTypes.FindById(gridChargingLoadTypeId);
 
             var transportationDeviceCategoryId = dr.GetIntFromLong("TransportationDeviceCategoryID",false,ignoreMissingFields);
             var maxChargingPower = dr.GetDouble("MaxChargingPower",false,0,ignoreMissingFields);
             var siteID = dr.GetIntFromLong("SiteID");
-            var site = aic.Sites.FirstOrDefault(x => x.ID == siteID);
+            var site = aic.Sites.FindById(siteID);
             var transportationDeviceCategory =
-                aic.TransportationDeviceCategories.FirstOrDefault(x => x.ID == transportationDeviceCategoryId);
+                aic.TransportationDeviceCategories.FindById(transportationDeviceCategoryId);
             var name = "(no name)";
             if (carLoadtype != null) {
                 name = carLoadtype.Name;

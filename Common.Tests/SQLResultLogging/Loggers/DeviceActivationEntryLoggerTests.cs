@@ -2,6 +2,7 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
@@ -29,11 +30,11 @@ namespace Common.Tests.SQLResultLogging.Loggers
                 ael
             };
                 InputDataLogger idl = new InputDataLogger(savers.ToArray());
-                CalcLoadTypeDto cldto = new CalcLoadTypeDto("loadtype", "kw", "kwh", 1, true, "guid".ToStrGuid());
+                CalcLoadTypeDto cldto = new CalcLoadTypeDto("loadtype", "kw", "kwh", 1, true, StringExtensions.ToStrGuid("guid"));
                 TimeStep ts = new TimeStep(1, 1, true);
-                CalcDeviceDto cdd = new CalcDeviceDto("devicename", "device".ToStrGuid(),
+                CalcDeviceDto cdd = new CalcDeviceDto("devicename", StringExtensions.ToStrGuid("device"),
                     key, OefcDeviceType.Device, "devicecategoryname",
-                    "additionalname", "deviceguid".ToStrGuid(), "locationguid".ToStrGuid(), "locationname", FlexibilityType.NoFlexibility, 0);
+                    "additionalname", StringExtensions.ToStrGuid("deviceguid"), StringExtensions.ToStrGuid("locationguid"), "locationname", FlexibilityType.NoFlexibility, 0);
                 DeviceActivationEntry ae1 = new DeviceActivationEntry("affordancename",
                     cldto, 1, "activator", 1, ts, cdd);
                 List<IHouseholdKey> aes = new List<IHouseholdKey>

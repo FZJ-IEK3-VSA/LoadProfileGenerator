@@ -70,9 +70,9 @@ namespace Database.Tables.ModularHouseholds {
             var deviceSelectionID = dr.GetIntFromLong("deviceSelectionID", false, ignoreMissingFields, -1);
             var deviceCategoryID = dr.GetIntFromLong("deviceCategoryID", false, ignoreMissingFields, -1);
             var deviceID = dr.GetIntFromLong("DeviceID", false, ignoreMissingFields, -1);
-            var rd = aic.RealDevices.FirstOrDefault(myDevice => myDevice.ID == deviceID);
+            var rd = aic.RealDevices.FindById(deviceID);
             var dc =
-                aic.DeviceCategories.FirstOrDefault(myDeviceCategory => myDeviceCategory.ID == deviceCategoryID);
+                aic.DeviceCategories.FindById(deviceCategoryID);
             var name = "(no name)";
             if (dc != null) {
                 name = dc.Name;

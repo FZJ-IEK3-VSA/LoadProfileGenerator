@@ -10,7 +10,7 @@ namespace Common.SQLResultLogging.Loggers {
     public class LocationEntryLogger : DataSaverBase {
         private const string TableName = "LocationEntries";
 
-        public LocationEntryLogger([NotNull] SqlResultLoggingService srls) :
+        public LocationEntryLogger([NotNull] IResultLoggingService srls) :
             base(typeof(LocationEntry), new ResultTableDefinition(TableName,ResultTableID.LocationEntries, "Location Entries", CalcOption.LocationsEntries), srls)
         {
         }

@@ -13,7 +13,7 @@ namespace Common.SQLResultLogging {
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     public class CalcDataRepository
     {
-        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
+        [JetBrains.Annotations.NotNull] private readonly IResultLoggingService _srls;
         //private readonly List<CalcHouseholdPlanDto> _householdPlans;
         [ItemNotNull] [CanBeNull] private List<CalcAffordanceTaggingSetDto> _affordanceTaggingSets;
 
@@ -21,7 +21,7 @@ namespace Common.SQLResultLogging {
 
         [CanBeNull] private CalcParameters _calcParameters;
 
-        public CalcDataRepository([JetBrains.Annotations.NotNull] SqlResultLoggingService srls)
+        public CalcDataRepository([JetBrains.Annotations.NotNull] IResultLoggingService srls)
         {
             _srls = srls;
             CarpetPlotColumnWidth = 5;

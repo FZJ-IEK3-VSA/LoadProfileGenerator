@@ -37,6 +37,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -44,7 +45,8 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class RealDevice : DBBaseElement, IAssignableDevice {
         public const string TableName = "tblDevices";
 
@@ -248,7 +250,7 @@ namespace Database.Tables.BasicHouseholds {
             var forceAllLoadTypesToBeSet = dr.GetBool("ForceAllLoadTypesToBeSet", false, true, ignoreMissingFields);
             var isStandbyDevice = dr.GetBool("IsStandbyDevice", false, false, ignoreMissingFields);
             var description = dr.GetString("Description", false, string.Empty, ignoreMissingFields);
-            var dc = aic.DeviceCategories.FirstOrDefault(category => category.ID == deviceCategoryID);
+            var dc = aic.DeviceCategories.FindById(deviceCategoryID);
             if (dc == null) {
                 dc = _noneCategory;
             }

@@ -1,35 +1,100 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Automation.ResultFiles;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Automation {
+    /// <summary>
+    /// A class for creating JsonReference objects from Json with System.Text.Json.
+    /// This is used so that simple name strings can be passed alternatively to
+    /// complete JsonReference objects with name and Guid.
+    /// </summary>
+    public class JsonReferenceConverter : JsonConverter<JsonReference>
+    {
+        public override JsonReference Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                // If it's a string, create a JsonReference with the name set to the string value
+                return new JsonReference(reader.GetString()!);
+            }
+            else if (reader.TokenType == JsonTokenType.StartObject)
+            {
+                // If it's an object, deserialize it normally
+                var newOptions = new JsonSerializerOptions(options);
+                // remove this converter from the list to avoid recursion
+                newOptions.Converters.Remove(this);
+                var jsonReference = JsonSerializer.Deserialize<JsonReference>(ref reader, newOptions)!;
+                return jsonReference;
+            }
+            else
+            {
+                throw new JsonException("Unexpected JSON format for JsonReference.");
+            }
+        }
+
+        public override void Write(Utf8JsonWriter writer, JsonReference value, JsonSerializerOptions options)
+        {
+            if ((value.Guid == null || value.Guid == StrGuid.Empty) && !string.IsNullOrEmpty(value.Name))
+            {
+                // If only the name is set, serialize it as a string
+                writer.WriteStringValue(value.Name);
+            }
+            else
+            {
+                // Otherwise, serialize it normally as an object
+                JsonSerializer.Serialize(writer, value, options);
+            }
+        }
+    }
 
     /// <summary>
-    /// A class for creating JsonReference objects from Json. This is used so that simple name strings
-    /// can be passed alternatively to complete JsonReference objects with name and Guid.
+    /// A class for creating JsonReference objects from Json with Newtonsoft.
+    /// This is used so that simple name strings can be passed alternatively to
+    /// complete JsonReference objects with name and Guid.
     /// </summary>
-    class JsonReferenceConverter : JsonConverter
+    class JsonReferenceConverterNewtonsoft : Newtonsoft.Json.JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
             return (objectType == typeof(JsonReference));
         }
 
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        public override object? ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object? existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
-            JToken token = JToken.Load(reader);
+            var token = Newtonsoft.Json.Linq.JToken.Load(reader);
             switch (token.Type) {
-                case JTokenType.Null:
+                case Newtonsoft.Json.Linq.JTokenType.Null:
                     return null;
-                case JTokenType.String:
+                case Newtonsoft.Json.Linq.JTokenType.String:
                      // if the json only contains a string, then use this as the name and leave the Guid blank
-                    string? name = (string?) token;
-                    return new JsonReference(name!, StrGuid.Empty);
-                default:
-                    JsonReference? jsonReference = new JsonReference();
-                    serializer.Populate(token.CreateReader(), jsonReference);
+                    string name = token.ToString()!;
+                    return new JsonReference(name, StrGuid.Empty);
+                case Newtonsoft.Json.Linq.JTokenType.Object:
+                    // there is a JSON object; check which attributes are present and parse them individually
+                    var jobject = (Newtonsoft.Json.Linq.JObject) token;
+                    var jsonReference = new JsonReference();
+
+                    // populate Name manually if it is present and not null
+                    if (jobject.TryGetValue("Name", out var nameToken) && nameToken.Type != Newtonsoft.Json.Linq.JTokenType.Null)
+                    {
+                        if (nameToken.Type != Newtonsoft.Json.Linq.JTokenType.String)
+                            throw new LPGException($"Could not parse Name of JsonReference at {reader.Path}: {nameToken}");
+
+                        jsonReference.Name = nameToken.ToObject<string>()!;
+                    }
+
+                    // populate Guid manually if it is present and not null
+                    if (jobject.TryGetValue("Guid", out var guidToken) && guidToken.Type != Newtonsoft.Json.Linq.JTokenType.Null)
+                    {
+                        if (guidToken.Type != Newtonsoft.Json.Linq.JTokenType.Object)
+                            throw new LPGException($"Could not parse Guid of JsonReference at {reader.Path}: {guidToken}");
+                        jsonReference.Guid = guidToken.ToObject<StrGuid>(serializer)!;
+                    }
                     return jsonReference;
+                default:
+                    throw new LPGException($"Could not parse JsonReference at {reader.Path}: {token}");
             }
         }
 
@@ -38,17 +103,17 @@ namespace Automation {
             get { return false; }
         }
 
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object? value, Newtonsoft.Json.JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
     }
 
-    [JsonConverter(typeof(JsonReferenceConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(JsonReferenceConverterNewtonsoft))]
     public class JsonReference : IGuidObject, IEquatable<JsonReference>
     {
         [SuppressMessage("ReSharper", "ConstantConditionalAccessQualifier")]
-        public bool Equals(JsonReference other)
+        public bool Equals(JsonReference? other)
             => Name == other?.Name && Guid == other?.Guid;
 
         public static bool operator ==(JsonReference? point1, JsonReference? point2)
@@ -86,7 +151,7 @@ namespace Automation {
             return !point1.Equals(point2);
         }
 
-        public override bool Equals(object obj) => obj is JsonReference other && Equals(other);
+        public override bool Equals(object? obj) => obj is JsonReference other && Equals(other);
 
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode()
@@ -96,10 +161,10 @@ namespace Automation {
             }
         }
 
-        public JsonReference([JetBrains.Annotations.NotNull] string name, StrGuid guid)
+        public JsonReference([JetBrains.Annotations.NotNull] string name, StrGuid? guid = null)
         {
             Name = name;
-            Guid = guid;
+            Guid = guid ?? StrGuid.Empty;
         }
 
 
@@ -110,10 +175,9 @@ namespace Automation {
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public JsonReference()
         {
-            //Guid = StrGuid.Empty;
+            Guid = StrGuid.Empty;
         }
 
-        [JetBrains.Annotations.NotNull]
         public string? Name { get; set; }
         public StrGuid Guid { get; set; }
 

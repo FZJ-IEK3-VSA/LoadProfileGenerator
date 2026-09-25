@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using CalculationEngine.HouseholdElements;
-using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.Tests;
 using Xunit.Abstractions;
 
-namespace Calculation.Tests {
+namespace Calculation.Tests
+{
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class CalcUnitTestBase : UnitTestBaseClass {
         [JetBrains.Annotations.NotNull]

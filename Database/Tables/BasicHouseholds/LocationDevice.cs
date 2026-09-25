@@ -135,10 +135,10 @@ namespace Database.Tables.BasicHouseholds {
             var assignableDeviceType = (AssignableDeviceType) assignableDeviceTypeInt;
             IAssignableDevice device;
             if (assignableDeviceType == AssignableDeviceType.Device) {
-                device = aic.RealDevices.FirstOrDefault(mydevice => mydevice.ID == deviceID);
+                device = aic.RealDevices.FindById(deviceID);
             }
             else {
-                device = aic.DeviceCategories.FirstOrDefault(mydeviceCat => mydeviceCat.ID == deviceID);
+                device = aic.DeviceCategories.FindById(deviceID);
             }
             var name = "(no name)";
             if (device != null) {

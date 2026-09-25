@@ -77,22 +77,22 @@ namespace Database.Tables.BasicHouseholds {
             IAssignableDevice device;
             switch (adt) {
                 case AssignableDeviceType.DeviceCategory:
-                    device = aic.DeviceCategories.FirstOrDefault(dc => dc.ID == deviceID);
+                    device = aic.DeviceCategories.FindById(deviceID);
                     break;
                 case AssignableDeviceType.Device:
-                    device = aic.RealDevices.FirstOrDefault(rd => rd.ID == deviceID);
+                    device = aic.RealDevices.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceAction:
-                    device = aic.DeviceActions.FirstOrDefault(rd => rd.ID == deviceID);
+                    device = aic.DeviceActions.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceActionGroup:
-                    device = aic.DeviceActionGroups.FirstOrDefault(rd => rd.ID == deviceID);
+                    device = aic.DeviceActionGroups.FindById(deviceID);
                     break;
                 default:
                     throw new LPGException("unknown device type");
             }
 
-            var aff = aic.Affordances.FirstOrDefault(affordance => affordance.ID == affordanceID);
+            var aff = aic.Affordances.FindById(affordanceID);
             var deviceName = "(no device)";
             if (device != null) {
                 deviceName = device.Name;

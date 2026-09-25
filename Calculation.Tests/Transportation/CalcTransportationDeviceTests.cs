@@ -10,6 +10,7 @@ using CalculationEngine.OnlineLogging;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -19,7 +20,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.Transportation {
+namespace Calculation.Tests.Transportation
+{
     public class CalcTransportationDeviceTests : UnitTestBaseClass {
         public CalcTransportationDeviceTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
@@ -52,7 +54,7 @@ namespace Calculation.Tests.Transportation {
             wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
             //_calcParameters.CSVCharacter = ";";_calcParameters.InitializeTimeSteps(new DateTime(2018,1,1),new DateTime(2018,1,31),new TimeSpan(0,1,0),3,true  );
-            var calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            var calcParameters = CalcParameters.CreateDefaultParamsForTesting();
 
             var category = new CalcTransportationDeviceCategory("category", true, Guid.NewGuid().ToStrGuid());
             var lt2 = new CalcLoadType("driving load", "km/h", "km", 10000, false, Guid.NewGuid().ToStrGuid());
@@ -72,7 +74,7 @@ namespace Calculation.Tests.Transportation {
             var srcSite = new CalcSite("srcsite", true, Guid.NewGuid().ToStrGuid(), key);
             var dstSite = new CalcSite("dstSite", true, Guid.NewGuid().ToStrGuid(), key);
             var isavailable = new BitArray(calcRepo.CalcParameters.InternalTimesteps);
-            var station = new CalcChargingStation(category, chargingCalcLoadType, 500, "stationname", "stationguid".ToStrGuid(),
+            var station = new CalcChargingStation(category, chargingCalcLoadType, 500, "stationname", StringExtensions.ToStrGuid("stationguid"),
                 key, chargingCalcLoadType, calcRepo,isavailable);
             dstSite.ChargingDevices.Add(station);
             var calcSites = new List<CalcSite> {
@@ -103,6 +105,8 @@ namespace Calculation.Tests.Transportation {
                 prevrange = ctd.AvailableRangeInMeters;
                 ctd.Currentsite.Should().BeNull();
             }
+
+            ctd.FinishTravel(new TimeStep(10, 0, false), dstSite);
 
             //no charging
             ctd.AvailableRangeInMeters.Should().Be(10000 - 10 * 60 * 10); //10m/s = 600m/minute

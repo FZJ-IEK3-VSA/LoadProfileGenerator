@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.InputLoggers
 {
     public class CalcAffordanceTaggingSetDtoLogger : DataSaverBase {
         private const string TableName = "AffordanceTaggingSets";
-        public CalcAffordanceTaggingSetDtoLogger([NotNull] SqlResultLoggingService srls)
+        public CalcAffordanceTaggingSetDtoLogger([NotNull] IResultLoggingService srls)
             : base(typeof(List<CalcAffordanceTaggingSetDto>),  new ResultTableDefinition(TableName,ResultTableID.AffordanceTaggingSets, "Json Specification of the Affordances Tagging Sets", CalcOption.AffordanceTaggingSets), srls)
         {
         }

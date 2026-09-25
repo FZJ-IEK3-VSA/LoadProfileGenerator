@@ -34,7 +34,7 @@ namespace Database.Tables.ModularHouseholds {
             var hhpID = dr.GetIntFromLong("ID");
             var templateTagID = dr.GetIntFromLong("TemplateTagID", ignoreMissingField: ignoreMissingFields);
             var householdID = dr.GetIntFromLong("HHTemplateID");
-            var p = aic.HouseholdTags.FirstOrDefault(x => x.ID == templateTagID);
+            var p = aic.HouseholdTags.FindById(templateTagID);
             var name = "(no name)";
             if (p != null) {
                 name = p.Name;
