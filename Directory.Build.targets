@@ -1,0 +1,9 @@
+<Project>
+  <!-- Keep libSkiaSharp.pdb and other native pdb files out of build and publish outputs (large and not needed). -->
+  <Target Name="RemoveNativePackagePdbs" AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <NativeCopyLocalItems Remove="@(NativeCopyLocalItems)" Condition="'%(Extension)' == '.pdb'" />
+      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="'%(Extension)' == '.pdb'" />
+    </ItemGroup>
+  </Target>
+</Project>
