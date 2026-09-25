@@ -477,7 +477,7 @@ namespace ReleaseMaker
                 ClearDirectory(zipFilesPath);
                 foreach (FileInfo fi in fileForUpload) {
                     string dstName = Path.Combine(zipFilesPath, fi.Name);
-                    fi.CopyTo(dstName,true);
+                    fi.MoveTo(dstName, true);
                 }
             }
         }
