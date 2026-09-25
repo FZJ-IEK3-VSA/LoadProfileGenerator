@@ -3,10 +3,9 @@
     public static class Program
     {
         /// <summary>
-        /// Increments the build number in the AssemblyVersion tag in the Directory.Build.props file
-        /// and in the VersionInfo.cs file.
+        /// Increments the build number in the AssemblyVersion and FileVersion tags in the Directory.Build.props file.
         /// </summary>
-        /// <exception cref="Exception">if one of the files is missing or has an unexpected format</exception>
+        /// <exception cref="Exception">if the file is missing or has an unexpected format</exception>
         public static void Main()
         {
             var di = new DirectoryInfo(Environment.CurrentDirectory);
@@ -38,19 +37,6 @@
             Console.WriteLine(newFileContent);
             File.WriteAllText(buildPropsFiles[0].FullName, newFileContent);
             Console.WriteLine("Increased version from " + s + " to " + newversion);
-
-            // find and open the version info file
-            var versionInfoFiles = di.GetFiles("VersionInfo.cs");
-            if (versionInfoFiles.Length != 1)
-            {
-                throw new Exception("File VersionInfo.cs not found.");
-            }
-
-            // replace the version string with the updated version
-            var versionInfoContent = File.ReadAllText(versionInfoFiles[0].FullName);
-            var newVersionInfoContent = versionInfoContent.Replace(s, newversion);
-            File.WriteAllText(versionInfoFiles[0].FullName, newVersionInfoContent);
-            Console.WriteLine(newVersionInfoContent);
         }
     }
 }

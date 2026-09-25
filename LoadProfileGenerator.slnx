@@ -7,7 +7,6 @@
     <File Path="MyRules.ruleset" />
     <File Path="MyRules_UnitTests.ruleset" />
     <File Path="readme.md" />
-    <File Path="VersionInfo.cs" />
   </Folder>
   <Project Path="Automation/Automation.csproj" />
   <Project Path="CalcPostProcessor/CalcPostProcessor.csproj" />
