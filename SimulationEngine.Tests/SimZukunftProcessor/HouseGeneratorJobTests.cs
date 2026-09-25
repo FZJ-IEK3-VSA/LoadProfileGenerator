@@ -155,7 +155,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     //housedata
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     var chargingStationSet = sim.ChargingStationSets
-                        .SafeFindByName("Charging At Home with 03.7 kW, output results to Car Electricity").GetJsonReference();
+                        .SafeFindByName("Charging At Home with 03.7 kW").GetJsonReference();
                     Logger.Info("Using charging station " + chargingStationSet);
                     var transportationDeviceSet = sim.TransportationDeviceSets[0].GetJsonReference();
                     var travelRouteSet = sim.TravelRouteSets[0].GetJsonReference();
@@ -239,7 +239,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     //housedata
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     var chargingStationSet = sim.ChargingStationSets
-                        .SafeFindByName("Charging At Home with 03.7 kW, output results to Car Electricity").GetJsonReference();
+                        .SafeFindByName("Charging At Home with 03.7 kW").GetJsonReference();
                     Logger.Info("Using charging station " + chargingStationSet);
                     var transportationDeviceSet = sim.TransportationDeviceSets[0].GetJsonReference();
                     var travelRouteSet = sim.TravelRouteSets[0].GetJsonReference();
