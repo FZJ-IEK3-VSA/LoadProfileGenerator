@@ -321,8 +321,6 @@ namespace CalculationEngine.HouseholdElements
             if (time.InternalStep == 0)
             {
                 Init(locs);
-                // select initial activities
-                PlanAndStartNewActivity(time, isDaylight, persons);
             }
 
             // cleanup list of previous affordances
