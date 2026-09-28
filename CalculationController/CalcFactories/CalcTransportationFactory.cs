@@ -1,6 +1,7 @@
 ﻿using CalculationEngine.HouseholdElements;
 using CalculationEngine.Transportation;
 using Common;
+using Common.Enums;
 using Common.JSON;
 using Database;
 using Database.Tables.BasicHouseholds;
@@ -228,7 +229,10 @@ namespace CalculationController.CalcFactories
                     if (person is not null)
                     {
                         // also check if at least one suitable route is available for the specified person
-                        routeEntries = routeEntries.Where(r => (r.PersonID == null || r.PersonID == person.IntID) && r.MinimumAge <= person.Age && r.MaximumAge >= person.Age);
+                        routeEntries = routeEntries.Where(r => (r.PersonID == null || r.PersonID == person.IntID)
+                            && (r.Gender == PermittedGender.All || person.Gender == PermittedGender.All || r.Gender == person.Gender)
+                            && (r.MinimumAge < 0 || r.MinimumAge <= person.Age)
+                            && (r.MaximumAge < 0 || r.MaximumAge >= person.Age));
                         if (!routeEntries.Any())
                         {
                             throw new DataIntegrityException($"Person {person.PrettyName} needs a route from {siteA.PrettyName} to {siteB.PrettyName}, but none of the " +
