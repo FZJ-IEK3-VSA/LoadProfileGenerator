@@ -11,10 +11,10 @@ namespace Automation {
         }
         //[CanBeNull] JsonReference calcObject,
         public JsonCalcSpecification( bool deleteAllButPDF, [CanBeNull] JsonReference? deviceSelection,
-                                     [CanBeNull]DateTime? endDate, [CanBeNull] string? externalTimeResolution, [CanBeNull] string? internalTimeResolution,
+                                     DateTime endDate, [CanBeNull] string? externalTimeResolution, [CanBeNull] string? internalTimeResolution,
                                      [CanBeNull] JsonReference? geographicLocation, LoadTypePriority loadTypePriorityEnum,
                                       [CanBeNull] string? outputDirectory, bool showSettlingPeriod,
-                                     [CanBeNull] DateTime? startDate, [CanBeNull] JsonReference? temperatureProfile, bool enableTransportation,
+                                     DateTime startDate, [CanBeNull] JsonReference? temperatureProfile, bool enableTransportation,
                                       bool enableFlexibility
                                       )
         {
@@ -117,9 +117,9 @@ namespace Automation {
         public JsonReference? DeviceSelection { get; set; }
 
         [Comment(
-            "End date of the simulation. Defaults to the 31.12. of the current year if not set. One year maximum.")]
+            "End date of the simulation.")]
         [CanBeNull]
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         [Comment(
             "How devices are picked for the households, for example if the household gets an old fridge or a new fridge.",
@@ -163,16 +163,16 @@ namespace Automation {
         public int SettlingDays { get; set; } = 3;
 
         [Comment(
-            "Flexibility modelling seperates the electric devices out that can time shifted. The LPG then generates two distinct profiles.")]
+            "Flexibility modelling seperates the electric devices out that can be time shifted. The LPG then generates two distinct profiles.")]
         public bool EnableFlexibility { get; set; }
 
         [Comment(
             "If you enable this, the LPG will check in the result directory if this household/house was already calculated and if so, will quit quietly. Defaults to true.")]
         public bool SkipExisting { get; set; } = true;
 
-        [Comment("Start date of the simulation. Defaults to the 01.01. of the current year if not set.")]
+        [Comment("Start date of the simulation.")]
         [CanBeNull]
-        public DateTime? StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         [Comment(
             "Reference of the temperature profile to use. Defaults to the first temperature profile in the database if not set, which is probably not what you want. " +

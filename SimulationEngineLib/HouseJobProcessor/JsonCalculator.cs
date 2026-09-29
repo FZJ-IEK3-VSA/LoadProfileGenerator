@@ -153,10 +153,6 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <exception cref="LPGPBadParameterException">if start or end date are missing</exception>
         public static CalcParameters CreateCalcParameters(GeneralConfig config, JsonCalcSpecification calcSpec, bool citySimulationEnabled = false)
         {
-            // check if start and end date are set
-            var startDate = calcSpec.StartDate ?? throw new LPGPBadParameterException("No StartDate specified.");
-            var endDate = calcSpec.EndDate ?? throw new LPGPBadParameterException("No EndDate specified.");
-
             // parse time resolution parameters
             var internalResolution = ParseTimeResolution(calcSpec.InternalTimeResolution);
             var externalResolution = ParseTimeResolution(calcSpec.ExternalTimeResolution, internalResolution);
@@ -168,8 +164,8 @@ namespace SimulationEngineLib.HouseJobProcessor
             // combine settings from the JsonCalcSpecification and the Simulator
             return new(
                 mergedCalcOptions,
-                startDate,
-                endDate,
+                calcSpec.StartDate,
+                calcSpec.EndDate,
                 internalResolution,
                 config.CSVCharacter,
                 externalResolution,

@@ -230,8 +230,8 @@ namespace Database.Tables.Houses
         }
 
         [CanBeNull]
-        public DateTime? EndDate {
-            get => _calcSpecification.EndDate ?? new DateTime(DateTime.Now.Year, 12, 31);
+        public DateTime EndDate {
+            get => _calcSpecification.EndDate;
             [UsedImplicitly]
             set {
                 if (_calcSpecification.EndDate == value) {
@@ -358,7 +358,7 @@ namespace Database.Tables.Houses
 
         [UsedImplicitly]
         [CanBeNull]
-        public DateTime? StartDate {
+        public DateTime StartDate {
             get => _calcSpecification.StartDate;
 
             set {
@@ -954,11 +954,8 @@ namespace Database.Tables.Houses
                     throw new LPGException("House was null");
                 }
 
-                if (StartDate == null) {
-                    throw new LPGException("No startdate was set.");
-                }
                 HouseCreationAndCalculationJob housejob = new HouseCreationAndCalculationJob(PrettyName,
-                    StartDate.Value.Year.ToString(CultureInfo.InvariantCulture),null, HouseDefinitionType.HouseData);
+                    StartDate.Year.ToString(CultureInfo.InvariantCulture),null, HouseDefinitionType.HouseData);
                 var calcSettings = new JsonCalcSpecification(_calcSpecification) {
                     GeographicLocation = GeographicLocation?.GetJsonReference(),
                     TemperatureProfile = TemperatureProfile?.GetJsonReference(),
