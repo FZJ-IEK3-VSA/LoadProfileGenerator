@@ -37,7 +37,7 @@ namespace CalculationEngine.Activities
         public override int Finish(TimeStep timestep, RemoteActivityFinished? remoteActivityResult)
         {
             int duration = base.Finish(timestep, remoteActivityResult);
-            TravelInfo.FinishTravel(StartTime!, PersonName, duration, Affordance);
+            TravelInfo.FinishTravel(StartTime!, timestep, PersonName, duration, Affordance);
             return duration;
         }
 

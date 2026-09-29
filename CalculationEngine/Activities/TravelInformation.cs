@@ -33,6 +33,12 @@ namespace CalculationEngine.Activities
         /// </summary>
         public string TravelName => CalcAffordanceTaggingSetDto.GetTravelActivityName(Route.Name);
 
+        /// <summary>
+        /// Starts the travel activity by activating the route and transportation devices and logging the transportation status.
+        /// </summary>
+        /// <param name="timestep">current timestep and start of the travel activity</param>
+        /// <param name="personName">name of the traveler</param>
+        /// <param name="affordance">affordance transport decorator for the travel</param>
         public void StartTravel(TimeStep timestep, string personName, AffordanceBaseTransportDecorator affordance)
         {
             // get the route which was already determined in IsBusy and activate it
@@ -43,7 +49,16 @@ namespace CalculationEngine.Activities
             affordance.LogTransportationStatus(timestep, Route.SiteA, travelDuration, DeviceChoice);
         }
 
-        public void FinishTravel(TimeStep startTime, string personName, int duration, AffordanceBaseTransportDecorator affordance)
+        /// <summary>
+        /// Finishes the travel activity, frees the transportation devices, and logs the transportation event.
+        /// </summary>
+        /// <param name="startTime">start time of the travel activity</param>
+        /// <param name="endTime">end time of the travel activity</param>
+        /// <param name="personName">name of the traveler</param>
+        /// <param name="duration">duration of the travel activity</param>
+        /// <param name="affordance">affordance transport decorator for the travel</param>
+        /// <exception cref="LPGException">if the travel device use events were not correctly set</exception>
+        public void FinishTravel(TimeStep startTime, TimeStep endTime, string personName, int duration, AffordanceBaseTransportDecorator affordance)
         {
             if (TravelDeviceUseEvents is null)
                 throw new LPGException("Did not store the travel device use events in a travel activity.");
@@ -51,7 +66,7 @@ namespace CalculationEngine.Activities
             // finish usage for all devices
             foreach (var deviceUse in TravelDeviceUseEvents)
             {
-                deviceUse.Device.FinishTravel(startTime, affordance.Site);
+                deviceUse.Device.FinishTravel(endTime, affordance.Site);
             }
 
             int sourceAffordanceDuration = -1; // dummy value - is currently not used in transportation logging
