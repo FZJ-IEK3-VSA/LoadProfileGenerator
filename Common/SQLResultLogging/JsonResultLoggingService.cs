@@ -131,7 +131,7 @@ namespace Common.SQLResultLogging
             }
 
             // remove the trailing comma
-            if (data.Any())
+            if (builder.Length > 0 && builder[^1] == ',')
                 builder.Length--;
 
             // add the final closing bracket and write the remaining buffer to file
