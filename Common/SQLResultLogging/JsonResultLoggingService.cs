@@ -351,13 +351,11 @@ namespace Common.SQLResultLogging
         {
             // load all entries from the file to delete items from
             var items = LoadItemsFromFile<Dictionary<string, object>>(householdKey, tableName);
-            // build a dict mapping JSON strings to deserialized items
-            var itemDict = items.ToDictionary(JsonConvert.SerializeObject);
             // serialize the entries to delete for comparison
             var jsonStringsToDelete = toDelete.Select(JsonConvert.SerializeObject).ToHashSet();
 
             // get all entries whose JSON strings are not in the set of entries to delete
-            var keptItems = itemDict.Where(kvp => !jsonStringsToDelete.Contains(kvp.Key)).Select(kvp => kvp.Value);
+            var keptItems = items.Where(item => !jsonStringsToDelete.Contains(JsonConvert.SerializeObject(item)));
 
             // clear the file but keep it to avoid duplicat result file entries
             var filepath = GetFilePath(householdKey, tableName);
