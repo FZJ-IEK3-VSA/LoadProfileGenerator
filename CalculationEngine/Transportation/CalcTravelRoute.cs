@@ -108,7 +108,9 @@ namespace CalculationEngine.Transportation
                 var device = _mypicks.PickedDevices[step];
                 if (device.Category.IsLimitedToSingleLocation)
                 {
-                    _deviceOwnerships.TrySetOwnership(calcPersonName, device);
+                    var success =_deviceOwnerships.TrySetOwnership(calcPersonName, device);
+                    if (!success)
+                        throw new LPGException($"Failed to set ownership for device {device.Name} although it was previously picked.");
                 }
                 // log the transportation status and activate the step
                 int pickedDuration = _mypicks.PickedDurations[step];
