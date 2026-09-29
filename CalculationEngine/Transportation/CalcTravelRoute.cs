@@ -128,6 +128,19 @@ namespace CalculationEngine.Transportation
             return totalDuration;
         }
 
+        /// <summary>
+        /// Finishes a travel on this route for the specified person. If devices may be left at the
+        /// destination site, the person is not bound to a device anymore and the ownership is released.
+        /// </summary>
+        /// <param name="personName">the person that finished the travel</param>
+        public void FinishTravel(string personName)
+        {
+            if (SiteB.DeviceChangeAllowed)
+            {
+                _deviceOwnerships.RemoveOwnership(personName);
+            }
+        }
+
         public void AddTravelRouteStep([NotNull] string stepName, [NotNull] CalcTransportationDeviceCategory deviceCategory,
             int stepNumber, double distanceInM, StrGuid guid, double durationInS = -1)
         {

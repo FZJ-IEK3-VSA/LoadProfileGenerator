@@ -69,6 +69,9 @@ namespace CalculationEngine.Activities
                 deviceUse.Device.FinishTravel(endTime, affordance.Site);
             }
 
+            // if devices may be left at the destination site, release the person's device ownership
+            Route.FinishTravel(personName);
+
             int sourceAffordanceDuration = -1; // dummy value - is currently not used in transportation logging
             affordance.LogTransportationEvent(TravelDeviceUseEvents, personName, startTime!, Route.SiteA, Route, duration, sourceAffordanceDuration);
         }

@@ -67,11 +67,6 @@ namespace CalculationEngine.Transportation
             if (srcSite == dstSite)
                 throw new LPGException($"Source and destination of a travel must not be the same site ({srcSite}).");
 
-            if (srcSite.DeviceChangeAllowed)
-            {
-                // person is not bound to a device anymore
-                DeviceOwnerships.RemoveOwnership(person.Name);
-            }
             //first get the routes, no matter if busy
             List<CalcTransportationDevice> devicesAtSrc = GetDevicesAtSite(srcSite);
             var possibleRoutes = srcSite.GetAllRoutesTo(timeStep, dstSite, devicesAtSrc, person);
