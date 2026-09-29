@@ -340,9 +340,6 @@ namespace CalculationEngine.Transportation
         /// <returns>true if the device is busy during that period; false, if it is available</returns>
         public bool IsBusy(TimeStep startTimeStep, int durationInTimesteps)
         {
-            var endTimeStep = startTimeStep.AddSteps(durationInTimesteps);
-            if (endTimeStep < _activationStartTimestep)
-                throw new LPGException("Transport devices are activated at the start of a journey. Checking for timesteps before that should never happen.");
             return startTimeStep < _activationStopTimestep;
         }
 
