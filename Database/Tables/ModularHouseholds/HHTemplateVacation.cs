@@ -35,7 +35,7 @@ namespace Database.Tables.ModularHouseholds {
             var hhpID = dr.GetIntFromLong("ID");
             var vacationID = dr.GetIntFromLong("VacationID", ignoreMissingField: ignoreMissingFields);
             var templateID = dr.GetIntFromLong("HHTemplateID");
-            var v = aic.Vacations.FirstOrDefault(mypers => mypers.ID == vacationID);
+            var v = aic.Vacations.FindById(vacationID);
             var name = "(no name)";
             if (v != null) {
                 name = v.Name;

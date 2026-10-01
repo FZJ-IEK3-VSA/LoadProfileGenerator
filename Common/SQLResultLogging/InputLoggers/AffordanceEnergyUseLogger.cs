@@ -10,7 +10,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class AffordanceEnergyUseLogger : DataSaverBase {
         private const string Tablename = "AffordanceEnergyUses";
 
-        public AffordanceEnergyUseLogger([NotNull] SqlResultLoggingService srls)
+        public AffordanceEnergyUseLogger([NotNull] IResultLoggingService srls)
             : base(typeof(List<AffordanceEnergyUseEntry>), new ResultTableDefinition(Tablename,ResultTableID.AffordanceEnergyUse,"Json Summaries of all Energy uses", CalcOption.AffordanceEnergyUse), srls)
         {
         }

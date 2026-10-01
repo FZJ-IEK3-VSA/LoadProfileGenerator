@@ -5,6 +5,7 @@ using System.IO;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
@@ -18,7 +19,8 @@ using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SimulationEngine.Tests.SimZukunftProcessor {
+namespace SimulationEngine.Tests.SimZukunftProcessor
+{
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class HouseGeneratorJobTests : UnitTestBaseClass {
         public HouseGeneratorJobTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -153,7 +155,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     //housedata
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     var chargingStationSet = sim.ChargingStationSets
-                        .SafeFindByName("Charging At Home with 03.7 kW, output results to Car Electricity").GetJsonReference();
+                        .SafeFindByName("Charging At Home with 03.7 kW").GetJsonReference();
                     Logger.Info("Using charging station " + chargingStationSet);
                     var transportationDeviceSet = sim.TransportationDeviceSets[0].GetJsonReference();
                     var travelRouteSet = sim.TravelRouteSets[0].GetJsonReference();
@@ -200,6 +202,33 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void JsonReferenceDeserializeTest()
+        {
+            // serialize and deserialize each JsonReference object, and check if the result is the same
+            JsonReference[] testCases = [new("myname", new("myguid")), new(), new("name only"), new("name", null), new("", new("empty name"))];
+            foreach (var testCase in testCases)
+            {
+                string referenceString = JsonConvert.SerializeObject(testCase);
+                JsonReference? deserialized = JsonConvert.DeserializeObject<JsonReference>(referenceString);
+                deserialized.Should().BeEquivalentTo(testCase);
+            }
+
+            // test some special cases
+            Dictionary<string, JsonReference> specialJsonCases = new(){
+                ["\"string only\""]= new("string only"),
+                ["{\"Name\": \"Name only\"}"] = new("Name only"),
+                ["{\"Guid\": {\"StrVal\": \"Guid only\"}}"] = new("", new("Guid only")) { Name = null },
+            };
+            foreach (var kvp in specialJsonCases)
+            {
+                JsonReference? deserialized = JsonConvert.DeserializeObject<JsonReference>(kvp.Key);
+                deserialized.Should().BeEquivalentTo(kvp.Value);
+            }
+
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void HouseJobDeserializeTest() {
             Logger.Get().StartCollectingAllMessages();
             using (WorkingDir workingDir = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
@@ -210,7 +239,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     //housedata
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     var chargingStationSet = sim.ChargingStationSets
-                        .SafeFindByName("Charging At Home with 03.7 kW, output results to Car Electricity").GetJsonReference();
+                        .SafeFindByName("Charging At Home with 03.7 kW").GetJsonReference();
                     Logger.Info("Using charging station " + chargingStationSet);
                     var transportationDeviceSet = sim.TransportationDeviceSets[0].GetJsonReference();
                     var travelRouteSet = sim.TravelRouteSets[0].GetJsonReference();
@@ -372,7 +401,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                             }
                         };
                         StartHouseJob(houseJob, wd, htcode);
-                        SqlResultLoggingService srls = new SqlResultLoggingService(houseJob.CalcSpec.OutputDirectory);
+                        IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(houseJob.CalcSpec.OutputDirectory);
                         HouseholdKeyLogger hhkslogger = new HouseholdKeyLogger(srls);
                         var hhks = hhkslogger.Load();
                         TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(srls);

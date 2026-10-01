@@ -10,7 +10,7 @@ namespace CalculationController.InputLoggers
 
     public class CalcStartParameterSetLogger : DataSaverBase
     {
-        public CalcStartParameterSetLogger( [JetBrains.Annotations.NotNull] SqlResultLoggingService srls): base(typeof(CalcStartParameterSet),
+        public CalcStartParameterSetLogger( [JetBrains.Annotations.NotNull] IResultLoggingService srls): base(typeof(CalcStartParameterSet),
             new ResultTableDefinition("CalcStartParameterSet",ResultTableID.CalcStartParameters, "All the calculation start parameters", CalcOption.BasicOverview), srls)
         {
         }
@@ -35,7 +35,7 @@ namespace CalculationController.InputLoggers
             se.AddRow(RowBuilder.Start("Name", "LoadTypePriority").Add("Value", csps.LoadTypePriority.ToString()).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "OfficialSimulationStartTime").Add("Value", csps.OfficialSimulationStartTime.ToString(CultureInfo.InvariantCulture)).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "OfficialSimulationEndTime").Add("Value", csps.OfficialSimulationEndTime.ToString(CultureInfo.InvariantCulture)).ToDictionary());
-            se.AddRow(RowBuilder.Start("Name", "SelectedRandomSeed").Add("Value", csps.SelectedRandomSeed.ToString(CultureInfo.InvariantCulture)).ToDictionary());
+            se.AddRow(RowBuilder.Start("Name", "RandomSeed").Add("Value", csps.RandomSeed.ToString(CultureInfo.InvariantCulture)).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "SettlingDays").Add("Value", csps.SettlingDays.ToString(CultureInfo.InvariantCulture)).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "ShowSettlingPeriod").Add("Value", csps.ShowSettlingPeriod.ToString()).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "TransportationDeviceSet").Add("Value", csps.TransportationDeviceSet?.Name??"None").ToDictionary());

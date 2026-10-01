@@ -107,16 +107,16 @@ namespace Database.Tables.ModularHouseholds {
             var hhpID = dr.GetIntFromLong("ID");
             var personID = dr.GetIntFromLong("PersonID", ignoreMissingField: ignoreMissingFields);
             var templateID = dr.GetIntFromLong("HHTemplateID");
-            var p = aic.Persons.FirstOrDefault(mypers => mypers.ID == personID);
+            var p = aic.Persons.FindById(personID);
             var name = "(no name)";
             if (p != null) {
                 name = p.Name;
             }
             var traitTagID = dr.GetIntFromLong("LivingPatternID", false, ignoreMissingFields,-1);
-            var traitTag = aic.TraitTags.FirstOrDefault(x => x.ID == traitTagID);
+            var traitTag = aic.TraitTags.FindById(traitTagID);
             var guid = GetGuid(dr, ignoreMissingFields);
             var livingpatternID = dr.GetIntFromLong("LivingPatternTagID", false, ignoreMissingFields);
-            var livingPattern = aic.LivingPatternTags.FirstOrDefault(x => x.ID == livingpatternID);
+            var livingPattern = aic.LivingPatternTags.FindById(livingpatternID);
             var hhp = new HHTemplatePerson(hhpID, p, templateID,
                 name, connectionString,traitTag,livingPattern, guid);
             return hhp;

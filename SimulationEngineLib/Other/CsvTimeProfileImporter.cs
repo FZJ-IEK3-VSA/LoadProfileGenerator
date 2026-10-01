@@ -1,12 +1,14 @@
 ﻿using System.IO;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace SimulationEngineLib.Other {
+namespace SimulationEngineLib.Other
+{
     public class CsvTimeProfileImporter
     {
         [NotNull] private readonly string _connectionString;

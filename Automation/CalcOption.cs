@@ -60,6 +60,8 @@
         JsonHouseholdSumFilesNoFlex,
         HouseholdSumProfilesCsvNoFlex,
         FlexibilityEvents,
-        DeleteDatFiles
+        DeleteDatFiles,
+        TransportationDefinitions,
+        TransportationDeviceChoices
     }
 }

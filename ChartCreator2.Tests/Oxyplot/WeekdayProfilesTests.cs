@@ -37,7 +37,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
 
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "WeekdayProfiles.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

@@ -33,7 +33,7 @@ namespace Database.Tables.Houses {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
             var householdTemplateID = dr.GetIntFromLong("HouseholdTemplateID", false);
-            var ht = aic.HouseholdTemplates.FirstOrDefault(x => x.IntID == householdTemplateID);
+            var ht = aic.HouseholdTemplates.FindById(householdTemplateID);
             var name = "unknown";
             if (ht != null) {
                 name = ht.Name;

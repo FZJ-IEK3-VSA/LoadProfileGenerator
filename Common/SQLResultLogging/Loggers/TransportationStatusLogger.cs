@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.Loggers {
     public class TransportationStatusLogger : DataSaverBase {
         private const string TableName = "TransportationStatuses";
 
-        public TransportationStatusLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) : base(typeof(TransportationStatus),
+        public TransportationStatusLogger([JetBrains.Annotations.NotNull] IResultLoggingService srls) : base(typeof(TransportationStatus),
             new ResultTableDefinition(TableName, ResultTableID.TransportationStatuses, "Transportation Status Messages", CalcOption.TransportationStatistics ),
             srls)
         {

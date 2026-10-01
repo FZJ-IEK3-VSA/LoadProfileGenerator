@@ -9,8 +9,10 @@ using Automation.ResultFiles;
 using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using System.Threading;
 
-namespace Common.SQLResultLogging {
+namespace Common.SQLResultLogging
+{
     /*public interface ITypeDescriber {
         [JetBrains.Annotations.NotNull]
         HouseholdKey HouseholdKey { get; }
@@ -22,36 +24,41 @@ namespace Common.SQLResultLogging {
         string GetTypeDescription();
     }*/
 
+    /// <summary>
+    /// The original result logging service that stores data in sqlite database files. There is one database file
+    /// for every different HouseholdKey, so one per household and additionally one general database for the house.
+    /// When using many SQLResultLoggingServices in parallel, e.g. in a city simulation, errors with database locking
+    /// can occur. In this case, use the JsonResultLoggingService instead.
+    /// </summary>
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
-    public class SqlResultLoggingService {
-        [JetBrains.Annotations.NotNull] private readonly string _basePath;
+    public class SqlResultLoggingService : IResultLoggingService
+    {
+        private readonly string _basePath;
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<HouseholdKey, List<string>> _createdTablesPerHousehold = new Dictionary<HouseholdKey, List<string>>();
+        private readonly Dictionary<HouseholdKey, List<string>> _createdTablesPerHousehold = [];
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<HouseholdKey, FileEntry> _filenameByHouseholdKey =
-            new Dictionary<HouseholdKey, FileEntry>();
+        private readonly Dictionary<HouseholdKey, FileEntry> _filenameByHouseholdKey = [];
 
         private bool _isFileNameDictLoaded;
-        //static readonly List<SqlResultLoggingService> loggingServices = new List<SqlResultLoggingService>();
+
         public bool DoesTableExist(HouseholdKey key, [JetBrains.Annotations.NotNull] string tableName)
         {
-            if (!File.Exists(FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename)) {
-                throw new LPGException(
-                    "Missing file: " + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename);
-            }
-
-            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename +
-                            ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
+            string constr = GetConnectionString(Constants.GeneralHouseholdKey, false);
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
+            {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE'" +
-                                                             tableName + "'")) {
+                                                             tableName + "'"))
+                {
                     cmd.Connection = conn;
-                    using (var dr = cmd.ExecuteReader()) {
-                        while (dr.Read()) {
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
                             var s = dr.GetString(0);
-                            if (string.Equals(s, tableName, StringComparison.OrdinalIgnoreCase)) {
+                            if (string.Equals(s, tableName, StringComparison.OrdinalIgnoreCase))
+                            {
                                 return true;
                             }
                         }
@@ -63,16 +70,11 @@ namespace Common.SQLResultLogging {
 
         public SqlResultLoggingService([JetBrains.Annotations.NotNull] string basePath)
         {
-            //loggingServices.Add(this);
-
             _basePath = basePath;
-
-            if (_basePath.Contains(".sqlite")) {
+            if (_basePath.Contains(".sqlite"))
+            {
                 throw new LPGException("need to put in the path, not a filename");
             }
-
-            //initialize main file
-            GetFilenameForHouseholdKey(Constants.GeneralHouseholdKey);
         }
 
         [JetBrains.Annotations.NotNull]
@@ -83,17 +85,20 @@ namespace Common.SQLResultLogging {
         public List<DatabaseEntry> LoadDatabases()
         {
             List<DatabaseEntry> td = new List<DatabaseEntry>();
-            const string sql = "SELECT * FROM DatabaseList";
+            const string sql = $"SELECT * FROM {Constants.DatabaseListTableName}";
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
+            string constr = GetConnectionString(Constants.GeneralHouseholdKey);
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
+            {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
-                using (SQLiteCommand cmd = new SQLiteCommand()) {
+                AttemptToOpenDBConnection(conn);
+                using (SQLiteCommand cmd = new SQLiteCommand())
+                {
                     cmd.Connection = conn;
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
-                    while (reader.Read()) {
+                    while (reader.Read())
+                    {
                         string keyStr = reader["HouseholdKey"].ToString() ?? "";
                         HouseholdKey key = new HouseholdKey(keyStr);
                         string filename = reader["Filename"].ToString() ?? "";
@@ -101,8 +106,6 @@ namespace Common.SQLResultLogging {
                         td.Add(fe);
                     }
                 }
-
-                conn.Close();
             }
 
             return td;
@@ -113,20 +116,24 @@ namespace Common.SQLResultLogging {
         public List<ResultTableDefinition> LoadTables([JetBrains.Annotations.NotNull] HouseholdKey dbKey)
         {
             List<ResultTableDefinition> td = new List<ResultTableDefinition>();
-            if (!FilenameByHouseholdKey.ContainsKey(dbKey)) {
+            if (!FilenameByHouseholdKey.ContainsKey(dbKey))
+            {
                 return td;
             }
-            const string sql = "SELECT * FROM TableDescription";
+            const string sql = $"SELECT * FROM {Constants.TableDescriptionTableName}";
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[dbKey].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
+            string constr = GetConnectionString(dbKey);
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
+            {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
-                using (SQLiteCommand cmd = new SQLiteCommand()) {
+                AttemptToOpenDBConnection(conn);
+                using (SQLiteCommand cmd = new SQLiteCommand())
+                {
                     cmd.Connection = conn;
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
-                    while (reader.Read()) {
+                    while (reader.Read())
+                    {
                         string tableName = reader["TableName"].ToString() ?? "no table name";
                         string description = reader["Description"].ToString() ?? "no description";
                         int resultTableid = (int)(long)reader["ResultTableID"];
@@ -135,8 +142,6 @@ namespace Common.SQLResultLogging {
                         td.Add(fe);
                     }
                 }
-
-                conn.Close();
             }
 
             return td;
@@ -150,28 +155,30 @@ namespace Common.SQLResultLogging {
                                              [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                                              [JetBrains.Annotations.NotNull] string tableName)
         {
-            if (fields.Count == 0) {
+            if (fields.Count == 0)
+            {
                 throw new LPGException("No fields defined for database");
             }
 
-            string dstFileName = GetFilenameForHouseholdKey(householdKey);
             string sql = "CREATE TABLE " + tableName + "(";
-            foreach (var field in fields) {
+            foreach (var field in fields)
+            {
                 sql += field.Name + " " + field.Type + ",";
             }
 
             sql = sql.Substring(0, sql.Length - 1) + ");";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3;")
-            ) {
-                conn.Open();
+            string conStr = GetConnectionString(householdKey, true);
+            using (SQLiteConnection conn = new SQLiteConnection(conStr)
+            )
+            {
+                AttemptToOpenDBConnection(conn);
                 var command = conn.CreateCommand();
                 command.CommandText = sql;
                 var result = command.ExecuteNonQuery();
-                if (result != 0) {
+                if (result != 0)
+                {
                     throw new LPGException("Creating the table " + tableName + " failed.");
                 }
-
-                conn.Close();
             }
         }
         [ItemNotNull]
@@ -183,17 +190,17 @@ namespace Common.SQLResultLogging {
                 LoadFileNameDict();
             }
 
-            string sql = "SELECT json FROM " + rtd.TableName;
+            string sql = $"SELECT {Constants.JsonColumnName} FROM " + rtd.TableName;
             if (!FilenameByHouseholdKey.ContainsKey(key))
             {
                 throw new LPGException("Missing sql file for household key " + key);
             }
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            string constr = GetConnectionString(key);
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand())
                 {
                     cmd.Connection = conn;
@@ -209,16 +216,17 @@ namespace Common.SQLResultLogging {
 
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
-                    while (reader.Read()) {
+                    while (reader.Read())
+                    {
                         string s = reader[0].ToString() ?? "";
                         T re = JsonConvert.DeserializeObject<T>(s);
-                        if (re is null) {
+                        if (re is null)
+                        {
                             throw new LPGException("object was null");
                         }
 
                         yield return re;
                     }
-                    conn.Close();
                 }
             }
         }
@@ -229,20 +237,20 @@ namespace Common.SQLResultLogging {
         public List<T> ReadFromJson<T>([JetBrains.Annotations.NotNull] ResultTableDefinition rtd, [JetBrains.Annotations.NotNull] HouseholdKey key,
                                        ExpectedResultCount expectedResult)
         {
-            if (!_isFileNameDictLoaded) {
+            if (!_isFileNameDictLoaded)
+            {
                 LoadFileNameDict();
             }
 
-            string sql = "SELECT json FROM " + rtd.TableName;
-            if (!FilenameByHouseholdKey.ContainsKey(key)) {
-                throw new LPGException("Missing sql file for household key "+ key);
-            }
+            string sql = $"SELECT {Constants.JsonColumnName} FROM " + rtd.TableName;
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
+            string constr = GetConnectionString(key);
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
+            {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
-                using (SQLiteCommand cmd = new SQLiteCommand()) {
+                AttemptToOpenDBConnection(conn);
+                using (SQLiteCommand cmd = new SQLiteCommand())
+                {
                     cmd.Connection = conn;
                     /*
                     List<string> tables = new List<string>();
@@ -256,49 +264,63 @@ namespace Common.SQLResultLogging {
                     List<T> resultsObjects = new List<T>();
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
-                    while (reader.Read()) {
+                    while (reader.Read())
+                    {
                         string s = reader[0].ToString() ?? "";
                         T re = JsonConvert.DeserializeObject<T>(s);
                         resultsObjects.Add(re);
                     }
 
-                    switch (expectedResult) {
-                        case ExpectedResultCount.One:
-                            if (resultsObjects.Count != 1) {
-                                throw new DataIntegrityException("Not exactly one result");
-                            }
-
-                            break;
-                        case ExpectedResultCount.Many:
-                            if (resultsObjects.Count < 2) {
-                                throw new DataIntegrityException("Not many results");
-                            }
-
-                            break;
-                        case ExpectedResultCount.OneOrMore:
-                            if (resultsObjects.Count < 1) {
-                                throw new DataIntegrityException("Not one or more results");
-                            }
-
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(expectedResult), expectedResult, null);
-                    }
-                    conn.Close();
+                    CheckResultCount(expectedResult, resultsObjects.Count);
                     return resultsObjects;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the expected number of results was found, throwing an
+        /// exception if not.
+        /// </summary>
+        /// <param name="expectedResult">the expected number of results</param>
+        /// <param name="resultsObjectCount">the number of results found</param>
+        /// <exception cref="DataIntegrityException">if the encountered number does not match the expectation</exception>
+        /// <exception cref="ArgumentOutOfRangeException">if an enum value was missing</exception>
+        public static void CheckResultCount(ExpectedResultCount expectedResult, int resultsObjectCount)
+        {
+            switch (expectedResult)
+            {
+                case ExpectedResultCount.One:
+                    if (resultsObjectCount != 1)
+                    {
+                        throw new DataIntegrityException("Not exactly one result");
+                    }
+
+                    break;
+                case ExpectedResultCount.Many:
+                    if (resultsObjectCount < 2)
+                    {
+                        throw new DataIntegrityException("Not many results");
+                    }
+
+                    break;
+                case ExpectedResultCount.OneOrMore:
+                    if (resultsObjectCount < 1)
+                    {
+                        throw new DataIntegrityException("Not one or more results");
+                    }
+
+                    break;
+                case ExpectedResultCount.AnyNumber:
+                    break; // any number is allowed
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(expectedResult), expectedResult, null);
             }
         }
 
         public void SaveDictionaryToDatabaseNewConnection([JetBrains.Annotations.NotNull] Dictionary<string, object> values,
                                                           [JetBrains.Annotations.NotNull] string tableName,
                                                           [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
-        {
-            List<Dictionary<string, object>> valuesList = new List<Dictionary<string, object>> {
-                values
-            };
-            SaveDictionaryToDatabaseNewConnection(valuesList, tableName, householdKey);
-        }
+            => SaveDictionaryToDatabaseNewConnection([values], tableName, householdKey);
 
         public void SaveDictionaryToDatabaseNewConnection([ItemNotNull] [JetBrains.Annotations.NotNull]
                                                           List<Dictionary<string, object>> values,
@@ -308,7 +330,8 @@ namespace Common.SQLResultLogging {
             string sql = "Insert into " + tableName + "(";
             string fields = "";
             string parameters = "";
-            foreach (KeyValuePair<string, object> pair in values[0]) {
+            foreach (KeyValuePair<string, object> pair in values[0])
+            {
                 fields += pair.Key + ",";
                 parameters += "@" + pair.Key + ",";
             }
@@ -316,126 +339,187 @@ namespace Common.SQLResultLogging {
             fields = fields.Substring(0, fields.Length - 1);
             parameters = parameters.Substring(0, parameters.Length - 1);
             sql += fields + ") VALUES (" + parameters + ")";
-            string dstFileName = GetFilenameForHouseholdKey(householdKey);
-            using (System.Data.SQLite.SQLiteConnection conn =
-                new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3;Synchronous=OFF;Journal Mode=WAL;")) {
-                conn.Open();
-                using (var transaction = conn.BeginTransaction()) {
-                    var command = conn.CreateCommand();
-                    command.CommandText = sql;
-                    foreach (Dictionary<string, object> row in values) {
-                        if (row.Count != values[0].Count) {
-                            throw new LPGException("Incorrect number of columns");
-                        }
-
-                        command.Parameters.Clear();
-                        foreach (KeyValuePair<string, object> pair in row) {
-                            string parameter = "@" + pair.Key;
-                            command.Parameters.AddWithValue(parameter, pair.Value);
-                        }
-
-                        command.ExecuteNonQuery();
+            string conStr = GetConnectionString(householdKey, true, true);
+            using SQLiteConnection conn = new(conStr);
+            AttemptToOpenDBConnection(conn);
+            using (var transaction = conn.BeginTransaction())
+            {
+                var command = conn.CreateCommand();
+                command.CommandText = sql;
+                foreach (Dictionary<string, object> row in values)
+                {
+                    if (row.Count != values[0].Count)
+                    {
+                        throw new LPGException("Incorrect number of columns");
                     }
 
-                    transaction.Commit();
+                    command.Parameters.Clear();
+                    foreach (KeyValuePair<string, object> pair in row)
+                    {
+                        string parameter = "@" + pair.Key;
+                        command.Parameters.AddWithValue(parameter, pair.Value);
+                    }
+
+                    command.ExecuteNonQuery();
                 }
 
-                conn.Close();
+                transaction.Commit();
             }
+        }
+
+        /// <summary>
+        /// Attempts to open a database. If that fails, retries a fixed number of times
+        /// before aborting.
+        /// </summary>
+        /// <param name="conn">the Database connection to open</param>
+        /// <exception cref="LPGException">if the maximum number of attempts failed</exception>
+        private static void AttemptToOpenDBConnection(SQLiteConnection conn)
+        {
+            bool successful = false;
+            int failures = 0;
+            while (!successful)
+            {
+                try
+                {
+                    conn.Open();
+                    successful = true;
+                }
+                catch (SQLiteException e)
+                {
+                    // opening the DB failed, e.g., because the "database is locked"
+                    failures++;
+                    if (failures > Constants.MaxDbOpenAttempts)
+                        throw new LPGException($"Could not open the database in {Constants.MaxDbOpenAttempts} attempts", e);
+
+                    // wait a bit before trying again
+                    Thread.Sleep(1000);
+                }
+            }
+            if (failures > 0)
+                Logger.Info($"Opening database succeeded on {failures + 1}. attempt");
         }
 
         public void SaveResultEntry([JetBrains.Annotations.NotNull] SaveableEntry entry)
         {
             entry.IntegrityCheck();
-            string dstFileName = GetFilenameForHouseholdKey(entry.HouseholdKey);
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3")) {
-                //;Synchronous=OFF;Journal Mode=WAL;"
-                conn.Open();
-                if (!IsTableCreated(entry)) {
-                    MakeTableForListOfFields(entry.Fields, conn, entry.ResultTableDefinition.TableName);
-                    Dictionary<string, object> fields = new Dictionary<string, object> {
-                        {"TableName", entry.ResultTableDefinition.TableName},
-                        {"Description", entry.ResultTableDefinition.Description},
-                        {"ResultTableID", entry.ResultTableDefinition.ResultTableID},
-                        {"EnablingOption", entry.ResultTableDefinition.EnablingOption}
-                    };
-                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>> {
-                        fields
-                    };
-                    SaveDictionaryToDatabase(rows, "TableDescription", conn);
-                    if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey)) {
-                        _createdTablesPerHousehold.Add(entry.HouseholdKey, new List<string>());
-                    }
-
-                    _createdTablesPerHousehold[entry.HouseholdKey].Add(entry.ResultTableDefinition.TableName);
-                }
-
-                SaveDictionaryToDatabase(entry.RowEntries, entry.ResultTableDefinition.TableName, conn);
-                conn.Close();
+            string conStr = GetConnectionString(entry.HouseholdKey, true);
+            using SQLiteConnection conn = new(conStr);
+            AttemptToOpenDBConnection(conn);
+            if (!CheckIfTableExists(entry.ResultTableDefinition.TableName, entry.HouseholdKey))
+            {
+                CreateNewTable(entry, conn);
             }
+
+            SaveDictionaryToDatabase(entry.RowEntries, entry.ResultTableDefinition.TableName, conn);
         }
+
         /*
-        public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List<T> items) where T : ITypeDescriber
+public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List<T> items) where T : ITypeDescriber
+{
+   Dictionary<HouseholdKey, List<T>> itemsByKey = new Dictionary<HouseholdKey, List<T>>();
+   foreach (T item in items) {
+       HouseholdKey key = item.HouseholdKey;
+       if (!itemsByKey.ContainsKey(key)) {
+           itemsByKey.Add(key, new List<T>());
+       }
+
+       itemsByKey[key].Add(item);
+   }
+
+   foreach (KeyValuePair<HouseholdKey, List<T>> pair in itemsByKey) {
+       var filteredItems = items.Where(x => x.HouseholdKey == pair.Key).ToList();
+       SaveableEntry se = new SaveableEntry(pair.Key, typeof(T).Name, filteredItems[0].GetTypeDescription());
+       var properties = typeof(T).GetProperties();
+       var fprops = properties.Where(x => !IgnoreThisField(x.Name)).ToList();
+       foreach (var prop in fprops) {
+           se.AddField(prop.Name, prop.PropertyType);
+       }
+
+       foreach (T item in filteredItems) {
+           RowBuilder rb = new RowBuilder();
+           foreach (var prop in fprops) {
+               rb.Add(prop.Name, prop.GetValue(item));
+           }
+
+           se.AddRow(rb.ToDictionary());
+       }
+
+       SaveResultEntry(se);
+   }
+}*/
+
+        /// <summary>
+        /// Build an SQLite connection string for the specified database file
+        /// </summary>
+        /// <param name="filename">the file path of the database to open</param>
+        /// <param name="walMode">if true, sets journal mode to WAL</param>
+        /// <returns>the connection string that can be used to open the database</returns>
+        private static string MakeConnectionString(string filename, bool walMode=false)
         {
-            Dictionary<HouseholdKey, List<T>> itemsByKey = new Dictionary<HouseholdKey, List<T>>();
-            foreach (T item in items) {
-                HouseholdKey key = item.HouseholdKey;
-                if (!itemsByKey.ContainsKey(key)) {
-                    itemsByKey.Add(key, new List<T>());
-                }
+            string additionalParams = walMode ? ";Synchronous=OFF;Journal Mode=WAL;" : "";
+            return $"Data Source={filename};Version=3{additionalParams}";
+        }
 
-                itemsByKey[key].Add(item);
-            }
+        /// <summary>
+        /// Gets the connection string for opening a specific database file. Makes sure the file exists.
+        /// </summary>
+        /// <param name="key">the household key of the database to open</param>
+        /// <param name="writing">whether the database should be openend for writing</param>
+        /// <param name="walMode">if true, sets journal mode to WAL in the connection string</param>
+        /// <returns>the connection string that can be used to open the database</returns>
+        private string GetConnectionString(HouseholdKey key, bool writing = false, bool walMode = false)
+        {
+            string databaseFile = InitDatabaseFile(key, writing);
+            return MakeConnectionString(databaseFile, walMode);
+        }
 
-            foreach (KeyValuePair<HouseholdKey, List<T>> pair in itemsByKey) {
-                var filteredItems = items.Where(x => x.HouseholdKey == pair.Key).ToList();
-                SaveableEntry se = new SaveableEntry(pair.Key, typeof(T).Name, filteredItems[0].GetTypeDescription());
-                var properties = typeof(T).GetProperties();
-                var fprops = properties.Where(x => !IgnoreThisField(x.Name)).ToList();
-                foreach (var prop in fprops) {
-                    se.AddField(prop.Name, prop.PropertyType);
-                }
-
-                foreach (T item in filteredItems) {
-                    RowBuilder rb = new RowBuilder();
-                    foreach (var prop in fprops) {
-                        rb.Add(prop.Name, prop.GetValue(item));
-                    }
-
-                    se.AddRow(rb.ToDictionary());
-                }
-
-                SaveResultEntry(se);
-            }
-        }*/
-
+        /// <summary>
+        /// Checks if a specific database file already exists, and if not, creates and initializes it if it is
+        /// opened for writing.
+        /// </summary>
+        /// <param name="key">the household key of the database to check</param>
+        /// <param name="writing">whether the database will be openend for writing</param>
+        /// <returns>the file path of the database</returns>
+        /// <exception cref="LPGException">if the database should be opened for reading, but does not exist</exception>
         [JetBrains.Annotations.NotNull]
-        private string GetFilenameForHouseholdKey([JetBrains.Annotations.NotNull] HouseholdKey key)
+        private string InitDatabaseFile([JetBrains.Annotations.NotNull] HouseholdKey key, bool writing = false)
         {
-            if (FilenameByHouseholdKey.ContainsKey(key)) {
-                return FilenameByHouseholdKey[key].Filename;
+            if (FilenameByHouseholdKey.TryGetValue(key, out FileEntry? value))
+            {
+                // database file exists and file path is already cached
+                return value.Filename;
             }
 
-            bool isMainDatabase = key == Constants.GeneralHouseholdKey;
-
-            string newName = Path.Combine(_basePath, "Results." + key + ".sqlite");
-            FilenameByHouseholdKey.Add(key, new FileEntry(newName));
-            FileInfo fi = new FileInfo(newName);
-            FilenameByHouseholdKey[key].DescriptionTableWritten = true;
-            if (fi.Exists && fi.Length > 1000) {
-                return newName;
+            // determine the file path of the database file based on the household key
+            string dbPath = Path.Combine(_basePath, "Results." + key + ".sqlite");
+            FileInfo fi = new(dbPath);
+            if (fi.Exists && fi.Length > 1000)
+            {
+                // file already exists and is not empty, so assume it is a valid database file
+                return dbPath;
             }
 
-            if (fi.FullName.Length > 260) {
-                throw new LPGException("Filename length > 260. This is a Windows limitation: " + fi.FullName);
+            if (!writing)
+            {
+                // the database should be opened for reading, but it does not exist
+                throw new LPGException($"Database file for household key {key} does not exist: {dbPath}");
+            }
+            if (fi.FullName.Length > 260)
+            {
+                throw new LPGException($"Filename length > 260. This is a Windows limitation: {fi.FullName}");
             }
 
-            if (fi.Directory?.Exists != true) {
-                throw new LPGException("Directory does not exist.");
-            }
-            string connectionString = MakeconnectionString(fi.FullName);
-            using (SQLiteConnection dbcon = new SQLiteConnection(connectionString)) {
-                dbcon.Open();
+            // create the result directory if it does not exist yet
+            fi.Directory.Create();
+
+            // cache the file path of the new database file in advance
+            FilenameByHouseholdKey.Add(key, new FileEntry(dbPath, true));
+
+            // create and initialize the new database file
+            string connectionString = MakeConnectionString(fi.FullName, true);
+            using (SQLiteConnection dbcon = new SQLiteConnection(connectionString))
+            {
+                AttemptToOpenDBConnection(dbcon);
                 {
                     FieldDefinition fd1 = new FieldDefinition("TableName", "Text");
                     FieldDefinition fd2 = new FieldDefinition("Description", "Text");
@@ -450,7 +534,9 @@ namespace Common.SQLResultLogging {
                     MakeTableForListOfFields(fields, dbcon, Constants.TableDescriptionTableName);
                 }
 
-                if (isMainDatabase) {
+                bool isMainDatabase = key == Constants.GeneralHouseholdKey;
+                if (isMainDatabase)
+                {
                     //MainFilename = newName;
                     {
                         FieldDefinition fd1 = new FieldDefinition("Filename", "Text");
@@ -461,99 +547,55 @@ namespace Common.SQLResultLogging {
                             fd2
                         };
                         //fields.Add(fd3);
-                        MakeTableForListOfFields(fields, dbcon, nameof(DatabaseList));
+                        MakeTableForListOfFields(fields, dbcon, Constants.DatabaseListTableName);
                     }
                 }
-
-                dbcon.Close();
             }
-            ResultFileEntry rfe = new ResultFileEntry("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key,null
-                , CalcOption.BasicOverview);
-            ResultFileEntryLogger rfel = new ResultFileEntryLogger(this);
-                rfel.Run(key,rfe);
-
-            /* DatabaseList dbl = new DatabaseList(key.Key, null, newName)
-             {
-                 HouseholdKey = key.Key,
-                 Filename = newName
-             };*/
-            var row = RowBuilder.Start("HouseholdKey", key.Key).Add("Filename", newName).ToDictionary();
+            AddResultFileEntry(this, key, fi);
+            var row = RowBuilder.Start("HouseholdKey", key.Key).Add("Filename", dbPath).ToDictionary();
             SaveDictionaryToDatabaseNewConnection(row, "DatabaseList", Constants.GeneralHouseholdKey);
-            return newName;
+            return dbPath;
         }
 
-        /*
-        private bool IgnoreThisField([JetBrains.Annotations.NotNull] string fieldname)
-        {
-            if (fieldname == "HouseholdKey") {
-                return true;
-            }
-
-            return false;
-        }*/
-
         /// <summary>
-        /// Returns whether a matching table for the entry exists
+        /// Adds an entry for a new database file with the ResultFileEntryLogger.
         /// </summary>
-        /// <param name="entry">The entry for which the table is intended</param>
-        /// <returns>True if a matching table exists, else false</returns>
-        private bool IsTableCreated([JetBrains.Annotations.NotNull] SaveableEntry entry)
+        /// <param name="service">the result logging service to use for the ResultFileEntryLogger</param>
+        /// <param name="key">the household key of the file</param>
+        /// <param name="fi">the FileInfo object of the file</param>
+        public static void AddResultFileEntry(IResultLoggingService service, HouseholdKey key, FileInfo fi, string? fileIndex = null)
         {
-            if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey)) {
-                return false;
-            }
-
-            var tables = _createdTablesPerHousehold[entry.HouseholdKey];
-            if (!tables.Contains(entry.ResultTableDefinition.TableName)) {
-                return false;
-            }
-
-            return true;
+            ResultFileEntry rfe = new("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key, fileIndex, CalcOption.BasicOverview);
+            ResultFileEntryLogger rfel = new(service);
+            rfel.Run(Constants.GeneralHouseholdKey, rfe);
         }
 
         private void LoadFileNameDict()
         {
             const string sql = "SELECT * FROM DatabaseList";
-            if (!File.Exists(FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename)) {
-                throw new LPGException("Missing file: " + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename);
-            }
-            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
+            string constr = GetConnectionString(Constants.GeneralHouseholdKey, false);
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
+            {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
-                using (SQLiteCommand cmd = new SQLiteCommand()) {
+                AttemptToOpenDBConnection(conn);
+                using (SQLiteCommand cmd = new SQLiteCommand())
+                {
                     cmd.Connection = conn;
 
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
-                    while (reader.Read()) {
+                    while (reader.Read())
+                    {
                         string keyStr = reader["HouseholdKey"].ToString() ?? "";
                         HouseholdKey key = new HouseholdKey(keyStr);
                         string filename = reader["Filename"].ToString() ?? "";
-                        FileEntry fe = new FileEntry(filename) {
-                            DescriptionTableWritten = true
-                        };
-                        if (!FilenameByHouseholdKey.ContainsKey(key)) {
-                            FilenameByHouseholdKey.Add(key, fe);
-                        }
+                        FileEntry fe = new FileEntry(filename, true);
+                        FilenameByHouseholdKey.TryAdd(key, fe);
                     }
                 }
-
-                conn.Close();
             }
 
             _isFileNameDictLoaded = true;
-        }
-
-        /// <summary>
-        /// Deletes an entry from a database table
-        /// </summary>
-        /// <param name="entry">A dictionary containing field values of the entry to delete.</param>
-        /// <param name="tableName">The name of the table to delete from</param>
-        /// <param name="householdKey">The HouseholdKey matching the entry</param>
-        public void DeleteEntry(Dictionary<string, object> entry, [JetBrains.Annotations.NotNull] string tableName, HouseholdKey householdKey)
-        {
-            DeleteEntries(new List<Dictionary<string, object>> { entry }, tableName, householdKey);
         }
 
         /// <summary>
@@ -562,19 +604,19 @@ namespace Common.SQLResultLogging {
         /// <param name="entries">A list of dictionaries, one for each entry to delete. Each dictionary contains field values of the entry to delete.</param>
         /// <param name="tableName">The name of the table to delete entries from</param>
         /// <param name="householdKey">The HouseholdKey matching the entries</param>
-        public void DeleteEntries([JetBrains.Annotations.NotNull][ItemNotNull] List<Dictionary<string, object>> entries,
+        public void DeleteEntries([JetBrains.Annotations.NotNull][ItemNotNull] IEnumerable<Dictionary<string, object>> entries,
                                    [JetBrains.Annotations.NotNull] string tableName, HouseholdKey householdKey)
         {
-            if (entries.Count == 0)
+            if (entries.Count() == 0)
             {
                 // nothing to do
                 return;
             }
 
             // open the SQLite database connection
-            string dstFileName = GetFilenameForHouseholdKey(householdKey);
-            using SQLiteConnection conn = new SQLiteConnection("Data Source=" + dstFileName + ";Version=3");
-            conn.Open();
+            string conStr = GetConnectionString(householdKey, true);
+            using SQLiteConnection conn = new(conStr);
+            AttemptToOpenDBConnection(conn);
 
             // prepare the sql command without the specific conditions
             string sqlBase = "DELETE FROM " + tableName + " WHERE ";
@@ -601,47 +643,66 @@ namespace Common.SQLResultLogging {
                 }
                 transaction.Commit();
             }
-            conn.Close();
         }
-
-        [JetBrains.Annotations.NotNull]
-        private static string MakeconnectionString([JetBrains.Annotations.NotNull] string filename) =>
-            "Data Source=" + filename + ";Version=3;Synchronous=OFF;Journal Mode=WAL;";
 
         private static void MakeTableForListOfFields([JetBrains.Annotations.NotNull] [ItemNotNull]
                                                      List<FieldDefinition> fields,
-                                                     [JetBrains.Annotations.NotNull] System.Data.SQLite.SQLiteConnection conn,
+                                                     [JetBrains.Annotations.NotNull] SQLiteConnection conn,
                                                      [JetBrains.Annotations.NotNull] string tableName)
         {
-            if (fields.Count == 0) {
+            if (fields.Count == 0)
+            {
                 throw new LPGException("No fields defined for database");
             }
 
             string sql = "CREATE TABLE " + tableName + "(";
-            foreach (var field in fields) {
+            foreach (var field in fields)
+            {
                 sql += field.Name + " " + field.Type + ",";
             }
 
             sql = sql.Substring(0, sql.Length - 1) + ");";
             int result;
-            using (var command = conn.CreateCommand()) {
+            using (var command = conn.CreateCommand())
+            {
                 command.CommandText = sql;
                 result = command.ExecuteNonQuery();
             }
 
-            if (result != 0) {
+            if (result != 0)
+            {
                 throw new LPGException("Creating the table " + tableName + " failed.");
             }
+        }
+
+        private void CreateNewTable(SaveableEntry entry, SQLiteConnection conn)
+        {
+            MakeTableForListOfFields(entry.Fields, conn, entry.ResultTableDefinition.TableName);
+            Dictionary<string, object> fields = new Dictionary<string, object> {
+                        {"TableName", entry.ResultTableDefinition.TableName},
+                        {"Description", entry.ResultTableDefinition.Description},
+                        {"ResultTableID", entry.ResultTableDefinition.ResultTableID},
+                        {"EnablingOption", entry.ResultTableDefinition.EnablingOption}
+                    };
+            List<Dictionary<string, object>> rows = [fields];
+            SaveDictionaryToDatabase(rows, Constants.TableDescriptionTableName, conn);
+            if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey))
+            {
+                _createdTablesPerHousehold.Add(entry.HouseholdKey, new List<string>());
+            }
+
+            _createdTablesPerHousehold[entry.HouseholdKey].Add(entry.ResultTableDefinition.TableName);
         }
 
         //[JetBrains.Annotations.NotNull]
         //public string ReturnMainSqlPath() => _filenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename;
 
-        private static void SaveDictionaryToDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] List<Dictionary<string, object>> values,
+        private static void SaveDictionaryToDatabase([JetBrains.Annotations.NotNull][ItemNotNull] List<Dictionary<string, object>> values,
                                                      [JetBrains.Annotations.NotNull] string tableName,
-                                                     [JetBrains.Annotations.NotNull] System.Data.SQLite.SQLiteConnection conn)
+                                                     [JetBrains.Annotations.NotNull] SQLiteConnection conn)
         {
-            if (values.Count == 0) {
+            if (values.Count == 0)
+            {
                 return;
             }
 
@@ -650,7 +711,8 @@ namespace Common.SQLResultLogging {
             string sql = "Insert into " + tableName + "(";
             string fields = "";
             string parameters = "";
-            foreach (KeyValuePair<string, object> pair in firstrow) {
+            foreach (KeyValuePair<string, object> pair in firstrow)
+            {
                 fields += pair.Key + ",";
                 parameters += "@" + pair.Key + ",";
             }
@@ -659,16 +721,21 @@ namespace Common.SQLResultLogging {
             parameters = parameters.Substring(0, parameters.Length - 1);
             sql += fields + ") VALUES (" + parameters + ")";
             //execute the sql
-            using (var transaction = conn.BeginTransaction()) {
-                using (var command = conn.CreateCommand()) {
+            using (var transaction = conn.BeginTransaction())
+            {
+                using (var command = conn.CreateCommand())
+                {
                     command.CommandText = sql;
-                    foreach (Dictionary<string, object> row in values) {
-                        if (row.Count != firstrow.Count) {
+                    foreach (Dictionary<string, object> row in values)
+                    {
+                        if (row.Count != firstrow.Count)
+                        {
                             throw new LPGException("Incorrect number of columns");
                         }
 
                         command.Parameters.Clear();
-                        foreach (KeyValuePair<string, object> pair in row) {
+                        foreach (KeyValuePair<string, object> pair in row)
+                        {
                             string parameter = "@" + pair.Key;
                             command.Parameters.AddWithValue(parameter, pair.Value);
                         }
@@ -681,91 +748,30 @@ namespace Common.SQLResultLogging {
             }
         }
 
-        public class DatabaseEntry {
-            public DatabaseEntry([JetBrains.Annotations.NotNull] string filename, [JetBrains.Annotations.NotNull] HouseholdKey key)
-            {
-                Filename = filename;
-                Key = key;
-            }
-
-            [JetBrains.Annotations.NotNull]
-            public string Filename { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public HouseholdKey Key { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public override string ToString() => Filename;
-        }
-
-        public class DatabaseList {
-            public DatabaseList([JetBrains.Annotations.NotNull] string householdKey, [CanBeNull] long? id, [JetBrains.Annotations.NotNull] string filename)
-            {
-                HouseholdKey = householdKey;
-                ID = id;
-                Filename = filename;
-            }
-
-            [JetBrains.Annotations.NotNull]
-            public string Filename { get; set; }
-
-            [JetBrains.Annotations.NotNull]
-            public string HouseholdKey { get; set; }
-
-            [UsedImplicitly]
-            [CanBeNull]
-            public long? ID { get; set; }
-        }
-
-        public class FieldDefinition {
-            public FieldDefinition([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string type)
-            {
-                Name = name;
-                Type = type;
-            }
-
-            [JetBrains.Annotations.NotNull]
-            public string Name { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public string Type { get; }
-        }
-
-        public class FileEntry {
-            public FileEntry([JetBrains.Annotations.NotNull] string filename) => Filename = filename;
-
-            public bool DescriptionTableWritten { get; set; }
-
-            [JetBrains.Annotations.NotNull]
-            public string Filename { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public override string ToString() => Filename;
-        }
-
-        public bool CheckifTableExits(string tableName)
+        public bool CheckIfTableExists(string tableName, HouseholdKey key)
         {
-            string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName+ "';";
+            string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';";
 
-            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
+            string constr = GetConnectionString(key);
             int lines = 0;
-            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            using (SQLiteConnection conn = new SQLiteConnection(constr))
             {
                 //;Synchronous=OFF;Journal Mode=WAL;
-                conn.Open();
+                AttemptToOpenDBConnection(conn);
                 using (SQLiteCommand cmd = new SQLiteCommand())
                 {
                     cmd.Connection = conn;
 
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
-                    while (reader.Read()) {
+                    while (reader.Read())
+                    {
                         lines++;
                     }
                 }
-                conn.Close();
             }
-            if (lines > 0) {
+            if (lines > 0)
+            {
                 return true;
             }
 
@@ -773,13 +779,16 @@ namespace Common.SQLResultLogging {
         }
     }
 
-    public enum ExpectedResultCount {
+    public enum ExpectedResultCount
+    {
         One,
         OneOrMore,
-        Many
+        Many,
+        AnyNumber
     }
 
-    public enum SqliteDataType {
+    public enum SqliteDataType
+    {
         Text,
         Integer,
         Double,
@@ -788,7 +797,8 @@ namespace Common.SQLResultLogging {
         JsonField
     }
 
-    public class SaveableEntry {
+    public class SaveableEntry
+    {
         public SaveableEntry([JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] ResultTableDefinition resultTableDefinition)
         {
             HouseholdKey = householdKey;
@@ -797,7 +807,7 @@ namespace Common.SQLResultLogging {
 
         [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<SqlResultLoggingService.FieldDefinition> Fields { get; } = new List<SqlResultLoggingService.FieldDefinition>();
+        public List<FieldDefinition> Fields { get; } = new List<FieldDefinition>();
 
         [JetBrains.Annotations.NotNull]
         public HouseholdKey HouseholdKey { get; }
@@ -811,30 +821,7 @@ namespace Common.SQLResultLogging {
 
         public void AddField([JetBrains.Annotations.NotNull] string name, SqliteDataType datatype)
         {
-            Fields.Add(new SqlResultLoggingService.FieldDefinition(name, datatype.ToString()));
-        }
-
-        public void AddField([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] Type datatype)
-        {
-            string sqlDataType;
-            switch (datatype.Name) {
-                case "String":
-                    sqlDataType = "TEXT";
-                    break;
-                case "Int32":
-                    sqlDataType = "INTEGER";
-                    break;
-                case "Boolean":
-                    sqlDataType = "BIT";
-                    break;
-                case "DateTime":
-                    sqlDataType = "DateTime";
-                    break;
-                default:
-                    throw new LPGException("Unknown data type:" + datatype.Name);
-            }
-
-            Fields.Add(new SqlResultLoggingService.FieldDefinition(name, sqlDataType));
+            Fields.Add(new FieldDefinition(name, datatype.ToString()));
         }
 
         public void AddRow([JetBrains.Annotations.NotNull] Dictionary<string, object> row)
@@ -844,13 +831,15 @@ namespace Common.SQLResultLogging {
 
         public void IntegrityCheck()
         {
-            if (RowEntries.Count > 0 && Fields.Count != RowEntries[0].Count) {
+            if (RowEntries.Count > 0 && Fields.Count != RowEntries[0].Count)
+            {
                 throw new LPGException("Inconsistent number of columns");
             }
         }
     }
 
-    public class RowBuilder {
+    public class RowBuilder
+    {
         [JetBrains.Annotations.NotNull]
         public Dictionary<string, object> Row { get; } = new Dictionary<string, object>();
 

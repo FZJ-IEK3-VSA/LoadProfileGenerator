@@ -89,7 +89,7 @@ namespace SimulationEngine.Tests
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void PdfReplacerTest()
         {
-            SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("MasterBatch");
+            SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("PdfReplacer");
             List<string> arguments = new List<string>
             {
                 "--Batch-ModularHouseholds"

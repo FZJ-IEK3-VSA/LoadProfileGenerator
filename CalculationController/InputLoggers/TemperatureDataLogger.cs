@@ -35,9 +35,9 @@ namespace CalculationController.InputLoggers {
     public class TemperatureDataLogger : DataSaverBase {
         [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
 
-        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
+        [JetBrains.Annotations.NotNull] private readonly IResultLoggingService _srls;
 
-        public TemperatureDataLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls, [JetBrains.Annotations.NotNull] CalcParameters calcParameters) : base(
+        public TemperatureDataLogger([JetBrains.Annotations.NotNull] IResultLoggingService srls, [JetBrains.Annotations.NotNull] CalcParameters calcParameters) : base(
             typeof(TemperatureProfile),
             new ResultTableDefinition("Temperatures", ResultTableID.Temperatures, "Used Temperatures", CalcOption.TemperatureFile),
             srls)

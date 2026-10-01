@@ -37,17 +37,13 @@ namespace SimulationEngineLib.SettlementCalculation {
             }
             if (string.IsNullOrEmpty(bo.StartDate)) {
 
-                if (settlement.StartDate != null) {
-                    options += " -StartDate " + settlement.StartDate.Value.ToShortDateString();
-                }
+                options += " -StartDate " + settlement.StartDate.ToShortDateString();
             }
             else {
                 options += " -StartDate " + bo.StartDate;
             }
             if (string.IsNullOrEmpty(bo.EndDate)) {
-                if (settlement.EndDate != null) {
-                    options += " -EndDate " + settlement.EndDate.Value.ToShortDateString();
-                }
+                options += " -EndDate " + settlement.EndDate.ToShortDateString();
             }
             else {
                 options += " -EndDate " + bo.EndDate;

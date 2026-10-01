@@ -32,11 +32,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Automation;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class Holiday : DBBaseElement {
         public enum HolidayType {
             Holiday,

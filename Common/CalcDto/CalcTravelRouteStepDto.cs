@@ -11,10 +11,11 @@ namespace Common.CalcDto {
         public double DistanceInM { get; }
         public StrGuid Guid { get; }
 
+        public double DurationInS { get; }
+
         public CalcTravelRouteStepDto([JetBrains.Annotations.NotNull]string name, int id,
                                       [JetBrains.Annotations.NotNull] CalcTransportationDeviceCategoryDto transportationDeviceCategory, int stepNumber,
-                                      double distanceInM,
-                                      StrGuid guid)
+                                      double distanceInM, StrGuid guid, double durationInS = -1)
         {
             Name = name;
             ID = id;
@@ -22,6 +23,7 @@ namespace Common.CalcDto {
             StepNumber = stepNumber;
             DistanceInM = distanceInM;
             Guid = guid;
+            DurationInS = durationInS;
         }
     }
 }

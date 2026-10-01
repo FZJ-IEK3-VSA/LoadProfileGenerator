@@ -35,7 +35,7 @@ namespace Database.Tables.Houses {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
             var travelRouteSetID = dr.GetIntFromLong("TravelRouteSetID", false);
-            var trs = aic.TravelRouteSets.FirstOrDefault(x => x.IntID == travelRouteSetID);
+            var trs = aic.TravelRouteSets.FindById(travelRouteSetID);
             var name = "unknown";
             if (trs != null)
             {

@@ -66,7 +66,14 @@ namespace CalculationController.Helpers
                     calcset.Colors.Add(tag.Name, tag.CarpetPlotColor);
                 }
 
+                // add additional special tags
                 calcset.AddTag("taking a vacation", "vacation");
+                // with transportation enabled, each route name is used as an activity
+                foreach(var route in sim.TravelRoutes.Items)
+                {
+                    calcset.AddTravelTag(route.Name);
+                }
+
                 foreach (var affordanceTaggingSetLoadType in affordanceTaggingSet.LoadTypes) {
                     if (affordanceTaggingSetLoadType.LoadType == null)
                     {

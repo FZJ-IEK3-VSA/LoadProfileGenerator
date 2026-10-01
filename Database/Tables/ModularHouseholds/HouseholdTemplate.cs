@@ -13,6 +13,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -20,7 +21,8 @@ using Database.Tables.Houses;
 using Database.Templating;
 using JetBrains.Annotations;
 
-namespace Database.Tables.ModularHouseholds {
+namespace Database.Tables.ModularHouseholds
+{
     public enum TemplateVacationType {
         FromList,
         RandomlyGenerated
@@ -379,8 +381,8 @@ namespace Database.Tables.ModularHouseholds {
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
         public List<ModularHousehold> GenerateHouseholds([JetBrains.Annotations.NotNull] Simulator sim, bool generateSettlement, [ItemNotNull] [JetBrains.Annotations.NotNull] List<STTraitLimit> limits,
-                                                         List<TraitTag> forbiddenTraitTags) =>
-            HouseholdTemplateExecutor.GenerateHouseholds(sim, generateSettlement, limits, this, forbiddenTraitTags);
+                                                         List<TraitTag> forbiddenTraitTags, Random? random = null) =>
+            HouseholdTemplateExecutor.GenerateHouseholds(sim, generateSettlement, limits, this, forbiddenTraitTags, random);
 
         public void ImportExistingModularHouseholds([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
@@ -660,7 +662,7 @@ namespace Database.Tables.ModularHouseholds {
             var newhhname = dr.GetString("NewHHName", false);
             var count = dr.GetIntFromLong("Count", false);
             var profileForVacations = dr.GetIntFromLong("ProfileForVacationsID", false, ignoreMissingFields, -1);
-            var dbp = aic.DateBasedProfiles.FirstOrDefault(x => x.IntID == profileForVacations);
+            var dbp = aic.DateBasedProfiles.FindById(profileForVacations);
             var templateVacationType = (TemplateVacationType)dr.GetIntFromLong("TemplateVacationType", false, ignoreMissingFields);
             var minNumberOfVacations = dr.GetIntFromLong("MinNumberOfVacations", false, ignoreMissingFields);
             var maxNumberOfVacations = dr.GetIntFromLong("MaxNumberOfVacations", false, ignoreMissingFields);

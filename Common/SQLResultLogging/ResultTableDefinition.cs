@@ -48,7 +48,8 @@ namespace Common.SQLResultLogging
         TotalsPerDevice,
         BodilyActivityLevelCount,
         DeviceArchive,
-        FlexibilityInformation
+        FlexibilityInformation,
+        TransportationDeviceChoices
     }
     public class ResultTableDefinition: IEquatable<ResultTableDefinition>
     {

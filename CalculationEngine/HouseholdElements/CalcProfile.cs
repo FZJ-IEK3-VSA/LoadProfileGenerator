@@ -10,7 +10,7 @@
 //  Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer
 // in the documentation and/or other materials provided with the distribution.
 //  All advertising materials mentioning features or use of this software must display the following acknowledgement:
-//  “This product includes software developed by the TU Chemnitz, Prof. Technische Thermodynamik and its contributors.”
+//  "This product includes software developed by the TU Chemnitz, Prof. Technische Thermodynamik and its contributors."
 //  Neither the name of the University nor the names of its contributors may be used to endorse or promote products
 //  derived from this software without specific prior written permission.
 //
@@ -36,37 +36,33 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using JetBrains.Annotations;
 
 #endregion
 
-namespace CalculationEngine.HouseholdElements {
+namespace CalculationEngine.HouseholdElements
+{
     public sealed class CalcProfile : BasicElement, ICalcProfile {
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull] private readonly List<CalcTimeDataPoint> _datapoints = new List<CalcTimeDataPoint>();
+        [JetBrains.Annotations.NotNull] private readonly List<CalcTimeDataPoint> _datapoints = [];
         private readonly ProfileType _profileType;
         private readonly TimeSpan _stepSize;
-        // ReSharper disable once NotAccessedField.Local
-#pragma warning disable IDE0052 // Remove unread private members
-        //saving this for information purposes
-        private readonly StrGuid _guid;
-#pragma warning restore IDE0052 // Remove unread private members
 
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CalcProfile([JetBrains.Annotations.NotNull] string name, StrGuid guid, TimeSpan stepSize, ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource):base(name)
+        public CalcProfile([JetBrains.Annotations.NotNull] string name, StrGuid guid, TimeSpan stepSize, ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource) : base(name)
         {
-            _guid = guid;
+            Guid = guid;
             _stepSize = stepSize;
             _profileType = profileType;
             TimeFactor = 1;
             DataSource = dataSource;
-            StepValues = new List<double>();
+            StepValues = [];
         }
 
         public CalcProfile([JetBrains.Annotations.NotNull] string name, StrGuid guid, [JetBrains.Annotations.NotNull] List<double> newValues,
-            ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource, double timeFactor = 1):base(name)
+            ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource, double timeFactor = 1) : base(name)
         {
-            _guid = guid;
+            Guid = guid;
             TimeFactor = timeFactor;
             StepValues = newValues;
             _profileType = profileType;
@@ -98,20 +94,23 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         [JetBrains.Annotations.NotNull]
-        private Dictionary<double, CalcProfile> ChangedProfiles { get; } = new Dictionary<double, CalcProfile>();
+        private Dictionary<int, CalcProfile> ChangedProfiles { get; } = [];
 
         [JetBrains.Annotations.NotNull]
         public CalcProfile CompressExpandDoubleArray(double timeFactor)
         {
-            timeFactor = Math.Round(timeFactor, 2);
-            if (ChangedProfiles.ContainsKey(timeFactor)) {
-                return ChangedProfiles[timeFactor];
-            }
-
             var newlength = GetNewLengthAfterCompressExpand(StepValues.Count, timeFactor);
+            // check if a profile of this length was already generated before
+            if (ChangedProfiles.TryGetValue(newlength, out CalcProfile? cachedProfile))
+            {
+                return cachedProfile;
+            }
+            timeFactor = RoundTimeFactor(timeFactor);
+
             var stepvaluesCompressed = new double[newlength];
             if (timeFactor < 1)
             {
+                // profile needs to be compressed
                 for (var timeidx = 0; timeidx < StepValues.Count; timeidx++)
                 {
                     stepvaluesCompressed[(int)(timeidx * timeFactor)] = StepValues[timeidx];
@@ -121,9 +120,11 @@ namespace CalculationEngine.HouseholdElements {
                     stepvaluesCompressed[newlength - 1] = StepValues[StepValues.Count - 1];
                 }
                 CalcProfile newcp = new CalcProfile(Name, System.Guid.NewGuid().ToStrGuid(), stepvaluesCompressed.ToList(), ProfileType, DataSource);
-                ChangedProfiles.Add(timeFactor,newcp);
+                ChangedProfiles.Add(newlength, newcp);
                 return newcp;
             }
+
+            // profile needs to be expanded
             var lastidx = 0;
             for (var timeidx = 0; timeidx < StepValues.Count; timeidx++)
             {
@@ -135,7 +136,7 @@ namespace CalculationEngine.HouseholdElements {
                 lastidx = nextidx;
             }
             CalcProfile cp = new CalcProfile(Name, System.Guid.NewGuid().ToStrGuid(), stepvaluesCompressed.ToList(), ProfileType, DataSource);
-            ChangedProfiles.Add(timeFactor, cp);
+            ChangedProfiles.Add(newlength, cp);
             return cp;
         }
 
@@ -287,6 +288,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public static int GetNewLengthAfterCompressExpand(double valuecount, double timefactor)
         {
+            timefactor = RoundTimeFactor(timefactor);
             var newdoublelength = valuecount * timefactor;
             var newlength = (int) Math.Ceiling(newdoublelength);
             if (newlength == 0) {
@@ -294,6 +296,18 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             return newlength;
+        }
+
+        /// <summary>
+        /// Rounds the time factor to a fixed precision to be able 
+        /// to reuse more cached CalcProfiles.
+        /// </summary>
+        /// <param name="timefactor">the time factor</param>
+        /// <returns>the rounded time factor</returns>
+        private static double RoundTimeFactor(double timefactor)
+        {
+            // round the time factor to be able to reuse more cached CalcProfiles
+            return Math.Round(timefactor, 2);
         }
 
         public override string ToString() => Name + "\t Datapoints:" + TimeSpanDataPoints.Count;
@@ -328,8 +342,9 @@ namespace CalculationEngine.HouseholdElements {
 
         public string DataSource { get; }
 
-        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public StrGuid Guid { get; }
+
+        public bool IsDetermined => true;
 
         #endregion
 

@@ -620,9 +620,9 @@ namespace Database.Tables.BasicElements {
             var householdPlanEntryID = dr.GetIntFromLong("ID");
             var householdPlanID = dr.GetIntFromLong("HouseholdPlanID");
             var personID = dr.GetIntFromLong("PersonID");
-            var person = aic.Persons.FirstOrDefault(pers => pers.ID == personID);
+            var person = aic.Persons.FindById(personID);
             var tagID = dr.GetIntFromLong("TagID", false, ignoreMissingFields, -1);
-            var tag = aic.AffordanceTags.FirstOrDefault(myTag => myTag.ID == tagID);
+            var tag = aic.AffordanceTags.FindById(tagID);
             var times = dr.GetDouble("Times", false, 0, ignoreMissingFields);
             var timeCount = dr.GetDouble("TimeCount", false, 0, ignoreMissingFields);
             var timetype = (TimeType)dr.GetIntFromLong("TimeType", false, ignoreMissingFields);

@@ -37,7 +37,7 @@ namespace Database.Tables.Transportation {
             var id = dr.GetIntFromLong("ID");
             var setid = dr.GetIntFromLong("TransportationDeviceSetID");
             var transportationDeviceCategoryID = dr.GetIntFromLong("TransportationDeviceID");
-            var tdevices = aic.TransportationDevices.FirstOrDefault(x => x.ID == transportationDeviceCategoryID);
+            var tdevices = aic.TransportationDevices.FindById(transportationDeviceCategoryID);
             var name = "(no name)";
             if (tdevices != null) {
                 name = tdevices.Name;

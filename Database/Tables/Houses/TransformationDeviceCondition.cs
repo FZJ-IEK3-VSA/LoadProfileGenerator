@@ -50,7 +50,7 @@ namespace Database.Tables.Houses {
             var id = dr.GetIntFromLong("ID");
             var transformationDeviceID = dr.GetIntFromLong("TransformationDeviceID");
             var variableID = dr.GetIntFromLong("ConditionLoadTypeID", false, ignoreMissingFields, -1);
-            var variable = aic.Variables.FirstOrDefault(mylt => mylt.ID == variableID);
+            var variable = aic.Variables.FindById(variableID);
             var minValue = dr.GetDouble("MinValue", false, 0, ignoreMissingFields);
             var maxValue = dr.GetDouble("MaxValue", false, 10000, ignoreMissingFields);
             const string name = "no name";

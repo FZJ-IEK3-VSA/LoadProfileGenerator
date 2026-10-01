@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database;
 using Database.Tables.BasicElements;
@@ -40,7 +41,8 @@ namespace DatabaseIO.Tables.BasicHouseholds.Tests
     }
 }
 
-namespace DatabaseIO.Tests.Tables.BasicHouseholds {
+namespace DatabaseIO.Tests.Tables.BasicHouseholds
+{
 
     public class RealDeviceTests : UnitTestBaseClass
     {

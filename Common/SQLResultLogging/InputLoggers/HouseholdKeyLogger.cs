@@ -10,7 +10,7 @@ namespace Common.SQLResultLogging.InputLoggers
         private const string TableName = "HouseholdKeys";
         private bool _isTableCreated;
         [ItemNotNull] [NotNull] private readonly HashSet<HouseholdKey> _savedKeys = new HashSet<HouseholdKey>();
-        public HouseholdKeyLogger([NotNull] SqlResultLoggingService srls):
+        public HouseholdKeyLogger([NotNull] IResultLoggingService srls):
             base(typeof(HouseholdKeyEntry),new ResultTableDefinition(TableName,ResultTableID.HouseholdKeys, "All Householdkeys", CalcOption.BasicOverview),srls)
         {
         }
@@ -59,7 +59,7 @@ namespace Common.SQLResultLogging.InputLoggers
 
         [ItemNotNull]
         [NotNull]
-        public static List<HouseholdKeyEntry>  Load([NotNull] SqlResultLoggingService srls)
+        public static List<HouseholdKeyEntry>  Load([NotNull] IResultLoggingService srls)
         {
             HouseholdKeyLogger hhkl = new HouseholdKeyLogger(srls);
             return hhkl.Load();

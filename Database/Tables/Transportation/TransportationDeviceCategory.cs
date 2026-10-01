@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Automation;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Transportation {
+namespace Database.Tables.Transportation
+{
     public class TransportationDeviceCategory : DBBaseElement {
         public const string TableName = "tblTransportationDeviceCategories";
         [CanBeNull] private string _description;

@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.InputLoggers
 {
     public class HouseholdDtoLogger : DataSaverBase
     {
-        public HouseholdDtoLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) : base(typeof(CalcHouseholdDto),
+        public HouseholdDtoLogger([JetBrains.Annotations.NotNull] IResultLoggingService srls) : base(typeof(CalcHouseholdDto),
             new ResultTableDefinition("HouseholdDefinitions", ResultTableID.HouseholdDefinitions, "Json Specification of the household", CalcOption.HouseholdContents), srls)
         {
         }

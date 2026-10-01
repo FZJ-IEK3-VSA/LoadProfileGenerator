@@ -34,7 +34,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 tou.MakePlot(rfe);
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "TimeOfUseProfiles.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

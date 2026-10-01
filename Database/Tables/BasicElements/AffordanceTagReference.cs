@@ -113,7 +113,7 @@ namespace Database.Tables.BasicElements {
             var holidayDateID = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("TaggingSetID");
             var tagID = dr.GetIntFromLong("TagID");
-            var tag = aic.AffordanceTags.FirstOrDefault(myTag => myTag.ID == tagID);
+            var tag = aic.AffordanceTags.FindById(tagID);
             var name = GetName(tag);
             var gender = (PermittedGender) dr.GetIntFromLong("Gender", false, ignoreMissingFields);
             var percentage = dr.GetDouble("Percentage", false, 0, ignoreMissingFields);

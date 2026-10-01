@@ -50,7 +50,7 @@ namespace Database.Tables.Transportation {
             var siteLocID = dr.GetIntFromLong("ID");
             var siteID = dr.GetIntFromLong("SiteID");
             var locationID = dr.GetIntFromLong("LocationID");
-            var loc = aic.Locations.FirstOrDefault(x => x.ID == locationID);
+            var loc = aic.Locations.FindById(locationID);
             var name = "(no name)";
             if (loc != null) {
                 name = loc.Name;

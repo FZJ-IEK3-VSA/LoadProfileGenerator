@@ -51,21 +51,19 @@ namespace CalculationEngine.HouseholdElements {
         public DateStampCreator DateStampCreator => _dateStampCreator ?? throw new LPGException("no dsc");
 
         [JetBrains.Annotations.NotNull]
-        public static CalcRepo Make([JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] IInputDataLogger idl,
+        public static CalcRepo MakeForTesting([JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] IInputDataLogger idl,
                                     [JetBrains.Annotations.NotNull] string resultPath, [JetBrains.Annotations.NotNull] string calcObjectName,
-                                    CalculationProfiler calculationProfiler)
+                                    CalculationProfiler calculationProfiler, int actualRandomSeed)
         {
-
             DateStampCreator dsc = new DateStampCreator(calcParameters);
             OnlineLoggingData old = new OnlineLoggingData(dsc,idl,calcParameters);
             FileFactoryAndTracker fft = new FileFactoryAndTracker(resultPath, calcObjectName, idl);
             LogFile lf = new LogFile(calcParameters, fft);
             OnlineDeviceActivationProcessor odap = new OnlineDeviceActivationProcessor(old,calcParameters,fft);
-                Random rnd = new Random(calcParameters.ActualRandomSeed);
-                NormalRandom nr = new NormalRandom(0,0.1,rnd);
-                SqlResultLoggingService srls = new SqlResultLoggingService(resultPath);
-            CalcRepo cr = new CalcRepo(odap,rnd,calcParameters,old,nr,lf,srls,
-                idl,calculationProfiler,fft,dsc);
+            Random rnd = new Random(actualRandomSeed);
+            NormalRandom nr = new NormalRandom(0,0.1,rnd);
+            IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(resultPath);
+            CalcRepo cr = new CalcRepo(odap,rnd,calcParameters,old,nr,lf,srls, idl,calculationProfiler,fft,dsc);
             return cr;
         }
         private readonly FileFactoryAndTracker? _fft;
@@ -77,7 +75,7 @@ namespace CalculationEngine.HouseholdElements {
                         IOnlineLoggingData? onlineLoggingData= null,
                         NormalRandom? normalRandom= null,
                         ILogFile? lf = null,
-                        SqlResultLoggingService? srls= null,
+                        IResultLoggingService? srls= null,
                         IInputDataLogger? inputDataLogger=null,
                         CalculationProfiler? calculationProfiler=null,
             FileFactoryAndTracker? fft =null,
@@ -104,7 +102,7 @@ namespace CalculationEngine.HouseholdElements {
         private readonly CalcParameters? _calcParameters;
         private readonly IOnlineLoggingData? _onlineLoggingData;
         private readonly NormalRandom? _normalRandom;
-        private readonly SqlResultLoggingService? _srls;
+        private readonly IResultLoggingService? _srls;
         private readonly IInputDataLogger? _inputDataLogger;
         private readonly CalculationProfiler? _calculationProfiler;
         private readonly DateStampCreator? _dateStampCreator;
@@ -128,7 +126,7 @@ namespace CalculationEngine.HouseholdElements {
         public ILogFile Logfile => _lf ?? throw new LPGException("no lf");
 
         [JetBrains.Annotations.NotNull]
-        public SqlResultLoggingService Srls => _srls ?? throw new LPGException("no srls");
+        public IResultLoggingService Srls => _srls ?? throw new LPGException("no srls");
 
         [JetBrains.Annotations.NotNull]
         public IInputDataLogger InputDataLogger => _inputDataLogger ?? throw new LPGException("no inputdatalogger");

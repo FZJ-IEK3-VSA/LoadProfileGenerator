@@ -33,15 +33,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
-using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class Person : DBBaseElement {
 
         public const string TableName = "tblPersons";
@@ -146,6 +147,16 @@ namespace Database.Tables.BasicHouseholds {
                 foreach (var person in chh.Persons) {
                     if (person.Person == this) {
                         used.Add(new UsedIn(chh, "Modular Household"));
+                    }
+                }
+            }
+            foreach (var template in sim.HouseholdTemplates.Items)
+            {
+                foreach (var person in template.Persons)
+                {
+                    if (person.Person == this)
+                    {
+                        used.Add(new UsedIn(template, "Household Template"));
                     }
                 }
             }

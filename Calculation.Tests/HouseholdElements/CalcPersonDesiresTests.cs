@@ -49,7 +49,7 @@ namespace Calculation.Tests.HouseholdElements {
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcPersonDesiresTest()
         {
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             var r = new Random(1);
             using (CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, rnd: r))
             {
@@ -87,7 +87,7 @@ namespace Calculation.Tests.HouseholdElements {
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcPersonNonSharedDesiresTest()
         {
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             var r = new Random(1);
             using (CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, rnd: r))
             {
@@ -130,7 +130,7 @@ namespace Calculation.Tests.HouseholdElements {
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcPersonSharedDesiresTest()
         {
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
             var r = new Random(1);
             using (CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, rnd: r))
             {

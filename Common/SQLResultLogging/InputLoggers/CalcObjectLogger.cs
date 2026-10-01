@@ -23,7 +23,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class CalcObjectInformationLogger: DataSaverBase
     {
         public const string TableName = "CalcObjectInformation";
-        public CalcObjectInformationLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls)
+        public CalcObjectInformationLogger([JetBrains.Annotations.NotNull] IResultLoggingService srls)
         : base(typeof(CalcObjectInformation),
             new ResultTableDefinition(TableName,ResultTableID.CalcObjectInformation, "Additional information about the calc object to help with further processing", CalcOption.HouseholdContents), srls)
     {

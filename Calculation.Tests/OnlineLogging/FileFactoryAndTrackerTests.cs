@@ -8,6 +8,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
@@ -18,7 +19,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests.OnlineLogging {
+namespace Calculation.Tests.OnlineLogging
+{
     public class FileFactoryAndTrackerTests : UnitTestBaseClass
     {
         public FileFactoryAndTrackerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -34,7 +36,7 @@ namespace Calculation.Tests.OnlineLogging {
             {
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                CalcParameters calcParameters = CalcParameters.CreateDefaultParamsForTesting();
                 var clt = new CalcLoadType("calcloadtype", "kwh", "kW", 0.001, true, Guid.NewGuid().ToStrGuid());
                 BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
                 BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);

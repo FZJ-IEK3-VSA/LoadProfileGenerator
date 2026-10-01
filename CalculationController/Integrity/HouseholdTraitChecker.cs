@@ -362,7 +362,7 @@ namespace CalculationController.Integrity {
                             throw new LPGException("found brackets in the name of a trait: " + householdTrait.Name);
                         }
                         var mbr =
-                            MessageWindowHandler.Mw.ShowYesNoMessage(
+                            MessageWindowHandler.Mw?.ShowYesNoMessage(
                                 "Remove from the household trait name " + householdTrait.Name + " the substring \"" +
                                 brackets + "\"", "Delete?");
                         if (mbr == LPGMsgBoxResult.Yes) {
@@ -507,27 +507,6 @@ namespace CalculationController.Integrity {
                 //if(PerformCleanupChecks)
                   //  CheckUsedIns(householdTrait, sim, ref notusedCount);
             }
-            List<HouseholdTrait> traitsWithMissingTags = new List<HouseholdTrait>();
-            const string officeTag = "Living Pattern / Office";
-            const string wfhtag = "Living Pattern / Work From Home";
-            const string worktag_prefix = "Work / Work";
-            foreach (var item in sim.HouseholdTraits.Items) {
-                if (item.Tags.Any(x => x.Tag.Name.StartsWith(worktag_prefix))) {
-                    continue;
-                }
-                if (item.LivingPatternTags.Any(x => x.Tag.Name.StartsWith(officeTag))) {
-                    if (!item.LivingPatternTags.Any(x => x.Tag.Name.Contains(wfhtag))) {
-                        traitsWithMissingTags.Add(item);
-                    }
-                }
-            }
-
-            if (traitsWithMissingTags.Count > 0) {
-                throw new DataIntegrityException("The following traits have office tags but not work from home tags:",
-                    traitsWithMissingTags.Take(10).Select(x=>(BasicElement) x).ToList());
-            }
         }
-
-
     }
 }

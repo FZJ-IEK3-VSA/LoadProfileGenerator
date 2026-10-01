@@ -37,6 +37,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -44,7 +45,8 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class Affordance : DBBaseElement {
         public const string TableName = "tblAffordances";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceDesire> _affDesires;
@@ -421,7 +423,7 @@ namespace Database.Tables.BasicHouseholds {
             TimeBasedProfile tp = null;
             if (dr["PersonProfileID"] != DBNull.Value) {
                 var personprofileID = dr.GetInt("PersonProfileID"); // time profile for the person
-                tp = aic.TimeProfiles.FirstOrDefault(tpl => tpl.ID == personprofileID);
+                tp = aic.TimeProfiles.FindById(personprofileID);
             }
 
             var minimumage = dr.GetInt("MinimumAge", true, 0);
@@ -447,7 +449,7 @@ namespace Database.Tables.BasicHouseholds {
 
             TimeLimit timeLimit = null;
             if (timeLimitID != null) {
-                timeLimit = aic.TimeLimits.FirstOrDefault(x => x.ID == timeLimitID);
+                timeLimit = aic.TimeLimits.FindById(timeLimitID);
             }
 
             var isInterruptable = dr.GetBool("IsInterruptable", false, false, ignoreMissingFields);

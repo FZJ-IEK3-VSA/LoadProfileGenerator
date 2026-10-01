@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.InputLoggers
 {
     public class HouseDtoLogger : DataSaverBase
     {
-        public HouseDtoLogger([NotNull] SqlResultLoggingService srls):
+        public HouseDtoLogger([NotNull] IResultLoggingService srls):
             base(typeof(CalcHouseDto), new ResultTableDefinition("HouseDefinition",ResultTableID.HouseDefinition, "Json Specification of the house", CalcOption.HouseholdContents),srls)
         {
         }

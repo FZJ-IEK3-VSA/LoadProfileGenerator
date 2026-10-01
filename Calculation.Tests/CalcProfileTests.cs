@@ -34,13 +34,15 @@ using Automation;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
+using Common.Extensions;
 using Common.Tests;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Calculation.Tests {
+namespace Calculation.Tests
+{
     public class CalcProfileTests : UnitTestBaseClass
     {
         public CalcProfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -143,6 +145,20 @@ namespace Calculation.Tests {
             result.StepValues[0].Should().Be(2);
             result.StepValues[1].Should().Be(4);
             result.StepValues[2].Should().Be(5);
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void CompressExpandDoubleArrayLenghtMustMatch()
+        {
+            // The time factor is rounded before applying it in the CalcProfile class.
+            // If this is not done consistently, it can lead to rare errors.
+            List<double> values = [.. Enumerable.Repeat(1.0, 100)];
+            double factor = 1.095;
+            var profile = new CalcProfile("bla", StrGuid.New(), values, ProfileType.Absolute, "bla");
+            int length = profile.GetNewLengthAfterCompressExpand(factor);
+            var result = profile.CompressExpandDoubleArray(factor);
+            result.StepValues.Count.Should().Be(length);
         }
     }
 }

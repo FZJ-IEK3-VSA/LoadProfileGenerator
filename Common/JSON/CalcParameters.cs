@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Automation;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -20,179 +21,110 @@ namespace Common.JSON {
         };
     }
 
-    public class CalcParameters {
-        private int _numberOfSettlingDays = 3;
+    /// <summary>
+    /// Stores all general, CalcObject-independent parameters for a simulation. In a mass simulation,
+    /// all house/household simulations use the same CalcParameters.
+    /// </summary>
+    public class CalcParameters
+    {
+        [System.Text.Json.Serialization.JsonConstructor]
+        private CalcParameters() { }
 
-        private CalcParameters()
+        [Newtonsoft.Json.JsonConstructor]
+        private CalcParameters(DateTime startDate, DateTime endDate)
         {
+            OfficialStartTime = startDate;
+            OfficialEndTime = endDate.AddDays(1);
         }
+
+        public CalcParameters(List<CalcOption> calcOptions, DateTime startDate, DateTime endDate, TimeSpan internalResolution, string cSVCharacter,
+            TimeSpan externalResolution, bool writeExcelColumnBool, bool showSettlingPeriodBool, int settlingDays, int repetitionCount, List<string> loadtypesForPostprocessing,
+            LoadTypePriority loadTypePriority, DeviceProfileHeaderMode deviceProfileHeaderMode, bool ignorePreviousActivitiesWhenNeeded, bool enableTransportation,
+            bool enableIdlemode, string decimalSeperator, bool enableFlexibility, bool citySimulationEnabled = false) : this(startDate, endDate)
+        {
+            Options = calcOptions?.ToHashSet() ?? [];
+            InternalStepsize = internalResolution;
+            ExternalStepsize = externalResolution;
+            CSVCharacter = cSVCharacter;
+            WriteExcelColumn = writeExcelColumnBool;
+            ShowSettlingPeriodTime = showSettlingPeriodBool;
+            NumberOfSettlingDays = settlingDays;
+            AffordanceRepetitionCount = repetitionCount;
+            LoadtypesToPostprocess = loadtypesForPostprocessing;
+            LoadTypePriority = loadTypePriority;
+            DeviceProfileHeaderMode = deviceProfileHeaderMode;
+            IgnorePreviousActivitesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
+            TransportationEnabled = enableTransportation;
+            EnableIdlemode = enableIdlemode;
+            DecimalSeperator = decimalSeperator;
+            FlexibilityEnabled = enableFlexibility;
+            CitySimulationEnabled = citySimulationEnabled;
+
+            InitializeTimeSteps();
+            CheckSettings();
+        }
+
+        /// <summary>
+        /// Create a set of reasonable default parameters for testing.
+        /// </summary>
+        /// <returns>CalcParameters for testing</returns>
+        public static CalcParameters CreateDefaultParamsForTesting()
+        {
+            var cp = new CalcParameters(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31));
+            cp.SetInternalTimeResolution(new TimeSpan(0, 1, 0)).SetExternalTimeResolution(new TimeSpan(0, 1, 0));
+            cp.SetCsvCharacter(";");
+            cp.SetLoadTypePriority(LoadTypePriority.RecommendedForHouses);
+            cp.DisableShowSettlingPeriod();
+            cp.SetSettlingDays(3);
+            cp.SetWriteExcelColumn(false);
+            cp.SetAffordanceRepetitionCount(3);
+            cp.CheckSettings();
+            return cp;
+        }
+
+        public int NumberOfSettlingDays { get; set; } = 3;
+
         [JsonConverter(typeof(StringEnumConverter))]
         public DeviceProfileHeaderMode DeviceProfileHeaderMode { get; set; }
-        public int ActualRandomSeed { get; set; }
         public int AffordanceRepetitionCount { get; set; }
 
         public bool TransportationEnabled { get; set; }
+
+        /// <summary>
+        /// Specifies whether this LPG simulation is part of a city simulation. In a city simulation,
+        /// travels and remote activities (affordances that don't take place at home) are simulated dynamically,
+        /// outside of the LPG household.
+        /// </summary>
+        public bool CitySimulationEnabled { get; set; }
+
         public bool FlexibilityEnabled { get; set; }
-        [NotNull]
         public string CSVCharacter { get; set; } = ";";
 
         public string DecimalSeperator { get; set; }
-        public bool DeleteDatFiles { get; set; }
         public int DummyCalcSteps { get; set; }
         public TimeSpan ExternalStepsize { get; set; }
-
-        public bool ForceRandom { get; private set; }
         public DateTime InternalEndTime { get; set; }
         public DateTime InternalStartTime { get; set; }
         public TimeSpan InternalStepsize { get; set; }
         public int InternalTimesteps { get; set; }
 
-        public LoadTypePriority LoadTypePriority { get; set; } = LoadTypePriority.All;
+        public LoadTypePriority LoadTypePriority { get; set; }
         [CanBeNull]
-        [ItemNotNull]
-        public List<string> LoadtypesToPostprocess { get; set; } = new List<string>();
+        public List<string> LoadtypesToPostprocess { get; set; } = [];
         public int OfficalTimesteps { get; set; }
 
         public DateTime OfficialEndTime { get; set; }
         public DateTime OfficialStartTime { get; set; }
 
-        [NotNull]
         [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
-        public HashSet<CalcOption> Options { get; } = new HashSet<CalcOption>();
+        public HashSet<CalcOption> Options { get; set; } = [];
 
         public bool ShowSettlingPeriodTime { get; set; }
         public int TimeStepsPerHour { get; set; }
 
-        public int UserSelectedRandomSeed { get; set; }
         public bool WriteExcelColumn { get; set; }
         public bool IgnorePreviousActivitesWhenNeeded { get; set; }
         public bool EnableIdlemode { get; set; }
-
-        //public void CheckDependenyOnOptions()
-        //{
-        //    if (!Config.ReallyMakeAllFilesIncludingBothSums) {
-        //        if (IsSet(CalcOption.OverallSum) && IsSet(CalcOption.HouseSumProfilesFromDetailedDats)) {
-        //            Logger.Error(
-        //                "You have both individual and overall sums enabled. This is a waste of time. The overall sum files are just a quicker way of calculating the results when no detailed information is needed. Please only enable one of those.");
-        //            Disable(CalcOption.OverallSum);
-        //            Enable(CalcOption.OverallDats);
-        //        }
-        //    }
-
-        //    // dependencies
-        //    if (IsSet(CalcOption.OverallSum)) {
-        //        Enable(CalcOption.OverallDats);
-        //    }
-        //    if (IsSet(CalcOption.JsonHouseSumFiles))
-        //    {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.HouseSumProfilesFromDetailedDats)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.WeekdayProfiles)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.AffordanceEnergyUse)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.DeviceProfileExternalEntireHouse)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-        //    if (IsSet(CalcOption.DeviceProfileExternalIndividualHouseholds))
-        //    {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.TotalsPerLoadtype)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.DeviceProfiles)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.ActivationFrequencies)) {
-        //        //Enable(CalcOption.ActionsLogfile);
-        //        Enable(CalcOption.AffordanceEnergyUse);
-        //    }
-
-        //    if (IsSet(CalcOption.HouseholdPlan)) {
-        //        Enable(CalcOption.ActivationFrequencies);
-        //        //Enable(CalcOption.ActionsLogfile);
-        //        Enable(CalcOption.AffordanceEnergyUse);
-        //    }
-
-        //    if (IsSet(CalcOption.ActivationsPerHour)) {
-        //        //Enable(CalcOption.ActionsLogfile);
-        //    }
-
-        //    if (IsSet(CalcOption.TotalsPerDevice)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.DurationCurve)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.ActionCarpetPlot)) {
-        //        //Enable(CalcOption.ActionsLogfile);
-        //    }
-
-        //    if (IsSet(CalcOption.TimeOfUsePlot)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.MakeGraphics)) {
-        //        //WriteExcelColumn = false;
-        //    }
-
-        //    if (IsSet(CalcOption.PolysunImportFiles)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.MakePDF)) {
-        //        Enable(CalcOption.MakeGraphics);
-        //    }
-
-        //    if (IsSet(CalcOption.BodilyActivityStatistics)) {
-        //        Enable(CalcOption.ActionsEachTimestep);
-        //    }
-        //    /*  if (IsSet(CalcOption.SMAImportFiles))
-        //      {
-        //          Enable(CalcOption.DetailedDatFiles);
-        //      }*/
-
-        //    if (IsSet(CalcOption.SumProfileExternalEntireHouse)) {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-        //    if (IsSet(CalcOption.SumProfileExternalIndividualHouseholds))
-        //    {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-
-        //    if (IsSet(CalcOption.HouseholdPlan)) {
-        //        Enable(CalcOption.ActivationFrequencies);
-        //        Enable(CalcOption.HouseholdPlan);
-        //        //Enable(CalcOption.ActionsLogfile);
-        //    }
-        //    if (IsSet(CalcOption.SumProfileExternalIndividualHouseholdsAsJson))
-        //    {
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-        //    if (!IsSet(CalcOption.DetailedDatFiles) && !IsSet(CalcOption.OverallDats)) {
-        //        //always enable at least some dat files.
-        //        Enable(CalcOption.DetailedDatFiles);
-        //    }
-        //    if (!IsSet(CalcOption.DetailedDatFiles) && !IsSet(CalcOption.OverallDats)) {
-        //        throw new LPGException("No dat file generation has been enabled. This is a bug. The workaround is to enable them manually "
-        //                               + " by setting the appropriate option (set either DetailedDatFiles or OverallDats), but this should be fixed in the code. Please report.");
-        //    }
-        //}
 
         public void CheckSettings()
         {
@@ -233,6 +165,9 @@ namespace Common.JSON {
             if (OfficalTimesteps < 0) {
                 throw new DataIntegrityException("Total time steps was calculated to be negative. This is not possible." + " Try changing the start or end time or the time resolution.");
             }
+
+            if (CitySimulationEnabled && !TransportationEnabled)
+                throw new DataIntegrityException("City simulation can only be enabled if transport is enabled.");
         }
 
         [NotNull]
@@ -256,9 +191,6 @@ namespace Common.JSON {
             ShowSettlingPeriodTime = true;
             return this;
         }
-
-        [NotNull]
-        public static CalcParameters GetNew() => new CalcParameters();
 
         public bool IsSet(CalcOption option)
         {
@@ -331,36 +263,33 @@ namespace Common.JSON {
             return this;
         }
 
-        public void SetManyOptionsWithClear([NotNull] List<CalcOption> options)
+        /// <summary>
+        /// Determines the actual random seed to use, depending on what the user specified.
+        /// If the user specified -1 or nothing at all, a random seed is chosen, otherwise
+        /// the seed specified by the user is used directly.
+        /// </summary>
+        /// <param name="randomSeed">the user-specified seed</param>
+        /// <param name="forceRandom">if true, always determine a new random seed to use</param>
+        /// <returns>the random seed to use</returns>
+        public static int GetActualRandomSeed(int? randomSeed, bool forceRandom = false)
         {
-            foreach (var calcOption in options) {
-                if (!Options.Contains(calcOption)) {
-                    Options.Add(calcOption);
-                }
+            int selectedSeed;
+            if (randomSeed is null || randomSeed == -1 || forceRandom)
+            {
+                // use a new Random object to generate a random seed
+                selectedSeed = new Random().Next();
+            } else
+            {
+                selectedSeed = randomSeed.Value;
             }
-
-//            CheckDependenyOnOptions();
-        }
-
-        [NotNull]
-        public CalcParameters SetRandomSeed(int randomSeed, bool forceRandom)
-        {
-            UserSelectedRandomSeed = randomSeed;
-            ForceRandom = forceRandom;
-            if (UserSelectedRandomSeed == -1 || forceRandom) {
-                ActualRandomSeed = DateTime.Now.Millisecond + DateTime.Now.Second * 100;
-            }
-            else {
-                ActualRandomSeed = randomSeed;
-            }
-
-            return this;
+            Logger.Info($"Using RNG seed {selectedSeed}");
+            return selectedSeed;
         }
 
         [NotNull]
         public CalcParameters SetSettlingDays(int numberOfDays)
         {
-            _numberOfSettlingDays = numberOfDays;
+            NumberOfSettlingDays = numberOfDays;
             InitializeTimeSteps();
             return this;
         }
@@ -391,32 +320,14 @@ namespace Common.JSON {
             return this;
         }
 
-        /*public void ClearOptions()
-            {
-                _options.Clear();
-            }*/
-
-        //private void Disable(CalcOption option)
-        //{
-        //    if (Options.Contains(option)) {
-        //        Options.Remove(option);
-        //    }
-
-        //    //CheckDependenyOnOptions();
-        //}
-
         private void InitializeTimeSteps()
         {
-            if (_numberOfSettlingDays > 0) {
-                _numberOfSettlingDays *= -1;
+            if (NumberOfSettlingDays > 0) {
+                NumberOfSettlingDays *= -1;
             }
 
-            InternalStartTime = OfficialStartTime.AddDays(_numberOfSettlingDays);
+            InternalStartTime = OfficialStartTime.AddDays(NumberOfSettlingDays);
             InternalEndTime = OfficialEndTime;
-            //   if (OfficialEndTime.Hour == 0 && OfficialEndTime.Minute == 0 && OfficialEndTime.Second == 0)
-            // {
-            //   OfficialEndTime = OfficialEndTime.AddDays(1);
-            //}
 
             var internalDuration = InternalEndTime - InternalStartTime;
             InternalTimesteps = (int)(internalDuration.TotalSeconds / InternalStepsize.TotalSeconds);

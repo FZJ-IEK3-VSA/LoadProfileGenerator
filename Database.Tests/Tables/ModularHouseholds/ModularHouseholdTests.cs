@@ -31,6 +31,7 @@ using System.Collections.ObjectModel;
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -42,7 +43,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables.ModularHouseholds {
+namespace Database.Tests.Tables.ModularHouseholds
+{
 
     public class ModularHouseholdTests : UnitTestBaseClass
     {
@@ -143,6 +145,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     var tt2 = sim1C.ModularHouseholds[0];
                     var jsonHH2 = tt2.GetJson();
                     jsonHH2.Should().BeEquivalentTo(jsonHH1, o => o
+                        .ComparingByMembers<JsonReference>()
                         .Excluding(x => x.Path.EndsWith("Guid")
                                         || x.Path.EndsWith("ID")));
                     db1.Cleanup();

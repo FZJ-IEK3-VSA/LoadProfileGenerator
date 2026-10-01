@@ -63,7 +63,7 @@ namespace ChartCreator2.Tests.Oxyplot {
 
                     var imagefiles = FileFinder.GetRecursiveFiles(new DirectoryInfo(wd.WorkingDirectory),
                         "testchart.*.png");
-                    imagefiles.Count.Should().BeGreaterOrEqualTo(1);
+                    imagefiles.Count.Should().BeGreaterThanOrEqualTo(1);
                     db.Cleanup();
                 }
                 wd.CleanUp();

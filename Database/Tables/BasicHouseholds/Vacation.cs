@@ -5,11 +5,13 @@ using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicHouseholds {
+namespace Database.Tables.BasicHouseholds
+{
     public class Vacation : DBBaseElement {
         public const string TableName = "tblVacations";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<VacationTime> _vacationTimes;

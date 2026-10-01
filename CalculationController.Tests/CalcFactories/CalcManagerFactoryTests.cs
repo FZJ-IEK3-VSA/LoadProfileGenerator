@@ -64,7 +64,6 @@ namespace CalculationController.Tests.CalcFactories {
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
 
             sim.Should().NotBeNull();
-            var cmf = new CalcManagerFactory();
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             //todo: put in a full house with transportation
             //var house = sim.Houses.CreateNewItem()
@@ -79,8 +78,9 @@ namespace CalculationController.Tests.CalcFactories {
                 false, false, 3, sim.MyGeneralConfig.RepetitionCount,
                 calculationProfiler,
                 path, false, false, ".", false);
+            var cmf = new CalcManagerFactory(sim, csps.CalcParams);
 
-            var cm = cmf.GetCalcManager(sim,csps,  false);
+            var cm = cmf.GetCalcManager(csps);
 
             bool success = cm.Run(ReportCancelFunc);
             if(!success) {
@@ -105,15 +105,15 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.Should().NotBeNull();
                     sim.MyGeneralConfig.RandomSeed = 10;
 
-                    var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random, false,
                          null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2018, 1, 15),
                         new DateTime(2018, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
                         wd.WorkingDirectory, false, false, ".", false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
 
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cm = cmf.GetCalcManager(csps);
 
                     cm.Run(ReportCancelFunc);
                     db.Cleanup();
@@ -136,15 +136,15 @@ namespace CalculationController.Tests.CalcFactories {
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
                     sim.Should().NotBeNull();
 
-                    var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.Houses[sim.Houses.Items.Count - 1], EnergyIntensityType.Random, false,
                          null, LoadTypePriority.RecommendedForHouses, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                             new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
                         wd.WorkingDirectory, false, false, ".", false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
 
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cm = cmf.GetCalcManager(csps);
 
                     cm.Run(ReportCancelFunc);
                     db.Cleanup();
@@ -183,7 +183,6 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.MyGeneralConfig.Enable(CalcOption.MakePDF);
                     sim.MyGeneralConfig.Enable(CalcOption.HouseholdContents);
                     sim.Should().NotBeNull();
-                    var cmf = new CalcManagerFactory();
                     ModularHousehold chs3 = null;
                     foreach (var modularHousehold in sim.ModularHouseholds.Items)
                     {
@@ -203,8 +202,9 @@ namespace CalculationController.Tests.CalcFactories {
                          null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
                         wd.WorkingDirectory, false, false, ".", false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
 
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cm = cmf.GetCalcManager(csps);
 
                     cm.Run(ReportCancelFunc);
                     cm.Dispose();
@@ -245,15 +245,15 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
                      sim.Should().NotBeNull();
 
-                    var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random, false,
                          null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
                         wd.WorkingDirectory, false, false, ".", false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
 
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cm = cmf.GetCalcManager(csps);
 
                     cm.Run(ReportCancelFunc);
                     db.Cleanup();
@@ -286,15 +286,15 @@ namespace CalculationController.Tests.CalcFactories {
                     }
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
                     sim.Should().NotBeNull();
-                    var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random, false,
                          null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
                         wd.WorkingDirectory, false, false, ".", false);
+                    var cmf = new CalcManagerFactory(sim, csps.CalcParams);
 
-                    var cm = cmf.GetCalcManager(sim, csps, false);
+                    var cm = cmf.GetCalcManager(csps);
 
                     var chh = (CalcHousehold)cm.CalcObject;
                     var devicenameByCategoryAndLocationID = new Dictionary<string, string>();
@@ -362,7 +362,13 @@ namespace CalculationController.Tests.CalcFactories {
                     var rfes1 = rfel1.Load();
                     var rfel2 = new ResultFileEntryLogger(wd2.SqlResultLoggingService);
                     var rfes2 = rfel2.Load();
-                    rfes1.Should().BeEquivalentTo(rfes2, o => o.Excluding(
+
+                    // don't compare logfiles as their content always differs
+                    HashSet<string> files_to_ignore = ["LogMessages.json"];
+                    var rfes1_filtered = rfes1.Where(x => !files_to_ignore.Contains(x.FileName)).ToList();
+                    var rfes2_filtered = rfes2.Where(x => !files_to_ignore.Contains(x.FileName)).ToList();
+
+                    rfes1_filtered.Should().BeEquivalentTo(rfes2_filtered, o => o.Excluding(
                          x => x.Path.EndsWith("FullFileName", StringComparison.InvariantCultureIgnoreCase) ||
                               x.Path.EndsWith("PersonInformation.Guid", StringComparison.InvariantCultureIgnoreCase)
                               ));

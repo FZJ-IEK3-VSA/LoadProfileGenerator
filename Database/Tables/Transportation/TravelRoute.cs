@@ -11,11 +11,13 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Transportation {
+namespace Database.Tables.Transportation
+{
     public class TravelRoute : DBBaseElement {
         public const string TableName = "tblTravelRoutes";
 
@@ -27,6 +29,10 @@ namespace Database.Tables.Transportation {
         [CanBeNull] private Site _siteB;
         [CanBeNull] private string _routeKey;
 
+        /// <summary>
+        /// Can be used to dynamically modify travel route distances via TransportationDistanceModifiers
+        /// in the Calcspec.
+        /// </summary>
         [CanBeNull]
         public string RouteKey {
             get => _routeKey;
@@ -36,6 +42,19 @@ namespace Database.Tables.Transportation {
         public override string PrettyName {
             get {
                     return Name + " (" + _steps.Count + " steps, " + _steps.Select(x => x.Distance).Sum() + " m)";
+            }
+        }
+        public override void SaveToDB(Connection con)
+        {
+            base.SaveToDB(con);
+            using (var tr = con.BeginTransaction())
+            {
+                foreach (var travelRouteStep in _steps)
+                {
+                    travelRouteStep.SaveToDB(con);
+                }
+
+                tr.Commit();
             }
         }
         public override void SaveToDB()
@@ -89,27 +108,10 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public ObservableCollection<TravelRouteStep> Steps => _steps;
 
-        [UsedImplicitly]
-        //TODO: use and remove used implictily
-        public void AddStep([JetBrains.Annotations.NotNull] TravelRouteStep step)
-        {
-            if (step == null) {
-                throw new LPGException("Can't add a null step.");
-            }
-            if (step.ConnectionString != ConnectionString) {
-                throw new LPGException("A step from another DB was just added!");
-            }
-
-            _steps.Add(step);
-            step.SaveToDB();
-            _steps.Sort();
-            OnPropertyChanged(nameof(PrettyName));
-        }
-
-        public void AddStep([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, bool save = true)
+        public void AddStep([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, double durationInS = -1, bool save = true)
         {
             var step = new TravelRouteStep(null, IntID, ConnectionString,
-                name, category, distance, stepNumber, System.Guid.NewGuid().ToStrGuid(), stepKey);
+                name, category, distance, stepNumber, System.Guid.NewGuid().ToStrGuid(), stepKey, durationInS);
             _steps.Add(step);
             if (save) {
                 step.SaveToDB();
@@ -129,8 +131,8 @@ namespace Database.Tables.Transportation {
             var siteAID = dr.GetIntFromLong("SiteAID");
             var siteBID = dr.GetIntFromLong("SiteBID");
             var routeKey = dr.GetString("RouteKey", false, "", ignoreMissingFields);
-            var siteA = aic.Sites.FirstOrDefault(x => x.ID == siteAID);
-            var siteB = aic.Sites.FirstOrDefault(x => x.ID == siteBID);
+            var siteA = aic.Sites.FindById(siteAID);
+            var siteB = aic.Sites.FindById(siteBID);
             var guid = GetGuid(dr, ignoreMissingFields);
             var locdev = new TravelRoute(id, connectionString, name,
                 description, siteA, siteB, guid,routeKey);
@@ -172,16 +174,12 @@ namespace Database.Tables.Transportation {
             return route;
         }
 
-        private static bool IsCorrectTravelRouteParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
-        {
-            var hd = (TravelRouteStep) child;
-            if (parent.ID == hd.RouteID) {
-                var route = (TravelRoute) parent;
-                route._steps.Add(hd);
-                return true;
-            }
-            return false;
-        }
+        /// <summary>
+        /// Adds a route step to the specified travel route. Used for loading from the database.
+        /// </summary>
+        /// <param name="route">the travel route object</param>
+        /// <param name="step">the travel route step object</param>
+        private static void AssignStep(DBBase route, DBBase step) => ((TravelRoute)route)._steps.Add((TravelRouteStep)step);
 
         protected override bool IsItemLoadedCorrectly(out string message)
         {
@@ -207,8 +205,7 @@ namespace Database.Tables.Transportation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
             var ld = new ObservableCollection<TravelRouteStep>();
             TravelRouteStep.LoadFromDatabase(ld, connectionString, transportationDeviceCategories, ignoreMissingTables);
-            SetSubitems(new List<DBBase>(result), new List<DBBase>(ld), IsCorrectTravelRouteParent,
-                ignoreMissingTables);
+            SetSubitemsByParentId([.. result], [.. ld], step => ((TravelRouteStep)step).RouteID, AssignStep, ignoreMissingTables);
             foreach (TravelRoute route in result) {
                 route.Steps.Sort();
             }
