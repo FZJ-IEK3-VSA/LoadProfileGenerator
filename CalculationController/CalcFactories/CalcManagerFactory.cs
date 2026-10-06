@@ -128,6 +128,7 @@ namespace CalculationController.CalcFactories
             ILifetimeScope scope = SharedObjectsScope.BeginLifetimeScope(builder => RegisterEverything(csps, builder, ds));
 
             CalcManager? cm = null;
+            ICalcAbleObject? ch = null;
             try
             {
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
@@ -140,7 +141,6 @@ namespace CalculationController.CalcFactories
                 //_calcParameters.EnergyIntensity = csps.EnergyIntensity;
                 // no vacation times needed for the light array
                 CalcObjectType cot;
-                ICalcAbleObject ch;
                 CalcVariableDtoFactory cvrdto = scope.Resolve<CalcVariableDtoFactory>();
                 CalcDeviceTaggingSets devicetaggingSets = scope.Resolve<CalcDeviceTaggingSets>();
                 var affordanceTaggingSets = scope.Resolve<List<CalcAffordanceTaggingSetDto>>();
@@ -184,7 +184,14 @@ namespace CalculationController.CalcFactories
                 return cm;
             }
             catch {
-                cm?.Dispose();
+                if (cm != null) {
+                    // the CalcManager owns the calc object and the scope
+                    cm.Dispose();
+                } else {
+                    // the CalcManager was not created yet, so the scope and calc object have to be disposed here
+                    ch?.Dispose();
+                    scope.Dispose();
+                }
                 throw;
             }
             finally {
