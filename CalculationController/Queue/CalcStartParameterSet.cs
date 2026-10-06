@@ -26,7 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-using Autofac;
 using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor;
@@ -183,18 +182,11 @@ namespace CalculationController.Queue
         /// </summary>
         private void EnableRequiredCalcOptions()
         {
-            var fftd = new FileFactoryAndTrackerDummy();
-
             // check CalcOption dependencies from the ChartProcessor
-            ChartProcessorManager.ChartingFunctionDependencySetter(ResultPath, CalculationProfiler, fftd, CalcOptions, false);
+            ChartProcessorManager.ChartingFunctionDependencySetter(CalcOptions, false);
 
             // check CalcOption dependencies from the Postprocessor
-            var container = PostProcessingManager.RegisterEverything(ResultPath, CalculationProfiler, fftd);
-            using (var scope = container.BeginLifetimeScope())
-            {
-                var odm = scope.Resolve<OptionDependencyManager>();
-                odm.EnableRequiredOptions(CalcOptions);
-            }
+            PostProcessingManager.EnableRequiredOptions(CalcOptions);
         }
 
 

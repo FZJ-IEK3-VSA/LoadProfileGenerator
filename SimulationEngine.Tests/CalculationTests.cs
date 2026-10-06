@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using Autofac;
 using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor;
@@ -278,16 +277,9 @@ namespace SimulationEngine.Tests
                 }
             }
 
-            var fftd = new FileFactoryAndTrackerDummy();
-            var cp = new CalculationProfiler();
-            var container = PostProcessingManager.RegisterEverything(wd, cp, fftd);
-            HashSet<CalcOption> enabledOptions = new HashSet<CalcOption>();
-            enabledOptions.Add(option);
-            ChartProcessorManager.ChartingFunctionDependencySetter(wd,cp,fftd,enabledOptions,false);
-            using (var scope = container.BeginLifetimeScope()) {
-                var odm = scope.Resolve<OptionDependencyManager>();
-                odm.EnableRequiredOptions(enabledOptions);
-            }
+            HashSet<CalcOption> enabledOptions = [option];
+            ChartProcessorManager.ChartingFunctionDependencySetter(enabledOptions,false);
+            PostProcessingManager.EnableRequiredOptions(enabledOptions);
 
             foreach (var enabledOption in enabledOptions) {
                 foundOptions.Remove(enabledOption);

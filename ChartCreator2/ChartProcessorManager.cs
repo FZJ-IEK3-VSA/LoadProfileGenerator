@@ -14,16 +14,21 @@ namespace ChartCreator2
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class ChartProcessorManager
     {
-        public static void ChartingFunctionDependencySetter(string path, [JetBrains.Annotations.NotNull] CalculationProfiler profiler,
-                                                FileFactoryAndTrackerDummy ifft,
-                                                HashSet<CalcOption> options, bool throwOnMissingOptionDependencies)
+        /// <summary>
+        /// The option dependencies only depend on the registered step types, so they are determined once and then cached.
+        /// </summary>
+        private static readonly Lazy<ChartOptionDependencyManager> _optionDependencyManager = new(CreateOptionDependencyManager);
+
+        private static ChartOptionDependencyManager CreateOptionDependencyManager()
         {
-            var container = RegisterEverything(path, profiler, ifft);
-            using (var scope = container.BeginLifetimeScope())
-            {
-                var odm = scope.Resolve<ChartOptionDependencyManager>();
-                odm.EnableRequiredOptions(options,throwOnMissingOptionDependencies);
-            }
+            using var container = RegisterEverything(string.Empty, new CalculationProfiler(), new FileFactoryAndTrackerDummy());
+            using var scope = container.BeginLifetimeScope();
+            return scope.Resolve<ChartOptionDependencyManager>();
+        }
+
+        public static void ChartingFunctionDependencySetter(HashSet<CalcOption> options, bool throwOnMissingOptionDependencies)
+        {
+            _optionDependencyManager.Value.EnableRequiredOptions(options, throwOnMissingOptionDependencies);
         }
 
 
