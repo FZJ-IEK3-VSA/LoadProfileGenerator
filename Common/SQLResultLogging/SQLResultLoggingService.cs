@@ -35,7 +35,10 @@ namespace Common.SQLResultLogging
     {
         private readonly string _basePath;
 
-        private readonly Dictionary<HouseholdKey, List<string>> _createdTablesPerHousehold = [];
+        /// <summary>
+        /// Caches the tables that are known to exist, to avoid querying the database on every write
+        /// </summary>
+        private readonly Dictionary<HouseholdKey, HashSet<string>> _knownTablesPerHousehold = [];
 
         private readonly Dictionary<HouseholdKey, FileEntry> _filenameByHouseholdKey = [];
 
@@ -402,15 +405,49 @@ namespace Common.SQLResultLogging
         public void SaveResultEntry([JetBrains.Annotations.NotNull] SaveableEntry entry)
         {
             entry.IntegrityCheck();
+            string tableName = entry.ResultTableDefinition.TableName;
             string conStr = GetConnectionString(entry.HouseholdKey, true);
             using SQLiteConnection conn = new(conStr);
             AttemptToOpenDBConnection(conn);
-            if (!CheckIfTableExists(entry.ResultTableDefinition.TableName, entry.HouseholdKey))
+            if (!IsTableKnown(entry.HouseholdKey, tableName))
             {
-                CreateNewTable(entry, conn);
+                // the table may have been created by another service instance, so check the database as well
+                if (!CheckIfTableExists(tableName, conn))
+                {
+                    CreateNewTable(entry, conn);
+                }
+
+                RememberTable(entry.HouseholdKey, tableName);
             }
 
-            SaveDictionaryToDatabase(entry.RowEntries, entry.ResultTableDefinition.TableName, conn);
+            SaveDictionaryToDatabase(entry.RowEntries, tableName, conn);
+        }
+
+        /// <summary>
+        /// Check whether a specific table already exists using the cache.
+        /// If the table was created by another service instance, this may
+        /// return false even if the table exists.
+        /// </summary>
+        /// <param name="key">household key of the table</param>
+        /// <param name="tableName">name of the table to check</param>
+        /// <returns>True if the table is known, false otherwise</returns>
+        private bool IsTableKnown(HouseholdKey key, string tableName) =>
+            _knownTablesPerHousehold.TryGetValue(key, out var tables) && tables.Contains(tableName);
+
+        /// <summary>
+        /// Add a table to the cache of known tables for a specific household key.
+        /// </summary>
+        /// <param name="key">household key of the table</param>
+        /// <param name="tableName">name of the table to add</param>
+        private void RememberTable(HouseholdKey key, string tableName)
+        {
+            if (!_knownTablesPerHousehold.TryGetValue(key, out var tables))
+            {
+                tables = [];
+                _knownTablesPerHousehold.Add(key, tables);
+            }
+
+            tables.Add(tableName);
         }
 
         /*
@@ -686,12 +723,6 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
                     };
             List<Dictionary<string, object>> rows = [fields];
             SaveDictionaryToDatabase(rows, Constants.TableDescriptionTableName, conn);
-            if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey))
-            {
-                _createdTablesPerHousehold.Add(entry.HouseholdKey, new List<string>());
-            }
-
-            _createdTablesPerHousehold[entry.HouseholdKey].Add(entry.ResultTableDefinition.TableName);
         }
 
         //[JetBrains.Annotations.NotNull]
@@ -748,34 +779,18 @@ public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List
             }
         }
 
-        public bool CheckIfTableExists(string tableName, HouseholdKey key)
+        /// <summary>
+        /// Checks whether a specific table already exists in the database. Does not rely on the cache but actually checks the database file instead.
+        /// </summary>
+        /// <param name="tableName">the table name to check</param>
+        /// <param name="conn">the database connection</param>
+        /// <returns>true if the table exists, false otherwise</returns>
+        private static bool CheckIfTableExists(string tableName, SQLiteConnection conn)
         {
-            string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';";
-
-            string constr = GetConnectionString(key);
-            int lines = 0;
-            using (SQLiteConnection conn = new SQLiteConnection(constr))
-            {
-                //;Synchronous=OFF;Journal Mode=WAL;
-                AttemptToOpenDBConnection(conn);
-                using (SQLiteCommand cmd = new SQLiteCommand())
-                {
-                    cmd.Connection = conn;
-
-                    cmd.CommandText = sql;
-                    var reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        lines++;
-                    }
-                }
-            }
-            if (lines > 0)
-            {
-                return true;
-            }
-
-            return false;
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT 1 FROM sqlite_master WHERE type='table' AND name=@name;";
+            cmd.Parameters.AddWithValue("@name", tableName);
+            return cmd.ExecuteScalar() != null;
         }
     }
 
