@@ -37,7 +37,7 @@ namespace Common.JSON {
             OfficialEndTime = endDate.AddDays(1);
         }
 
-        public CalcParameters(List<CalcOption> calcOptions, DateTime startDate, DateTime endDate, TimeSpan internalResolution, string cSVCharacter,
+        public CalcParameters(IEnumerable<CalcOption> calcOptions, DateTime startDate, DateTime endDate, TimeSpan internalResolution, string cSVCharacter,
             TimeSpan externalResolution, bool writeExcelColumnBool, bool showSettlingPeriodBool, int settlingDays, int repetitionCount, List<string> loadtypesForPostprocessing,
             LoadTypePriority loadTypePriority, DeviceProfileHeaderMode deviceProfileHeaderMode, bool ignorePreviousActivitiesWhenNeeded, bool enableTransportation,
             bool enableIdlemode, string decimalSeperator, bool enableFlexibility, bool citySimulationEnabled = false) : this(startDate, endDate)
@@ -117,7 +117,7 @@ namespace Common.JSON {
         public DateTime OfficialStartTime { get; set; }
 
         [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
-        public HashSet<CalcOption> Options { get; set; } = [];
+        public HashSet<CalcOption> Options { get; } = [];
 
         public bool ShowSettlingPeriodTime { get; set; }
         public int TimeStepsPerHour { get; set; }

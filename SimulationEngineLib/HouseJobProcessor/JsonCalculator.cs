@@ -159,7 +159,8 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             // join the manually selected CalcOptions with the ones from the DefaultForOutputFiles setting
             var defaultCalcOptions = OutputFileDefaultHelper.GetOptionsForDefault(calcSpec.DefaultForOutputFiles);
-            var mergedCalcOptions = calcSpec.CalcOptions.Union(defaultCalcOptions).ToList();
+            var mergedCalcOptions = calcSpec.CalcOptions.Union(defaultCalcOptions).ToHashSet();
+            CalcStartParameterSet.EnableRequiredCalcOptions(mergedCalcOptions);
 
             // combine settings from the JsonCalcSpecification and the Simulator
             return new(

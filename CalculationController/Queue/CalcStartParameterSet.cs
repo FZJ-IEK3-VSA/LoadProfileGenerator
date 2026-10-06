@@ -96,6 +96,19 @@ namespace CalculationController.Queue
         /// </summary>
         public string LPGVersion { get; } = Utili.GetCurrentAssemblyVersion();
 
+        /// <summary>
+        /// Creates a CalcStartParameterSet from already prepared parameters. The CalcOptions in the passed CalcParameters
+        /// must already contain all required options (see <see cref="EnableRequiredCalcOptions"/>), as they can be shared
+        /// between multiple CalcStartParameterSets.
+        /// </summary>
+        /// <param name="objectsForCalc">CalcObject and dependent objects</param>
+        /// <param name="parameters">calculation parameters</param>
+        /// <param name="helpers">helper functions and objects</param>
+        /// <param name="userSelectedRandomSeed">user-selected random seed; -1 or null will be replaced with a randomly chosen seed</param>
+        /// <param name="transport">transport-related objects</param>
+        /// <param name="resumeSettlement">whether to resume settlement simulation</param>
+        /// <param name="preserveLogfile">whether to preserve log files while clearing the output folder</param>
+        /// <exception cref="LPGException">if required transport objects are missing</exception>
         public CalcStartParameterSet(CalcObjectParameters objectsForCalc, CalcParameters parameters, CalculationHelpers helpers, int? userSelectedRandomSeed,
             TransportObjects? transport = null, bool resumeSettlement = false, bool preserveLogfile = false)
         {
@@ -112,8 +125,6 @@ namespace CalculationController.Queue
                 // when directly simulating a modular household without a house, transport parameters must be provided here
                 throw new LPGException("Simulating a household with transportation enabled, but no transportation parameters were provided.");
             }
-
-            EnableRequiredCalcOptions();
         }
 
         /// <summary>
@@ -149,7 +160,10 @@ namespace CalculationController.Queue
                     transportationEnabled, enableIdlemode, decimalSeperator, flexibilityEnabled, citySimulationEnabled),
                  new CalculationHelpers(calculationProfiler, dispatcher, reportFinishFuncForHouseAndSettlement, reportFinishFuncForHousehold, openTabFunc, reportCancelFunc), selectedRandomSeed,
                  new TransportObjects(travelRouteSet, transportationDeviceSet, chargingStationSet), resumeSettlement)
-        { }
+        {
+            // the CalcParameters were created specifically for this CalcStartParameterSet, so the required options still need to be enabled
+            EnableRequiredCalcOptions(CalcOptions);
+        }
 
         /// <summary>
         ///     starter for unit tests
@@ -179,14 +193,16 @@ namespace CalculationController.Queue
 
         /// <summary>
         /// Enables CalcOptions that are required by the selected options, using dependencies of the Postprocessor and the ChartProcessor.
+        /// Modifies the passed option set in place.
         /// </summary>
-        private void EnableRequiredCalcOptions()
+        /// <param name="options">the selected options, to which all required options are added</param>
+        public static void EnableRequiredCalcOptions(HashSet<CalcOption> options)
         {
             // check CalcOption dependencies from the ChartProcessor
-            ChartProcessorManager.ChartingFunctionDependencySetter(CalcOptions, false);
+            ChartProcessorManager.ChartingFunctionDependencySetter(options, false);
 
             // check CalcOption dependencies from the Postprocessor
-            PostProcessingManager.EnableRequiredOptions(CalcOptions);
+            PostProcessingManager.EnableRequiredOptions(options);
         }
 
 
