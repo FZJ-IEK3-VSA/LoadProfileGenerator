@@ -112,16 +112,7 @@ namespace Calculation.Tests
                 cdl
             };
             CalcDeviceDto cdd = new CalcDeviceDto("device",
-
-/* Unmerged change from project 'Calculation.Tests (net8.0)'
-Before:
                 "devcategoryguid".ToStrGuid(),
-                hhkey,
-After:
-"devcategoryguid".ToStrGuid(),
-                hhkey,
-*/
-StringExtensions.ToStrGuid("devcategoryguid"),
                 hhkey,
                 OefcDeviceType.Device,
                 "category",
