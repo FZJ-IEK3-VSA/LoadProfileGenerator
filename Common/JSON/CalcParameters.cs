@@ -117,6 +117,7 @@ namespace Common.JSON {
         public DateTime OfficialStartTime { get; set; }
 
         [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
+        [System.Text.Json.Serialization.JsonObjectCreationHandling(System.Text.Json.Serialization.JsonObjectCreationHandling.Populate)]
         public HashSet<CalcOption> Options { get; } = [];
 
         public bool ShowSettlingPeriodTime { get; set; }
