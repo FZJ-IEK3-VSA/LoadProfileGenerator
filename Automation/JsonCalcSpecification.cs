@@ -116,9 +116,9 @@ namespace Automation {
         [CanBeNull]
         public JsonReference? DeviceSelection { get; set; }
 
-        [Comment(
-            "End date of the simulation.")]
-        [CanBeNull]
+        [Comment("End date of the simulation.")]
+        [JsonProperty(Required = Required.Always)]
+        [System.Text.Json.Serialization.JsonRequired]
         public DateTime EndDate { get; set; }
 
         [Comment(
@@ -171,7 +171,8 @@ namespace Automation {
         public bool SkipExisting { get; set; } = true;
 
         [Comment("Start date of the simulation.")]
-        [CanBeNull]
+        [JsonProperty(Required = Required.Always)]
+        [System.Text.Json.Serialization.JsonRequired]
         public DateTime StartDate { get; set; }
 
         [Comment(
