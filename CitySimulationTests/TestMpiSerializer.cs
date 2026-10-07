@@ -17,6 +17,7 @@ namespace CitySimulationTests
     public sealed class TestMpiSerializer(ITestOutputHelper testOutputHelper) : UnitTestBaseClass(testOutputHelper)
     {
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
         public void TestCalcParameters()
         {
@@ -31,6 +32,7 @@ namespace CitySimulationTests
         }
 
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
         public void TestScenarioPart()
         {
@@ -43,6 +45,7 @@ namespace CitySimulationTests
         }
 
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
         public void TestMessageContainer()
         {
@@ -52,6 +55,7 @@ namespace CitySimulationTests
         }
 
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
         public void TestRemoteActivityStart()
         {
@@ -62,6 +66,7 @@ namespace CitySimulationTests
         }
 
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         [Trait(UnitTestCategories.Category, UnitTestCategories.CitySimulationTest)]
         public void TestRemoteActivityFinished()
         {
