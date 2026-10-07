@@ -349,8 +349,8 @@ namespace Common.SQLResultLogging
 
         public void DeleteEntries(IEnumerable<Dictionary<string, object>> toDelete, string tableName, HouseholdKey householdKey)
         {
-            // load all entries from the file to delete items from
-            var items = LoadItemsFromFile<Dictionary<string, object>>(householdKey, tableName);
+            // load all entries from the file to delete items from; use ToList to avoid lazy-loading as the file is overwritten below
+            var items = LoadItemsFromFile<Dictionary<string, object>>(householdKey, tableName).ToList();
             // serialize the entries to delete for comparison
             var jsonStringsToDelete = toDelete.Select(JsonConvert.SerializeObject).ToHashSet();
 
