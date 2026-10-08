@@ -176,7 +176,7 @@ namespace Database.Tables.ModularHouseholds {
             Desire desire = null;
             var name = "(no name)";
             if (desireID != null) {
-                desire = aic.Desires.FirstOrDefault(myDesire => myDesire.ID == desireID);
+                desire = aic.Desires.FindById(desireID);
             }
 
             if (desire != null) {

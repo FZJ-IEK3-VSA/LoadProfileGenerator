@@ -32,13 +32,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.ModularHouseholds {
+namespace Database.Tables.ModularHouseholds
+{
     public class DeviceSelection : DBBaseElement {
         public const string TableName = "tblDeviceSelections";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DeviceSelectionDeviceAction> _selectionActions;

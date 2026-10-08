@@ -30,17 +30,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Automation;
-using CalculationController.DtoFactories;
 using Common;
+using Common.Extensions;
+using Common.JSON;
 using Common.Tests;
-using Database.Helpers;
 using Database.Tables.BasicElements;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables {
+namespace Database.Tests.Tables
+{
 
     public class GeographicLocationTests : UnitTestBaseClass
     {
@@ -86,7 +87,7 @@ namespace Database.Tests.Tables {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                var pars = CalcParametersFactory.MakeGoodDefaults();
+                var pars = CalcParameters.CreateDefaultParamsForTesting();
                 // use a simple time limit which only depends on daylight
                 var timelimitNight = sim.TimeLimits.FindFirstByName("At Night");
                 var r = new Random();

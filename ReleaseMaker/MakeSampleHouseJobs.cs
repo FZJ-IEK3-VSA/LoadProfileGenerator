@@ -5,6 +5,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database;
 using Database.Helpers;
 using Database.Tests;

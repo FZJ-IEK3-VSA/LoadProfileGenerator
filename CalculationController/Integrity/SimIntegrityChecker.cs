@@ -150,17 +150,19 @@ namespace CalculationController.Integrity {
         }
     }
 
-    public class CheckingOptions {
-        public bool CheckTransport {
-            get;
-            set;
-        }
+    public class CheckingOptions
+    {
+        public bool CheckTransport { get; private set; }
+
+        public bool CitySimulationEnabled { get; private set; }
 
         [JetBrains.Annotations.NotNull]
-        public static CheckingOptions Default () {
+        public static CheckingOptions Default()
+        {
 
             var co = new CheckingOptions();
             co.CheckTransport = false;
+            co.CitySimulationEnabled = false;
             return co;
         }
 
@@ -169,6 +171,7 @@ namespace CalculationController.Integrity {
         {
             var co = new CheckingOptions();
             co.CheckTransport = csps.TransportationEnabled;
+            co.CitySimulationEnabled = csps.CitySimulationEnabled;
             return co;
         }
     }

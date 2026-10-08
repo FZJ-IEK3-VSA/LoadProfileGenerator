@@ -17,10 +17,10 @@ namespace Common.SQLResultLogging {
 
     public abstract class DataSaverBase : IDataSaverBase {
         public ResultTableDefinition ResultTableDefinition { get; }
-        [CanBeNull] private readonly SqlResultLoggingService _srls;
+        [CanBeNull] private readonly IResultLoggingService _srls;
 
         protected DataSaverBase([NotNull] Type savingType, [NotNull] ResultTableDefinition resultTableDefinition,
-                                [CanBeNull] SqlResultLoggingService srls)
+                                [CanBeNull] IResultLoggingService srls)
         {
             SavingType = savingType;
             //check if no readonly properties
@@ -29,19 +29,33 @@ namespace Common.SQLResultLogging {
             _srls = srls;
         }
         private static readonly HashSet<string> _checkedTypes = new HashSet<string>();
+        /// <summary>
+        /// Guards <see cref="_checkedTypes"/>, as loggers can be created from multiple threads concurrently.
+        /// </summary>
+        private static readonly object _checkedTypesLock = new object();
         private static void CheckType([NotNull] Type savingType)
         {
-            if (_checkedTypes.Contains(savingType.FullName)) {
+            lock (_checkedTypesLock) {
+                CheckTypeUnsafe(savingType);
+            }
+        }
+
+        /// <summary>
+        /// Recursively checks that the type has no non-public setters. Must only be called while holding <see cref="_checkedTypesLock"/>.
+        /// </summary>
+        private static void CheckTypeUnsafe([NotNull] Type savingType)
+        {
+            if (!_checkedTypes.Add(savingType.FullName)) {
+                // type was already checked
                 return;
             }
 
-            _checkedTypes.Add(savingType.FullName);
             var properties = savingType.GetProperties();
             //Logger.Info("Checking " + savingType.FullName);
             foreach (var property in properties) {
                 //Logger.Info(" checking " + property.Name);
                 if (property.PropertyType.IsClass) {
-                    CheckType(property.PropertyType);
+                    CheckTypeUnsafe(property.PropertyType);
                 }
                 var accessors = property.GetAccessors();
 
@@ -63,7 +77,7 @@ namespace Common.SQLResultLogging {
         public Type SavingType { get; }
 
         [CanBeNull]
-        protected SqlResultLoggingService Srls => _srls;
+        protected IResultLoggingService Srls => _srls;
 
         [NotNull]
         protected SaveableEntry GetStandardSaveableEntry([NotNull] HouseholdKey key)

@@ -491,14 +491,14 @@ namespace Database.Tests
         [ItemNotNull]
         public ObservableCollection<TravelRouteSet> LoadTravelRouteSets([JetBrains.Annotations.NotNull][ItemNotNull]ObservableCollection<Location> locations,
             [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TransportationDeviceCategory> categories,[JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Site> sites,
-            ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets)
+            ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets, ObservableCollection<TimeLimit> timeLimits)
         {
             var travelRouteSets = new ObservableCollection<TravelRouteSet>();
 
             var travelRoutes = LoadTravelRoutes(categories, locations,
                 out var sites1);
             sites = sites1;
-            TravelRouteSet.LoadFromDatabase(travelRouteSets, ConnectionString, false, travelRoutes, affordanceTaggingSets);
+            TravelRouteSet.LoadFromDatabase(travelRouteSets, ConnectionString, false, travelRoutes, affordanceTaggingSets, timeLimits);
             return travelRouteSets;
         }
 
@@ -787,12 +787,13 @@ namespace Database.Tests
             [ItemNotNull][JetBrains.Annotations.NotNull] out ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
             [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,
             [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<ChargingStationSet> chargingStationSets,
-            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets)
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets,
+            ObservableCollection<TimeLimit> timeLimits)
         {
             transportationDeviceSets = LoadTransportationDeviceSets(
                 loadTypes,
                 out transportationDeviceCategories, out transportationDevices);
-            travelRouteSets = LoadTravelRouteSets(locations, transportationDeviceCategories, out var sites, affordanceTaggingSets);
+            travelRouteSets = LoadTravelRouteSets(locations, transportationDeviceCategories, out var sites, affordanceTaggingSets, timeLimits);
             chargingStationSets = LoadChargingStationSets(loadTypes,transportationDeviceCategories,sites);
         }
 
@@ -967,18 +968,23 @@ namespace Database.Tests
             return null;
         }
 
+        /// <summary>
+        /// Looks for a file with the given name in the directory of the LoadProfileGenerator GUI project (formerly WpfApplication1).
+        /// </summary>
+        /// <param name="filename">the name of the file to look for</param>
+        /// <returns>a FileInfo object for that file; otherwise, returns null</returns>
         [CanBeNull]
-        private static FileInfo CheckWpfApplicationPath([JetBrains.Annotations.NotNull] string filename)
+        private static FileInfo CheckLoadProfileGeneratorProjectPath([JetBrains.Annotations.NotNull] string filename)
         {
             // if started from the target directory
             DirectoryInfo di =
-                new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\wpfapplication1"));
+                new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\LoadProfileGenerator"));
             Logger.Info("Trying " + di.FullName);
             if (!di.Exists)
             {
                 // depending on the current directory we need to get one level higher
                 di =
-                   new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\wpfapplication1"));
+                   new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\LoadProfileGenerator"));
                 Logger.Info("Trying " + di.FullName);
             }
             if (di.Exists)
@@ -1032,7 +1038,7 @@ namespace Database.Tests
                 return di;
             }
 
-            di = CheckWpfApplicationPath(filename);
+            di = CheckLoadProfileGeneratorProjectPath(filename);
             if (di != null)
             {
                 return di;

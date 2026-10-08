@@ -35,7 +35,7 @@ namespace Database.Tables.Houses {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
             var chargingStationId = dr.GetIntFromLong("ChargingStationSetID", false);
-            var css = aic.ChargingStationSets.FirstOrDefault(x => x.IntID == chargingStationId);
+            var css = aic.ChargingStationSets.FindById(chargingStationId);
             var name = "unknown";
             if (css != null)
             {

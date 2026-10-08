@@ -34,13 +34,14 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Automation.ResultFiles;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public enum TimeProfileType {
         Relative = 0,
         Absolute = 1

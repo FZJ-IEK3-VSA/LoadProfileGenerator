@@ -37,11 +37,13 @@ using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Helpers;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class TimeLimitEntry : DBBase {
         public const string TableName = "tblTimeLimitEntries";
         private const string TableNameOld = "tblDeviceTimeBoolEntries";
@@ -500,7 +502,7 @@ namespace Database.Tables.BasicElements {
                 minTemperature, maxTemperature, needsLight, needsDarkness, parentID, anyAllTimeLimitCondition,
                 dateRangeStart, dateRangeEnd, dateProfileID, maxDateProfileValue, minDateProfileValue, duringVacation,
                 duringNotVacation, duringVacationLongerThan, duringVacationShorterThan, vacationDurationLimit,
-                duringHoliday, aic.DateBasedProfiles, connectionString, randomizeTimeAmount, dateProfileMinVariation,
+                duringHoliday, aic.DateBasedProfiles.Items, connectionString, randomizeTimeAmount, dateProfileMinVariation,
                 dateProfileMaxVariation, guid);
             return pte;
         }

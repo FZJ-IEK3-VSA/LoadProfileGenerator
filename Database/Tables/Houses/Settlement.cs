@@ -43,6 +43,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Database.Database;
 using Database.Tables.BasicElements;
@@ -54,7 +55,8 @@ using Exception = System.Exception;
 
 #endregion
 
-namespace Database.Tables.Houses {
+namespace Database.Tables.Houses
+{
     public class Settlement : DBBaseElement, ICalcObject {
         public const string TableName = "tblSettlement";
         [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<SettlementHH> _households;
@@ -228,8 +230,8 @@ namespace Database.Tables.Houses {
         }
 
         [CanBeNull]
-        public DateTime? EndDate {
-            get => _calcSpecification.EndDate ?? new DateTime(DateTime.Now.Year, 12, 31);
+        public DateTime EndDate {
+            get => _calcSpecification.EndDate;
             [UsedImplicitly]
             set {
                 if (_calcSpecification.EndDate == value) {
@@ -356,7 +358,7 @@ namespace Database.Tables.Houses {
 
         [UsedImplicitly]
         [CanBeNull]
-        public DateTime? StartDate {
+        public DateTime StartDate {
             get => _calcSpecification.StartDate;
 
             set {
@@ -952,11 +954,8 @@ namespace Database.Tables.Houses {
                     throw new LPGException("House was null");
                 }
 
-                if (StartDate == null) {
-                    throw new LPGException("No startdate was set.");
-                }
                 HouseCreationAndCalculationJob housejob = new HouseCreationAndCalculationJob(PrettyName,
-                    StartDate.Value.Year.ToString(CultureInfo.InvariantCulture),null, HouseDefinitionType.HouseData);
+                    StartDate.Year.ToString(CultureInfo.InvariantCulture),null, HouseDefinitionType.HouseData);
                 var calcSettings = new JsonCalcSpecification(_calcSpecification) {
                     GeographicLocation = GeographicLocation?.GetJsonReference(),
                     TemperatureProfile = TemperatureProfile?.GetJsonReference(),
@@ -1050,13 +1049,13 @@ namespace Database.Tables.Houses {
             var temperatureProfileID = dr.GetNullableIntFromLong("TemperatureProfileID", false, ignoreMissingFields);
             TemperatureProfile tp = null;
             if (temperatureProfileID != null) {
-                tp = aic.TemperatureProfiles.FirstOrDefault(tp1 => tp1.ID == temperatureProfileID);
+                tp = aic.TemperatureProfiles.FindById(temperatureProfileID);
             }
 
             var geographicLocationID = dr.GetNullableIntFromLong("GeographicLocationID", false, ignoreMissingFields);
             GeographicLocation geoloc = null;
             if (geographicLocationID != null) {
-                geoloc = aic.GeographicLocations.FirstOrDefault(geo1 => geo1.ID == geographicLocationID);
+                geoloc = aic.GeographicLocations.FindById(geographicLocationID);
             }
 
             //var loadtypePrio = (LoadTypePriority)dr.GetIntFromLong("LoadTypePriority", false, ignoreMissingFields, (int)Automation.LoadTypePriority.RecommendedForHouses);

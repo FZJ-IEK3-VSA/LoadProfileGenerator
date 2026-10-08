@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using Automation.ResultFiles;
+using CalculationEngine.CitySimulation;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -58,8 +59,9 @@ namespace CalculationEngine
         void DumpHouseholdContentsToText();
         void FinishCalculation();
 
-        void Init( [NotNull] DayLightStatus daylightArray, int simulationSeed);
-//void WriteInformation();
-        void RunOneStep([NotNull] TimeStep timestep, DateTime now, bool runProcessing);
+        void Init([NotNull] DayLightStatus daylightArray);
+
+        IEnumerable<RemoteActivityInfo> RunOneStep(TimeStep timestep, DateTime now, bool runProcessing,
+            Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null);
     }
 }

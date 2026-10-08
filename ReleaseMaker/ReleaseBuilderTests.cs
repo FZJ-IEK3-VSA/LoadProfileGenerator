@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Integrity;
 using Common;
 using Database;
-using Database.Database;
 using Database.Helpers;
 using Database.Tables;
 using Database.Tables.BasicHouseholds;
@@ -22,115 +16,8 @@ using Database.Tests;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
 
-#nullable enable
-#pragma warning disable 162
-
 namespace ReleaseMaker
 {
-    public class CopierBase {
-        //string? dstfilename = null,
-        protected static void Copy(List<string> programFiles, DirectoryInfo basePath, [JetBrains.Annotations.NotNull] string src, [JetBrains.Annotations.NotNull] string dst, [JetBrains.Annotations.NotNull] string filename,  string? contentToReplace = null, string? newContent = null)
-        {
-            var dstFi = new FileInfo( Path.Combine(dst, filename));
-            if (!Directory.Exists(dstFi.DirectoryName)) {
-                Directory.CreateDirectory(dstFi.DirectoryName??throw new LPGException("no dir"));
-            }
-
-            if (contentToReplace != null && newContent == null) {
-                throw new LPGException("either both or nothing");
-            }
-            if (contentToReplace == null && newContent != null)
-            {
-                throw new LPGException("either both or nothing");
-            }
-            if (dstFi.Exists)
-            {
-                dstFi.Delete();
-            }
-            if (contentToReplace != null && newContent != null) {
-                string s = File.ReadAllText(Path.Combine(src, filename));
-                s = s.Replace(contentToReplace, newContent);
-                File.WriteAllText(dstFi.FullName,s);
-                Logger.Info("Copied and modified " + filename);
-            }
-            else {
-                //if (dstfilename == null) {
-                    File.Copy(Path.Combine(src, filename), dstFi.FullName);
-                //}
-                //else {
-                    //File.Copy(Path.Combine(src, filename), dstFi.FullName);
-                //}
-
-                Logger.Info("Copied " + filename);
-            }
-
-            programFiles.Add(new FileInfo(Path.Combine(src, filename)).RelativePath(basePath));
-        }
-
-        protected static void CheckIfFilesAreCompletelyCopied(string src, List<string> programFiles)
-        {
-            DirectoryInfo di = new DirectoryInfo(src);
-            var fis = di.GetFiles("*.*", SearchOption.AllDirectories);
-            if (fis.Length == 0) {
-                throw new Exception("Not a single file in " + src);
-            }
-            var filesToComplain = new List<string>();
-            var filesToIgnore = new List<string>
-            {
-                "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",
-                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
-                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll",
-                "calcspec.json",
-                "Log.CommandlineCalculation.txt",
-                "xunit.runner.json"
-            };
-            foreach (var fi in fis)
-            {
-                if (fi.Name.EndsWith(".pdb"))
-                {
-                    continue;
-                }
-
-                if (fi.Name.EndsWith(".db3"))
-                {
-                    continue;
-                }
-
-                if (fi.Name.EndsWith(".dat"))
-                {
-                    continue;
-                }
-
-                if (fi.Name.EndsWith(".sqlite"))
-                {
-                    continue;
-                }
-
-                if (filesToIgnore.Contains(fi.Name))
-                {
-                    continue;
-                }
-
-                var relpath = fi.RelativePath(di);
-                if (!programFiles.Contains(relpath))
-                {
-                    filesToComplain.Add(relpath);
-                }
-            }
-
-            if (filesToComplain.Count > 0)
-            {
-                string s1 = "";
-                foreach (var fn in filesToComplain)
-                {
-                    s1 += "Copy(programFiles, srcDi, src, dst,@\"" + fn + "\");\n";
-                }
-
-                throw new LPGException("Forgotten Files in " + Utili.GetCallingMethodAndClass() + " :\n" + s1);
-            }
-        }
-    }
-
     [SuppressMessage("ReSharper", "RedundantAssignment")]
     public class ReleaseBuilderTests
     {
@@ -159,12 +46,9 @@ namespace ReleaseMaker
             {
                 Logger.Error("unused desire:" + unusedDesire);
             }
-#pragma warning disable S2583 // Conditionally executed blocks should be reachable
-#pragma warning disable S2589 // Boolean expressions should not be gratuitous
+
             if (ThrowOnUnusedDesires && unusedDesires.Count > 0)
             {
-#pragma warning restore S2589 // Boolean expressions should not be gratuitous
-#pragma warning restore S2583 // Conditionally executed blocks should be reachable
                 throw new LPGException(unusedDesires.Count + " unused desires found!");
             }
             foreach (var category in sim.Categories)
@@ -431,79 +315,83 @@ namespace ReleaseMaker
             Logger.Info("Using file " + db.FileName);
             var sim = new Simulator(db.ConnectionString);
             var count = CalculationOutcomesPresenter.CountMissingEntries(sim);
-#pragma warning disable S2583 // Conditionally executed blocks should be reachable
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (count != 0 && ThrowOnMissingOutcomes)
                 // ReSharper disable once HeuristicUnreachableCode
             {
-#pragma warning restore S2583 // Conditionally executed blocks should be reachable
                 throw new LPGException("Missing " + count + " calculation outcomes!");
             }
             db.Cleanup();
         }
 
 
-//        [Test]
-        //[Fact]
-        //      [Trait(UnitTestCategories.Category,"ReleaseMaker")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         public void MakeRelease([System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
-            const string filename = "profilegenerator-latest.db3";
+            // the .NET version is defined centrally in Directory.Build.props and embedded as assembly metadata
+            var dotnetVersion = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyMetadataAttribute>()
+                .FirstOrDefault(a => a.Key == "LpgDotnetVersion")?.Value;
+            if (string.IsNullOrEmpty(dotnetVersion))
+                throw new LPGException("Could not determine the .NET version from the assembly metadata.");
+            
+            const string dbFilename = "profilegenerator-latest.db3";
             const bool cleanDatabase = true;
-            const bool makeZipAndSetup = true;
+            const bool makeZip = true;
             const bool cleanCalcOutcomes = true;
             Logger.Info("### Starting Release");
-            var releasename = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            releasename = releasename.Substring(0, 6);
+            // get version number and remove the build number from that
+            var fullVersion = Assembly.GetExecutingAssembly().GetName().Version!.ToString();
+            int lastDot = fullVersion.LastIndexOf('.');
+            var releasename = fullVersion[..lastDot];
+            if (string.IsNullOrEmpty(releasename))
+                throw new LPGException("Could not determine proper release version number.");
             Logger.Info("Release name: " + releasename);
-            //return;
-            var baseReleasePath = @"C:\LPGReleaseMakerResults\";
-            var dstWin = baseReleasePath + @"LPGReleases\releases" + releasename + "\\windows";
-            var dstLinux = baseReleasePath + @"LPGReleases\releases" + releasename + "\\linux";
-            var dstWinCore = baseReleasePath + @"LPGReleases\releases" + releasename + "\\netCore";
-            //const string srcsim = @"v:\Dropbox\LPG\SimulationEngine\bin\x64\Debug";
 
-            PrepareDirectory(dstWin);
-            PrepareDirectory(dstLinux);
-            PrepareDirectory(dstWinCore);
-            // Currently, this source file is located in a subdirectory of the base development directory.
+            // get the path to the root of the LPG repository, based on the location of this source file
+            var lpgRepoPath = new FileInfo(sourceFilePath).Directory!.Parent;
+            var baseReleasePath = lpgRepoPath!.CombineName("LPGRelease\\");
+            var releaseDirectoriesPath = baseReleasePath + "release_directories\\";
+            var dstWinFull = releaseDirectoriesPath + "windows";
+            var dstLinuxSimEngine = releaseDirectoriesPath + "linux_simengine";
+            var dstWinSimEngine = releaseDirectoriesPath + "windows_simengine";
+
+            ClearDirectory(dstWinFull);
+            ClearDirectory(dstLinuxSimEngine);
+            ClearDirectory(dstWinSimEngine);
+
+            // This source file (ReleaseBuilderTests.cs) is located in a subdirectory of the base development directory.
             // Use this to get the base development path from the file path
-            string? baseDevelopPath = Directory.GetParent(sourceFilePath)?.Parent?.FullName;
-            if (baseDevelopPath == null)
+            var baseDevelopPath = Directory.GetParent(sourceFilePath)?.Parent;
+            if (baseDevelopPath is null || !baseDevelopPath.Exists)
             {
-                throw new LPGException("Could not find the base development path");
+                throw new LPGException("Could not find the base development path: " + baseDevelopPath);
             }
-            // add a trailing \ if there is none
-            char sepChar = Path.DirectorySeparatorChar;
-            char altSepChar = Path.AltDirectorySeparatorChar;
-            if (!baseDevelopPath.EndsWith(sepChar) && !baseDevelopPath.EndsWith(sepChar))
-            {
-                baseDevelopPath += sepChar;
-            }
-            Logger.Info("Using base development path '" + baseDevelopPath + "'");
-            string srclpg = baseDevelopPath + @"WpfApplication1\bin\Debug\net8.0-windows";
-            Logger.Info("### Copying win lpg files");
-            var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
-            string srcsim = baseDevelopPath + @"SimulationEngine\bin\Debug\net8.0-windows";
-            var filesForSetup2 = SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
+            Logger.Info($"Using base development path '{baseDevelopPath}'");
 
-            string srcsim2 = baseDevelopPath + @"SimEngine2\bin\Release\net8.0-windows\win-x64\publish";
-            SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
-            string srcsimLinux = baseDevelopPath + @"SimEngine2\bin\Release\net8.0\linux-x64\publish";
-            LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinux);
+            // combine the main LPG GUI program and the SimulationEngine (with FlameChart function) in the same release folder
+            Logger.Info("### Copying lpg files");
+            string srcWinGUI = baseDevelopPath.CombineName($"LoadProfileGenerator\\bin\\Release\\{dotnetVersion}-windows\\publish");
+            CopyDirectoryContents(srcWinGUI, dstWinFull);
+            string srcWinSimengine = baseDevelopPath.CombineName($"SimulationEngine\\bin\\Release\\{dotnetVersion}\\win-x64\\publish");
+            CopyDirectoryContents(srcWinSimengine, dstWinFull);
+
+            // copy the SimEngine2 binaries (no GUI) for Windows and Linux to the respective release folders
+            string simengine2Path = $"SimEngine2\\bin\\Release\\{dotnetVersion}\\";
+            string srcWinSimEngine = baseDevelopPath.CombineName($"{simengine2Path}win-x64\\publish");
+            CopyDirectoryContents(srcWinSimEngine, dstWinSimEngine);
+            string srcsimLinux = baseDevelopPath.CombineName($"{simengine2Path}linux-x64\\publish");
+            CopyDirectoryContents(srcsimLinux, dstLinuxSimEngine);
             Logger.Info("### Finished copying lpg files");
-            // CopyFiles(src, dst);
+
             Logger.Info("### Performing release checks");
-            ReleaseCheck(filename);
-            //CopyFilesSimulationEngine(srcsim, dst);
-            using (var db = new DatabaseSetup("Release", filename))
+            ReleaseCheck(dbFilename);
+
+            // clean database
+            using (var db = new DatabaseSetup("Release", dbFilename))
             {
-                Logger.Info("Using database " + filename);
-#pragma warning disable S2583 // Conditionally executed blocks should be reachable
+                Logger.Info("Using database " + dbFilename);
                 if (cleanDatabase)
                 {
-#pragma warning restore S2583 // Conditionally executed blocks should be reachable
                     //DeleteOldCalcOutcomes(db);
                     Logger.Info("### cleaning database");
                     DissStuffDatabaseCleaner.Run(db.FileName);
@@ -521,8 +409,8 @@ namespace ReleaseMaker
                 sim.MyGeneralConfig.DestinationPath = "C:\\Work\\";
                 sim.MyGeneralConfig.ImagePath = "C:\\Work\\";
                 sim.MyGeneralConfig.RandomSeed = -1;
-                sim.MyGeneralConfig.StartDateString = "01.01.2021";
-                sim.MyGeneralConfig.EndDateString = "31.12.2021";
+                sim.MyGeneralConfig.StartDateString = "01.01.2026";
+                sim.MyGeneralConfig.EndDateString = "31.12.2026";
                 SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 sim.MyGeneralConfig.PerformCleanUpChecks = "False";
                 sim.MyGeneralConfig.CSVCharacter = ";";
@@ -557,11 +445,9 @@ namespace ReleaseMaker
                 }
 
                 // get rid of all templated items
-#pragma warning disable S2583 // Conditions should not unconditionally evaluate to "true" or to "false"
                 if (cleanDatabase)
                 {
                     Logger.Info("### deleting all templated items");
-#pragma warning restore S2583 // Conditions should not unconditionally evaluate to "true" or to "false" {
                     sim.FindAndDeleteAllTemplated();
                     var templatedItems = sim.FindAndDeleteAllTemplated();
                     if (templatedItems > 0)
@@ -570,41 +456,41 @@ namespace ReleaseMaker
                     }
                 }
 
-                File.Copy(db.FileName, Path.Combine(dstWin, "profilegenerator.db3"));
-                File.Copy(db.FileName, Path.Combine(dstWinCore, "profilegenerator.db3"));
-                File.Copy(db.FileName, Path.Combine(dstLinux, "profilegenerator.db3"));
+                // copy cleaned database to release folders
+                const string targetName = "profilegenerator.db3";
+                File.Copy(db.FileName, Path.Combine(dstWinFull, targetName), true);
+                File.Copy(db.FileName, Path.Combine(dstWinSimEngine, targetName), true);
+                File.Copy(db.FileName, Path.Combine(dstLinuxSimEngine, targetName), true);
             }
             Thread.Sleep(1000);
             Logger.Info("### Finished copying all files");
-            //CopyFilesSimulationEngine(srcsim, dst);
-            if (makeZipAndSetup)
+            
+            if (makeZip)
             {
-                List<FileInfo> fileForUpload = new List<FileInfo>
-                {
-                    MakeZipFile(releasename, dstWin),
-                    MakeZipFile(releasename + "_core", dstWinCore),
-                    MakeZipFile(releasename + "_linux", dstLinux)
-                };
+                List<FileInfo> fileForUpload = [
+                    MakeZipFile(releasename, dstWinFull),
+                    MakeZipFile(releasename + "_windows_simengine", dstWinSimEngine),
+                    MakeZipFile(releasename + "_linux_simengine", dstLinuxSimEngine)
+                ];
 
-                var allSetupFiles = filesForSetup.ToList();
-                allSetupFiles.AddRange(filesForSetup2);
-                allSetupFiles = allSetupFiles.Distinct().ToList();
-
-                //fileForUpload.Add(MakeSetup(dstWin, releasename, allSetupFiles));
-                var dstUpload = baseReleasePath + @"releases" + releasename + "\\upload";
-                PrepareDirectory(dstUpload);
+                var zipFilesPath = $"{baseReleasePath}zip_files";
+                ClearDirectory(zipFilesPath);
                 foreach (FileInfo fi in fileForUpload) {
-                    string dstName = Path.Combine(dstUpload, fi.Name);
-                    fi.CopyTo(dstName,true);
+                    string dstName = Path.Combine(zipFilesPath, fi.Name);
+                    fi.MoveTo(dstName, true);
                 }
             }
         }
 
-        private static void PrepareDirectory(string dstWin)
+        /// <summary>
+        /// Deletes the directory and creates it again, to ensure it is empty
+        /// </summary>
+        /// <param name="directory"></param>
+        private static void ClearDirectory(string directory)
         {
-            if (Directory.Exists(dstWin)) {
+            if (Directory.Exists(directory)) {
                 try {
-                    Directory.Delete(dstWin, true);
+                    Directory.Delete(directory, true);
                 }
                 catch (Exception ex) {
                     Logger.Info(ex.Message);
@@ -613,80 +499,47 @@ namespace ReleaseMaker
                 Thread.Sleep(250);
             }
 
-            Directory.CreateDirectory(dstWin);
+            Directory.CreateDirectory(directory);
             Thread.Sleep(250);
         }
 
-//        private static FileInfo MakeSetup([JetBrains.Annotations.NotNull] string dst, [JetBrains.Annotations.NotNull] string releaseName, List<string> programFiles)
-//        {
-////make iss
-//            string dstFileName = dst + "\\lpgsetup.iss";
-//            using (var sw = new StreamWriter(dstFileName)) {
-//                const string top = @"V:\Dropbox\Development\LPGSetup\lpgsetup_start.iss";
-//                using (var sr = new StreamReader(top)) {
-//                    while (!sr.EndOfStream) {
-//                        var s = sr.ReadLine();
-//                        if (s == null) {
-//                            throw new LPGException("Readline failed");
-//                        }
+        /// <summary>
+        /// Copies all contents of one directory to another directory, including subdirectories and files.
+        /// Keeps any existing contents in the destination directory, but overwrites files with the same name.
+        /// </summary>
+        /// <param name="sourcePath">the source directory</param>
+        /// <param name="destinationPath">the destination directory</param>
+        /// <exception cref="DirectoryNotFoundException">if the source directory does not exist</exception>
+        private static void CopyDirectoryContents(string sourcePath, string destinationPath)
+        {
+            var sourceDir = new DirectoryInfo(sourcePath);
 
-//                        if (s.StartsWith("AppVersion=", StringComparison.Ordinal)) {
-//                            sw.WriteLine("AppVersion=" + releaseName);
-//                        }
-//                        else {
-//                            sw.WriteLine(s);
-//                        }
-//                    }
-//                }
+            if (!sourceDir.Exists)
+                throw new DirectoryNotFoundException($"Source directory not found: {sourceDir.FullName}");
 
-//                //insert the files
-//                foreach (var programFile in programFiles) {
-//                    sw.WriteLine("Source: \"" + programFile + "\"; DestDir: \"{app}\"");
-//                }
+            // create directory if it doesn't exist
+            Directory.CreateDirectory(destinationPath);
 
-//                //bottom of the file
-//                const string bottom = @"V:\Dropbox\Development\LPGSetup\lpgsetup_end.iss";
-//                using (var sr = new StreamReader(bottom)) {
-//                    while (!sr.EndOfStream) {
-//                        var s = sr.ReadLine();
-//                        if (s == null) {
-//                            throw new LPGException("Readline failed");
-//                        }
+            // Copy files
+            foreach (FileInfo file in sourceDir.GetFiles())
+            {
+                string targetFilePath = Path.Combine(destinationPath, file.Name);
+                file.CopyTo(targetFilePath, overwrite: true);
+            }
 
-//                        sw.WriteLine(s);
-//                    }
-//                }
-//            }
-
-//            Logger.Info("Currently open connections:" + Connection.ConnectionCount);
-//            //Thread.Sleep(3000);
-//            GC.WaitForPendingFinalizers();
-//            GC.Collect();
-//            //Thread.Sleep(3000);
-//            using (var process2 = new Process()) {
-//                // Configure the process using the StartInfo properties.
-//                process2.StartInfo.FileName = @"C:\Program Files (x86)\Inno Setup 6\Compil32.exe";
-//                process2.StartInfo.Arguments = "/cc lpgsetup.iss";
-//                Logger.Info(process2.StartInfo.FileName + " " + process2.StartInfo.Arguments);
-//                process2.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
-//                process2.StartInfo.WorkingDirectory = dst;
-//                process2.Start();
-//                process2.WaitForExit(); // Waits here for the process to exit.
-//            }
-
-//            var fi = new FileInfo(Path.Combine(dst, "mysetup.exe"));
-//            var newsetupFileName = Path.Combine(dst, "Setup" + releaseName + ".exe");
-//            if (fi.Exists) {
-//                fi.MoveTo(newsetupFileName);
-//            }
-//            return new FileInfo(newsetupFileName);
-//        }
+            // Recurse into subdirectories
+            foreach (DirectoryInfo subDir in sourceDir.GetDirectories())
+            {
+                string newDestinationDir = Path.Combine(destinationPath, subDir.Name);
+                CopyDirectoryContents(subDir.FullName, newDestinationDir);
+            }
+        }
 
         private static FileInfo MakeZipFile([JetBrains.Annotations.NotNull] string releaseName, [JetBrains.Annotations.NotNull] string dst)
         {
             using (var process = new Process()) {
                 // Configure the process using the StartInfo properties.
-                process.StartInfo.FileName = @"D:\Program Files\7-Zip\7z.exe";
+                process.StartInfo.FileName = @"C:\Program Files\7-Zip\7z.exe";
                 process.StartInfo.Arguments = "a -tzip -mx9 LPG" + releaseName + ".zip  *";
                 Logger.Info(process.StartInfo.FileName + " " + process.StartInfo.Arguments);
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
@@ -696,7 +549,5 @@ namespace ReleaseMaker
             }
             return new FileInfo( Path.Combine( dst, "LPG"+releaseName + ".zip"));
         }
-
- //       public ReleaseBuilderTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper){}
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Autofac;
+using Automation;
 using CalcPostProcessor.GeneralHouseholdSteps;
 using CalcPostProcessor.GeneralSteps;
 using CalcPostProcessor.LoadTypeHouseholdSteps;
@@ -16,6 +19,26 @@ namespace CalcPostProcessor
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class PostProcessingManager
     {
+        /// <summary>
+        /// The option dependencies only depend on the registered step types, so they are determined once and then cached.
+        /// </summary>
+        private static readonly Lazy<OptionDependencyManager> _optionDependencyManager = new(CreateOptionDependencyManager);
+
+        private static OptionDependencyManager CreateOptionDependencyManager()
+        {
+            using var container = RegisterEverything(string.Empty, new CalculationProfiler(), new FileFactoryAndTrackerDummy());
+            using var scope = container.BeginLifetimeScope();
+            return scope.Resolve<OptionDependencyManager>();
+        }
+
+        /// <summary>
+        /// Enables all options that are required by the post processing steps of the already enabled options.
+        /// </summary>
+        public static void EnableRequiredOptions(HashSet<CalcOption> options)
+        {
+            _optionDependencyManager.Value.EnableRequiredOptions(options);
+        }
+
         [JetBrains.Annotations.NotNull]
         private readonly ICalculationProfiler _calculationProfiler;
         [JetBrains.Annotations.NotNull]
@@ -46,7 +69,7 @@ namespace CalcPostProcessor
         public static  IContainer RegisterEverything(string resultPath, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [JetBrains.Annotations.CanBeNull] IFileFactoryAndTracker fft)
         {
             var builder = new ContainerBuilder();
-            builder.Register(_ => new SqlResultLoggingService(resultPath)).As<SqlResultLoggingService>().SingleInstance();
+            builder.Register(_ => ResultLoggingFactory.CreateResultLoggingService(resultPath)).As<IResultLoggingService>().SingleInstance();
             //builder.Register(c =>_logFile).As<ILogFile>().SingleInstance();
             builder.Register(_ => calculationProfiler).As<ICalculationProfiler>().SingleInstance();
             builder.Register(_ => fft).As<IFileFactoryAndTracker>().SingleInstance();

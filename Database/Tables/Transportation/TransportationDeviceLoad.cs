@@ -73,7 +73,7 @@ namespace Database.Tables.Transportation {
             var realDeviceID = dr.GetNullableIntFromLong("TransportationDeviceID", false);
             var loadTypeID = (int) dr.GetLong("LoadTypeID");
             var value = dr.GetDouble("Value");
-            var lt = aic.LoadTypes.FirstOrDefault(x => x.ID == loadTypeID);
+            var lt = aic.LoadTypes.FindById(loadTypeID);
             var name = "(no name)";
             if (lt != null) {
                 name = lt.Name;

@@ -189,13 +189,13 @@ namespace Database.Tables.ModularHouseholds {
             var timeProfileID = dr.GetNullableIntFromLong("TimeProfileID", false, ignoreMissingFields);
             var householdID = dr.GetIntFromLong("HouseholdTraitID");
             var locationID = dr.GetIntFromLong("LocationID", false, ignoreMissingFields, -1);
-            var loc = aic.Locations.FirstOrDefault(lt => lt.ID == locationID);
+            var loc = aic.Locations.FindById(locationID);
 
             var vLoadTypeID = dr.GetNullableIntFromLong("VLoadTypeID", false, ignoreMissingFields);
 
             VLoadType newloadType = null;
             if (vLoadTypeID != null) {
-                newloadType = aic.LoadTypes.FirstOrDefault(lt => lt.ID == vLoadTypeID);
+                newloadType = aic.LoadTypes.FindById(vLoadTypeID);
             }
             var timeLimitID = dr.GetNullableIntFromLong("TimeLimitID", false, ignoreMissingFields);
             if (timeLimitID == null && ignoreMissingFields) {
@@ -203,7 +203,7 @@ namespace Database.Tables.ModularHouseholds {
             }
             TimeLimit newTimeLimit = null;
             if (timeLimitID != null) {
-                newTimeLimit = aic.TimeLimits.FirstOrDefault(dt => dt.ID == timeLimitID);
+                newTimeLimit = aic.TimeLimits.FindById(timeLimitID);
             }
             var deviceType =
                 (AssignableDeviceType) dr.GetIntFromLong("AssignableDeviceType", false, ignoreMissingFields);
@@ -211,23 +211,23 @@ namespace Database.Tables.ModularHouseholds {
             IAssignableDevice device;
             switch (deviceType) {
                 case AssignableDeviceType.Device:
-                    device = aic.RealDevices.FirstOrDefault(mydevice => mydevice.ID == deviceID);
+                    device = aic.RealDevices.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceCategory:
-                    device = aic.DeviceCategories.FirstOrDefault(mydeviceCat => mydeviceCat.ID == deviceID);
+                    device = aic.DeviceCategories.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceAction:
-                    device = aic.DeviceActions.FirstOrDefault(mydeviceCat => mydeviceCat.ID == deviceID);
+                    device = aic.DeviceActions.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceActionGroup:
-                    device = aic.DeviceActionGroups.FirstOrDefault(mydeviceCat => mydeviceCat.ID == deviceID);
+                    device = aic.DeviceActionGroups.FindById(deviceID);
                     break;
                 default:
                     throw new LPGException("Forgotten assignable device type in HHTAutonomousDevice. Please report!");
             }
             TimeBasedProfile tp = null;
             if (timeProfileID != null) {
-                tp = aic.TimeProfiles.FirstOrDefault(myTimeProfiles => myTimeProfiles.ID == timeProfileID);
+                tp = aic.TimeProfiles.FindById(timeProfileID);
             }
             var name = "(no name)";
             if (device != null) {
@@ -238,7 +238,7 @@ namespace Database.Tables.ModularHouseholds {
             var condition =
                 (VariableCondition) dr.GetIntFromLong("VariableCondition", false, ignoreMissingFields);
             var variableID = dr.GetIntFromLong("VariableID", false, ignoreMissingFields, -1);
-            var variable = aic.Variables.FirstOrDefault(x => x.ID == variableID);
+            var variable = aic.Variables.FindById(variableID);
             var guid = GetGuid(dr, ignoreMissingFields);
 
             var hhad = new HHTAutonomousDevice(hhadID, device, tp, householdID, timeStandardDeviation,

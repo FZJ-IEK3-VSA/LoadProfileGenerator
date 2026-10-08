@@ -31,6 +31,7 @@ using System.Collections.ObjectModel;
 using Automation;
 using Common;
 using Common.Enums;
+using Common.Extensions;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -41,7 +42,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables {
+namespace Database.Tests.Tables
+{
 
     public class HouseTypeTests : UnitTestBaseClass
     {
@@ -397,7 +399,7 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                houseTypes.Count.Should().BeGreaterOrEqualTo( 1);
+                houseTypes.Count.Should().BeGreaterThanOrEqualTo(1);
                 db.Cleanup();
             }
         }

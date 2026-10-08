@@ -104,8 +104,8 @@ namespace Database.Tables.BasicElements {
             var taggingSetID = dr.GetIntFromLong("TaggingSetID");
             var tagID = dr.GetIntFromLong("TagID");
             var affordanceID = dr.GetIntFromLong("AffordanceID");
-            var tag = aic.AffordanceTags.FirstOrDefault(myTag => myTag.ID == tagID);
-            var affordance = aic.Affordances.FirstOrDefault(myAff => myAff.ID == affordanceID);
+            var tag = aic.AffordanceTags.FindById(tagID);
+            var affordance = aic.Affordances.FindById(affordanceID);
             var name = GetName(tag, affordance);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new AffordanceTaggingEntry(name, taggingSetID, tag, affordance, connectionString, holidayDateID,

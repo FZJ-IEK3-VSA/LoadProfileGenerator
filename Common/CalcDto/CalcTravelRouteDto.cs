@@ -11,10 +11,11 @@ namespace Common.CalcDto {
         public int MinimumAge { get; }
         public int MaximumAge { get; }
         public Enums.PermittedGender Gender { get; }
-        public string AffordanceTaggingSetName { get; }
-        public string AffordanceTagName { get; }
+        public string? AffordanceTaggingSetName { get; }
+        public string? AffordanceTagName { get; }
         public int? PersonID { get; }
         public double Weight { get; }
+        public AvailabilityDataReferenceDto? IsAvailableArray { get; }
         public int ID { get; }
         [NotNull]
         public string SiteAName { get; }
@@ -26,7 +27,7 @@ namespace Common.CalcDto {
         public StrGuid Guid { get; }
 
         public CalcTravelRouteDto([NotNull]string name, int minimumAge, int maximumAge, Enums.PermittedGender gender, string affordanceTaggingSetName, string affordanceTagName, int? personID,
-            double weight, int id, [NotNull] HouseholdKey householdkey, StrGuid guid, [NotNull]string siteAName, StrGuid siteAGuid, [NotNull] string siteBName, StrGuid siteBGuid)
+            double weight, AvailabilityDataReferenceDto? isAvailableArray, int id, [NotNull] HouseholdKey householdkey, StrGuid guid, [NotNull]string siteAName, StrGuid siteAGuid, [NotNull] string siteBName, StrGuid siteBGuid)
         {
             Name = name;
             MinimumAge = minimumAge;
@@ -36,6 +37,7 @@ namespace Common.CalcDto {
             AffordanceTagName = affordanceTagName;
             PersonID = personID;
             Weight = weight;
+            IsAvailableArray = isAvailableArray;
             ID = id;
             HouseholdKey = householdkey;
             Guid = guid;
@@ -46,9 +48,9 @@ namespace Common.CalcDto {
         }
         [NotNull][ItemNotNull]
         public List<CalcTravelRouteStepDto> Steps { get; } = new List<CalcTravelRouteStepDto>();
-        public void AddTravelRouteStep([NotNull]string stepName, int stepIntID, [NotNull]CalcTransportationDeviceCategoryDto deviceCategory, int stepNumber, double distanceInM, StrGuid guid)
+        public void AddTravelRouteStep([NotNull]string stepName, int stepIntID, [NotNull]CalcTransportationDeviceCategoryDto deviceCategory, int stepNumber, double distanceInM, StrGuid guid, double durationInS = -1)
         {
-            CalcTravelRouteStepDto trs = new CalcTravelRouteStepDto(stepName, stepIntID, deviceCategory, stepNumber, distanceInM, guid);
+            CalcTravelRouteStepDto trs = new CalcTravelRouteStepDto(stepName, stepIntID, deviceCategory, stepNumber, distanceInM, guid, durationInS);
             Steps.Add(trs);
         }
     }

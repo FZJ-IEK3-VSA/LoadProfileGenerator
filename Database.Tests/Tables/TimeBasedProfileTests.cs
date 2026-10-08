@@ -32,6 +32,7 @@ using System;
 using System.Collections.ObjectModel;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using FluentAssertions;
@@ -41,7 +42,8 @@ using Xunit.Abstractions;
 
 #endregion
 
-namespace Database.Tests.Tables {
+namespace Database.Tests.Tables
+{
 
     public class TimeBasedProfileTests : UnitTestBaseClass
     {

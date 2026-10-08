@@ -120,7 +120,7 @@ namespace CalcPostProcessor.Steps
 
         public bool IsEnabled()
         {
-            if (_options.Any(x=> Repository.CalcParameters.IsSet(x)))
+            if (_options.Any((System.Func<CalcOption, bool>)(x=> Repository.CalcParameters.IsSet(x))))
             {
                 return true;
             }

@@ -34,12 +34,14 @@ using System.Globalization;
 using System.Linq;
 using Automation;
 using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.BasicElements {
+namespace Database.Tables.BasicElements
+{
     public class DateBasedProfile : DBBaseElement {
         public const string TableName = "tblDateBasedProfile";
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DateProfileDataPoint> _datapoints;
@@ -278,7 +280,7 @@ namespace Database.Tables.BasicElements {
         [JetBrains.Annotations.NotNull]
         private static double[] GetValueArray(DateTime startDateTime, DateTime endDateTime, TimeSpan stepsize, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateProfileDataPoint> dataPoints)
         {
-            var tempvalues = new List<TempValue>();
+            // collect which years occur in the simulation
             var yearsToMake = new List<int>();
             var startyear = startDateTime.Year;
             while (new DateTime(startyear, 1, 1) <= endDateTime) {
@@ -286,6 +288,8 @@ namespace Database.Tables.BasicElements {
                 startyear++;
             }
 
+            // duplicate each data point for every year in the simulation
+            var dataPointsEachYear = new List<TempValue>();
             foreach (var dateProfileDataPoint in dataPoints) {
                 foreach (var year in yearsToMake) {
                     try {
@@ -293,7 +297,7 @@ namespace Database.Tables.BasicElements {
                             var newdate = new DateTime(year, dateProfileDataPoint.DateAndTime.Month, dateProfileDataPoint.DateAndTime.Day, dateProfileDataPoint.DateAndTime.Hour,
                                 dateProfileDataPoint.DateAndTime.Minute, dateProfileDataPoint.DateAndTime.Second);
                             var tv = new TempValue(dateProfileDataPoint.Value, newdate);
-                            tempvalues.Add(tv);
+                            dataPointsEachYear.Add(tv);
                         }
                     }
                     catch (ArgumentOutOfRangeException) {
@@ -303,29 +307,30 @@ namespace Database.Tables.BasicElements {
                     }
                 }
             }
+            dataPointsEachYear.Sort();
 
-            tempvalues.Sort();
-            // datearray creation
+            // create an array with the DateTime for each timestep
             var duration = endDateTime - startDateTime;
             var totalsteps = (int)(duration.TotalSeconds / stepsize.TotalSeconds);
-            var dts = new DateTime[totalsteps];
-            dts[0] = startDateTime;
+            var dateTimes = new DateTime[totalsteps];
+            dateTimes[0] = startDateTime;
             for (var i = 1; i < totalsteps; i++) {
-                dts[i] = dts[i - 1] + stepsize;
+                dateTimes[i] = dateTimes[i - 1] + stepsize;
             }
 
-            // werte füllen
-            var sourceTime = 0;
-            var lastvalue = tempvalues[0].Value;
+            // determine the appropriate data point for each timestep
+            var dataIndex = 0;
+            var lastvalue = dataPointsEachYear[0].Value;
             var allValues = new double[totalsteps];
-            for (var destinationTime = 0; destinationTime < dts.Length; destinationTime++) {
-                // this makes potentially the first minute wrong && destinationTime > 0
-                while (sourceTime < tempvalues.Count && tempvalues[sourceTime].Time <= dts[destinationTime]) {
-                    sourceTime++;
-                    lastvalue = tempvalues[sourceTime - 1].Value;
+            for (var i = 0; i < totalsteps; i++) {
+                // find the first datapoint with a later DateTime than the current timestep
+                while (dataIndex < dataPointsEachYear.Count && dataPointsEachYear[dataIndex].Time <= dateTimes[i]) {
+                    // store the data point before that and use it for all timesteps inbetween
+                    lastvalue = dataPointsEachYear[dataIndex].Value;
+                    dataIndex++;
                 }
 
-                allValues[destinationTime] = lastvalue;
+                allValues[i] = lastvalue;
             }
 
             return allValues;

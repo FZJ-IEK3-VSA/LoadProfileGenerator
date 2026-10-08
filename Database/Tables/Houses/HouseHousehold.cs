@@ -89,20 +89,20 @@ namespace Database.Tables.Houses {
             var houseID = dr.GetIntFromLong("HouseID");
             var householdID = dr.GetNullableIntFromLong("HouseholdID", false);
 
-            ICalcObject calcObject = aic.ModularHouseholds.FirstOrDefault(hh1 => hh1.ID == householdID);
+            ICalcObject calcObject = aic.ModularHouseholds.FindById(householdID);
             var householdname = string.Empty;
             if (calcObject != null) {
                 householdname = calcObject.Name;
             }
             var guid = GetGuid(dr, ignoreMissingFields);
             int chargingSetID = dr.GetIntFromLong("ChargingSetID",false,ignoreMissingFields);
-            var chargingStation = aic.ChargingStationSets.FirstOrDefault(x => x.ID == chargingSetID);
+            var chargingStation = aic.ChargingStationSets.FindById(chargingSetID);
 
             int transportationDeviceSetID = dr.GetIntFromLong("TransportationDeviceSetID", false, ignoreMissingFields);
-            var transportationDeviceSet = aic.TransportationDeviceSets.FirstOrDefault(x => x.ID == transportationDeviceSetID);
+            var transportationDeviceSet = aic.TransportationDeviceSets.FindById(transportationDeviceSetID);
 
             int travelrouteSetID = dr.GetIntFromLong("TravelRouteSetID",false, ignoreMissingFields);
-            var travelrouteSet = aic.TravelRouteSets.FirstOrDefault(x => x.ID == travelrouteSetID);
+            var travelrouteSet = aic.TravelRouteSets.FindById(travelrouteSetID);
             return new HouseHousehold(id, houseID, calcObject,
                 connectionString, householdname, guid,
                 transportationDeviceSet,chargingStation,travelrouteSet);

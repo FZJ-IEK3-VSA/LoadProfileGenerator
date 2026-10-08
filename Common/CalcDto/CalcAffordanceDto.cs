@@ -45,7 +45,7 @@ namespace Common.CalcDto {
         public ActionAfterInterruption ActionAfterInterruption { get; }
         [NotNull]
         public string TimeLimitName { get; }
-        public int Weight { get; }
+        public double Weight { get; }
         public bool RequireAllDesires { get; }
         [NotNull]
         public string SrcTrait { get; }
@@ -60,7 +60,7 @@ namespace Common.CalcDto {
                                  bool needsLight, double timeStandardDeviation, byte colorR, byte colorG, byte colorB, [NotNull] string affCategory,
                                  bool isInterruptable, bool isInterrupting, [ItemNotNull][NotNull]List<CalcAffordanceVariableOpDto> variableOps,
                                  [ItemNotNull] [NotNull]List<VariableRequirementDto> variableRequirements,
-                                 ActionAfterInterruption actionAfterInterruption, [NotNull] string timeLimitName, int weight,
+                                 ActionAfterInterruption actionAfterInterruption, [NotNull] string timeLimitName, double weight,
                                  bool requireAllDesires, [NotNull] string srcTrait,
                                  StrGuid guid, [NotNull] AvailabilityDataReferenceDto isBusyArray,
                                  [NotNull] HouseholdKey householdKey, BodilyActivityLevel bodilyActivityLevel)

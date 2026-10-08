@@ -79,7 +79,7 @@ namespace Common.Tests {
         private static void FailIfValueOutsideBounds<TValue, TDelta>(bool valueWithinBounds, TValue minvalue, TDelta maxvalue, TValue actualValue,
                                                                      string because, object[] becauseArgs)
         {
-            Execute.Assertion.ForCondition(valueWithinBounds).BecauseOf(because, becauseArgs)
+            AssertionChain.GetOrCreate().ForCondition(valueWithinBounds).BecauseOf(because, becauseArgs)
                 .FailWith("Expected {context:value} to be within {0} - {1}{reason}, but found {2}.", minvalue, maxvalue, actualValue);
         }
     }

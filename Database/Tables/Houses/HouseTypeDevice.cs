@@ -136,16 +136,16 @@ namespace Database.Tables.Houses {
             IAssignableDevice device;
             switch (assignableDeviceType) {
                 case AssignableDeviceType.Device:
-                    device = aic.RealDevices.FirstOrDefault(mydevice => mydevice.ID == deviceID);
+                    device = aic.RealDevices.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceCategory:
-                    device = aic.DeviceCategories.FirstOrDefault(mydeviceCat => mydeviceCat.ID == deviceID);
+                    device = aic.DeviceCategories.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceAction:
-                    device = aic.DeviceActions.FirstOrDefault(mydeviceCat => mydeviceCat.ID == deviceID);
+                    device = aic.DeviceActions.FindById(deviceID);
                     break;
                 case AssignableDeviceType.DeviceActionGroup:
-                    device = aic.DeviceActionGroups.FirstOrDefault(mydeviceCat => mydeviceCat.ID == deviceID);
+                    device = aic.DeviceActionGroups.FindById(deviceID);
                     break;
                 default:
                     throw new LPGException("Unknown AssignableDeviceType. This is a bug. Please report!");
@@ -154,22 +154,22 @@ namespace Database.Tables.Houses {
             var timeProfileID = dr.GetNullableIntFromLongOrInt("TimeProfileID", false, ignoreMissingFields);
             TimeBasedProfile tp = null;
             if (timeProfileID != null) {
-                tp = aic.TimeProfiles.FirstOrDefault(myTimeProfiles => myTimeProfiles.ID == timeProfileID);
+                tp = aic.TimeProfiles.FindById(timeProfileID);
             }
             var houseID = dr.GetInt("HouseID");
             var dtID = dr.GetIntFromLong("TimeLimitID", false, ignoreMissingFields);
             var standardDeviation = dr.GetDouble("StandardDeviation");
-            var timeLimit = aic.TimeLimits.FirstOrDefault(myDateTime => myDateTime.ID == dtID);
-            if (timeLimit == null && aic.TimeLimits.Count > 0) {
-                timeLimit = aic.TimeLimits.First();
+            var timeLimit = aic.TimeLimits.FindById(dtID);
+            if (timeLimit == null && aic.TimeLimits.Items.Count > 0) {
+                timeLimit = aic.TimeLimits.Items.First();
             }
             var locationID = dr.GetIntFromLong("LocationID", false, ignoreMissingFields, -1);
-            var loc = aic.Locations.FirstOrDefault(vl => vl.ID == locationID);
+            var loc = aic.Locations.FindById(locationID);
 
             var loadtypeID = dr.GetNullableIntFromLong("VLoadTypeID", false);
             VLoadType vlt = null;
             if (loadtypeID != null) {
-                vlt = aic.LoadTypes.FirstOrDefault(vl => vl.ID == loadtypeID);
+                vlt = aic.LoadTypes.FindById(loadtypeID);
             }
             var name = "(no name)";
             if (device != null) {
@@ -183,7 +183,7 @@ namespace Database.Tables.Houses {
             var tc =
                 (VariableCondition) dr.GetIntFromLong("VariableCondition", false, ignoreMissingFields);
             var variableID = dr.GetIntFromLong("VariableID", false, ignoreMissingFields, -1);
-            var variable = aic.Variables.FirstOrDefault(x => x.ID == variableID);
+            var variable = aic.Variables.FindById(variableID);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new HouseTypeDevice(id, device, tp, houseID, timeLimit, standardDeviation, vlt, connectionString,
                 name, loc,

@@ -81,14 +81,14 @@ namespace Database.Tables.BasicHouseholds {
             }
             var desireID = dr.GetInt("DesireID");
             var satisfactionValue =  dr.GetDecimal("SatisfactionValue");
-            var dstDesire = aic.Desires.FirstOrDefault(desire => desire.IntID == desireID);
+            var dstDesire = aic.Desires.FindById(desireID);
             var name = "(no name)";
             if (dstDesire != null) {
                 name = dstDesire.Name;
             }
             var guid = GetGuid(dr, ignoreMissingFields);
             var affordanceDesire = new SubAffordanceDesire(id, dstDesire, affordanceID,
-                satisfactionValue, aic.Desires, null, connectionString, name, guid);
+                satisfactionValue, aic.Desires.Items, null, connectionString, name, guid);
             return affordanceDesire;
         }
 

@@ -186,7 +186,7 @@ namespace Common {
 
         public void ReadExistingFilesFromSql()
         {
-            SqlResultLoggingService srls = new SqlResultLoggingService(_baseResultpath);
+            IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(_baseResultpath);
             HouseholdKeyLogger hhKeyLogger = new HouseholdKeyLogger(srls);
             var hhkes = hhKeyLogger.Load();
             foreach (HouseholdKeyEntry entry in hhkes) {
@@ -200,7 +200,7 @@ namespace Common {
         }
         public static void CheckExistingFilesFromSql([NotNull] string baseResultpath)
         {
-            SqlResultLoggingService srls = new SqlResultLoggingService(baseResultpath);
+            IResultLoggingService srls = ResultLoggingFactory.CreateResultLoggingService(baseResultpath);
             var rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
             foreach (ResultFileEntry entry in rfes)

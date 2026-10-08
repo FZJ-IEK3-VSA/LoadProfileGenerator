@@ -30,6 +30,7 @@ using System;
 using System.Collections.ObjectModel;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -37,7 +38,8 @@ using Database.Tables.ModularHouseholds;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Database.Tests.Tables.ModularHouseholds {
+namespace Database.Tests.Tables.ModularHouseholds
+{
 
     public class ModularHouseholdTraitTests : UnitTestBaseClass
     {

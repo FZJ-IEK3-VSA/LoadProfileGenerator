@@ -4,12 +4,13 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using Automation;
-using Common;
+using Common.Extensions;
 using Database.Database;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 
-namespace Database.Tables.Houses {
+namespace Database.Tables.Houses
+{
     public class STHouseholdDistribution : DBBase, IComparable<STHouseholdDistribution> {
         public const string TableName = "tblSTHouseholdDistributions";
         private readonly EnergyIntensityType _energyIntensity;

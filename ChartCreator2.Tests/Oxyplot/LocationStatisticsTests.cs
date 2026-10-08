@@ -28,7 +28,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Info("Making picture");
                 var di = new DirectoryInfo(cs.DstDir);
                 var files = FileFinder.GetRecursiveFiles(di, "LocationStatistics.HH1.csv");
-                files.Count.Should().BeGreaterOrEqualTo( 1);
+                files.Count.Should().BeGreaterThanOrEqualTo(1);
                 CalculationProfiler cp = new CalculationProfiler();
                 ChartCreationParameters ccps = new ChartCreationParameters(300, 4000,
                     2500, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
@@ -38,7 +38,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Info("finished picture");
                 //   OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "LocationStatistics.*.png");
-                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
+                imagefiles.Count.Should().BeGreaterThanOrEqualTo(1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

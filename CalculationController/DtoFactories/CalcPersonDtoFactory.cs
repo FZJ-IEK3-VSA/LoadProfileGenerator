@@ -4,6 +4,7 @@ using Automation.ResultFiles;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
+using Common.Extensions;
 using Common.JSON;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;

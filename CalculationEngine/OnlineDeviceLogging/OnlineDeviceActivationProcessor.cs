@@ -37,7 +37,9 @@ using Common.CalcDto;
 using Common.JSON;
 using JetBrains.Annotations;
 
-namespace CalculationEngine.OnlineDeviceLogging {
+namespace CalculationEngine.OnlineDeviceLogging
+{
+    using Common.Extensions;
     using Common.SQLResultLogging.Loggers;
 
     public class SetToZeroEntry {
@@ -237,7 +239,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public OefcKey RegisterDevice(CalcLoadTypeDto loadType, CalcDeviceDto devicedto)
         {
             var key= new OefcKey(devicedto, loadType.Guid);
-            if(key.LoadtypeGuid != loadType.Guid && key.LoadtypeGuid != "-1".ToStrGuid()) {
+            if(key.LoadtypeGuid != loadType.Guid && key.LoadtypeGuid != StringExtensions.ToStrGuid("-1")) {
                 throw new LPGException("bug: loadtype id was wrong while registering a device");
             }
 

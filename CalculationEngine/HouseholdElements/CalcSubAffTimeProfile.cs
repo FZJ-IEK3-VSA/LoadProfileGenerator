@@ -28,10 +28,11 @@
 
 using System.Collections.Generic;
 using Automation;
-using Common;
+using Common.Extensions;
 
-namespace CalculationEngine.HouseholdElements {
-    internal class CalcSubAffTimeProfile : ICalcProfile {
+namespace CalculationEngine.HouseholdElements
+{
+    public class CalcSubAffTimeProfile : ICalcProfile {
         [JetBrains.Annotations.NotNull]
         private readonly List<double> _values;
 
@@ -51,13 +52,15 @@ namespace CalculationEngine.HouseholdElements {
 
         public List<double> StepValues => _values;
 
-        //public string DataSource => "Synthethic calculated from Person Profile";
-
         public string Name { get; }
+
         public double TimeFactor { get; }
+
         public string DataSource { get; }
 
         public StrGuid Guid { get; }
+
+        public bool IsDetermined => true;
 
         #endregion
     }

@@ -10,7 +10,7 @@ namespace Common.SQLResultLogging.InputLoggers
 
     public class BridgeDayEntryLogger : DataSaverBase {
         public const string TableName = "BridgeDays";
-        public BridgeDayEntryLogger([NotNull] SqlResultLoggingService srls)
+        public BridgeDayEntryLogger([NotNull] IResultLoggingService srls)
             : base(typeof(BridgeDayEntries),  new ResultTableDefinition(TableName, ResultTableID.BridgeDayEntries,"All the bridge days for this household", CalcOption.HouseholdContents), srls)
         {
         }

@@ -9,7 +9,7 @@ namespace Common.SQLResultLogging.InputLoggers
     {
         public const string TableName = "CalcParameters";
 
-        public CalcParameterLogger( [JetBrains.Annotations.NotNull] SqlResultLoggingService srls): base(typeof(CalcParameters),
+        public CalcParameterLogger( [JetBrains.Annotations.NotNull] IResultLoggingService srls): base(typeof(CalcParameters),
              new ResultTableDefinition(TableName,ResultTableID.CalcParameters, "All the calculation parameters", CalcOption.BasicOverview), srls)
         {
         }

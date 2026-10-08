@@ -28,20 +28,16 @@
 
 using System.Collections.Generic;
 using Automation;
+using CalculationEngine.HouseholdElements;
 
 namespace CalculationEngine
 {
     public interface ICalcProfile
     {
-        [JetBrains.Annotations.NotNull]
         List<double> StepValues { get; }
-        [JetBrains.Annotations.NotNull]
-        string Name { get; }
+
         double TimeFactor { get; }
-        [JetBrains.Annotations.NotNull]
-        string DataSource { get; }
 
         StrGuid Guid { get; }
-        //string DataSource { get; }
     }
 }

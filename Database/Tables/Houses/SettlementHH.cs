@@ -105,10 +105,10 @@ namespace Database.Tables.Houses {
 
             switch (objectType) {
                 case CalcObjectType.ModularHousehold:
-                    calcObject = aic.ModularHouseholds.FirstOrDefault(hh1 => hh1.ID == householdID);
+                    calcObject = aic.ModularHouseholds.FindById(householdID);
                     break;
                 case CalcObjectType.House:
-                    calcObject = aic.Houses.FirstOrDefault(hh1 => hh1.ID == householdID);
+                    calcObject = aic.Houses.FindById(householdID);
                     break;
 
                 default: throw new LPGException("Unknown CalcObjectType! This is a bug.");

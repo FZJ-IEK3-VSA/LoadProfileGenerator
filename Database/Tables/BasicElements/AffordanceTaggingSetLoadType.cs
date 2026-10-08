@@ -37,7 +37,7 @@ namespace Database.Tables.BasicElements {
             var id = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("AffTagSetID");
             var loadtypeID = dr.GetIntFromLong("LoadTypeID");
-            var loadType = aic.LoadTypes.FirstOrDefault(lt => lt.ID == loadtypeID);
+            var loadType = aic.LoadTypes.Items.FirstOrDefault(lt => lt.ID == loadtypeID);
             var name = "(no name)";
             if (loadType != null) {
                 name = loadType.Name;

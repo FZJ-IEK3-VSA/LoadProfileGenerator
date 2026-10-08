@@ -73,7 +73,7 @@ namespace Database.Tables.Houses {
             var houseID = dr.GetIntFromLong("HouseID");
 
             var td =
-                aic.TransformationDevices.FirstOrDefault(tradev => tradev.ID == transformationDeviceID);
+                aic.TransformationDevices.FindById(transformationDeviceID);
             var tdName = string.Empty;
             if (td != null) {
                 tdName = td.Name;

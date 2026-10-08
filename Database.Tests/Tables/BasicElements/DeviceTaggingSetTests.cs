@@ -30,6 +30,7 @@ using System.Collections.ObjectModel;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using FluentAssertions;
@@ -37,7 +38,8 @@ using Xunit;
 using Xunit.Abstractions;
 
 
-namespace Database.Tests.Tables.BasicElements {
+namespace Database.Tests.Tables.BasicElements
+{
 
     public class DeviceTaggingSetTests : UnitTestBaseClass
     {

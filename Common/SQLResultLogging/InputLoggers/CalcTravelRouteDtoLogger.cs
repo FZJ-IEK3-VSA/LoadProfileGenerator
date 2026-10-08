@@ -12,7 +12,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class CalcTravelRouteDtoLogger : DataSaverBase {
         private const string Tablename = "TravelRoutes";
 
-        public CalcTravelRouteDtoLogger([NotNull] SqlResultLoggingService srls)
+        public CalcTravelRouteDtoLogger([NotNull] IResultLoggingService srls)
             : base(typeof(CalcTravelRouteDto), new ResultTableDefinition(Tablename,ResultTableID.TravelRouteDefinitions,
                 "Json Specification of the Travel Routes", CalcOption.TransportationStatistics), srls)
         {

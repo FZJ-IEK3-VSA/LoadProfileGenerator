@@ -32,6 +32,7 @@ using System;
 using System.Collections.ObjectModel;
 using Automation;
 using Common;
+using Common.Extensions;
 using Common.Tests;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
@@ -42,7 +43,8 @@ using Xunit.Abstractions;
 
 #endregion
 
-namespace Database.Tests.Tables {
+namespace Database.Tests.Tables
+{
 
     public class SettlementHHTests : UnitTestBaseClass
     {
@@ -53,12 +55,12 @@ namespace Database.Tests.Tables {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
-                var affordances = db.LoadAffordances(out var timeprofiles, out _, out _, out var realDevices, out _, out var loadtypes, out _, out _, out _, out var locations, out _, out _);
+                var affordances = db.LoadAffordances(out var timeprofiles, out _, out _, out var realDevices, out _, out var loadtypes, out var timeLimits, out _, out _, out var locations, out _, out _);
                 var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadtypes);
                 db.LoadTransportation(locations, out var transportationDeviceSets,
                     out var travelRouteSets, out var _,
                     out var _, loadtypes,
-                    out var chargingStationSets, affordanceTaggingSets);
+                    out var chargingStationSets, affordanceTaggingSets, timeLimits);
                 db.LoadHouseholdsAndHouses(out var modularHouseholds,
                     out var houses, out _, traitTags, chargingStationSets, travelRouteSets, transportationDeviceSets);
                 var settlementHhs = new ObservableCollection<SettlementHH>();
@@ -82,7 +84,7 @@ namespace Database.Tests.Tables {
                 db.LoadTransportation(locations, out var transportationDeviceSets,
                     out var travelRouteSets, out var _,
                     out var _, loadtypes,
-                    out var chargingStationSets, affordanceTaggingSets);
+                    out var chargingStationSets, affordanceTaggingSets, timeLimits);
                 db.LoadHouseholdsAndHouses(out var modularHouseholds,
                     out var houses, out _, traitTags, chargingStationSets,
                     travelRouteSets, transportationDeviceSets);
