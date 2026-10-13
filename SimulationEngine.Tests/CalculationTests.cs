@@ -224,7 +224,11 @@ namespace SimulationEngine.Tests
 
         public static void CheckForResultfile(string wd, CalcOption option)
         {
-
+            // Remark: this check is imprecise as PeakWorkingSet64 measures the peak RAM demand of 
+            // the whole process, and multiple tests can be run in the same process. Consequently,
+            // once one test fails, all subsequent tests will fail as well. Furthermore, garbage
+            // accumulated over multiple tests can increase memory usage.
+            // Unfortunately, there is no simple fix for this, so the test remains as an estimate.
             var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
             const long memoryCap = 1024L * 1024L * 1024L * 8L;
             peakWorkingSet.Should().BeLessThan(memoryCap);
