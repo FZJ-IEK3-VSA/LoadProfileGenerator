@@ -41,13 +41,15 @@ namespace ChartCreator2.OxyCharts {
             };
 
             if (!itemsByLevel.ContainsKey(1)) {
+                // OxyPlot 2.2.0 defaults LabelFormatString to "{2}", which throws a FormatException while rendering
                 var series = new IntervalBarSeries
                 {
-                    FontSize = fontsize
+                    FontSize = fontsize,
+                    LabelFormatString = null
                 };
                 itemsByLevel.Add(1, series);
             }
-            var ibs = new IntervalBarSeries();
+            var ibs = new IntervalBarSeries { LabelFormatString = null };
 
             for (var i = 0; i < row; i++) {
                 ibs.Items.Add(new IntervalBarItem(0, 0, ""));

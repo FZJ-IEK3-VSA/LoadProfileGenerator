@@ -142,7 +142,8 @@ namespace ChartCreator2.OxyCharts {
             foreach (var s in taggingSet.Categories)
             {
                 caSub.Labels.Add(ChartLocalizer.Get().GetTranslation(s));
-                var ibs = new IntervalBarSeries();
+                // OxyPlot 2.2.0 defaults LabelFormatString to "{2}", which throws a FormatException while rendering
+                var ibs = new IntervalBarSeries { LabelFormatString = null };
                 // ibs.Title =
                 var coloridx = taggingSet.GetCategoryIndexOfCategory(s);
                 ibs.FillColor = p.Colors[coloridx];

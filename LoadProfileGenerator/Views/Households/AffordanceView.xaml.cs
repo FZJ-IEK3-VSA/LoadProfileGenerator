@@ -356,8 +356,10 @@ namespace LoadProfileGenerator.Views.Households {
             l.LegendOrientation = LegendOrientation.Horizontal;
             _categoryAxis.Labels.Clear();
             _categoryAxis.Labels.Add("Person Profile");
+            // OxyPlot 2.2.0 defaults LabelFormatString to "{2}", which throws a FormatException while rendering
             var personSeries = new IntervalBarSeries {
-                Title = "Person"
+                Title = "Person",
+                LabelFormatString = null
             };
 
             const double personstart = 0;
@@ -372,15 +374,18 @@ namespace LoadProfileGenerator.Views.Households {
             // Get a reference to the GraphPane
 
             var minSeries = new IntervalBarSeries {
-                Title = "Minimum"
+                Title = "Minimum",
+                LabelFormatString = null
             };
             minSeries.Items.Add(new IntervalBarItem(0, 0));
             var bodySeries = new IntervalBarSeries {
-                Title = "Always"
+                Title = "Always",
+                LabelFormatString = null
             };
             bodySeries.Items.Add(new IntervalBarItem(0, 0));
             var maxSeries = new IntervalBarSeries {
-                Title = "Maximum"
+                Title = "Maximum",
+                LabelFormatString = null
             };
             maxSeries.Items.Add(new IntervalBarItem(0, 0));
 
