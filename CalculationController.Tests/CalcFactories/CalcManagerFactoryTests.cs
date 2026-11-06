@@ -162,6 +162,7 @@ namespace CalculationController.Tests.CalcFactories {
                 using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
                     Config.IsInUnitTesting = true;
+                    Config.MakePDFCharts = false;
                     var sim = new Simulator(db.ConnectionString);
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
                     DeviceCategory light = null;
