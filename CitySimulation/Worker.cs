@@ -56,6 +56,7 @@ namespace CitySimulation
             // general settings
             // avoid MPI processes cluttering the console
             Config.OutputToConsole = false;
+            Config.ShowDeleteMessages = false;
             Config.ResultLogger = Common.SQLResultLogging.ResultLoggerType.JSON;
 
             scenarioPart = LoadAndDistributeScenario(inputPath);

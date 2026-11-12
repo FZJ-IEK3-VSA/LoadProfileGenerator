@@ -67,8 +67,10 @@ namespace Database.Tables.Transportation
             if(savetodb) {
                 entry.SaveToDB();
             }
-
-            _routes.Sort();
+            if (Config.AlwaysSortCollections)
+            {
+                _routes.Sort();
+            }
         }
 
         [JetBrains.Annotations.NotNull]
@@ -166,6 +168,7 @@ namespace Database.Tables.Transportation
             using Connection con = new(ConnectionString);
             con.Open();
             base.SaveToDB(con);
+            _routes.Sort();
             using (var tr = con.BeginTransaction())
             {
                 foreach (var routeEntry in _routes)

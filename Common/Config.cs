@@ -63,6 +63,11 @@ namespace Common {
         public static bool MakePDFCharts { get; set; }
         public static bool ReallyMakeAllFilesIncludingBothSums { get; set; }
         public static bool ShowDeleteMessages { get; set; } = true;
+
+        /// <summary>
+        /// Determines if item collections are immediately re-sorted after every added item or name change.
+        /// </summary>
+        public static bool AlwaysSortCollections { get; set; } = true;
         [CanBeNull]
         public static int? SpecialChartFontSize { get; set; }
 

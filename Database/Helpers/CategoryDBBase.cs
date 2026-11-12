@@ -205,7 +205,10 @@ namespace Database.Helpers
         private void AddItemToList([JetBrains.Annotations.NotNull] T item)
         {
             Items.Add(item);
-            Items.Sort();
+            if (Config.AlwaysSortCollections)
+            {
+                Items.Sort();
+            }
         }
 
         protected static void AddUniqueStringToList([ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<string> list,
@@ -716,7 +719,7 @@ namespace Database.Helpers
             {
                 func(propertyChangedEventArgs.PropertyName);
             }
-            if (propertyChangedEventArgs.PropertyName != "Name")
+            if (propertyChangedEventArgs.PropertyName != "Name" || !Config.AlwaysSortCollections)
             {
                 return;
             }

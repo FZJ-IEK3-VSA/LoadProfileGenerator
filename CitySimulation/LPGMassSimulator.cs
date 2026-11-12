@@ -90,10 +90,13 @@ namespace CitySimulation
         private void GenerateHouses()
         {
             HouseGenerator houseGenerator = new();
+            // disable re-sorting the simulator during mass house generation, as the database is reopened and sorted after generation anyway.
+            Config.AlwaysSortCollections = false;
             foreach (var target in scenarioPart.TargetReferences)
             {
                 ReadAndGenerateHouse(target, houseGenerator);
             }
+            Config.AlwaysSortCollections = true;
             logger.Info("Finished generating all houses");
         }
 
