@@ -176,6 +176,8 @@ namespace CitySimulation
                     var objectsForCalc = JsonCalculator.CreateCalcObjectParams(sim, calcSpecCopy, calcObjectReference, houseResultDir);
                     var calcStartParameterSet = new CalcStartParameterSet(objectsForCalc, scenarioPart.CalcParams, new(), target.Seed);
 
+                    // the integrity check covers the whole database, so it is only run once, for the first house
+                    CalcManagerFactory.DoIntegrityRun = simulationTargets.Count == 0;
                     // create a calcManager for each household
                     var calcManager = cmf.GetCalcManager(calcStartParameterSet);
                     simulationTargets.Add(new CitySimulationHouse(target.Id, calcManager, houseResultDir));
