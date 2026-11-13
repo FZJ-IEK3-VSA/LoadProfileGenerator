@@ -35,12 +35,35 @@ using System.Data.SQLite;
 
 namespace Database.Database
 {
+    /// <summary>
+    /// Manages a database connection. A <see cref="SharedConnectionScope"/> can be used to share a single connection across
+    /// multiple operations, as long as the scope is active.
+    /// </summary>
     public sealed class Connection : IDisposable
     {
         public static int ConnectionCount { get; private set; }
         [JetBrains.Annotations.NotNull] private readonly SQLiteConnection _sqlcon;
-        public Connection([JetBrains.Annotations.NotNull] string connectionString)
+
+        /// <summary>
+        /// Whether this object only wraps the shared connection of an active SharedConnectionScope,
+        /// which must not be opened or closed here.
+        /// </summary>
+        private readonly bool isShared;
+
+        /// <summary>
+        /// The shared connection of the currently active SharedConnectionScope, if any. Not thread-safe.
+        /// </summary>
+        private static SQLiteConnection sharedConnection;
+
+        public Connection(string connectionString)
         {
+            if (sharedConnection != null && sharedConnection.ConnectionString == connectionString)
+            {
+                // reuse the shared connection instead of opening a new one
+                _sqlcon = sharedConnection;
+                isShared = true;
+                return;
+            }
             _sqlcon = new SQLiteConnection(connectionString);
             ConnectionCount++;
         }
@@ -52,17 +75,75 @@ namespace Database.Database
 
         private void Close()
         {
+            if (isShared)
+            {
+                // the shared connection is closed by its scope
+                return;
+            }
             _sqlcon.Close();
             _sqlcon.Dispose();
             ConnectionCount--;
         }
 
-        public void Open() => _sqlcon.Open();
+        public void Open()
+        {
+            if (!isShared)
+            {
+                _sqlcon.Open();
+            }
+        }
 
         [JetBrains.Annotations.NotNull]
         public SQLiteTransaction BeginTransaction()
         {
             return _sqlcon.BeginTransaction();
+        }
+
+        /// <summary>
+        /// Opens a single shared connection with one transaction for the specified connection string. While the returned
+        /// scope is active, all Connection objects created for this connection string reuse the shared connection instead
+        /// of opening their own one. Transactions started on the shared connection in the meantime are nested into the
+        /// scope transaction. Commit() needs to be called before disposing the scope; otherwise, all changes are rolled
+        /// back. Not thread-safe; scopes cannot be nested.
+        /// </summary>
+        /// <param name="connectionString">the connection string of the database to open</param>
+        /// <returns>the scope object, which must be disposed to close the shared connection</returns>
+        public static SharedConnectionScope BeginSharedConnection(string connectionString) => new(connectionString);
+
+        /// <summary>
+        /// Manages a single shared database connection.
+        /// </summary>
+        public sealed class SharedConnectionScope : IDisposable
+        {
+            private readonly SQLiteConnection connection;
+            private readonly SQLiteTransaction transaction;
+
+            internal SharedConnectionScope(string connectionString)
+            {
+                if (sharedConnection != null)
+                {
+                    throw new InvalidOperationException("A shared database connection is already active. Nested scopes are not supported.");
+                }
+                // create the shared connection object and start one transaction for all operations
+                connection = new SQLiteConnection(connectionString);
+                connection.Open();
+                transaction = connection.BeginTransaction();
+                sharedConnection = connection;
+            }
+
+            /// <summary>
+            /// Commits all changes made through the shared connection.
+            /// </summary>
+            public void Commit() => transaction.Commit();
+
+            public void Dispose()
+            {
+                // disposing a transaction that was not committed rolls it back
+                transaction.Dispose();
+                connection.Close();
+                connection.Dispose();
+                sharedConnection = null;
+            }
         }
     }
 }

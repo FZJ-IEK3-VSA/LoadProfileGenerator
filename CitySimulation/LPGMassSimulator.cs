@@ -12,6 +12,7 @@ using CitySimulation.Scenarios;
 using CitySimulation.SimulationTargets;
 using Common;
 using Database;
+using Database.Database;
 using MPI;
 using Newtonsoft.Json;
 using PowerArgs;
@@ -132,8 +133,11 @@ namespace CitySimulation
             }
             try
             {
+                // use a single shared database connection for the whole house to reduce overhead
+                using var dbScope = Connection.BeginSharedConnection(sim.ConnectionString);
                 // create the target house/household if necessary and get its JsonReference
                 var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim, new Random(target.Seed));
+                dbScope.Commit();
                 return calcObjectReference;
             }
             catch (Exception ex)
