@@ -34,6 +34,7 @@ using Automation;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
+using Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
@@ -97,18 +98,49 @@ namespace CalculationController.CalcFactories {
         [NotNull]
         public static CalcLoadTypeDtoDictionary MakeLoadTypes(
             [NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes, TimeSpan internalTimeResolution,
-            LoadTypePriority priority)
+            LoadTypePriority priority, ICollection<VLoadType>? requiredLoadTypes = null)
         {
             var ltDtoDict = new Dictionary<VLoadType, CalcLoadTypeDto>();
             foreach (var lt in loadTypes) {
-                // ReSharper disable once ReplaceWithSingleAssignment.True
-                if (lt.Priority <= priority) {
+                // add all load types with sufficient priority and those that are explicitly required, e.g., for transportation
+                bool isRequired = requiredLoadTypes?.Contains(lt) is true;
+                if (lt.Priority <= priority || isRequired)
+                {
                     var calcLoadTypeDto = new CalcLoadTypeDto(lt.Name,  lt.UnitOfPower, lt.UnitOfSum,
                         lt.ConvertPowerValueWithTime(1, internalTimeResolution), lt.ShowInCharts, lt.Guid);
                     ltDtoDict.Add(lt, calcLoadTypeDto);
                 }
             }
             return new CalcLoadTypeDtoDictionary(ltDtoDict);
+        }
+
+        /// <summary>
+        /// Collects all load types that are referenced by charging stations. These are required for transportation
+        /// simulation regardless of their priority. As the load types are shared among all calculation targets, all
+        /// charging station sets and transportation devices in the database are considered, not only the ones of a
+        /// specific target.
+        /// </summary>
+        /// <param name="sim">the simulator containing the database objects</param>
+        /// <returns>the load types required for transportation</returns>
+        public static HashSet<VLoadType> GetLoadTypesRequiredForTransportation(Simulator sim)
+        {
+            var required = new HashSet<VLoadType>();
+            // collect load types from all charging stations
+            foreach (var chargingStationSet in sim.ChargingStationSets.Items)
+            {
+                foreach (var chargingStation in chargingStationSet.ChargingStations)
+                {
+                    if (chargingStation.CarChargingLoadType != null)
+                    {
+                        required.Add(chargingStation.CarChargingLoadType);
+                    }
+                    if (chargingStation.GridChargingLoadType != null)
+                    {
+                        required.Add(chargingStation.GridChargingLoadType);
+                    }
+                }
+            }
+            return required;
         }
     }
 

@@ -329,8 +329,12 @@ namespace CalculationController.CalcFactories
             ContainerBuilder builder = new();
 
             builder.RegisterInstance(calcParameters);
+            // add load types required for transportation if that is enabled
+            var transportLoadTypes = calcParameters.TransportationEnabled
+                ? CalcLoadTypeDtoFactory.GetLoadTypesRequiredForTransportation(sim)
+                : null;
             builder.RegisterInstance(CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, calcParameters.InternalStepsize,
-                        calcParameters.LoadTypePriority));
+                        calcParameters.LoadTypePriority, transportLoadTypes));
             builder.RegisterType<AffordanceTaggingSetFactory>().SingleInstance();
             builder.Register(x => x.Resolve<AffordanceTaggingSetFactory>().GetAffordanceTaggingSets(sim)).SingleInstance();
             builder.Register(x => CalcLoadTypeFactory.MakeLoadTypes(x.Resolve<CalcLoadTypeDtoDictionary>())).SingleInstance();
